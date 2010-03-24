@@ -15,4 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-version = '0.1'
+def get_stripped_lines(string):
+    lines = [l.strip() for l in string.splitlines()]
+    return [l for l in lines if l]

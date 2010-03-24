@@ -14,5 +14,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import lettuce
 
-version = '0.1'
+def test_has_version():
+    "A nice python module is supposed to have a version"
+    assert lettuce.version
