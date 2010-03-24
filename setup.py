@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# <Lettuce - Behavior-driven design for python>
+# <Lettuce - Behaviour Driven Development for python>
 # Copyright (C) <2010>  Gabriel Falcão <gabriel@nacaolivre.org>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,7 @@ from setuptools import setup
 
 setup(name='lettuce',
     version=version,
-    description='Behavior-driven design for python',
+    description='Behaviour Driven Development for python',
     author=u'Gabriel Falcão',
     author_email='gabriel@nacaolivre.org',
     url='http://github.com/gabrielfalcao/lettuce',

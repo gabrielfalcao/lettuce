@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# <Lettuce - Behavior-driven design for python>
+# <Lettuce - Behaviour Driven Development for python>
 # Copyright (C) <2010>  Gabriel Falcão <gabriel@nacaolivre.org>
 #
 # This program is free software: you can redistribute it and/or modify
