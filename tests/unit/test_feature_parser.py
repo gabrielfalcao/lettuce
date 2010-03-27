@@ -15,6 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from lettuce.core import Step
+from lettuce.core import Scenario
+from lettuce.core import Feature
+from nose.tools import assert_equals
+
 FEATURE1 = """
 Feature: Rent movies
     Scenario: Renting a featured movie
@@ -44,20 +49,45 @@ Feature: Rent movies
         Then he needs to pay 16 bucks
 """
 
-from lettuce.core import Step
-from lettuce.core import Scenario
-from lettuce.core import Feature
-from nose.tools import assert_equals
+FEATURE2 = """
+Feature: Division
+  In order to avoid silly mistakes
+  Cashiers must be able to calculate a fraction
 
+  Scenario: Regular numbers
+    * I have entered 3 into the calculator
+    * I have entered 2 into the calculator
+    * I press divide
+    * the result should be 1.5 on the screen
+"""
+
+FEATURE_WITH_OUTLINED_SCENARIO = """
+Feature: Addition
+  In order to avoid silly mistakes
+  As a math idiot
+  I want to be told the sum of two numbers
+
+  Scenario Outline: Add two numbers
+    Given I have entered <input_1> into the calculator
+    And I have entered <input_2> into the calculator
+    When I press <button>
+    Then the result should be <output> on the screen
+
+  Examples:
+    | input_1 | input_2 | button | output |
+    | 20      | 30      | add    | 50     |
+    | 2       | 5       | add    | 7      |
+    | 0       | 40      | add    | 40     |
+"""
 def test_scenario_has_name():
-    "It should extract the description string from the scenario"
+    "It should extract the name string from the scenario"
 
     feature = Feature.from_string(FEATURE1)
 
     assert isinstance(feature, Feature)
 
     assert_equals(
-        feature.description,
+        feature.name,
         "Rent movies"
     )
 
@@ -87,3 +117,21 @@ def test_feature_has_scenarios():
             {'Name': 'Matrix Revolutions', 'Rating': '4 stars', 'New': 'no', 'Available': '6'},
         ]
     )
+
+def test_can_parse_feature_description():
+    "A feature object should have a description"
+
+    feature = Feature.from_string(FEATURE2)
+
+    expected_scenario_names = ["Regular numbers"]
+    got_scenario_names = [s.name for s in feature.scenarios]
+
+    assert_equals(expected_scenario_names, got_scenario_names)
+    assert_equals(len(feature.scenarios[0].steps), 4)
+
+    step1, step2, step3, step4 = feature.scenarios[0].steps
+
+    assert_equals(step1.sentence, '* I have entered 3 into the calculator')
+    assert_equals(step2.sentence, '* I have entered 2 into the calculator')
+    assert_equals(step3.sentence, '* I press divide')
+    assert_equals(step4.sentence, '* the result should be 1.5 on the screen')

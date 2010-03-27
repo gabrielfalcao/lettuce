@@ -66,20 +66,31 @@ class Scenario(object):
         return scenario
 
 class Feature(object):
-    def __init__(self, description, remaining_lines):
-        self.description = description
-        self.scenarios = self._parse_remaining_lines(remaining_lines)
+    def __init__(self, name, remaining_lines):
+        self.name = name
+        self.scenarios, self.description = self._parse_remaining_lines(
+            remaining_lines
+        )
 
     @classmethod
     def from_string(new_feature, string):
         lines = strings.get_stripped_lines(string)
         feature_line = lines.pop(0)
         line = feature_line.replace("Feature: ", "")
-        feature = new_feature(description=line, remaining_lines=lines)
+        feature = new_feature(name=line, remaining_lines=lines)
         return feature
 
     def _parse_remaining_lines(self, lines):
-        scenarios = "\n".join(lines).split("Scenario: ")
-        scenario_strings = ["Scenario: %s" % s for s in scenarios if s.strip()]
-        return [Scenario.from_string(s) for s in scenario_strings]
+        joined = "\n".join(lines)
+        parts = joined.split("Scenario: ")
+        description = ""
+
+        if not joined.strip().startswith("Scenario:"):
+            description = parts[0]
+            parts.pop(0)
+
+        scenario_strings = ["Scenario: %s" % s for s in parts if s.strip()]
+        scenarios = [Scenario.from_string(s) for s in scenario_strings]
+
+        return scenarios, description
 
