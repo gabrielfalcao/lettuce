@@ -16,15 +16,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import re
 
+def escape_if_necessary(what):
+    if len(what) is 1:
+        what = "[%s]" % what
+
+    return what
+
 def get_stripped_lines(string):
     lines = [l.strip() for l in string.splitlines()]
     return [l for l in lines if l]
 
 def split_wisely(string, sep, strip=False):
-    if len(sep) is 1:
-        sep = "[%s]" % sep
-
-    regex = re.compile(sep, re.I)
+    regex = re.compile(escape_if_necessary(sep),  re.I)
 
     items = filter(lambda x: x, regex.split(string))
     if strip:
@@ -32,3 +35,6 @@ def split_wisely(string, sep, strip=False):
 
     return items
 
+def wise_startswith(string, seed):
+    regex = "^%s" % escape_if_necessary(seed)
+    return bool(re.search(regex, string, re.I))

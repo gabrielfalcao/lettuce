@@ -51,7 +51,7 @@ class Scenario(object):
     def _parse_remaining_lines(self, lines):
         step_strings = []
         for line in lines:
-            if line.strip().startswith("|"):
+            if strings.wise_startswith(line, "|"):
                 step_strings[-1] += "\n%s" % line
             else:
                 step_strings.append(line)
@@ -86,7 +86,7 @@ class Feature(object):
         parts = strings.split_wisely(joined, "Scenario: ")
         description = ""
 
-        if not joined.strip().startswith("Scenario:"):
+        if not strings.wise_startswith(joined, "Scenario:"):
             description = parts[0]
             parts.pop(0)
 
