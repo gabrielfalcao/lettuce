@@ -14,7 +14,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 from lettuce import strings
 
 class Step(object):
@@ -29,9 +28,11 @@ class Step(object):
         keys = []
         data_list = []
         if lines:
-            keys = [k.strip() for k in lines.pop(0).split("|") if k]
+            first_line = lines.pop(0)
+            keys = strings.split_wisely(first_line, "|", True)
+
             for line in lines:
-                values = [k.strip() for k in line.split("|") if k]
+                values = strings.split_wisely(line, "|", True)
                 data_list.append(dict(zip(keys, values)))
 
         return keys, data_list
@@ -82,7 +83,7 @@ class Feature(object):
 
     def _parse_remaining_lines(self, lines):
         joined = "\n".join(lines)
-        parts = joined.split("Scenario: ")
+        parts = strings.split_wisely(joined, "Scenario: ")
         description = ""
 
         if not joined.strip().startswith("Scenario:"):
