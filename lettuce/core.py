@@ -16,6 +16,19 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from lettuce import strings
 
+def parse_data_list(lines):
+    keys = []
+    data_list = []
+    if lines:
+        first_line = lines.pop(0)
+        keys = strings.split_wisely(first_line, "|", True)
+
+        for line in lines:
+            values = strings.split_wisely(line, "|", True)
+            data_list.append(dict(zip(keys, values)))
+
+    return keys, data_list
+
 class Step(object):
     def __init__(self, sentence, remaining_lines):
         self.sentence = sentence
@@ -25,17 +38,7 @@ class Step(object):
         self.data_list = list(data_list)
 
     def _parse_remaining_lines(self, lines):
-        keys = []
-        data_list = []
-        if lines:
-            first_line = lines.pop(0)
-            keys = strings.split_wisely(first_line, "|", True)
-
-            for line in lines:
-                values = strings.split_wisely(line, "|", True)
-                data_list.append(dict(zip(keys, values)))
-
-        return keys, data_list
+        return parse_data_list(lines)
 
     @classmethod
     def from_string(cls, string):
@@ -44,9 +47,10 @@ class Step(object):
         return cls(sentence, remaining_lines=lines)
 
 class Scenario(object):
-    def __init__(self, name, remaining_lines):
+    def __init__(self, name, remaining_lines, outlines):
         self.name = name
         self.steps = self._parse_remaining_lines(remaining_lines)
+        self.outlines = outlines
 
     def _parse_remaining_lines(self, lines):
         step_strings = []
@@ -60,10 +64,20 @@ class Scenario(object):
 
     @classmethod
     def from_string(new_scenario, string):
+        splitted = strings.split_wisely(string, "Example[s]?[:]", True)
+        string = splitted[0]
+
+        outlines = []
+        if len(splitted) is 2:
+            part = splitted[1]
+            keys, outlines = parse_data_list(strings.get_stripped_lines(part))
+
         lines = strings.get_stripped_lines(string)
         scenario_line = lines.pop(0)
-        line = scenario_line.replace("Scenario: ", "").strip()
-        scenario =  new_scenario(name=line, remaining_lines=lines)
+        line = strings.remove_it(scenario_line, "Scenario( Outline)?: ")
+
+        scenario =  new_scenario(name=line, remaining_lines=lines, outlines=outlines)
+
         return scenario
 
 class Feature(object):

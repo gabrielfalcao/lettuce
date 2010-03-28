@@ -38,3 +38,6 @@ def split_wisely(string, sep, strip=False):
 def wise_startswith(string, seed):
     regex = "^%s" % escape_if_necessary(seed)
     return bool(re.search(regex, string, re.I))
+
+def remove_it(string, what):
+    return re.sub(what, "", string).strip()

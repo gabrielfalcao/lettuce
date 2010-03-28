@@ -26,6 +26,20 @@ Scenario: Adding some students to my university database
     And I see the 2nd line of 'courses.txt' has 'Nutrition:4'
 """
 
+OUTLINED_SCENARIO = """
+Scenario Outline: Add two numbers
+    Given I have entered <input_1> into the calculator
+    And I have entered <input_2> into the calculator
+    When I press <button>
+    Then the result should be <output> on the screen
+
+    Examples:
+      | input_1 | input_2 | button | output |
+      | 20      | 30      | add    | 50     |
+      | 2       | 5       | add    | 7      |
+      | 0       | 40      | add    | 40     |
+"""
+
 from lettuce.core import Step
 from lettuce.core import Scenario
 from nose.tools import assert_equals
@@ -67,5 +81,31 @@ def test_scenario_has_steps():
         [
             {'Name': 'Computer Science', 'Duration': '5 years'},
             {'Name': 'Nutrition', 'Duration': '4 years'},
+        ]
+    )
+
+def test_scenario_may_own_outlines():
+    "A scenario may own outlines"
+    scenario = Scenario.from_string(OUTLINED_SCENARIO)
+
+    assert_equals(len(scenario.steps), 4)
+    expected_sentences = [
+        'Given I have entered <input_1> into the calculator',
+        'And I have entered <input_2> into the calculator',
+        'When I press <button>',
+        'Then the result should be <output> on the screen',
+    ]
+
+    for step, expected_sentence in zip(scenario.steps, expected_sentences):
+        assert_equals(type(step), Step)
+        assert_equals(step.sentence, expected_sentence)
+
+    assert_equals(scenario.name, "Add two numbers")
+    assert_equals(
+        scenario.outlines,
+        [
+            {'input_1': '20', 'input_2': '30', 'button': 'add', 'output': '50'},
+            {'input_1': '2', 'input_2': '5', 'button': 'add', 'output': '7'},
+            {'input_1': '0', 'input_2': '40', 'button': 'add', 'output': '40'},
         ]
     )
