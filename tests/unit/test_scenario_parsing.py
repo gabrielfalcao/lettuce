@@ -109,3 +109,28 @@ def test_scenario_may_own_outlines():
             {'input_1': '0', 'input_2': '40', 'button': 'add', 'output': '40'},
         ]
     )
+
+def test_scenario_sentences_can_be_solved():
+    "A scenario with outlines may solve its sentences"
+    scenario = Scenario.from_string(OUTLINED_SCENARIO)
+
+    assert_equals(len(scenario.solved_steps), 12)
+    expected_sentences = [
+        'Given I have entered 20 into the calculator',
+        'And I have entered 30 into the calculator',
+        'When I press add',
+        'Then the result should be 50 on the screen',
+        'Given I have entered 2 into the calculator',
+        'And I have entered 5 into the calculator',
+        'When I press add',
+        'Then the result should be 7 on the screen',
+        'Given I have entered 0 into the calculator',
+        'And I have entered 40 into the calculator',
+        'When I press add',
+        'Then the result should be 40 on the screen',
+    ]
+
+    for step, expected_sentence in zip(scenario.solved_steps, expected_sentences):
+        assert_equals(type(step), Step)
+        assert_equals(step.sentence, expected_sentence)
+

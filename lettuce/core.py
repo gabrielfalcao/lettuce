@@ -32,6 +32,7 @@ def parse_data_list(lines):
 class Step(object):
     def __init__(self, sentence, remaining_lines):
         self.sentence = sentence
+        self._remaining_lines = remaining_lines
         keys, data_list = self._parse_remaining_lines(remaining_lines)
 
         self.keys = tuple(keys)
@@ -51,6 +52,16 @@ class Scenario(object):
         self.name = name
         self.steps = self._parse_remaining_lines(remaining_lines)
         self.outlines = outlines
+        self.solved_steps = list(self._resolve_steps(self.steps, self.outlines))
+
+    def _resolve_steps(self, steps, outlines):
+        for outline in outlines:
+            for step in steps:
+                sentence = step.sentence
+                for k, v in outline.items():
+                    sentence = sentence.replace(u'<%s>' % k, v)
+
+                yield Step(sentence, step._remaining_lines)
 
     def _parse_remaining_lines(self, lines):
         step_strings = []
