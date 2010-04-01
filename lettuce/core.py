@@ -14,7 +14,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import re
 from lettuce import strings
+
+STEP_REGISTRY = {}
 
 def parse_data_list(lines):
     keys = []
@@ -41,6 +44,12 @@ class Step(object):
     def _parse_remaining_lines(self, lines):
         return parse_data_list(lines)
 
+    def run(self):
+        for regex, func in STEP_REGISTRY.items():
+            matched = re.search(regex, self.sentence)
+            if matched:
+                func()
+
     @classmethod
     def from_string(cls, string):
         lines = strings.get_stripped_lines(string)
@@ -53,6 +62,22 @@ class Scenario(object):
         self.steps = self._parse_remaining_lines(remaining_lines)
         self.outlines = outlines
         self.solved_steps = list(self._resolve_steps(self.steps, self.outlines))
+
+    def run(self):
+        steps_ran = []
+        steps_failed = []
+
+        for step in self.steps:
+            try:
+                step.run()
+                steps_ran.append(step)
+            except AssertionError:
+                steps_ran.append(step)
+                steps_failed.append(step)
+                break
+
+        remaining_steps = [step for step in self.steps if step not in steps_ran]
+        return ScenarioResult(steps_ran, steps_failed, remaining_steps)
 
     def _resolve_steps(self, steps, outlines):
         for outline in outlines:
@@ -87,7 +112,9 @@ class Scenario(object):
         scenario_line = lines.pop(0)
         line = strings.remove_it(scenario_line, "Scenario( Outline)?: ")
 
-        scenario =  new_scenario(name=line, remaining_lines=lines, outlines=outlines)
+        scenario =  new_scenario(name=line,
+                                 remaining_lines=lines,
+                                 outlines=outlines)
 
         return scenario
 
@@ -120,3 +147,16 @@ class Feature(object):
 
         return scenarios, description
 
+    def run(self):
+        return FeatureResult(*[scenario.run() for scenario in self.scenarios])
+
+class FeatureResult(object):
+    def __init__(self, *scenario_results):
+        self.scenario_results = scenario_results
+
+class ScenarioResult(object):
+    def __init__(self, steps_ran, steps_failed, remaining_steps):
+        self.steps_ran = steps_ran
+        self.steps_failed = steps_failed
+        self.remaining_steps = remaining_steps
+        self.total_steps = len(steps_ran) + len(remaining_steps)

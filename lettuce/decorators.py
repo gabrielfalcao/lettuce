@@ -15,6 +15,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-version = '0.1'
+from lettuce.core import STEP_REGISTRY
 
-from lettuce.decorators import step
+def step(regex):
+    def wrap(func):
+        STEP_REGISTRY[regex] = func
+
+    return wrap
