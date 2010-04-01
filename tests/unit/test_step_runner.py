@@ -41,14 +41,14 @@ def wont_reach_here():
     raise NotImplementedError('You should never reach here!')
 
 def test_can_count_steps_and_its_states():
-    "The scenario result has the steps ran, failed and remaining steps. " \
+    "The scenario result has the steps passed, failed and skipped steps. " \
     "And total steps as well."
 
     f = Feature.from_string(FEATURE)
     feature_result = f.run()
 
     scenario_result = feature_result.scenario_results[0]
-    assert_equals(len(scenario_result.steps_ran), 2)
+    assert_equals(len(scenario_result.steps_passed), 2)
     assert_equals(len(scenario_result.steps_failed), 1)
-    assert_equals(len(scenario_result.remaining_steps), 1)
+    assert_equals(len(scenario_result.steps_skipped), 1)
     assert_equals(scenario_result.total_steps, 3)

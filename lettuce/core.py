@@ -64,20 +64,20 @@ class Scenario(object):
         self.solved_steps = list(self._resolve_steps(self.steps, self.outlines))
 
     def run(self):
-        steps_ran = []
+        steps_passed = []
         steps_failed = []
 
         for step in self.steps:
             try:
                 step.run()
-                steps_ran.append(step)
+                steps_passed.append(step)
             except AssertionError:
-                steps_ran.append(step)
+                steps_passed.append(step)
                 steps_failed.append(step)
                 break
 
-        remaining_steps = [step for step in self.steps if step not in steps_ran]
-        return ScenarioResult(steps_ran, steps_failed, remaining_steps)
+        steps_skipped = [step for step in self.steps if step not in steps_passed]
+        return ScenarioResult(steps_passed, steps_failed, steps_skipped)
 
     def _resolve_steps(self, steps, outlines):
         for outline in outlines:
@@ -155,8 +155,8 @@ class FeatureResult(object):
         self.scenario_results = scenario_results
 
 class ScenarioResult(object):
-    def __init__(self, steps_ran, steps_failed, remaining_steps):
-        self.steps_ran = steps_ran
+    def __init__(self, steps_passed, steps_failed, steps_skipped):
+        self.steps_passed = steps_passed
         self.steps_failed = steps_failed
-        self.remaining_steps = remaining_steps
-        self.total_steps = len(steps_ran) + len(remaining_steps)
+        self.steps_skipped = steps_skipped
+        self.total_steps = len(steps_passed) + len(steps_skipped)
