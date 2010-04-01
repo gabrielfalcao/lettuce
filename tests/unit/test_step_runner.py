@@ -52,3 +52,18 @@ def test_can_count_steps_and_its_states():
     assert_equals(len(scenario_result.steps_failed), 1)
     assert_equals(len(scenario_result.steps_skipped), 1)
     assert_equals(scenario_result.total_steps, 3)
+
+def test_can_figure_out_why_has_failed():
+    "It can figure out why the test has failed"
+
+    f = Feature.from_string(FEATURE)
+    feature_result = f.run()
+
+    scenario_result = feature_result.scenario_results[0]
+    failed_step = scenario_result.steps_failed[0]
+
+    assert_equals(failed_step.why.cause, 'It should fail')
+    assert 'Traceback (most recent call last):' in failed_step.why.traceback
+    assert 'AssertionError: It should fail' in failed_step.why.traceback
+    assert_equals(type(failed_step.why.exception), AssertionError)
+

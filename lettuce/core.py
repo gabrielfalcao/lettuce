@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import re
+import traceback
 from lettuce import strings
 
 STEP_REGISTRY = {}
@@ -48,13 +49,23 @@ class Step(object):
         for regex, func in STEP_REGISTRY.items():
             matched = re.search(regex, self.sentence)
             if matched:
-                func()
+                try:
+                    func()
+                except Exception, e:
+                    self.why = ReasonToFail(e)
+                    raise
 
     @classmethod
     def from_string(cls, string):
         lines = strings.get_stripped_lines(string)
         sentence = lines.pop(0)
         return cls(sentence, remaining_lines=lines)
+
+class ReasonToFail(object):
+    def __init__(self, exc):
+        self.exception = exc
+        self.cause = unicode(exc)
+        self.traceback = traceback.format_exc(exc)
 
 class Scenario(object):
     def __init__(self, name, remaining_lines, outlines):
