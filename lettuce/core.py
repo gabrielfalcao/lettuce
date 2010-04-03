@@ -34,6 +34,15 @@ def parse_data_list(lines):
 
     return keys, data_list
 
+class StepDefinition(object):
+    def __init__(self, function):
+        self.function = function
+        self.file = function.func_code.co_filename
+        self.line = function.func_code.co_firstlineno + 1
+
+    def __call__(self, *args, **kw):
+        return self.function(*args, **kw)
+
 class Step(object):
     has_definition = False
 
@@ -59,17 +68,18 @@ class Step(object):
             if matched:
                 break
 
-        return matched, func
+        return matched, StepDefinition(func)
 
     def run(self, ignore_case):
-        matched, func = self._get_match(ignore_case)
+        matched, step_definition = self._get_match(ignore_case)
 
         if not matched:
             raise NoDefinitionFound(self)
         else:
             self.has_definition = True
+            self.defined_at = step_definition
             try:
-                func()
+                step_definition()
             except Exception, e:
                 self.why = ReasonToFail(e)
                 raise

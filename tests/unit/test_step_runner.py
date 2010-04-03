@@ -132,3 +132,18 @@ def test_doesnt_ignore_case():
     assert_equals(len(scenario_result.steps_undefined), 2)
     assert_equals(scenario_result.total_steps, 3)
     assert not all([s.has_definition for s in scenario_result.scenario.steps])
+
+def test_steps_are_aware_of_its_definitions():
+    "Steps are aware of its definitions line numbers and file names"
+
+    f = Feature.from_string(FEATURE1)
+    feature_result = f.run()
+    scenario_result = feature_result.scenario_results[0]
+
+    for step in scenario_result.steps_passed:
+        assert step.has_definition
+
+    step1 = scenario_result.steps_passed[0]
+
+    assert_equals(step1.defined_at.line, 48)
+    assert_equals(step1.defined_at.file, __file__.rstrip("c"))
