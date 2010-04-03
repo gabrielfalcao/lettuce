@@ -15,8 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import re
-import traceback
 from lettuce import strings
+from lettuce.exceptions import ReasonToFail
+from lettuce.exceptions import NoDefinitionFound
 
 STEP_REGISTRY = {}
 
@@ -34,6 +35,8 @@ def parse_data_list(lines):
     return keys, data_list
 
 class Step(object):
+    has_definition = False
+
     def __init__(self, sentence, remaining_lines):
         self.sentence = sentence
         self._remaining_lines = remaining_lines
@@ -49,26 +52,27 @@ class Step(object):
         return parse_data_list(lines)
 
     def run(self):
+        matched = False
         for regex, func in STEP_REGISTRY.items():
             matched = re.search(regex, self.sentence)
             if matched:
-                try:
-                    func()
-                except Exception, e:
-                    self.why = ReasonToFail(e)
-                    raise
+                break
+
+        if not matched:
+            raise NoDefinitionFound(self)
+        else:
+            self.has_definition = True
+            try:
+                func()
+            except Exception, e:
+                self.why = ReasonToFail(e)
+                raise
 
     @classmethod
     def from_string(cls, string):
         lines = strings.get_stripped_lines(string)
         sentence = lines.pop(0)
         return cls(sentence, remaining_lines=lines)
-
-class ReasonToFail(object):
-    def __init__(self, exc):
-        self.exception = exc
-        self.cause = unicode(exc)
-        self.traceback = traceback.format_exc(exc)
 
 class Scenario(object):
     def __init__(self, name, remaining_lines, outlines):
@@ -83,6 +87,7 @@ class Scenario(object):
     def run(self):
         steps_passed = []
         steps_failed = []
+        steps_undefined = []
 
         for step in self.steps:
             try:
@@ -92,9 +97,19 @@ class Scenario(object):
                 steps_passed.append(step)
                 steps_failed.append(step)
                 break
+            except NoDefinitionFound, e:
+                steps_undefined.append(e.step)
+                break
 
-        steps_skipped = [step for step in self.steps if step not in steps_passed]
-        return ScenarioResult(steps_passed, steps_failed, steps_skipped)
+        steps_skipped = [step for step in self.steps if step not in steps_passed and step not in steps_undefined]
+
+        return ScenarioResult(
+            self,
+            steps_passed,
+            steps_failed,
+            steps_skipped,
+            steps_undefined
+        )
 
     def _resolve_steps(self, steps, outlines):
         for outline in outlines:
@@ -168,15 +183,22 @@ class Feature(object):
         return scenarios, description
 
     def run(self):
-        return FeatureResult(*[scenario.run() for scenario in self.scenarios])
+        return FeatureResult(self, *[scenario.run() for scenario in self.scenarios])
 
 class FeatureResult(object):
-    def __init__(self, *scenario_results):
+    def __init__(self, feature, *scenario_results):
+        self.feature = feature
         self.scenario_results = scenario_results
 
 class ScenarioResult(object):
-    def __init__(self, steps_passed, steps_failed, steps_skipped):
+    def __init__(self, scenario, steps_passed, steps_failed, steps_skipped,
+                 steps_undefined):
+
+        self.scenario = scenario
         self.steps_passed = steps_passed
         self.steps_failed = steps_failed
         self.steps_skipped = steps_skipped
-        self.total_steps = len(steps_passed) + len(steps_skipped)
+        self.steps_undefined = steps_undefined
+        self.total_steps = len(steps_passed) + \
+                           len(steps_skipped) + \
+                           len(steps_undefined)

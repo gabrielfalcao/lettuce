@@ -16,16 +16,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from lettuce import step
+from lettuce.core import Step
 from lettuce.core import Feature
-from nose.tools import assert_raises
 from nose.tools import assert_equals
 
-FEATURE = """
+FEATURE1 = """
 Feature: Count steps ran
     Scenario: Total of steps ran
         Given I have a defined step
         When other step fails
         Then it won't reach here
+"""
+
+FEATURE2 = """
+Feature: Find undefined steps
+    Scenario: Undefined step can be pointed
+        Given I have a defined step
+        Then this one has no definition
 """
 
 @step('I have a defined step')
@@ -44,7 +51,7 @@ def test_can_count_steps_and_its_states():
     "The scenario result has the steps passed, failed and skipped steps. " \
     "And total steps as well."
 
-    f = Feature.from_string(FEATURE)
+    f = Feature.from_string(FEATURE1)
     feature_result = f.run()
 
     scenario_result = feature_result.scenario_results[0]
@@ -53,10 +60,24 @@ def test_can_count_steps_and_its_states():
     assert_equals(len(scenario_result.steps_skipped), 1)
     assert_equals(scenario_result.total_steps, 3)
 
+def test_can_point_undefined_steps():
+    "The scenario result has also the undefined steps."
+
+    f = Feature.from_string(FEATURE2)
+    feature_result = f.run()
+    scenario_result = feature_result.scenario_results[0]
+    assert_equals(len(scenario_result.steps_undefined), 1)
+    assert_equals(len(scenario_result.steps_passed), 1)
+    assert_equals(scenario_result.total_steps, 2)
+
+    undefined = scenario_result.steps_undefined[0]
+
+    assert_equals(undefined.sentence, 'Then this one has no definition')
+
 def test_can_figure_out_why_has_failed():
     "It can figure out why the test has failed"
 
-    f = Feature.from_string(FEATURE)
+    f = Feature.from_string(FEATURE1)
     feature_result = f.run()
 
     scenario_result = feature_result.scenario_results[0]
@@ -66,4 +87,13 @@ def test_can_figure_out_why_has_failed():
     assert 'Traceback (most recent call last):' in failed_step.why.traceback
     assert 'AssertionError: It should fail' in failed_step.why.traceback
     assert_equals(type(failed_step.why.exception), AssertionError)
+
+def test_skipped_steps_can_be_retrieved_as_steps():
+    "Skipped steps can be retrieved as steps"
+
+    f = Feature.from_string(FEATURE1)
+    feature_result = f.run()
+    scenario_result = feature_result.scenario_results[0]
+    for step in scenario_result.steps_skipped:
+        assert_equals(type(step), Step)
 
