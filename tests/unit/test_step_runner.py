@@ -33,6 +33,15 @@ Feature: Find undefined steps
     Scenario: Undefined step can be pointed
         Given I have a defined step
         Then this one has no definition
+        And this one also
+"""
+
+FEATURE3 = """
+Feature: Lettuce can ignore case
+    Scenario: On step definitions
+        Given I define a step
+        And DEFINE a STEP
+        And also define A sTeP
 """
 
 @step('I have a defined step')
@@ -46,6 +55,10 @@ def and_another():
 @step("it won't reach here")
 def wont_reach_here():
     raise NotImplementedError('You should never reach here!')
+
+@step("define a step")
+def define_a_step():
+    assert True
 
 def test_can_count_steps_and_its_states():
     "The scenario result has the steps passed, failed and skipped steps. " \
@@ -66,13 +79,15 @@ def test_can_point_undefined_steps():
     f = Feature.from_string(FEATURE2)
     feature_result = f.run()
     scenario_result = feature_result.scenario_results[0]
-    assert_equals(len(scenario_result.steps_undefined), 1)
+    assert_equals(len(scenario_result.steps_undefined), 2)
     assert_equals(len(scenario_result.steps_passed), 1)
-    assert_equals(scenario_result.total_steps, 2)
+    assert_equals(scenario_result.total_steps, 3)
 
-    undefined = scenario_result.steps_undefined[0]
+    undefined1 = scenario_result.steps_undefined[0]
+    undefined2 = scenario_result.steps_undefined[1]
 
-    assert_equals(undefined.sentence, 'Then this one has no definition')
+    assert_equals(undefined1.sentence, 'Then this one has no definition')
+    assert_equals(undefined2.sentence, 'And this one also')
 
 def test_can_figure_out_why_has_failed():
     "It can figure out why the test has failed"
@@ -97,3 +112,23 @@ def test_skipped_steps_can_be_retrieved_as_steps():
     for step in scenario_result.steps_skipped:
         assert_equals(type(step), Step)
 
+def test_ignore_case_on_step_definitions():
+    "By default lettuce ignore case on step definitions"
+
+    f = Feature.from_string(FEATURE3)
+    feature_result = f.run()
+    scenario_result = feature_result.scenario_results[0]
+    assert_equals(len(scenario_result.steps_passed), 3)
+    assert_equals(scenario_result.total_steps, 3)
+    assert all([s.has_definition for s in scenario_result.scenario.steps])
+
+def test_doesnt_ignore_case():
+    "Lettuce can, optionally consider case on step definitions"
+
+    f = Feature.from_string(FEATURE3)
+    feature_result = f.run(ignore_case=False)
+    scenario_result = feature_result.scenario_results[0]
+    assert_equals(len(scenario_result.steps_passed), 1)
+    assert_equals(len(scenario_result.steps_undefined), 2)
+    assert_equals(scenario_result.total_steps, 3)
+    assert not all([s.has_definition for s in scenario_result.scenario.steps])

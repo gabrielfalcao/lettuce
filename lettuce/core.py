@@ -51,18 +51,18 @@ class Step(object):
     def _parse_remaining_lines(self, lines):
         return parse_data_list(lines)
 
-    def _get_match(self):
+    def _get_match(self, ignore_case):
         matched, func = None, lambda: None
 
         for regex, func in STEP_REGISTRY.items():
-            matched = re.search(regex, self.sentence)
+            matched = re.search(regex, self.sentence, ignore_case and re.I or 0)
             if matched:
                 break
 
         return matched, func
 
-    def run(self):
-        matched, func = self._get_match()
+    def run(self, ignore_case):
+        matched, func = self._get_match(ignore_case)
 
         if not matched:
             raise NoDefinitionFound(self)
@@ -90,14 +90,14 @@ class Scenario(object):
     def __repr__(self):
         return u'<Scenario: "%s">' % self.name
 
-    def run(self):
+    def run(self, ignore_case):
         steps_passed = []
         steps_failed = []
         steps_undefined = []
 
         for step in self.steps:
             try:
-                step.run()
+                step.run(ignore_case)
                 steps_passed.append(step)
             except AssertionError:
                 steps_passed.append(step)
@@ -105,7 +105,7 @@ class Scenario(object):
                 break
             except NoDefinitionFound, e:
                 steps_undefined.append(e.step)
-                break
+                continue
 
         skip = lambda x: x not in steps_passed and x not in steps_undefined
         steps_skipped = filter(skip, self.steps)
@@ -189,8 +189,9 @@ class Feature(object):
 
         return scenarios, description
 
-    def run(self):
-        return FeatureResult(self, *[scenario.run() for scenario in self.scenarios])
+    def run(self, ignore_case=True):
+        scenarios_ran = [scenario.run(ignore_case) for scenario in self.scenarios]
+        return FeatureResult(self, *scenarios_ran)
 
 class FeatureResult(object):
     def __init__(self, feature, *scenario_results):
