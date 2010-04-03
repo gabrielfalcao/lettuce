@@ -51,12 +51,18 @@ class Step(object):
     def _parse_remaining_lines(self, lines):
         return parse_data_list(lines)
 
-    def run(self):
-        matched = False
+    def _get_match(self):
+        matched, func = None, lambda: None
+
         for regex, func in STEP_REGISTRY.items():
             matched = re.search(regex, self.sentence)
             if matched:
                 break
+
+        return matched, func
+
+    def run(self):
+        matched, func = self._get_match()
 
         if not matched:
             raise NoDefinitionFound(self)
@@ -101,7 +107,8 @@ class Scenario(object):
                 steps_undefined.append(e.step)
                 break
 
-        steps_skipped = [step for step in self.steps if step not in steps_passed and step not in steps_undefined]
+        skip = lambda x: x not in steps_passed and x not in steps_undefined
+        steps_skipped = filter(skip, self.steps)
 
         return ScenarioResult(
             self,
@@ -195,10 +202,11 @@ class ScenarioResult(object):
                  steps_undefined):
 
         self.scenario = scenario
+
         self.steps_passed = steps_passed
         self.steps_failed = steps_failed
         self.steps_skipped = steps_skipped
         self.steps_undefined = steps_undefined
-        self.total_steps = len(steps_passed) + \
-                           len(steps_skipped) + \
-                           len(steps_undefined)
+
+        all_lists = [steps_passed + steps_skipped + steps_undefined]
+        self.total_steps = sum(map(len, all_lists))

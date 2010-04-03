@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from lettuce.core import Step
 from lettuce.core import Scenario
 from lettuce.core import Feature
 from nose.tools import assert_equals

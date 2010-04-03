@@ -32,11 +32,13 @@ def split_wisely(string, sep, strip=False):
     items = filter(lambda x: x, regex.split(string))
     if strip:
         items = [i.strip() for i in items]
+    else:
+        items = [i.strip("\n") for i in items]
 
-    return items
+    return [i for i in items if i]
 
 def wise_startswith(string, seed):
-    regex = "^%s" % escape_if_necessary(seed)
+    regex = "^%s" % re.escape(seed)
     return bool(re.search(regex, string, re.I))
 
 def remove_it(string, what):
