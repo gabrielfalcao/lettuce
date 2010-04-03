@@ -38,13 +38,13 @@ def test_feature_finder_finds_all_feature_files_within_a_dir():
     )
 
 def test_feature_finder_loads_feature_objects():
-    "FeatureLoader loads feature by filename"
+    "Feature.from_file loads feature by filename"
 
     feature_file = cjoin('1st_feature_dir', 'more_features_here', 'another.feature')
 
     feature = Feature.from_file(feature_file)
     assert_equals(type(feature), Feature)
-    expected_scenario_names = ["Regular numbers"]
+    expected_scenario_names = ["Regular numbers", "Fractions"]
     got_scenario_names = [s.name for s in feature.scenarios]
 
     assert_equals(expected_scenario_names, got_scenario_names)
@@ -57,3 +57,27 @@ def test_feature_finder_loads_feature_objects():
     assert_equals(step3.sentence, '* I press divide')
     assert_equals(step4.sentence, '* the result should be 1.5 on the screen')
 
+def test_feature_loaded_from_file_has_feature_line_and_feature_filename():
+    "Feature.from_file sets FeatureDefinition into Feature objects, " \
+    "giving line number and filename as well"
+
+    feature_file = cjoin('1st_feature_dir', 'more_features_here', 'another.feature')
+
+    feature = Feature.from_file(feature_file)
+    assert_equals(feature.defined_at.file, feature_file)
+    assert_equals(feature.defined_at.line, 2)
+
+def test_scenario_loaded_from_file_sets_scenario_line_and_scenario_filename():
+    "Feature.from_file sets ScenarioDefinition into Scenario objects, " \
+    "giving line number and filename as well"
+
+    feature_file = cjoin('1st_feature_dir', 'more_features_here', 'another.feature')
+
+    feature = Feature.from_file(feature_file)
+    scenario1, scenario2 = feature.scenarios
+
+    assert_equals(scenario1.defined_at.file, feature_file)
+    assert_equals(scenario1.defined_at.line, 6)
+
+    assert_equals(scenario2.defined_at.file, feature_file)
+    assert_equals(scenario2.defined_at.line, 12)

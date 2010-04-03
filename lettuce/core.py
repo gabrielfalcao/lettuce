@@ -43,6 +43,25 @@ class StepDefinition(object):
     def __call__(self, *args, **kw):
         return self.function(*args, **kw)
 
+class ScenarioDefinition(object):
+    def __init__(self, scenario, filename, string):
+        self.file = filename
+        self.line = None
+
+        for pline, part in enumerate(string.splitlines()):
+            if re.search(re.escape(scenario.name), part):
+                self.line = pline + 1
+                break
+
+class FeatureDefinition(object):
+    def __init__(self, filename, lines):
+        self.file = filename
+        self.line = None
+        for pline, part in enumerate(lines):
+            if part.strip().startswith("Feature:"):
+                self.line = pline + 2
+                break
+
 class Step(object):
     has_definition = False
 
@@ -91,6 +110,7 @@ class Step(object):
         return cls(sentence, remaining_lines=lines)
 
 class Scenario(object):
+    defined_at = None
     def __init__(self, name, remaining_lines, outlines):
         self.name = name
         self.steps = self._parse_remaining_lines(remaining_lines)
@@ -147,8 +167,11 @@ class Scenario(object):
 
         return [Step.from_string(s) for s in step_strings]
 
+    def _set_definition(self, definition):
+        self.defined_at = definition
+
     @classmethod
-    def from_string(new_scenario, string):
+    def from_string(new_scenario, string, with_file=None, original_string=None):
         splitted = strings.split_wisely(string, "Example[s]?[:]", True)
         string = splitted[0]
 
@@ -165,24 +188,41 @@ class Scenario(object):
                                  remaining_lines=lines,
                                  outlines=outlines)
 
+        if with_file and original_string:
+            scenario_definition = ScenarioDefinition(scenario, with_file,
+                                                     original_string)
+            scenario._set_definition(scenario_definition)
+
         return scenario
 
 class Feature(object):
-    def __init__(self, name, remaining_lines):
+    defined_at = None
+    def __init__(self, name, remaining_lines, with_file, original_string):
         self.name = name
         self.scenarios, self.description = self._parse_remaining_lines(
-            remaining_lines
+            remaining_lines,
+            original_string,
+            with_file
         )
+
+        self.original_string = original_string
+
+        if with_file:
+            feature_definition = FeatureDefinition(with_file, lines=remaining_lines)
+            self._set_definition(feature_definition)
 
     def __repr__(self):
         return u'<Feature: "%s">' % self.name
 
     @classmethod
-    def from_string(new_feature, string):
+    def from_string(new_feature, string, with_file=None):
         lines = strings.get_stripped_lines(string)
         feature_line = lines.pop(0)
         line = feature_line.replace("Feature: ", "")
-        feature = new_feature(name=line, remaining_lines=lines)
+        feature = new_feature(name=line,
+                              remaining_lines=lines,
+                              with_file=with_file,
+                              original_string=string)
         return feature
 
     @classmethod
@@ -190,9 +230,13 @@ class Feature(object):
         f = open(filename)
         string = f.read()
         f.close()
-        return new_feature.from_string(string)
+        feature = new_feature.from_string(string, with_file=filename)
+        return feature
 
-    def _parse_remaining_lines(self, lines):
+    def _set_definition(self, definition):
+        self.defined_at = definition
+
+    def _parse_remaining_lines(self, lines, original_string, with_file=None):
         joined = "\n".join(lines)
         parts = strings.split_wisely(joined, "Scenario: ")
         description = ""
@@ -202,7 +246,8 @@ class Feature(object):
             parts.pop(0)
 
         scenario_strings = ["Scenario: %s" % s for s in parts if s.strip()]
-        scenarios = [Scenario.from_string(s) for s in scenario_strings]
+        kw = dict(original_string=original_string, with_file=with_file)
+        scenarios = [Scenario.from_string(s, **kw) for s in scenario_strings] # use filter here
 
         return scenarios, description
 

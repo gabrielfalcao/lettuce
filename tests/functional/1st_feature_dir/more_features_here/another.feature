@@ -8,3 +8,9 @@ Feature: Division
     * I have entered 2 into the calculator
     * I press divide
     * the result should be 1.5 on the screen
+
+  Scenario: Fractions
+    * I have entered 3.3 into the calculator
+    * I have entered 2.1 into the calculator
+    * I press divide
+    * the result should be 1.57 on the screen
