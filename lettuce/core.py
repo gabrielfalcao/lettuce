@@ -185,6 +185,13 @@ class Feature(object):
         feature = new_feature(name=line, remaining_lines=lines)
         return feature
 
+    @classmethod
+    def from_file(new_feature, filename):
+        f = open(filename)
+        string = f.read()
+        f.close()
+        return new_feature.from_string(string)
+
     def _parse_remaining_lines(self, lines):
         joined = "\n".join(lines)
         parts = strings.split_wisely(joined, "Scenario: ")

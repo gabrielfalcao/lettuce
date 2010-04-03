@@ -17,7 +17,7 @@
 from os import walk
 from os.path import dirname, abspath, join
 
-class FeatureFinder(object):
+class FeatureLoader(object):
     def __init__(self, base_dir):
         self.base_dir = abspath(base_dir)
 
@@ -28,4 +28,5 @@ class FeatureFinder(object):
                 if filename.endswith(".feature"):
                     path = join(root, filename)
                     paths.append(path)
+
         return paths
