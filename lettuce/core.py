@@ -42,6 +42,9 @@ class Step(object):
         self.keys = tuple(keys)
         self.data_list = list(data_list)
 
+    def __repr__(self):
+        return u'<Step: "%s">' % self.sentence
+
     def _parse_remaining_lines(self, lines):
         return parse_data_list(lines)
 
@@ -73,6 +76,9 @@ class Scenario(object):
         self.steps = self._parse_remaining_lines(remaining_lines)
         self.outlines = outlines
         self.solved_steps = list(self._resolve_steps(self.steps, self.outlines))
+
+    def __repr__(self):
+        return u'<Scenario: "%s">' % self.name
 
     def run(self):
         steps_passed = []
@@ -135,6 +141,9 @@ class Feature(object):
         self.scenarios, self.description = self._parse_remaining_lines(
             remaining_lines
         )
+
+    def __repr__(self):
+        return u'<Feature: "%s">' % self.name
 
     @classmethod
     def from_string(new_feature, string):

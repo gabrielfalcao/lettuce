@@ -25,6 +25,14 @@ I have the following beverages in my freezer:
 from lettuce.core import Step
 from nose.tools import assert_equals
 
+def test_step_has_repr():
+    "Step implements __repr__ nicely"
+    step = Step.from_string(STEP1)
+    assert_equals(
+        repr(step),
+        '<Step: "I have the following beverages in my freezer:">'
+    )
+
 def test_can_get_sentence_from_string():
     "It should extract the sentence string from the whole step"
 

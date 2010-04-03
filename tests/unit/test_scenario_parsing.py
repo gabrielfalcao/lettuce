@@ -56,6 +56,14 @@ def test_scenario_has_name():
         "Adding some students to my university database"
     )
 
+def test_scenario_has_repr():
+    "Scenario implements __repr__ nicely"
+    scenario = Scenario.from_string(SCENARIO1)
+    assert_equals(
+        repr(scenario),
+        '<Scenario: "Adding some students to my university database">'
+    )
+
 def test_scenario_has_steps():
     "A scenario object should have a list of steps"
 

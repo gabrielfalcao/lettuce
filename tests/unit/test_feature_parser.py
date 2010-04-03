@@ -61,6 +61,11 @@ Feature: Division
     * the result should be 1.5 on the screen
 """
 
+def test_feature_has_repr():
+    "Feature implements __repr__ nicely"
+    feature = Feature.from_string(FEATURE1)
+    assert_equals(repr(feature), '<Feature: "Rent movies">')
+
 def test_scenario_has_name():
     "It should extract the name string from the scenario"
 
