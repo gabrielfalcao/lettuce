@@ -14,13 +14,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import re
 from lettuce import strings
-from lettuce.terrain import before, after
+from lettuce.registry import STEP_REGISTRY
+from lettuce.registry import CALLBACK_REGISTRY
 from lettuce.exceptions import ReasonToFail
 from lettuce.exceptions import NoDefinitionFound
-
-STEP_REGISTRY = {}
 
 def parse_data_list(lines):
     keys = []
@@ -105,14 +105,7 @@ class Step(object):
             self.has_definition = True
             self.defined_at = step_definition
             try:
-                for callback in before.EACH_STEP_CALLBACKS:
-                    callback(self)
-
                 step_definition()
-
-                for callback in after.EACH_STEP_CALLBACKS:
-                    callback(self)
-
             except Exception, e:
                 self.why = ReasonToFail(e)
                 raise
@@ -158,9 +151,19 @@ class Scenario(object):
         steps_failed = []
         steps_undefined = []
 
+        for callback in CALLBACK_REGISTRY['scenario']['before_each']:
+            callback(self)
+
         for step in self.steps:
             try:
+                for callback in CALLBACK_REGISTRY['step']['before_each']:
+                    callback(step)
+
                 step.run(ignore_case)
+
+                for callback in CALLBACK_REGISTRY['step']['after_each']:
+                    callback(step)
+
                 steps_passed.append(step)
             except AssertionError:
                 steps_passed.append(step)
@@ -169,6 +172,9 @@ class Scenario(object):
             except NoDefinitionFound, e:
                 steps_undefined.append(e.step)
                 continue
+
+        for callback in CALLBACK_REGISTRY['scenario']['after_each']:
+            callback(self)
 
         skip = lambda x: x not in steps_passed and x not in steps_undefined
         steps_skipped = filter(skip, self.steps)

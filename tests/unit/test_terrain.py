@@ -19,23 +19,29 @@ from nose.tools import assert_equals
 from lettuce import step
 from lettuce.terrain import after
 from lettuce.terrain import before
+from lettuce.terrain import world
 from lettuce.core import Feature
 
-FEATURE = '''
+
+FEATURE1 = '''
 Feature: Before and After callbacks all along lettuce
     Scenario: Before and After steps
         Given I append "during" to states
+'''
 
+FEATURE2 = '''
+Feature: Before and After callbacks all along lettuce
     Scenario: Before and After scenarios
         Given I append "during" to states
 
+    Scenario: Again
+        Given I append "during" to states
 '''
 
 def test_world():
     "lettuce.terrain.world can be monkey patched at will"
 
     def set_world():
-        from lettuce.terrain import world
         world.was_set = True
 
     def test_does_not_have():
@@ -50,59 +56,53 @@ def test_world():
     set_world()
     test_does_have()
 
-def _test_after_each_step_is_executed_before_each_step():
+def test_after_each_step_is_executed_before_each_step():
     "terrain.before.each_step and terrain.after.each_step decorators"
-    step_states = []
-
+    world.step_states = []
     @before.each_step
     def set_state_to_before(step):
-        assert_equals(step.sentence, 'Given I append "during" to step_states')
-        step_states.append('before')
+        world.step_states.append('before')
+        expected = 'Given I append "during" to states'
+        if step.sentence != expected:
+            raise TypeError('%r != %r' % (step.sentence, expected))
 
-
-    @step('append "during" to step_states')
+    @step('append "during" to states')
     def append_during_to_step_states():
-        step_states.append("during")
+        world.step_states.append("during")
 
     @after.each_step
     def set_state_to_after(step):
-        assert_equals(step.sentence, 'Given I append "during" to step_states')
-        step_states.append('after')
+        world.step_states.append('after')
+        expected = 'Given I append "during" to states'
+        if step.sentence != expected:
+            raise TypeError('%r != %r' % (step.sentence, expected))
 
-
-    feature = Feature.from_string(FEATURE)
+    feature = Feature.from_string(FEATURE1)
     feature.run()
 
-    assert_equals(step_states, ['before', 'during', 'after'])
+    assert_equals(world.step_states, ['before', 'during', 'after'])
 
-def _test_after_each_scenario_is_executed_before_each_scenario():
+def test_after_each_scenario_is_executed_before_each_scenario():
     "terrain.before.each_scenario and terrain.after.each_scenario decorators"
-    scenario_steps = []
+    world.scenario_steps = []
 
     @before.each_scenario
     def set_state_to_before(scenario):
-        if scenario.name == 'Before and After steps':
-            scenario_steps.append('before')
-        else:
-            scenario_steps.append('almost during')
+        world.scenario_steps.append('before')
 
-
-    @step('append "during" to scenario_steps')
+    @step('append "during" to states')
     def append_during_to_scenario_steps():
-        scenario_steps.append("during")
+        world.scenario_steps.append("during")
 
     @after.each_scenario
     def set_state_to_after(scenario):
-        if scenario.name == 'Before and After scenarios':
-            scenario_steps.append('almost after')
-        else:
-            scenario_steps.append('after')
+        world.scenario_steps.append('after')
 
-    feature = Feature.from_string(FEATURE)
+    feature = Feature.from_string(FEATURE2)
     feature.run()
 
     assert_equals(
-        scenario_steps,
-        ['before', 'almost during', 'during', 'almost after', 'after']
+        world.scenario_steps,
+        ['before', 'during', 'after', 'before', 'during', 'after']
     )
 

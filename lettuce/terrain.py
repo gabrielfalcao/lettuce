@@ -14,24 +14,29 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from lettuce.registry import world
+from lettuce.registry import CALLBACK_REGISTRY
+world._set = True
 
-from threading import local
-
-world = local()
-
-class before_and_after_base(object):
+class before:
     @classmethod
-    def each_step(cls, callback):
-        cls.EACH_STEP_CALLBACKS.append(callback)
+    def each_step(cls, function):
+        CALLBACK_REGISTRY['step']['%s_each' % cls.__name__].append(function)
+        return function
 
     @classmethod
-    def each_scenario(cls, callback):
-        cls.EACH_SCENARIO_CALLBACKS.append(callback)
+    def each_scenario(cls, function):
+        CALLBACK_REGISTRY['scenario']['%s_each' % cls.__name__].append(function)
+        return function
 
-class before(before_and_after_base):
-    EACH_STEP_CALLBACKS = []
-    EACH_SCENARIO_CALLBACKS = []
+class after:
+    @classmethod
+    def each_step(cls, function):
+        CALLBACK_REGISTRY['step']['%s_each' % cls.__name__].append(function)
+        return function
 
-class after(before_and_after_base):
-    EACH_STEP_CALLBACKS = []
-    EACH_SCENARIO_CALLBACKS = []
+    @classmethod
+    def each_scenario(cls, function):
+        CALLBACK_REGISTRY['scenario']['%s_each' % cls.__name__].append(function)
+        return function
+
