@@ -289,7 +289,14 @@ class Feature(object):
         return scenarios, description
 
     def run(self, ignore_case=True):
+        for callback in CALLBACK_REGISTRY['feature']['before_each']:
+            callback(self)
+
         scenarios_ran = [scenario.run(ignore_case) for scenario in self.scenarios]
+
+        for callback in CALLBACK_REGISTRY['feature']['after_each']:
+            callback(self)
+
         return FeatureResult(self, *scenarios_ran)
 
 class FeatureResult(object):

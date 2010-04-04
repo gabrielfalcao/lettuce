@@ -17,6 +17,7 @@
 from nose.tools import assert_equals
 
 from lettuce import step
+from lettuce import registry
 from lettuce.terrain import after
 from lettuce.terrain import before
 from lettuce.terrain import world
@@ -104,5 +105,29 @@ def test_after_each_scenario_is_executed_before_each_scenario():
     assert_equals(
         world.scenario_steps,
         ['before', 'during', 'after', 'before', 'during', 'after']
+    )
+
+def test_after_each_feature_is_executed_before_each_feature():
+    "terrain.before.each_feature and terrain.after.each_feature decorators"
+    world.feature_steps = []
+
+    @before.each_feature
+    def set_state_to_before(feature):
+        world.feature_steps.append('before')
+
+    @step('append "during" to states')
+    def append_during_to_feature_steps():
+        world.feature_steps.append("during")
+
+    @after.each_feature
+    def set_state_to_after(feature):
+        world.feature_steps.append('after')
+
+    feature = Feature.from_string(FEATURE2)
+    feature.run()
+
+    assert_equals(
+        world.feature_steps,
+        ['before', 'during', 'during', 'after']
     )
 

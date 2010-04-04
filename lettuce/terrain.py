@@ -29,6 +29,11 @@ class before:
         CALLBACK_REGISTRY['scenario']['%s_each' % cls.__name__].append(function)
         return function
 
+    @classmethod
+    def each_feature(cls, function):
+        CALLBACK_REGISTRY['feature']['%s_each' % cls.__name__].append(function)
+        return function
+
 class after:
     @classmethod
     def each_step(cls, function):
@@ -38,5 +43,10 @@ class after:
     @classmethod
     def each_scenario(cls, function):
         CALLBACK_REGISTRY['scenario']['%s_each' % cls.__name__].append(function)
+        return function
+
+    @classmethod
+    def each_feature(cls, function):
+        CALLBACK_REGISTRY['feature']['%s_each' % cls.__name__].append(function)
         return function
 
