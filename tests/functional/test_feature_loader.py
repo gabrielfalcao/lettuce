@@ -58,17 +58,17 @@ def test_feature_finder_loads_feature_objects():
     assert_equals(step4.sentence, '* the result should be 1.5 on the screen')
 
 def test_feature_loaded_from_file_has_feature_line_and_feature_filename():
-    "Feature.from_file sets FeatureDefinition into Feature objects, " \
+    "Feature.from_file sets FeatureDescription into Feature objects, " \
     "giving line number and filename as well"
 
     feature_file = cjoin('1st_feature_dir', 'more_features_here', 'another.feature')
 
     feature = Feature.from_file(feature_file)
-    assert_equals(feature.defined_at.file, feature_file)
-    assert_equals(feature.defined_at.line, 2)
+    assert_equals(feature.described_at.file, feature_file)
+    assert_equals(feature.described_at.line, 2)
 
-def test_scenario_loaded_from_file_sets_scenario_line_and_scenario_filename():
-    "Feature.from_file sets ScenarioDefinition into Scenario objects, " \
+def test_feature_loaded_from_file_sets_scenario_line_and_scenario_filename():
+    "Feature.from_file sets ScenarioDescription into Scenario objects, " \
     "giving line number and filename as well"
 
     feature_file = cjoin('1st_feature_dir', 'more_features_here', 'another.feature')
@@ -76,8 +76,34 @@ def test_scenario_loaded_from_file_sets_scenario_line_and_scenario_filename():
     feature = Feature.from_file(feature_file)
     scenario1, scenario2 = feature.scenarios
 
-    assert_equals(scenario1.defined_at.file, feature_file)
-    assert_equals(scenario1.defined_at.line, 6)
+    assert_equals(scenario1.described_at.file, feature_file)
+    assert_equals(scenario1.described_at.line, 6)
 
-    assert_equals(scenario2.defined_at.file, feature_file)
-    assert_equals(scenario2.defined_at.line, 12)
+    assert_equals(scenario2.described_at.file, feature_file)
+    assert_equals(scenario2.described_at.line, 12)
+
+def test_feature_loaded_from_file_sets_step_line_and_step_filenames():
+    "Feature.from_file sets StepDescription into Scenario objects, " \
+    "giving line number and filename as well"
+
+    feature_file = cjoin('1st_feature_dir', 'one_more.feature')
+
+    feature = Feature.from_file(feature_file)
+    (scenario, ) = feature.scenarios
+
+    step1, step2, step3, step4 = scenario.steps
+
+    for step in scenario.steps:
+        assert_equals(step.described_at.file, feature_file)
+
+    assert_equals(step1.sentence, "* I have entered 10 into the calculator")
+    assert_equals(step1.described_at.line, 7)
+
+    assert_equals(step2.sentence, "* I have entered 4 into the calculator")
+    assert_equals(step2.described_at.line, 8)
+
+    assert_equals(step3.sentence, "* I press multiply")
+    assert_equals(step3.described_at.line, 9)
+
+    assert_equals(step4.sentence, "* the result should be 40 on the screen")
+    assert_equals(step4.described_at.line, 10)

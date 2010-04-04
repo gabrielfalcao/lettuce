@@ -43,7 +43,12 @@ class StepDefinition(object):
     def __call__(self, *args, **kw):
         return self.function(*args, **kw)
 
-class ScenarioDefinition(object):
+class StepDescription(object):
+    def __init__(self, line, filename):
+        self.file = filename
+        self.line = line
+
+class ScenarioDescription(object):
     def __init__(self, scenario, filename, string):
         self.file = filename
         self.line = None
@@ -53,7 +58,7 @@ class ScenarioDefinition(object):
                 self.line = pline + 1
                 break
 
-class FeatureDefinition(object):
+class FeatureDescription(object):
     def __init__(self, filename, lines):
         self.file = filename
         self.line = None
@@ -65,13 +70,14 @@ class FeatureDefinition(object):
 class Step(object):
     has_definition = False
 
-    def __init__(self, sentence, remaining_lines):
+    def __init__(self, sentence, remaining_lines, line=None, filename=None):
         self.sentence = sentence
         self._remaining_lines = remaining_lines
         keys, data_list = self._parse_remaining_lines(remaining_lines)
 
         self.keys = tuple(keys)
         self.data_list = list(data_list)
+        self.described_at = StepDescription(line, filename)
 
     def __repr__(self):
         return u'<Step: "%s">' % self.sentence
@@ -104,18 +110,37 @@ class Step(object):
                 raise
 
     @classmethod
-    def from_string(cls, string):
+    def from_string(cls, string, with_file=None, original_string=None):
         lines = strings.get_stripped_lines(string)
         sentence = lines.pop(0)
-        return cls(sentence, remaining_lines=lines)
+
+        line = None
+        if with_file and original_string:
+            for pline, line in enumerate(original_string.splitlines()):
+                if sentence in line:
+                    line = pline + 1
+                    break
+
+        return cls(sentence, remaining_lines=lines, line=line, filename=with_file)
 
 class Scenario(object):
-    defined_at = None
-    def __init__(self, name, remaining_lines, outlines):
+    described_at = None
+    def __init__(self, name, remaining_lines, outlines, with_file=None,
+                 original_string=None):
+
         self.name = name
-        self.steps = self._parse_remaining_lines(remaining_lines)
+        self.steps = self._parse_remaining_lines(remaining_lines,
+                                                 with_file,
+                                                 original_string)
         self.outlines = outlines
-        self.solved_steps = list(self._resolve_steps(self.steps, self.outlines))
+
+        if with_file and original_string:
+            scenario_definition = ScenarioDescription(self, with_file,
+                                                      original_string)
+            self._set_definition(scenario_definition)
+
+        self.solved_steps = list(self._resolve_steps(self.steps, self.outlines,
+                                                     with_file, original_string))
 
     def __repr__(self):
         return u'<Scenario: "%s">' % self.name
@@ -148,7 +173,7 @@ class Scenario(object):
             steps_undefined
         )
 
-    def _resolve_steps(self, steps, outlines):
+    def _resolve_steps(self, steps, outlines, with_file, original_string):
         for outline in outlines:
             for step in steps:
                 sentence = step.sentence
@@ -157,7 +182,7 @@ class Scenario(object):
 
                 yield Step(sentence, step._remaining_lines)
 
-    def _parse_remaining_lines(self, lines):
+    def _parse_remaining_lines(self, lines, with_file, original_string):
         step_strings = []
         for line in lines:
             if strings.wise_startswith(line, "|"):
@@ -165,10 +190,11 @@ class Scenario(object):
             else:
                 step_strings.append(line)
 
-        return [Step.from_string(s) for s in step_strings]
+        mkargs = lambda s: [s, with_file, original_string]
+        return [Step.from_string(*mkargs(s)) for s in step_strings]
 
     def _set_definition(self, definition):
-        self.defined_at = definition
+        self.described_at = definition
 
     @classmethod
     def from_string(new_scenario, string, with_file=None, original_string=None):
@@ -186,17 +212,14 @@ class Scenario(object):
 
         scenario =  new_scenario(name=line,
                                  remaining_lines=lines,
-                                 outlines=outlines)
-
-        if with_file and original_string:
-            scenario_definition = ScenarioDefinition(scenario, with_file,
-                                                     original_string)
-            scenario._set_definition(scenario_definition)
+                                 outlines=outlines,
+                                 with_file=with_file,
+                                 original_string=original_string)
 
         return scenario
 
 class Feature(object):
-    defined_at = None
+    described_at = None
     def __init__(self, name, remaining_lines, with_file, original_string):
         self.name = name
         self.scenarios, self.description = self._parse_remaining_lines(
@@ -208,7 +231,7 @@ class Feature(object):
         self.original_string = original_string
 
         if with_file:
-            feature_definition = FeatureDefinition(with_file, lines=remaining_lines)
+            feature_definition = FeatureDescription(with_file, remaining_lines)
             self._set_definition(feature_definition)
 
     def __repr__(self):
@@ -234,7 +257,7 @@ class Feature(object):
         return feature
 
     def _set_definition(self, definition):
-        self.defined_at = definition
+        self.described_at = definition
 
     def _parse_remaining_lines(self, lines, original_string, with_file=None):
         joined = "\n".join(lines)
