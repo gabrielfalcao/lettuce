@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import re
 from lettuce import strings
+from lettuce.terrain import before, after
 from lettuce.exceptions import ReasonToFail
 from lettuce.exceptions import NoDefinitionFound
 
@@ -104,7 +105,14 @@ class Step(object):
             self.has_definition = True
             self.defined_at = step_definition
             try:
+                for callback in before.EACH_STEP_CALLBACKS:
+                    callback(self)
+
                 step_definition()
+
+                for callback in after.EACH_STEP_CALLBACKS:
+                    callback(self)
+
             except Exception, e:
                 self.why = ReasonToFail(e)
                 raise
