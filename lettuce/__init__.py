@@ -47,6 +47,8 @@ class Runner(object):
         fs.FileSystem.popd()
 
     def run(self):
+        self.loader.find_and_load_step_definitions()
+
         for callback in CALLBACK_REGISTRY['all']['before']:
             callback()
 

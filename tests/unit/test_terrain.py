@@ -156,6 +156,7 @@ def test_after_each_all_is_executed_before_each_all():
     lettuce.sys.path.insert(0, 'some_basepath')
     lettuce.sys.path.remove('some_basepath')
 
+    loader_mock.find_and_load_step_definitions()
     loader_mock.find_feature_files().AndReturn(['some_basepath/foo.feature'])
     lettuce.Feature.from_file('some_basepath/foo.feature'). \
         AndReturn(Feature.from_string(FEATURE2))
