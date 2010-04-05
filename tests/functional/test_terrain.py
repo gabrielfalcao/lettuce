@@ -40,15 +40,15 @@ def test_after_each_all_is_executed_before_each_all():
         world.all_steps.append('before')
 
     @step('append 1 in world all steps')
-    def append_1_in_world_all_steps():
+    def append_1_in_world_all_steps(step):
         world.all_steps.append("1")
 
     @step('append 2 more')
-    def append_2_more():
+    def append_2_more(step):
         world.all_steps.append("2")
 
     @step('append 3 in world all steps')
-    def append_during_to_all_steps():
+    def append_during_to_all_steps(step):
         world.all_steps.append("3")
 
     @after.all

@@ -36,13 +36,14 @@ def parse_data_list(lines):
     return keys, data_list
 
 class StepDefinition(object):
-    def __init__(self, function):
+    def __init__(self, step, function):
         self.function = function
         self.file = function.func_code.co_filename
         self.line = function.func_code.co_firstlineno + 1
+        self.step = step
 
     def __call__(self, *args, **kw):
-        return self.function(*args, **kw)
+        return self.function(self.step, *args, **kw)
 
 class StepDescription(object):
     def __init__(self, line, filename):
@@ -94,7 +95,7 @@ class Step(object):
             if matched:
                 break
 
-        return matched, StepDefinition(func)
+        return matched, StepDefinition(self, func)
 
     def run(self, ignore_case):
         matched, step_definition = self._get_match(ignore_case)

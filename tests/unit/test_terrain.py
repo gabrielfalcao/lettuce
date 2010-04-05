@@ -68,7 +68,7 @@ def test_after_each_step_is_executed_before_each_step():
             raise TypeError('%r != %r' % (step.sentence, expected))
 
     @step('append "during" to states')
-    def append_during_to_step_states():
+    def append_during_to_step_states(step):
         world.step_states.append("during")
 
     @after.each_step
@@ -92,7 +92,7 @@ def test_after_each_scenario_is_executed_before_each_scenario():
         world.scenario_steps.append('before')
 
     @step('append "during" to states')
-    def append_during_to_scenario_steps():
+    def append_during_to_scenario_steps(step):
         world.scenario_steps.append("during")
 
     @after.each_scenario
@@ -116,7 +116,7 @@ def test_after_each_feature_is_executed_before_each_feature():
         world.feature_steps.append('before')
 
     @step('append "during" to states')
-    def append_during_to_feature_steps():
+    def append_during_to_feature_steps(step):
         world.feature_steps.append("during")
 
     @after.each_feature
@@ -165,7 +165,7 @@ def test_after_each_all_is_executed_before_each_all():
         world.all_steps.append('before')
 
     @step('append "during" to states')
-    def append_during_to_all_steps():
+    def append_during_to_all_steps(step):
         world.all_steps.append("during")
 
     @after.all

@@ -67,15 +67,15 @@ def have_a_defined_step(*args, **kw):
     assert True
 
 @step('other step fails')
-def and_another():
+def and_another(*args, **kw):
     assert False, 'It should fail'
 
 @step("it won't reach here")
-def wont_reach_here():
+def wont_reach_here(*args, **kw):
     raise NotImplementedError('You should never reach here!')
 
 @step("define a step")
-def define_a_step():
+def define_a_step(*args, **kw):
     assert True
 
 def test_can_count_steps_and_its_states():
@@ -169,7 +169,7 @@ def test_steps_are_aware_of_its_definitions():
 def test_steps_that_match_groups_takes_them_as_parameters():
     "Steps that match groups takes them as parameters"
     @step(r'Given a ([^\s]+) called "(.*)"')
-    def given_what_named(what, name):
+    def given_what_named(step, what, name):
         assert_equals(what, 'person')
         assert_equals(name, 'John Doe')
 
@@ -182,7 +182,7 @@ def test_steps_that_match_groups_takes_them_as_parameters():
 def test_steps_that_match_named_groups_takes_them_as_parameters():
     "Steps that match named groups takes them as parameters"
     @step(r'When a (?P<what>foreign) at "(?P<city>.*)"')
-    def given_action_named(what, city):
+    def given_action_named(step, what, city):
         assert_equals(what, 'person')
         assert_equals(city, 'Rio de Janeiro')
 
@@ -195,7 +195,7 @@ def test_steps_that_match_named_groups_takes_them_as_parameters():
 def test_steps_that_match_groups_and_named_groups_takes_just_named_as_params():
     "Steps that match groups and named groups takes just the named as parameters"
     @step(r'(he|she) gets a (?P<what>\w+)')
-    def given_action_named(what):
+    def given_action_named(step, what):
         assert_equals(what, 'caipirinha')
 
     f = Feature.from_string(FEATURE6)
@@ -203,3 +203,23 @@ def test_steps_that_match_groups_and_named_groups_takes_just_named_as_params():
     scenario_result = feature_result.scenario_results[0]
     assert_equals(len(scenario_result.steps_passed), 1)
     assert_equals(scenario_result.total_steps, 1)
+
+def test_step_definitions_takes_the_step_object_as_first_argument():
+    "Step definitions takes step object as first argument"
+
+    FEATURE = '''
+    Feature: Steps as args
+        Scenario: Steps as args
+            When I define this one
+    '''
+
+    @step(r'When I define this one')
+    def when_i_define_this_one(step):
+        assert_equals(step.sentence, 'When I define this one')
+
+    f = Feature.from_string(FEATURE)
+    feature_result = f.run()
+    scenario_result = feature_result.scenario_results[0]
+    assert_equals(len(scenario_result.steps_passed), 1)
+    assert_equals(scenario_result.total_steps, 1)
+
