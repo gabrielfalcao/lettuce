@@ -13,6 +13,42 @@ mostly used for ruby.
 
 Lettuce allows you to make BDD in the easiest way possible, removing *ALL FRICTION* possible
 
+Nutshell:
+=========
+
+Given this feature at ``~/Projects/my-projects/features/division.feature``
+::
+    Feature: Division
+       In order to avoid silly mistakes
+       Cashiers must be able to calculate a fraction
+       Scenario: Regular numbers
+           Given I have entered 10 into the calculator
+           And I have entered 2 into the calculator
+           When I press divide
+           Then I see 5 as result
+
+You can define steps at ``~/Projects/my-projects/features/step_definitions/calculator_steps.py``
+    >>> from lettuce import step
+    >>> from lettuce import world
+    >>>
+    >>> calculator_stack = []
+    >>> @step(r'have entered (\d+) into the calculator')
+    ... def entered_into_calculator(step, number):
+    ...     calculator_stack.append(number)
+    ...
+    >>> @step(r'I press divide')
+    ... def press_divide(step):
+    ...     world.result = sum(map(int, calculator_stack))
+    ...
+    >>> @step(r'I see (\d+) as result')
+    ... def see_result(step, result):
+    ...     assert int(result) == world.result
+    ...
+
+Run with ::
+
+    user@machine:~/Projects/my-projects/$ lettuce features/
+
 Motivation
 ==========
 

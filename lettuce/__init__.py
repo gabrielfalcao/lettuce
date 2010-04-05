@@ -22,11 +22,12 @@ from lettuce.core import Feature
 
 from lettuce.terrain import after
 from lettuce.terrain import before
+from lettuce.terrain import world
 
 from lettuce.decorators import step
 from lettuce.registry import CALLBACK_REGISTRY
 
-__all__ = ['after', 'before', 'step']
+__all__ = ['after', 'before', 'step', 'world']
 
 def _import(name):
     return __import__(name)

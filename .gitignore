@@ -1,3 +1,4 @@
 *.pyc
 .coverage
 ./tests/functional/2nd_feature_dir/step_definitions/__init__.py
+docs/_build/

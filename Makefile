@@ -1,8 +1,9 @@
-all: unit functional
+all: unit functional doctests
 
 unit:
 	@echo "Running unit tests ..."
 	@nosetests -s --verbosity=2 --with-coverage --cover-erase --cover-inclusive tests/unit/ --cover-package=lettuce
+
 functional:
 	@echo "Running functional tests ..."
 	@nosetests -s --verbosity=2 --with-coverage --cover-erase --cover-inclusive tests/functional/ --cover-package=lettuce
