@@ -15,9 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from os.path import dirname, abspath, join
+from nose.tools import assert_equals
 
+from lettuce import step
 from lettuce import Runner
 from lettuce.terrain import world
+from lettuce.terrain import before, after
 
 def test_imports_terrain_under_path_that_is_run():
 
@@ -27,3 +30,35 @@ def test_imports_terrain_under_path_that_is_run():
     assert runner.terrain
     assert hasattr(world, 'works_fine')
     assert world.works_fine
+
+def test_after_each_all_is_executed_before_each_all():
+    "terrain.before.each_all and terrain.after.each_all decorators"
+    world.all_steps = []
+
+    @before.all
+    def set_state_to_before():
+        world.all_steps.append('before')
+
+    @step('append 1 in world all steps')
+    def append_1_in_world_all_steps():
+        world.all_steps.append("1")
+
+    @step('append 2 more')
+    def append_2_more():
+        world.all_steps.append("2")
+
+    @step('append 3 in world all steps')
+    def append_during_to_all_steps():
+        world.all_steps.append("3")
+
+    @after.all
+    def set_state_to_after():
+        world.all_steps.append('after')
+
+    runner = Runner(join(abspath(dirname(__file__)), '2nd_feature_dir'))
+    runner.run()
+
+    assert_equals(
+        world.all_steps,
+        ['before', '1', '2', '3', 'after']
+    )

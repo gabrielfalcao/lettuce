@@ -14,10 +14,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from mox import Mox
 from nose.tools import assert_equals
 
 from lettuce import step
-from lettuce import registry
 from lettuce.terrain import after
 from lettuce.terrain import before
 from lettuce.terrain import world
@@ -131,3 +131,57 @@ def test_after_each_feature_is_executed_before_each_feature():
         ['before', 'during', 'during', 'after']
     )
 
+def test_after_each_all_is_executed_before_each_all():
+    "terrain.before.each_all and terrain.after.each_all decorators"
+    import lettuce
+    from lettuce.fs import FeatureLoader
+    world.all_steps = []
+
+    mox = Mox()
+
+    loader_mock = mox.CreateMock(FeatureLoader)
+    mox.StubOutWithMock(lettuce.sys, 'path')
+    mox.StubOutWithMock(lettuce, 'fs')
+    mox.StubOutWithMock(lettuce.fs, 'FileSystem')
+    mox.StubOutWithMock(lettuce, 'Feature')
+    mox.StubOutWithMock(lettuce, '_import')
+
+    lettuce._import('terrain')
+
+    lettuce.fs.FileSystem.pushd('some_basepath')
+    lettuce.fs.FileSystem.popd()
+
+    lettuce.fs.FeatureLoader('some_basepath').AndReturn(loader_mock)
+
+    lettuce.sys.path.insert(0, 'some_basepath')
+    lettuce.sys.path.remove('some_basepath')
+
+    loader_mock.find_feature_files().AndReturn(['some_basepath/foo.feature'])
+    lettuce.Feature.from_file('some_basepath/foo.feature'). \
+        AndReturn(Feature.from_string(FEATURE2))
+
+    @before.all
+    def set_state_to_before():
+        world.all_steps.append('before')
+
+    @step('append "during" to states')
+    def append_during_to_all_steps():
+        world.all_steps.append("during")
+
+    @after.all
+    def set_state_to_after():
+        world.all_steps.append('after')
+
+    mox.ReplayAll()
+
+    runner = lettuce.Runner('some_basepath')
+    runner.run()
+
+    mox.VerifyAll()
+
+    assert_equals(
+        world.all_steps,
+        ['before', 'during', 'during', 'after']
+    )
+
+    mox.UnsetStubs()

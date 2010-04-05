@@ -21,6 +21,10 @@ world = threading.local()
 world._set = False
 
 CALLBACK_REGISTRY = {
+    'all': {
+        'before': [],
+        'after': []
+    },
     'step': {
         'before_each': [],
         'after_each': []

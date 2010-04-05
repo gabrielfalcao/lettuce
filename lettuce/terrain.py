@@ -20,6 +20,11 @@ world._set = True
 
 class before:
     @classmethod
+    def all(cls, function):
+        CALLBACK_REGISTRY['all'][cls.__name__].append(function)
+        return function
+
+    @classmethod
     def each_step(cls, function):
         CALLBACK_REGISTRY['step']['%s_each' % cls.__name__].append(function)
         return function
@@ -35,6 +40,11 @@ class before:
         return function
 
 class after:
+    @classmethod
+    def all(cls, function):
+        CALLBACK_REGISTRY['all'][cls.__name__].append(function)
+        return function
+
     @classmethod
     def each_step(cls, function):
         CALLBACK_REGISTRY['step']['%s_each' % cls.__name__].append(function)

@@ -34,6 +34,7 @@ def test_feature_finder_finds_all_feature_files_within_a_dir():
             cjoin('1st_feature_dir', 'one_more.feature'),
             cjoin('1st_feature_dir', 'some.feature'),
             cjoin('1st_feature_dir', 'more_features_here', 'another.feature'),
+            cjoin('2nd_feature_dir', 'before_and_after_all.feature'),
         ])
     )
 

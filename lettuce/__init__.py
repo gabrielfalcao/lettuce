@@ -17,21 +17,42 @@
 
 version = '0.1'
 import sys
+from lettuce import fs
+from lettuce.core import Feature
+
+from lettuce.terrain import after
+from lettuce.terrain import before
+
 from lettuce.decorators import step
-from lettuce.terrain import *
-from lettuce.fs import FileSystem
-#from lettuce.core import Feature
+from lettuce.registry import CALLBACK_REGISTRY
+
+
+def _import(name):
+    return __import__(name)
 
 class Runner(object):
     def __init__(self, base_path):
         sys.path.insert(0, base_path)
-        FileSystem.pushd(base_path)
+        fs.FileSystem.pushd(base_path)
         self.terrain = None
+        self.loader = fs.FeatureLoader(base_path)
         try:
-            self.terrain = __import__("terrain")
+            self.terrain = _import("terrain")
         except ImportError, e:
             if not "No module named terrain" in str(e):
                 raise e
 
         sys.path.remove(base_path)
-        FileSystem.popd()
+        fs.FileSystem.popd()
+
+    def run(self):
+        for callback in CALLBACK_REGISTRY['all']['before']:
+            callback()
+
+        for filename in self.loader.find_feature_files():
+            feature = Feature.from_file(filename)
+            feature.run()
+
+        for callback in CALLBACK_REGISTRY['all']['after']:
+            callback()
+
