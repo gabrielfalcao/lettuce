@@ -262,6 +262,12 @@ class Feature(object):
             feature_definition = FeatureDescription(with_file, remaining_lines)
             self._set_definition(feature_definition)
 
+        self._add_myself_to_scenarios()
+
+    def _add_myself_to_scenarios(self):
+        for scenario in self.scenarios:
+            scenario.feature = self
+
     def __repr__(self):
         return u'<Feature: "%s">' % self.name
 

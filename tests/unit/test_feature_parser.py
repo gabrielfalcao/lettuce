@@ -121,3 +121,11 @@ def test_can_parse_feature_description():
     assert_equals(step2.sentence, '* I have entered 2 into the calculator')
     assert_equals(step3.sentence, '* I press divide')
     assert_equals(step4.sentence, '* the result should be 1.5 on the screen')
+
+def test_scenarios_parsed_by_feature_has_feature():
+    "Scenarios parsed by features has feature"
+
+    feature = Feature.from_string(FEATURE2)
+
+    for scenario in feature.scenarios:
+        assert_equals(scenario.feature, feature)
