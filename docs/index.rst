@@ -11,10 +11,16 @@ Lettuce is a shameless clone of the super awesome Cucumber_ which does
 even more than Lettuce, is more robust, and mature. But written is
 mostly used for ruby.
 
-Lettuce allows you to make BDD in the easiest way possible, removing *ALL FRICTION* possible
+Lettuce allows you to make BDD in the easiest way possible, without
+friction to define your step definitions, a global context that lives
+through with lettuce and many setup adn teardown callbacks.
 
 Nutshell:
 =========
+
+Install ::
+
+    user@machine:~$ [sudo] pip install lettuce
 
 Given this feature at ``~/Projects/my-projects/features/division.feature``
 ::
@@ -52,18 +58,23 @@ Run with ::
 Motivation
 ==========
 
-This is not the first time I write a tool for behaviour-driven
-development. I worked on Pyccuracy_ which is a awesome tool for
-testing websites.
+I was missing a tool that could be comparable to Cucumber_, but in
+python.
 
-And as expected I am a hard user of Pyccuracy_, but since I met
-Cucumber_, I fell in love for Scenario Outlines, global variables and
-tables.  Althrough, Pyccuracy_ does not aim to do the same that
-Cucumber_ does, sometimes it sucks, because Cucumber has very handy
-features, that avoid code duplicity and so on.
+After a pretty deep search I found a few tools for BDD in python, but none satisfied the most basic requisites:
 
-Thus, Lettuce does not aim on website automated testing, Lettuce is a
-multi-purpose testing tool.
+      * Should be a nice Agile_ tool.
+      * It should be so *cool* that inspire coders to make tests.
+      * It could be used to test anything.
 
+Through its development I put a few aditional goals:
+
+      * Be compatible with cucumber, so that people that use cucumber
+        to test python could migrate to lettuce with less friction.
+      * It should provide ways to avoid step copy-and-paste, through a outline mechanism.
+      * It should have a global context, so that different step definitions should be talk with each other.
+      * It must be easy to set step definitions.
+
+.. _Agile: http://agilemanifesto.org/
 .. _Cucumber: http://cukes.info
 .. _Pyccuracy: http://github.com/heynemann/pyccuracy
