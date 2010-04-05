@@ -36,6 +36,8 @@ def parse_data_list(lines):
     return keys, data_list
 
 class StepDefinition(object):
+    """A step definition is a wrapper for user-defined callbacks. It
+    gets a few metadata from file, such as filename and line number"""
     def __init__(self, step, function):
         self.function = function
         self.file = function.func_code.co_filename
@@ -43,14 +45,22 @@ class StepDefinition(object):
         self.step = step
 
     def __call__(self, *args, **kw):
+        """Method that actually wrapps the call to step definition
+        callback. Sends step object as first argument
+        """
         return self.function(self.step, *args, **kw)
 
 class StepDescription(object):
+    """A simple object that holds filename and line number of a step
+    description (step within feature file)"""
     def __init__(self, line, filename):
         self.file = filename
         self.line = line
 
 class ScenarioDescription(object):
+    """A simple object that holds filename and line number of a scenario
+    description (scenario within feature file)"""
+
     def __init__(self, scenario, filename, string):
         self.file = filename
         self.line = None
@@ -61,6 +71,9 @@ class ScenarioDescription(object):
                 break
 
 class FeatureDescription(object):
+    """A simple object that holds filename and line number of a feature
+    description"""
+
     def __init__(self, filename, lines):
         self.file = filename
         self.line = None
@@ -70,6 +83,7 @@ class FeatureDescription(object):
                 break
 
 class Step(object):
+    """ Object that represents each step on feature files."""
     has_definition = False
 
     def __init__(self, sentence, remaining_lines, line=None, filename=None):
@@ -98,6 +112,8 @@ class Step(object):
         return matched, StepDefinition(self, func)
 
     def run(self, ignore_case):
+        """Runs a step, trying to resolve it on available step
+        definitions"""
         matched, step_definition = self._get_match(ignore_case)
 
         if not matched:
@@ -118,6 +134,7 @@ class Step(object):
 
     @classmethod
     def from_string(cls, string, with_file=None, original_string=None):
+        """Creates a new step from string"""
         lines = strings.get_stripped_lines(string)
         sentence = lines.pop(0)
 
@@ -131,6 +148,7 @@ class Step(object):
         return cls(sentence, remaining_lines=lines, line=line, filename=with_file)
 
 class Scenario(object):
+    """ Object that represents each scenario on feature files."""
     described_at = None
     def __init__(self, name, remaining_lines, outlines, with_file=None,
                  original_string=None):
@@ -154,6 +172,9 @@ class Scenario(object):
         return u'<Scenario: "%s">' % self.name
 
     def run(self, ignore_case):
+        """Runs a scenario, running each of its steps. Also call
+        before_each and after_each callbacks for steps and scenario"""
+
         steps_passed = []
         steps_failed = []
         steps_undefined = []
@@ -226,6 +247,7 @@ class Scenario(object):
 
     @classmethod
     def from_string(new_scenario, string, with_file=None, original_string=None):
+        """ Creates a new scenario from string"""
         splitted = strings.split_wisely(string, "Example[s]?[:]", True)
         string = splitted[0]
 
@@ -247,6 +269,7 @@ class Scenario(object):
         return scenario
 
 class Feature(object):
+    """ Object that represents a feature."""
     described_at = None
     def __init__(self, name, remaining_lines, with_file, original_string):
         self.name = name
@@ -273,6 +296,7 @@ class Feature(object):
 
     @classmethod
     def from_string(new_feature, string, with_file=None):
+        """Creates a new feature from string"""
         lines = strings.get_stripped_lines(string)
         feature_line = lines.pop(0)
         line = feature_line.replace("Feature: ", "")
@@ -284,6 +308,7 @@ class Feature(object):
 
     @classmethod
     def from_file(new_feature, filename):
+        """Creates a new feature from filename"""
         f = open(filename)
         string = f.read()
         f.close()
@@ -320,11 +345,13 @@ class Feature(object):
         return FeatureResult(self, *scenarios_ran)
 
 class FeatureResult(object):
+    """Object that holds results of each scenario ran from within a feature"""
     def __init__(self, feature, *scenario_results):
         self.feature = feature
         self.scenario_results = scenario_results
 
 class ScenarioResult(object):
+    """Object that holds results of each step ran from within a scenario"""
     def __init__(self, scenario, steps_passed, steps_failed, steps_skipped,
                  steps_undefined):
 

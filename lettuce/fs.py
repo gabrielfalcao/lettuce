@@ -24,6 +24,8 @@ from glob import glob
 from os.path import abspath, join, dirname, curdir, exists
 
 class FeatureLoader(object):
+    """Loader class responsible for findind features and step
+    definitions along a given path on filesystem"""
     def __init__(self, base_dir):
         self.base_dir = FileSystem.abspath(base_dir)
 
@@ -46,6 +48,9 @@ class FeatureLoader(object):
         return paths
 
 class FileSystem(object):
+    """File system abstraction, mainly used for indirection, so that
+    lettuce can be well unit-tested :)
+    """
     stack = []
 
     def __init__(self):
@@ -53,6 +58,8 @@ class FileSystem(object):
 
     @classmethod
     def pushd(cls, path):
+        """Change current dir to `path`, adding it to a stack. Can be
+        undone by calling FileSystem.popd()"""
         if not len(cls.stack):
             cls.stack.append(cls.current_dir())
 
@@ -61,6 +68,7 @@ class FileSystem(object):
 
     @classmethod
     def popd(cls):
+        """Go back one path in path stack"""
         if cls.stack:
             cls.stack.pop()
             if cls.stack:
@@ -68,6 +76,17 @@ class FileSystem(object):
 
     @classmethod
     def filename(cls, path, with_extension=True):
+        """Returns only the filename from a full path. If the argument
+        with_extension is False, return the filename without
+        extension.
+
+        Examples::
+
+        >>> from lettuce.fs import FileSystem
+        >>> assert FileSystem.filename('/full/path/to/some_file.py') == 'some_file.py'
+        >>> assert FileSystem.filename('/full/path/to/some_file.py', False) == 'some_file'
+
+        """
         fname = os.path.split(path)[1]
         if not with_extension:
             fname = os.path.splitext(fname)[0]
@@ -76,10 +95,17 @@ class FileSystem(object):
 
     @classmethod
     def exists(cls, path):
+        """Return True if `path`exists"""
         return exists(path)
 
     @classmethod
     def mkdir(cls, path):
+        """Create paths recursively, ignore already created dirs
+
+        Example:
+            >>> from lettuce.fs import FileSystem
+            >>> FileSystem.mkdir('~/a/lot/of/nested/dirs')
+        """
         try:
             os.makedirs(path)
         except OSError, e:
@@ -123,6 +149,7 @@ class FileSystem(object):
 
     @classmethod
     def locate(cls, path, match, recursive=True):
+        """Locate files recursively in a given path"""
         root_path = cls.abspath(path)
         if recursive:
             return_files = []
@@ -135,6 +162,7 @@ class FileSystem(object):
 
     @classmethod
     def extract_zip(cls, filename, base_path='.', verbose=False):
+        """Extracts a zip file into `base_path`"""
         base_path = cls.abspath(base_path)
         output = lambda x: verbose and sys.stdout.write("%s\n" % x)
 
@@ -156,6 +184,7 @@ class FileSystem(object):
 
     @classmethod
     def open(cls, name, mode):
+        """Opens a file as utf-8"""
         path = name
         if not os.path.isabs(path):
             path = cls.current_dir(name)
@@ -164,6 +193,7 @@ class FileSystem(object):
 
     @classmethod
     def open_raw(cls, name, mode):
+        """Opens a file without specifying encoding"""
         path = name
         if not os.path.isabs(path):
             path = cls.current_dir(name)

@@ -33,7 +33,15 @@ def _import(name):
     return __import__(name)
 
 class Runner(object):
+    """ Main lettuce's test runner
+
+    Takes a base path as parameter (string), so that it can look for
+    features and step definitions on there.
+    """
     def __init__(self, base_path):
+        """ lettuce.Runner will try to find a terrain.py file and
+        import it from within `base_path`
+        """
         sys.path.insert(0, base_path)
         fs.FileSystem.pushd(base_path)
         self.terrain = None
@@ -48,6 +56,9 @@ class Runner(object):
         fs.FileSystem.popd()
 
     def run(self):
+        """ Find and load step definitions, and them find and load
+        features under `base_path` specified on constructor
+        """
         self.loader.find_and_load_step_definitions()
 
         for callback in CALLBACK_REGISTRY['all']['before']:

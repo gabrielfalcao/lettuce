@@ -17,6 +17,12 @@
 import traceback
 
 class NoDefinitionFound(Exception):
+    """ Exception raised by lettuce.core.Step, when trying to solve a
+    Step, but does not find a suitable step definition.
+
+    This exception should never blow on user's face. It used merely yo
+    lettuce can filter undefined steps.
+    """
     def __init__(self, step):
         self.step = step
         super(NoDefinitionFound, self).__init__(
@@ -24,6 +30,10 @@ class NoDefinitionFound(Exception):
         )
 
 class ReasonToFail(object):
+    """ Exception that contains detailed information about a
+    AssertionError raised within a step definition.  With these data
+    lettuce show detailed traceback to user in a nice representation.
+    """
     def __init__(self, exc):
         self.exception = exc
         self.cause = unicode(exc)

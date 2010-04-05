@@ -18,6 +18,22 @@
 from lettuce.core import STEP_REGISTRY
 
 def step(regex):
+    """Decorates a function, so that it will become a new step
+    definition.
+
+    Example::
+
+        >>> from lettuce import step
+        >>> from models import contact
+        >>>
+        >>> step(r'Given I delete the contact "(?P<name>.*)" from my address book')
+        ... def given_i_do_something(step, name):
+        ...     contact.delete_by_name(name)
+        ...     assert step.sentence == 'Given I delete the contact "John Doe" from my address book'
+
+
+    Notice that all step definitions take a step object as argument.
+    """
     def wrap(func):
         STEP_REGISTRY[regex] = func
 
