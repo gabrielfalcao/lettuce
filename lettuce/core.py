@@ -148,6 +148,7 @@ class Scenario(object):
 
         self.solved_steps = list(self._resolve_steps(self.steps, self.outlines,
                                                      with_file, original_string))
+        self._add_myself_to_steps()
 
     def __repr__(self):
         return u'<Scenario: "%s">' % self.name
@@ -192,6 +193,13 @@ class Scenario(object):
             steps_skipped,
             steps_undefined
         )
+
+    def _add_myself_to_steps(self):
+        for step in self.steps:
+            step.scenario = self
+
+        for step in self.solved_steps:
+            step.scenario = self
 
     def _resolve_steps(self, steps, outlines, with_file, original_string):
         for outline in outlines:

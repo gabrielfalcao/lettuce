@@ -118,6 +118,12 @@ def test_scenario_may_own_outlines():
         ]
     )
 
+def test_steps_parsed_by_scenarios_has_scenarios():
+    "Steps parsed by scenarios has scenarios"
+    scenario = Scenario.from_string(SCENARIO1)
+    for step in scenario.steps:
+        assert_equals(step.scenario, scenario)
+
 def test_scenario_sentences_can_be_solved():
     "A scenario with outlines may solve its sentences"
     scenario = Scenario.from_string(OUTLINED_SCENARIO)
@@ -142,3 +148,8 @@ def test_scenario_sentences_can_be_solved():
         assert_equals(type(step), Step)
         assert_equals(step.sentence, expected_sentence)
 
+def test_solved_steps_also_have_scenario_as_attribute():
+    "Steps solved in scenario outlines also have scenario as attribute"
+    scenario = Scenario.from_string(OUTLINED_SCENARIO)
+    for step in scenario.solved_steps:
+        assert_equals(step.scenario, scenario)
