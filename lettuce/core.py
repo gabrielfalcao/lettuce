@@ -105,7 +105,12 @@ class Step(object):
             self.has_definition = True
             self.defined_at = step_definition
             try:
-                step_definition()
+                kw = matched.groupdict()
+                if kw:
+                    step_definition(**kw)
+                else:
+                    groups = matched.groups()
+                    step_definition(*groups)
             except Exception, e:
                 self.why = ReasonToFail(e)
                 raise

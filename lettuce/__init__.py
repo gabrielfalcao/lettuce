@@ -26,6 +26,7 @@ from lettuce.terrain import before
 from lettuce.decorators import step
 from lettuce.registry import CALLBACK_REGISTRY
 
+__all__ = ['after', 'before', 'step']
 
 def _import(name):
     return __import__(name)

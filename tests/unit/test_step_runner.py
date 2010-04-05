@@ -44,6 +44,24 @@ Feature: Lettuce can ignore case
         And also define A sTeP
 """
 
+FEATURE4 = '''
+Feature: My steps are rocking!
+    Scenario: Step definition receive regex matched groups as parameters
+        Given a person called "John Doe"
+'''
+
+FEATURE5 = '''
+Feature: My steps are rocking!
+    Scenario: Step definition receive regex matched named groups as parameters
+        When a foreign at "Rio de Janeiro"
+'''
+
+FEATURE6 = '''
+Feature: My steps are rocking!
+    Scenario: Step definition receive regex matched named groups as parameters
+        Then he gets a caipirinha
+'''
+
 @step('I have a defined step')
 def have_a_defined_step(*args, **kw):
     assert True
@@ -145,5 +163,43 @@ def test_steps_are_aware_of_its_definitions():
 
     step1 = scenario_result.steps_passed[0]
 
-    assert_equals(step1.defined_at.line, 48)
+    assert_equals(step1.defined_at.line, 66)
     assert_equals(step1.defined_at.file, __file__.rstrip("c"))
+
+def test_steps_that_match_groups_takes_them_as_parameters():
+    "Steps that match groups takes them as parameters"
+    @step(r'Given a ([^\s]+) called "(.*)"')
+    def given_what_named(what, name):
+        assert_equals(what, 'person')
+        assert_equals(name, 'John Doe')
+
+    f = Feature.from_string(FEATURE4)
+    feature_result = f.run()
+    scenario_result = feature_result.scenario_results[0]
+    assert_equals(len(scenario_result.steps_passed), 1)
+    assert_equals(scenario_result.total_steps, 1)
+
+def test_steps_that_match_named_groups_takes_them_as_parameters():
+    "Steps that match named groups takes them as parameters"
+    @step(r'When a (?P<what>foreign) at "(?P<city>.*)"')
+    def given_action_named(what, city):
+        assert_equals(what, 'person')
+        assert_equals(city, 'Rio de Janeiro')
+
+    f = Feature.from_string(FEATURE5)
+    feature_result = f.run()
+    scenario_result = feature_result.scenario_results[0]
+    assert_equals(len(scenario_result.steps_passed), 1)
+    assert_equals(scenario_result.total_steps, 1)
+
+def test_steps_that_match_groups_and_named_groups_takes_just_named_as_params():
+    "Steps that match groups and named groups takes just the named as parameters"
+    @step(r'(he|she) gets a (?P<what>\w+)')
+    def given_action_named(what):
+        assert_equals(what, 'caipirinha')
+
+    f = Feature.from_string(FEATURE6)
+    feature_result = f.run()
+    scenario_result = feature_result.scenario_results[0]
+    assert_equals(len(scenario_result.steps_passed), 1)
+    assert_equals(scenario_result.total_steps, 1)
