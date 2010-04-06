@@ -1,0 +1,24 @@
+#index p.rubric { font-size:150%; font-weight:normal; margin-bottom:.2em; color:#EFFFF0; }
+
+#index div.section dt { font-weight: normal; }
+
+#index #s-nutshell { float: right; width: 35em; background: #A1BCA2; padding: 1em; margin: 2em 0 2em 2em; }
+#index #s-nutshell a {color: #386848}
+#index #s-nutshell h1 {color: #333}
+#index #s-nutshell h2 { margin: 0; }
+
+#index #s-django-documentation div.section div.section h3 { margin: 0; }
+#index #s-django-documentation div.section div.section { background: #E1ECE2; padding: 1em; margin: 2em 0 2em 40.3em; }
+#index #s-django-documentation div.section div.section a.reference { white-space: nowrap; }
+
+#index #s-using-django dl,
+#index #s-add-on-contrib-applications dl,
+#index #s-solving-specific-problems dl,
+#index #s-reference dl
+    { float: left; width: 41em; }
+
+#index #s-add-on-contrib-applications,
+#index #s-solving-specific-problems,
+#index #s-reference,
+#index #s-and-all-the-rest
+    { clear: left; }
