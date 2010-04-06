@@ -1,4 +1,4 @@
-.. _tables:
+.. _tutorial-tables:
 
 ======
 Tables

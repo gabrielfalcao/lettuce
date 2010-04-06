@@ -1,4 +1,4 @@
-.. _scenario-outlines:
+.. _tutorial-scenario-outlines:
 
 =================
 Scenario Outlines

@@ -1,4 +1,4 @@
-.. _hooks:
+.. _tutorial-hooks:
 
 =====
 Hooks
