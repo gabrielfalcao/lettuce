@@ -31,6 +31,7 @@ tests:
 	@echo "Tests Finished"
 
 html:
+	rm -rf _build
 	mkdir -p _build/html _build/doctrees
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) _build/html
 	@echo
