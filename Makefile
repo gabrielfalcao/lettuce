@@ -10,7 +10,7 @@ functional:
 
 doctests:
 	@echo "Running doctests..."
-	@for file in `ls docs/*.rst`; do python -c "import doctest;doctest.testfile('$$file', verbose=False, report=True)"; done
+	@find docs -name '*.rst' -exec printf "    on file "{}" ..." \; -exec python -c "import doctest;doctest.testfile('{}', verbose=False, report=True)" \; -exec echo " ok" \; 
 	@echo "tests passed!"
 
 clean:

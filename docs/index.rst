@@ -1,4 +1,4 @@
-.. _index:
+ .. _index:
 .. rubric:: All you need to know, from the leaves to the root
 
 Nutshell
@@ -10,11 +10,39 @@ Nutshell
 
    user@machine:~$ [sudo] pip install lettuce
 
-**Describe** your first :ref:`feature <nutshell-features>`
+**Describe your first feature**
 
-**Define** its :ref:`steps <nutshell-steps>`
+::
 
-**run it**
+   Feature: Manipulate string
+     In order to have some fun
+     As a programming beginner
+     I want to manipulate strings
+
+     Scenario: Uppercased strings
+       Given I have the string "lettuce leaves"
+       When I put it in upper case
+       Then I see the string is "LETTUCE LEAVES"
+
+**Define its steps**
+
+::
+
+    >>> from lettuce import *
+    >>> @step('I have the string "(.*)"')
+    ... def have_the_string(step, string):
+    ...     world.string = string
+    ...
+    >>> @step('I put it in upper case')
+    ... def put_it_in_upper(step):
+    ...     world.string = world.string.upper()
+    ...
+    >>> @step('I see the string is "(.*)"')
+    ... def see_the_string_is(step, expected):
+    ...     assert world.string == expected, \
+    ...         "Got %s" % world.string
+
+**what it pass**
 
 ::
 

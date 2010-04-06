@@ -26,7 +26,6 @@ setup(name='lettuce',
     url='http://github.com/gabrielfalcao/lettuce',
     packages=[
           'lettuce',
-          'lettuce.core',
     ]
 )
 
