@@ -1,8 +1,8 @@
  .. _index:
 .. rubric:: All you need to know, from the leaves to the root
 
-Nutshell
-========
+Quickstart
+==========
 
 **install it**
 
@@ -42,7 +42,7 @@ Nutshell
     ...     assert world.string == expected, \
     ...         "Got %s" % world.string
 
-**what it pass**
+**watch it pass**
 
 ::
 

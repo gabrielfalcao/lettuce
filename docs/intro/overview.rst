@@ -33,9 +33,24 @@ is a honking great tool, and has a lot more features than Lettuce.
 Although Lettuce aims on the most usual tasks on BDD_, specially
 focusing on those that make BDD_ be so fun :)
 
+Comparation with other BDD tools
+================================
 
-Quick start
-===========
+Cucumber
+~~~~~~~~
+
+This awesome tool not just inspires Lettuce. Actually, Cucumber_ has
+all Lettuce features, but have a lot of more features. Putting
+bluntly, Lettuce does not have all Cucumber_ features, and don't mean
+to.
+
+Pyccuracy
+~~~~~~~~~
+
+Pyccuracy_ is a BDD tool that works only for web browser tests.
+
+Hands on!
+=========
 
 This documentation will drive you through all the Lettuce features.
 When you feel a bit comfortable, go to the :ref:`first part of the tutorial <tutorial-simple>`, or go further on the :ref:`reference <reference-features>`.
