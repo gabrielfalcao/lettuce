@@ -41,7 +41,7 @@ master_doc = 'contents'
 
 # General substitutions.
 project = 'Lettuce'
-copyright = 'Gabriel Falcão <gabriel@nacaolivre.org>'
+copyright = u'Gabriel Falcão <gabriel@nacaolivre.org>'
 
 # The default replacements for |version| and |release|, also used in various
 # other places throughout the built documents.
