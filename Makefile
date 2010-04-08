@@ -1,4 +1,4 @@
-all: unit functional doctests
+all: unit functional doctest
 
 unit:
 	@echo "Running unit tests ..."
@@ -8,10 +8,8 @@ functional:
 	@echo "Running functional tests ..."
 	@nosetests -s --verbosity=2 --with-coverage --cover-erase --cover-inclusive tests/functional/ --cover-package=lettuce
 
-doctests:
-	@echo "Running doctests..."
-	@find docs -name '*.rst' -exec printf "    on file "{}" ..." \; -exec python -c "import doctest;doctest.testfile('{}', verbose=False, report=True)" \; -exec echo " ok" \; 
-	@echo "tests passed!"
+doctest:
+	@cd docs && make doctest
 
 clean:
 	@echo -n "Cleaning up files that are already in .gitignore... "

@@ -128,10 +128,9 @@ div#contents ul ul li { margin-top: 0.3em}
 /*** IE hacks ***/
 * pre { width: 100%}
 .footer {
-    background-color: #444;
     color: white;
 }
 
 .footer a {
-    color: #EFFFEF;
+    color: #94da3a;
 }

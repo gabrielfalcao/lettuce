@@ -12,17 +12,23 @@
 # serve to show the default value.
 
 import sys
-import os
-
+from os.path import dirname, abspath, join
 # If your extensions are in another directory, add it here.
-sys.path.append(os.path.join(os.path.dirname(__file__), "_ext"))
+_localfile = lambda *x: join(abspath(dirname(__file__)), *x)
+sys.path.append(_localfile("_ext"))
+sys.path.append(_localfile("../"))
 
 # General configuration
 # ---------------------
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = []
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.doctest',
+    'sphinx.ext.todo',
+    'sphinx.ext.coverage'
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

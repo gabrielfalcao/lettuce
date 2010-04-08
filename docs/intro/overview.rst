@@ -47,7 +47,9 @@ to.
 Pyccuracy
 ~~~~~~~~~
 
-Pyccuracy_ is a BDD tool that works only for web browser tests.
+Pyccuracy_ is a BDD tool that works only for web browser
+tests. Pyccuracy also has totally different principles when compared
+with Cucumber, thus
 
 Hands on!
 =========
@@ -55,7 +57,7 @@ Hands on!
 This documentation will drive you through all the Lettuce features.
 When you feel a bit comfortable, go to the :ref:`first part of the tutorial <tutorial-simple>`, or go further on the :ref:`reference <reference-features>`.
 
-.. _Agile: http://agilemanifesto.org/
+.. _Agile: http://agilemanifesto.org
 .. _Cucumber: http://cukes.info
 .. _Pyccuracy: http://github.com/heynemann/pyccuracy
 .. _TDD: http://en.wikipedia.org/wiki/Test_Driven_Development

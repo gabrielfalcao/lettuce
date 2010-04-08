@@ -12,7 +12,7 @@ Quickstart
 
 **Describe your first feature**
 
-::
+.. doctest::
 
    Feature: Manipulate string
      In order to have some fun
@@ -26,7 +26,7 @@ Quickstart
 
 **Define its steps**
 
-::
+.. doctest::
 
     >>> from lettuce import *
     >>> @step('I have the string "(.*)"')
@@ -68,8 +68,8 @@ First steps
       * :ref:`Features <reference-features>`
       * :ref:`Scenarios <reference-scenarios>`
       * :ref:`Steps <reference-steps>`
-      * :ref:`Hooks <reference-hooks>`
       * :ref:`World <reference-world>`
+      * :ref:`Hooks <reference-hooks>`
       * :ref:`Language support <reference-languages>`
 
 Recipes
