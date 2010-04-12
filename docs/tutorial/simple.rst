@@ -15,6 +15,7 @@ So assuming that:
 
 Let's have a ...
 
-A starty start
+A simple start
 ==============
 
+Lettuce is very flexible about where you decide to put your features.

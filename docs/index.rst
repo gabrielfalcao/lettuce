@@ -48,20 +48,31 @@ Quickstart
 
    user@machine:~/Projects/my-project$ lettuce features/
 
-First steps
-===========
+Introduction
+============
 
     * **What is Lettuce, and what it does:**
 
       * :ref:`Overview <intro-overview>`
       * :ref:`Installation <intro-install>`
 
+What the feature ?!
+-------------------
+
+      :ref:`Understand the terms behind Lettuce <intro-wtf>`
+
+Walkthrough
+===========
+
     * **Tutorial:**
 
-      * :ref:`Simple features <tutorial-simple>`
+      * :ref:`Using simple features <tutorial-simple>`
       * :ref:`Steps with tables <tutorial-tables>`
       * :ref:`Scenario Outlines <tutorial-scenario-outlines>`
       * :ref:`Taking actions before and after tests <tutorial-hooks>`
+
+Furthermore
+===========
 
     * **Reference and concepts:**
 

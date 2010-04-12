@@ -33,6 +33,15 @@ is a honking great tool, and has a lot more features than Lettuce.
 Although Lettuce aims on the most usual tasks on BDD_, specially
 focusing on those that make BDD_ be so fun :)
 
+Lettuce pragma
+==============
+
+Give to developers ability to describe :ref:`features <intro-wtf>` in
+natural language, composing it with one one or more scenarios.
+
+Each scenario has one possible behaviour of the feature you want to implement.
+To make the scenarios run python code, you define :ref:`steps <reference-steps`.
+
 Comparation with other BDD tools
 ================================
 

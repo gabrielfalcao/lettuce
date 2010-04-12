@@ -49,7 +49,7 @@ h4 { font-size:125%; font-weight:bold; margin-top:1.5em; margin-bottom:3px}
 div.figure { text-align: center}
 div.figure p.caption { font-size:1em; margin-top:0; margin-bottom:1.5em; color: black}
 hr { color:#ccc; background-color:#ccc; height:1px; border:0}
-p, ul, dl { margin-top:.6em; margin-bottom:1em; padding-bottom: 0.1em; color: #333}
+p, ul, dl { margin-top:.6em; margin-bottom:1em; color: #333}
 #yui-main div.yui-b img { max-width: 50em; margin-left: auto; margin-right: auto; display: block}
 caption { font-size:1em; font-weight:bold; margin-top:0.5em; margin-bottom:0.5em; margin-left: 2px; text-align: center}
 blockquote { padding: 0 1em; margin: 1em 0; font:125%/1.2em "Trebuchet MS", sans-serif; color:#234f32}
@@ -61,7 +61,7 @@ ins { font-weight: bold; text-decoration: none}
 ul { padding-left:30px}
 ol { padding-left:30px}
 ol.arabic li { list-style-type: decimal}
-ul li { list-style-type:square; margin-bottom:.4em; font-size: 14px}
+ul li { list-style-type:square; font-size: 14px}
 ol li { margin-bottom: .4em}
 ul ul { padding-left:1.2em}
 ul ul ul { padding-left:1em}
