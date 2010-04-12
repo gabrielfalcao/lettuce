@@ -9,6 +9,8 @@ Stable release
 
 You can install the latest stable release with pip
 
+.. highlight:: bash
+
 ::
 
     user@machine:~$ [sudo] pip install lettuce

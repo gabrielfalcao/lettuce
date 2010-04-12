@@ -28,6 +28,9 @@ and phones of a person.
 
 See how this feature could be described with Lettuce above:
 
+
+.. highlight:: ruby
+
 ::
 
     Feature: Add people to contact book

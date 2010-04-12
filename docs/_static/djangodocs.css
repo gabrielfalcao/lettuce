@@ -92,7 +92,7 @@ table.docutils { border-collapse:collapse}
 .literal { color:#234f32}
 #sidebar .literal { color:#487858; background:transparent; font-size:11px}
 h4 .literal { color: #234f32; font-size: 13px}
-pre { font-size:small; background:#EFE; border:1px solid #444; border-width:1px 0; margin: 1em 0; padding: .3em .4em; overflow: hidden; line-height: 1.3em; color: #444}
+pre { font-size:small; background:#222; border:1px solid #444; border-width:1px 0; margin: 1em 0; padding: .3em .4em; overflow: hidden; line-height: 1.3em; color: #FFF}
 dt .literal, table .literal { background:none}
 #bd a.reference { text-decoration: none}
 #bd a.reference tt.literal { border-bottom: 1px #234f32 dotted}

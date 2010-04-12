@@ -6,15 +6,19 @@ Quickstart
 
 **install it**
 
+.. highlight:: bash
+
 ::
 
    user@machine:~$ [sudo] pip install lettuce
 
 **Describe your first feature**
 
-.. doctest::
+.. highlight:: ruby
 
-   Feature: Manipulate string
+::
+
+   Feature: Manipulate strings
      In order to have some fun
      As a programming beginner
      I want to manipulate strings
@@ -25,6 +29,8 @@ Quickstart
        Then I see the string is "LETTUCE LEAVES"
 
 **Define its steps**
+
+.. highlight:: python
 
 .. doctest::
 
@@ -44,6 +50,7 @@ Quickstart
 
 **watch it pass**
 
+.. highlight:: bash
 ::
 
    user@machine:~/Projects/my-project$ lettuce features/
