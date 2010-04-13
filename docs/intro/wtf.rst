@@ -181,7 +181,7 @@ Lettuce considers each line of a scenario as a simple step, the only
 exception is if the first non-blank character of the line is a pipe
 ``|``, in this case Lettuce will consider the step as a tabular step.
 
-Example::
+In a nutshell, a simple step may look like this::
 
     Given I go to the conference website
 
