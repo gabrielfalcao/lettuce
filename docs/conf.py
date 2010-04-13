@@ -20,7 +20,7 @@ sys.path.append(_localfile("../"))
 
 # General configuration
 # ---------------------
-
+import lettuce
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
@@ -47,9 +47,9 @@ copyright = u'Gabriel Falcão <gabriel@nacaolivre.org>'
 # other places throughout the built documents.
 #
 # The short X.Y version.
-version = '0.1'
+version = lettuce.version
 # The full version, including alpha/beta/rc tags.
-release = version
+release = "%s (%s release)" % (version, lettuce.release)
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:

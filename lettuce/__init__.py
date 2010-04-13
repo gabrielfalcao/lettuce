@@ -16,6 +16,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 version = '0.1'
+release = 'emerald'
+
+
 import sys
 from lettuce import fs
 from lettuce.core import Feature
