@@ -7,10 +7,10 @@ Lettuce documentation contents
 .. toctree::
    :maxdepth: 2
 
-   nutshell/features
-   nutshell/steps
+   index
    intro/overview
    intro/install
+   intro/wtf
    tutorial/simple
    tutorial/tables
    tutorial/scenario-outlines
@@ -29,4 +29,3 @@ Indices, glossary and tables
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`glossary`
