@@ -73,10 +73,10 @@ Walkthrough
 
     * **Tutorial:**
 
-      * :ref:`Using simple features <tutorial-simple>`
-      * :ref:`Steps with tables <tutorial-tables>`
-      * :ref:`Scenario Outlines <tutorial-scenario-outlines>`
-      * :ref:`Taking actions before and after tests <tutorial-hooks>`
+      1. :ref:`Writting your first feature <tutorial-simple>`
+      2. :ref:`Steps with tables <tutorial-tables>`
+      3. :ref:`Scenario Outlines <tutorial-scenario-outlines>`
+      4. :ref:`Taking actions before and after tests <tutorial-hooks>`
 
 Furthermore
 ===========

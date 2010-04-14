@@ -1,21 +1,14 @@
 .. _tutorial-simple:
 
-=================================
-Writting your first steps, part 1
-=================================
+===================================
+Part 1: Writting your first feature
+===================================
 
 Welcome to the first part of Lettuce tutorials, through this tutorial
 we will use Lettuce to provide a simple and pythonic way to create a
 tests for a python module.
 
-So assuming that:
+To keep following the tutorial, you must:
 
-    * you have already :ref:`installed <intro-install>` Lettuce.
-    * you have a GNU/Linux / MacOS console available.
-
-Let's have a ...
-
-A simple start
-==============
-
-Lettuce is very flexible about where you decide to put your features.
+    * have already :ref:`installed <intro-install>` Lettuce.
+    * have a unix shell available.
