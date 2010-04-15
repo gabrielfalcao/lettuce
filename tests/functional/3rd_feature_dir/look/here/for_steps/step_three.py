@@ -15,22 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from nose.tools import assert_equals
-
 from lettuce import step
 from lettuce.terrain import world
-from lettuce import after
 
-@step('I sum (\d+) and (\d+)')
-def i_sum_x_and_y(step, x, y):
-    world.sum = int(x) + int(y)
-
-@step('it should result in (\d+)')
-def it_should_result_in_z(step, z):
-    assert_equals(world.sum, int(z))
-
-@after.all
-def clear_sum():
-    if hasattr(world, 'sum'):
-        del world.sum
-
+@step(r'at look/here/for_steps/step_three.py')
+def step_three(step):
+    world.step_list.append(step.sentence)
