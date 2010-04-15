@@ -19,11 +19,12 @@ clean:
 	@for pattern in `cat .gitignore`; do find . -name "$$pattern" -exec rm -rf {} \;; done
 	@echo "OK!"
 
-
-deploy-documentation: documentation
+withdraw-documentation: 
 	@printf 'Removing current documentation ...'
 	@ssh gabrielfalcao@gabrielfalcao.com rm -rf lettuce.it/public/*
 	@echo "DONE!"
+
+deploy-documentation:documentation withdraw-documentation 
 	@printf 'Deploying documentation to http://lettuce.it ...'
 	@cd ./docs/_build/html && tar -zcp *  | ssh gabrielfalcao@gabrielfalcao.com "tar zxp -C ./lettuce.it/public/"
 	@echo "DONE!"
