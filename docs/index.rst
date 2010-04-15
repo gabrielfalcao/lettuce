@@ -1,7 +1,7 @@
  .. _index:
 .. rubric:: All you need to know, from the leaves to the root
 
-Quickstart
+quickstart
 ==========
 
 **install it**
@@ -12,7 +12,7 @@ Quickstart
 
    user@machine:~$ [sudo] pip install lettuce
 
-**Describe your first feature**
+**describe your first feature**
 
 .. highlight:: ruby
 
@@ -28,7 +28,7 @@ Quickstart
        When I put it in upper case
        Then I see the string is "LETTUCE LEAVES"
 
-**Define its steps**
+**define its steps**
 
 .. highlight:: python
 
@@ -55,43 +55,43 @@ Quickstart
 
    user@machine:~/Projects/my-project$ lettuce features/
 
-Introduction
+introduction
 ============
 
-    * **What is Lettuce, and what it does:**
+    * **what is Lettuce, and what it does:**
 
-      * :ref:`Overview <intro-overview>`
-      * :ref:`Installation <intro-install>`
+      * :ref:`overview <intro-overview>`
+      * :ref:`installation <intro-install>`
 
-What the feature ?!
+what the feature ?!
 -------------------
 
-      :ref:`Understand the terms behind Lettuce <intro-wtf>`
+      :ref:`understand the terms behind Lettuce <intro-wtf>`
 
-Walkthrough
+walkthrough
 ===========
 
-    * **Tutorial:**
+    * **tutorial:**
 
-      1. :ref:`Writting your first feature <tutorial-simple>`
-      2. :ref:`Steps with tables <tutorial-tables>`
-      3. :ref:`Scenario Outlines <tutorial-scenario-outlines>`
-      4. :ref:`Taking actions before and after tests <tutorial-hooks>`
+      1. :ref:`writting your first feature <tutorial-simple>`
+      2. :ref:`wteps with tables <tutorial-tables>`
+      3. :ref:`scenario Outlines <tutorial-scenario-outlines>`
+      4. :ref:`taking actions before and after tests <tutorial-hooks>`
 
-Furthermore
+furthermore
 ===========
 
-    * **Reference and concepts:**
+    * **reference and concepts:**
 
-      * :ref:`Features <reference-features>`
-      * :ref:`Scenarios <reference-scenarios>`
-      * :ref:`Steps <reference-steps>`
-      * :ref:`World <reference-world>`
-      * :ref:`Hooks <reference-hooks>`
-      * :ref:`Language support <reference-languages>`
+      * :ref:`features <reference-features>`
+      * :ref:`scenarios <reference-scenarios>`
+      * :ref:`steps <reference-steps>`
+      * :ref:`world <reference-world>`
+      * :ref:`hooks <reference-hooks>`
+      * :ref:`language support <reference-languages>`
 
-Recipes
+recipes
 =======
 
-    * :ref:`Browser testing with webdriver <recipes-webdriver>`
-    * :ref:`Best assertions with nose <recipes-nose>`
+    * :ref:`browser testing with webdriver <recipes-webdriver>`
+    * :ref:`best assertions with nose <recipes-nose>`
