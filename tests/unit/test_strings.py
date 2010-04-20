@@ -103,3 +103,38 @@ def test_remove_it_accepts_regex_to_remove_all_from_string():
         strings.remove_it("Gabriel Falcão", "[aã]"),
         "Gbriel Flco"
     )
+
+def test_rfill_simple():
+    "strings.rfill simple case"
+    assert_equals(
+        strings.rfill("ab", 10, "-"),
+        "ab--------"
+    )
+
+def test_rfill_empty():
+    "strings.rfill empty"
+    assert_equals(
+        strings.rfill("", 10, "*"),
+        "**********"
+    )
+
+def test_rfill_blank():
+    "strings.rfill blank"
+    assert_equals(
+        strings.rfill(" ", 10, "|"),
+        " |||||||||"
+    )
+
+def test_rfill_full():
+    "strings.rfill full"
+    assert_equals(
+        strings.rfill("abcdefghij", 10, "|"),
+        "abcdefghij"
+    )
+
+def test_rfill_append():
+    "strings.rfill append"
+    assert_equals(
+        strings.rfill("ab", 10, append="# path/to/file.extension: 2"),
+        "ab        # path/to/file.extension: 2"
+    )

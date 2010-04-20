@@ -19,6 +19,7 @@ import re
 from lettuce import strings
 from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
+from lettuce.registry import world
 from lettuce.exceptions import ReasonToFail
 from lettuce.exceptions import NoDefinitionFound
 
@@ -74,13 +75,23 @@ class FeatureDescription(object):
     """A simple object that holds filename and line number of a feature
     description"""
 
-    def __init__(self, filename, lines):
+    def __init__(self, feature, filename, string):
+        lines = [l.strip() for l in string.splitlines()]
         self.file = filename
         self.line = None
+        described_at = []
+        description_lines = strings.get_stripped_lines(feature.description)
         for pline, part in enumerate(lines):
-            if part.strip().startswith("Feature:"):
-                self.line = pline + 2
-                break
+            part = part.strip()
+            line = pline + 1
+            if part.startswith("Feature:"):
+                self.line = line
+            else:
+                for description in description_lines:
+                    if part == description:
+                        described_at.append(line)
+
+        self.description_at = tuple(described_at)
 
 class Step(object):
     """ Object that represents each step on feature files."""
@@ -355,7 +366,9 @@ class Feature(object):
         self.original_string = original_string
 
         if with_file:
-            feature_definition = FeatureDescription(with_file, remaining_lines)
+            feature_definition = FeatureDescription(self,
+                                                    with_file,
+                                                    original_string)
             self._set_definition(feature_definition)
 
         self._add_myself_to_scenarios()
@@ -381,13 +394,22 @@ class Feature(object):
     def __repr__(self):
         return u'<Feature: "%s">' % self.name
 
+    def represented(self, color=True):
+        return ''
+
     @classmethod
     def from_string(new_feature, string, with_file=None):
         """Creates a new feature from string"""
         lines = strings.get_stripped_lines(string)
-        feature_line = lines.pop(0)
-        line = feature_line.replace("Feature: ", "")
-        feature = new_feature(name=line,
+        while lines:
+            matched = re.search(r'Feature:(.*)', lines[0], re.I)
+            if matched:
+                name = matched.groups()[0].strip()
+                break
+
+            lines.pop(0)
+
+        feature = new_feature(name=name,
                               remaining_lines=lines,
                               with_file=with_file,
                               original_string=string)
@@ -406,7 +428,7 @@ class Feature(object):
         self.described_at = definition
 
     def _parse_remaining_lines(self, lines, original_string, with_file=None):
-        joined = "\n".join(lines)
+        joined = "\n".join(lines[1:])
         regex = re.compile("Scenario( Outline)?[:]\s", re.I)
         joined = regex.sub('Scenario: ', joined)
         parts = strings.split_wisely(joined, "Scenario[:] ")

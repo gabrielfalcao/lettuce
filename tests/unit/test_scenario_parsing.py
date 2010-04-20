@@ -267,4 +267,3 @@ def test_full_featured_feature():
 
     for step, expected_sentence in zip(scenario4.solved_steps, expected_sentences):
         assert_equals(step.sentence, expected_sentence)
-

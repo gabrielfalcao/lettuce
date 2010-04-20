@@ -18,8 +18,8 @@
 version = '0.1'
 release = 'barium'
 
-
 import sys
+
 from lettuce import fs
 from lettuce.core import Feature
 
@@ -29,6 +29,8 @@ from lettuce.terrain import world
 
 from lettuce.decorators import step
 from lettuce.registry import CALLBACK_REGISTRY
+
+from couleur import Shell
 
 __all__ = ['after', 'before', 'step', 'world']
 
@@ -41,7 +43,7 @@ class Runner(object):
     Takes a base path as parameter (string), so that it can look for
     features and step definitions on there.
     """
-    def __init__(self, base_path):
+    def __init__(self, base_path, verbosity=4):
         """ lettuce.Runner will try to find a terrain.py file and
         import it from within `base_path`
         """
@@ -49,6 +51,7 @@ class Runner(object):
         fs.FileSystem.pushd(base_path)
         self.terrain = None
         self.loader = fs.FeatureLoader(base_path)
+        self.verbosity = verbosity
         try:
             self.terrain = _import("terrain")
         except ImportError, e:
@@ -57,6 +60,9 @@ class Runner(object):
 
         sys.path.remove(base_path)
         fs.FileSystem.popd()
+
+        world._runner = self
+        world._shell = Shell(linebreak=True, disabled=verbosity is not 4)
 
     def run(self):
         """ Find and load step definitions, and them find and load

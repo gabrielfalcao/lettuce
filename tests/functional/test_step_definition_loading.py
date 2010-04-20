@@ -29,7 +29,7 @@ def test_loads_sum_steps():
     def assert_is_fine(step):
         world.ran = True
 
-    runner = Runner(join(abspath(dirname(__file__)), '2nd_feature_dir'))
+    runner = Runner(join(abspath(dirname(__file__)), '2nd_feature_dir'), verbosity=0)
     runner.run()
 
     assert world.ran
@@ -40,7 +40,7 @@ def test_recursive_fallback():
 
     world.step_list = list()
 
-    runner = Runner(join(abspath(dirname(__file__)), '3rd_feature_dir'))
+    runner = Runner(join(abspath(dirname(__file__)), '3rd_feature_dir'), verbosity=0)
     runner.run()
 
     assert_equals(

@@ -70,6 +70,25 @@ def test_feature_loaded_from_file_has_feature_line_and_feature_filename():
     feature = Feature.from_file(feature_file)
     assert_equals(feature.described_at.file, feature_file)
     assert_equals(feature.described_at.line, 2)
+    assert_equals(feature.name, 'Division')
+    assert_equals(feature.described_at.description_at, (3, 4))
+
+def test_feature_loaded_from_file_has_description_at():
+    "Feature.from_file sets FeatureDescription with line numbers of its description"
+
+    feature_file = cjoin('1st_feature_dir', 'some.feature')
+
+    feature = Feature.from_file(feature_file)
+    assert_equals(feature.described_at.file, feature_file)
+    assert_equals(feature.described_at.line, 5)
+    assert_equals(feature.name, 'Addition')
+    assert_equals(feature.described_at.description_at, (6, 7, 8))
+    assert_equals(
+        feature.description,
+        "In order to avoid silly mistakes\n"
+        "As a math idiot\n"
+        "I want to be told the sum of two numbers"
+    )
 
 def test_feature_loaded_from_file_sets_scenario_line_and_scenario_filename():
     "Feature.from_file sets ScenarioDescription into Scenario objects, " \

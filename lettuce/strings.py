@@ -43,3 +43,10 @@ def wise_startswith(string, seed):
 
 def remove_it(string, what):
     return re.sub(what, "", string).strip()
+
+def rfill(string, times, char=" ", append=""):
+    missing = times - len(string)
+    for x in range(missing):
+        string += char
+
+    return string + append
