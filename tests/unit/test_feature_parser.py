@@ -124,6 +124,20 @@ Feature: Big scenario outline
     | 1                            | um          | one             |
     | 2                            | dois        | two             |
 """
+
+FEATURE9 = """
+Feature: Big scenario outline
+  Scenario: big scenario outlines
+    Given I do fill 'description' with '<value_two>'
+
+  Examples:
+    | value_two_thousand_and_three_biiiiiiiiiiiiiiiiiiiiiiiiiiiiig |
+    | 1                                                            |
+    | 2                                                            |
+    | 3                                                            |
+"""
+
+
 def test_feature_has_repr():
     "Feature implements __repr__ nicely"
     feature = Feature.from_string(FEATURE1)
@@ -247,5 +261,7 @@ def test_feature_max_length_on_scenario_outline_keys():
     "The max length of a feature considering when the table keys of the  " \
     "scenario oulines are longer than the remaining things"
 
-    feature = Feature.from_string(FEATURE8)
-    assert_equals(feature.max_length, 68)
+    feature1 = Feature.from_string(FEATURE8)
+    feature2 = Feature.from_string(FEATURE9)
+    assert_equals(feature1.max_length, 68)
+    assert_equals(feature2.max_length, 68)
