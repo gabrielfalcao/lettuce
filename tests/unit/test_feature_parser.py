@@ -96,12 +96,12 @@ Feature: Big table
 
 FEATURE6 = """
 Feature: Big scenario outline
-  Scenario Outline: Regular numbers
+  Scenario: Regular numbers
     Given I do fill 'description' with '<value_two>'
-    Examples:
-      | value_two                                                               |
-      | this is such a huge value within a table, the maxlengh will be damn big |
-      | this is another description within a table                              |
+  Examples:
+    | value_two                                                               |
+    | this is such a huge value within a table, the maxlengh will be damn big |
+    | this is another description within a table                              |
 
 """
 
@@ -116,12 +116,13 @@ Feature: Big table
 
 FEATURE8 = """
 Feature: Big scenario outline
-  Scenario Outline: Regular numbers
+  Scenario: big scenario outlines
     Given I do fill 'description' with '<value_two>'
-    Examples:
-      | value_two_thousand_and_three | another_one | and_even_bigger |
-      | 1                            | um          | one             |
-      | 2                            | dois        | two             |
+
+  Examples:
+    | value_two_thousand_and_three | another_one | and_even_bigger |
+    | 1                            | um          | one             |
+    | 2                            | dois        | two             |
 """
 def test_feature_has_repr():
     "Feature implements __repr__ nicely"
@@ -240,11 +241,11 @@ def test_feature_max_length_on_scenario_outline():
     "scenario oulines is longer than the remaining things"
 
     feature = Feature.from_string(FEATURE6)
-    assert_equals(feature.max_length, 81)
+    assert_equals(feature.max_length, 79)
 
 def test_feature_max_length_on_scenario_outline_keys():
     "The max length of a feature considering when the table keys of the  " \
     "scenario oulines are longer than the remaining things"
 
     feature = Feature.from_string(FEATURE8)
-    assert_equals(feature.max_length, 84)
+    assert_equals(feature.max_length, 68)
