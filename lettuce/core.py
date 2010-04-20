@@ -85,7 +85,8 @@ class FeatureDescription(object):
 class Step(object):
     """ Object that represents each step on feature files."""
     has_definition = False
-
+    indentation = 4
+    table_indentation = indentation + 2
     def __init__(self, sentence, remaining_lines, line=None, filename=None):
         self.sentence = sentence
         self._remaining_lines = remaining_lines
@@ -94,6 +95,36 @@ class Step(object):
         self.keys = tuple(keys)
         self.data_list = list(data_list)
         self.described_at = StepDescription(line, filename)
+
+    def _calc_list_length(self, lst):
+        length = self.table_indentation + 2
+        for item in lst:
+            length += len(item) + 2
+
+        if len(lst) > 1:
+            length += 1
+
+        return length
+
+    def _calc_key_length(self, data):
+        return self._calc_list_length(data.keys())
+
+    def _calc_value_length(self, data):
+        return self._calc_list_length(data.values())
+
+    @property
+    def max_length(self):
+        max_length = len(self.sentence) + self.indentation
+        for data in self.data_list:
+            key_size = self._calc_key_length(data)
+            if key_size > max_length:
+                max_length = key_size
+
+            value_size = self._calc_value_length(data)
+            if value_size > max_length:
+                max_length = value_size
+
+        return max_length
 
     def __repr__(self):
         return u'<Step: "%s">' % self.sentence
@@ -150,6 +181,8 @@ class Step(object):
 class Scenario(object):
     """ Object that represents each scenario on feature files."""
     described_at = None
+    indentation = 2
+
     def __init__(self, name, remaining_lines, outlines, with_file=None,
                  original_string=None):
 
@@ -167,6 +200,21 @@ class Scenario(object):
         self.solved_steps = list(self._resolve_steps(self.steps, self.outlines,
                                                      with_file, original_string))
         self._add_myself_to_steps()
+
+    @property
+    def max_length(self):
+        if self.outlines:
+            prefix = "Scenario Outline:"
+        else:
+            prefix = "Scenario:"
+
+        max_length = len("%s %s" % (prefix, self.name)) + self.indentation
+
+        for step in self.steps:
+            if step.max_length > max_length:
+                max_length = step.max_length
+
+        return max_length
 
     def __repr__(self):
         return u'<Scenario: "%s">' % self.name
@@ -286,6 +334,20 @@ class Feature(object):
             self._set_definition(feature_definition)
 
         self._add_myself_to_scenarios()
+
+    @property
+    def max_length(self):
+        max_length = len("Feature: %s" % self.name)
+        for line in self.description.splitlines():
+            length = len(line.strip()) + Scenario.indentation
+            if length > max_length:
+                max_length = length
+
+        for scenario in self.scenarios:
+            if scenario.max_length > max_length:
+                max_length = scenario.max_length
+
+        return max_length
 
     def _add_myself_to_scenarios(self):
         for scenario in self.scenarios:
