@@ -27,7 +27,7 @@ def get_stripped_lines(string):
     return [l for l in lines if l]
 
 def split_wisely(string, sep, strip=False):
-    regex = re.compile(escape_if_necessary(sep),  re.I)
+    regex = re.compile(escape_if_necessary(sep),  re.I | re.M)
 
     items = filter(lambda x: x, regex.split(string))
     if strip:

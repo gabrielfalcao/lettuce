@@ -40,8 +40,60 @@ Scenario Outline: Add two numbers
       | 0       | 40      | add    | 40     |
 """
 
+OUTLINED_FEATURE = """
+    Feature: Do many things at once
+        In order to automate tests
+        As a automation freaky
+        I want to use scenario outlines
+
+        Scenario Outline: Add two numbers wisely
+            Given I have entered <input_1> into the calculator
+            And I have entered <input_2> into the calculator
+            When I press <button>
+            Then the result should be <output> on the screen
+
+        Examples:
+            | input_1 | input_2 | button | output |
+            | 20      | 30      | add    | 50     |
+            | 2       | 5       | add    | 7      |
+            | 0       | 40      | add    | 40     |
+"""
+
+OUTLINED_FEATURE_WITH_MANY = """
+    Feature: Full-featured feature
+        Scenario Outline: Do something
+            Given I have entered <input_1> into the <input_2>
+
+        Examples:
+            | input_1 | input_2 |
+            | ok      | fail    |
+            | fail    | ok      |
+
+        Scenario: Do something else
+          Given I am fine
+
+        Scenario: Worked!
+          Given it works
+          When I look for something
+          Then I find it
+
+        Scenario Outline: Add two numbers wisely
+            Given I have entered <input_1> into the calculator
+            And I have entered <input_2> into the calculator
+            When I press <button>
+            Then the result should be <output> on the screen
+
+        Examples:
+            | input_1 | input_2 | button | output |
+            | 20      | 30      | add    | 50     |
+            | 2       | 5       | add    | 7      |
+            | 0       | 40      | add    | 40     |
+
+"""
+
 from lettuce.core import Step
 from lettuce.core import Scenario
+from lettuce.core import Feature
 from nose.tools import assert_equals
 
 def test_scenario_has_name():
@@ -153,3 +205,66 @@ def test_solved_steps_also_have_scenario_as_attribute():
     scenario = Scenario.from_string(OUTLINED_SCENARIO)
     for step in scenario.solved_steps:
         assert_equals(step.scenario, scenario)
+
+def test_scenario_outlines_within_feature():
+    "Solving scenario outlines within a feature"
+    feature = Feature.from_string(OUTLINED_FEATURE)
+    scenario = feature.scenarios[0]
+
+    assert_equals(len(scenario.solved_steps), 12)
+    expected_sentences = [
+        'Given I have entered 20 into the calculator',
+        'And I have entered 30 into the calculator',
+        'When I press add',
+        'Then the result should be 50 on the screen',
+        'Given I have entered 2 into the calculator',
+        'And I have entered 5 into the calculator',
+        'When I press add',
+        'Then the result should be 7 on the screen',
+        'Given I have entered 0 into the calculator',
+        'And I have entered 40 into the calculator',
+        'When I press add',
+        'Then the result should be 40 on the screen',
+    ]
+
+    for step, expected_sentence in zip(scenario.solved_steps, expected_sentences):
+        assert_equals(type(step), Step)
+        assert_equals(step.sentence, expected_sentence)
+
+def test_full_featured_feature():
+    "Solving scenarios within a full-featured feature"
+    feature = Feature.from_string(OUTLINED_FEATURE_WITH_MANY)
+    scenario1, scenario2, scenario3, scenario4 = feature.scenarios
+
+    assert_equals(scenario1.name, 'Do something')
+    assert_equals(scenario2.name, 'Do something else')
+    assert_equals(scenario3.name, 'Worked!')
+    assert_equals(scenario4.name, 'Add two numbers wisely')
+
+    assert_equals(len(scenario1.solved_steps), 2)
+    expected_sentences = [
+        'Given I have entered ok into the fail',
+        'Given I have entered fail into the ok',
+    ]
+    for step, expected_sentence in zip(scenario1.solved_steps, expected_sentences):
+        assert_equals(step.sentence, expected_sentence)
+
+    assert_equals(len(scenario4.solved_steps), 12)
+    expected_sentences = [
+        'Given I have entered 20 into the calculator',
+        'And I have entered 30 into the calculator',
+        'When I press add',
+        'Then the result should be 50 on the screen',
+        'Given I have entered 2 into the calculator',
+        'And I have entered 5 into the calculator',
+        'When I press add',
+        'Then the result should be 7 on the screen',
+        'Given I have entered 0 into the calculator',
+        'And I have entered 40 into the calculator',
+        'When I press add',
+        'Then the result should be 40 on the screen',
+    ]
+
+    for step, expected_sentence in zip(scenario4.solved_steps, expected_sentences):
+        assert_equals(step.sentence, expected_sentence)
+

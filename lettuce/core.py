@@ -248,6 +248,7 @@ class Scenario(object):
     @classmethod
     def from_string(new_scenario, string, with_file=None, original_string=None):
         """ Creates a new scenario from string"""
+
         splitted = strings.split_wisely(string, "Example[s]?[:]", True)
         string = splitted[0]
 
@@ -320,16 +321,20 @@ class Feature(object):
 
     def _parse_remaining_lines(self, lines, original_string, with_file=None):
         joined = "\n".join(lines)
-        parts = strings.split_wisely(joined, "Scenario: ")
+        regex = re.compile("Scenario( Outline)?[:]\s", re.I)
+        joined = regex.sub('Scenario: ', joined)
+        parts = strings.split_wisely(joined, "Scenario[:] ")
+
         description = ""
 
-        if not strings.wise_startswith(joined, "Scenario:"):
-            description = parts[0]
+        if not re.search("^Scenario[:] ", joined):
+            description = strings.get_stripped_lines(parts[0])
             parts.pop(0)
 
         scenario_strings = ["Scenario: %s" % s for s in parts if s.strip()]
         kw = dict(original_string=original_string, with_file=with_file)
-        scenarios = [Scenario.from_string(s, **kw) for s in scenario_strings] # use filter here
+
+        scenarios = [Scenario.from_string(s, **kw) for s in scenario_strings]
 
         return scenarios, description
 
