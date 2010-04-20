@@ -182,7 +182,7 @@ class Scenario(object):
     """ Object that represents each scenario on feature files."""
     described_at = None
     indentation = 2
-
+    table_indentation = indentation + 2
     def __init__(self, name, remaining_lines, outlines, with_file=None,
                  original_string=None):
 
@@ -191,7 +191,6 @@ class Scenario(object):
                                                  with_file,
                                                  original_string)
         self.outlines = outlines
-
         if with_file and original_string:
             scenario_definition = ScenarioDescription(self, with_file,
                                                       original_string)
@@ -214,7 +213,32 @@ class Scenario(object):
             if step.max_length > max_length:
                 max_length = step.max_length
 
+        for outline in self.outlines:
+            key_size = self._calc_key_length(outline)
+            if key_size > max_length:
+                max_length = key_size
+
+            value_size = self._calc_value_length(outline)
+            if value_size > max_length:
+                max_length = value_size
+
         return max_length
+
+    def _calc_list_length(self, lst):
+        length = self.table_indentation + 2
+        for item in lst:
+            length += len(item) + 2
+
+        if len(lst) > 1:
+            length += 2
+
+        return length
+
+    def _calc_key_length(self, data):
+        return self._calc_list_length(data.keys())
+
+    def _calc_value_length(self, data):
+        return self._calc_list_length(data.values())
 
     def __repr__(self):
         return u'<Scenario: "%s">' % self.name
@@ -307,7 +331,7 @@ class Scenario(object):
 
         lines = strings.get_stripped_lines(string)
         scenario_line = lines.pop(0)
-        line = strings.remove_it(scenario_line, "Scenario( Outline)?: ")
+        line = strings.remove_it(scenario_line, "Scenario( Outline)?[:] ")
 
         scenario =  new_scenario(name=line,
                                  remaining_lines=lines,
