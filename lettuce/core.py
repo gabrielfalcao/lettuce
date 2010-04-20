@@ -414,7 +414,7 @@ class Feature(object):
         description = ""
 
         if not re.search("^Scenario[:] ", joined):
-            description = strings.get_stripped_lines(parts[0])
+            description = parts[0]
             parts.pop(0)
 
         scenario_strings = ["Scenario: %s" % s for s in parts if s.strip()]

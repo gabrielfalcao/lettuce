@@ -50,18 +50,6 @@ Feature: Rent movies
 
 FEATURE2 = """
 Feature: Division
-  In order to avoid silly mistakes
-  Cashiers must be able to calculate a fraction
-
-  Scenario: Regular numbers
-    * I have entered 3 into the calculator
-    * I have entered 2 into the calculator
-    * I press divide
-    * the result should be 1.5 on the screen
-"""
-
-FEATURE2 = """
-Feature: Division
       In order to avoid silly mistakes
       Cashiers must be able to calculate a fraction
 
@@ -74,12 +62,17 @@ Feature: Division
 
 FEATURE3 = """
 Feature: A long line as feature name will define the max length of the feature
+  In order to describe my features
+  I want to add description on them
   Scenario: Regular numbers
     Nothing to do
 """
 
 FEATURE4 = """
 Feature: Big sentence
+  As a clever guy
+  I want to describe this Feature
+  So that I can take care of my Scenario
   Scenario: Regular numbers
     Given a huge sentence, that have so many characters
     And another one, very tiny
@@ -187,6 +180,11 @@ def test_can_parse_feature_description():
 
     feature = Feature.from_string(FEATURE2)
 
+    assert_equals(
+        feature.description,
+        "In order to avoid silly mistakes\n"
+        "Cashiers must be able to calculate a fraction"
+    )
     expected_scenario_names = ["Regular numbers"]
     got_scenario_names = [s.name for s in feature.scenarios]
 
@@ -265,3 +263,23 @@ def test_feature_max_length_on_scenario_outline_keys():
     feature2 = Feature.from_string(FEATURE9)
     assert_equals(feature1.max_length, 68)
     assert_equals(feature2.max_length, 68)
+
+def test_description_on_long_named_feature():
+    "Can parse the description on long named features"
+    feature = Feature.from_string(FEATURE3)
+    assert_equals(
+        feature.description,
+        "In order to describe my features\n"
+        "I want to add description on them"
+    )
+
+def test_description_on_big_sentenced_steps():
+    "Can parse the description on long sentenced steps"
+    feature = Feature.from_string(FEATURE4)
+    assert_equals(
+        feature.description,
+        "As a clever guy\n"
+        "I want to describe this Feature\n"
+        "So that I can take care of my Scenario"
+    )
+
