@@ -60,6 +60,69 @@ Feature: Division
     * the result should be 1.5 on the screen
 """
 
+FEATURE2 = """
+Feature: Division
+      In order to avoid silly mistakes
+      Cashiers must be able to calculate a fraction
+
+      Scenario: Regular numbers
+            * I have entered 3 into the calculator
+            * I have entered 2 into the calculator
+            * I press divide
+            * the result should be 1.5 on the screen
+"""
+
+FEATURE3 = """
+Feature: A long line as feature name will define the max length of the feature
+  Scenario: Regular numbers
+    Nothing to do
+"""
+
+FEATURE4 = """
+Feature: Big sentence
+  Scenario: Regular numbers
+    Given a huge sentence, that have so many characters
+    And another one, very tiny
+"""
+
+FEATURE5 = """
+Feature: Big table
+  Scenario: Regular numbers
+    Given that I have these items:
+      | description                                                               |
+      | this is such a huge description within a table, the maxlengh will be huge |
+      | this is another description within a table                                |
+"""
+
+FEATURE6 = """
+Feature: Big scenario outline
+  Scenario Outline: Regular numbers
+    Given I do fill 'description' with '<value_two>'
+    Examples:
+      | value_two                                                               |
+      | this is such a huge value within a table, the maxlengh will be damn big |
+      | this is another description within a table                              |
+
+"""
+
+FEATURE7 = """
+Feature: Big table
+  Scenario: Regular numbers
+    Given that I have these items:
+      | description-long-as-hell | name-that-will-make-my-max-length-big |
+      | one                      | john                                  |
+      | two                      | baby                                  |
+"""
+
+FEATURE8 = """
+Feature: Big scenario outline
+  Scenario Outline: Regular numbers
+    Given I do fill 'description' with '<value_two>'
+    Examples:
+      | value_two_thousand_and_three | another_one | and_even_bigger |
+      | 1                            | um          | one             |
+      | 2                            | dois        | two             |
+"""
 def test_feature_has_repr():
     "Feature implements __repr__ nicely"
     feature = Feature.from_string(FEATURE1)
@@ -129,3 +192,59 @@ def test_scenarios_parsed_by_feature_has_feature():
 
     for scenario in feature.scenarios:
         assert_equals(scenario.feature, feature)
+
+def test_feature_max_length_on_scenario():
+    "The max length of a feature considering when the scenario is longer than " \
+    "the remaining things"
+
+    feature = Feature.from_string(FEATURE1)
+    assert_equals(feature.max_length, 76)
+
+def test_feature_max_length_on_feature_description():
+    "The max length of a feature considering when one of the description lines " \
+    "of the feature is longer than the remaining things"
+
+    feature = Feature.from_string(FEATURE2)
+    assert_equals(feature.max_length, 47)
+
+def test_feature_max_length_on_feature_name():
+    "The max length of a feature considering when the name of the feature " \
+    "is longer than the remaining things"
+
+    feature = Feature.from_string(FEATURE3)
+    assert_equals(feature.max_length, 78)
+
+def test_feature_max_length_on_step_sentence():
+    "The max length of a feature considering when the some of the step sentences " \
+    "is longer than the remaining things"
+
+    feature = Feature.from_string(FEATURE4)
+    assert_equals(feature.max_length, 55)
+
+def test_feature_max_length_on_step_with_table():
+    "The max length of a feature considering when the table of some of the steps " \
+    "is longer than the remaining things"
+
+    feature = Feature.from_string(FEATURE5)
+    assert_equals(feature.max_length, 83)
+
+def test_feature_max_length_on_step_with_table_keys():
+    "The max length of a feature considering when the table keys of some of the " \
+    "steps are longer than the remaining things"
+
+    feature = Feature.from_string(FEATURE7)
+    assert_equals(feature.max_length, 74)
+
+def test_feature_max_length_on_scenario_outline():
+    "The max length of a feature considering when the table of some of the  " \
+    "scenario oulines is longer than the remaining things"
+
+    feature = Feature.from_string(FEATURE6)
+    assert_equals(feature.max_length, 81)
+
+def test_feature_max_length_on_scenario_outline_keys():
+    "The max length of a feature considering when the table keys of the  " \
+    "scenario oulines are longer than the remaining things"
+
+    feature = Feature.from_string(FEATURE8)
+    assert_equals(feature.max_length, 84)
