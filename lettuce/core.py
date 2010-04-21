@@ -14,12 +14,11 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+import os
 import re
 from lettuce import strings
 from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
-from lettuce.registry import world
 from lettuce.exceptions import ReasonToFail
 from lettuce.exceptions import NoDefinitionFound
 
@@ -56,6 +55,9 @@ class StepDescription(object):
     description (step within feature file)"""
     def __init__(self, line, filename):
         self.file = filename
+        if self.file:
+            self.file = os.path.relpath(self.file)
+
         self.line = line
 
 class ScenarioDescription(object):
@@ -63,7 +65,7 @@ class ScenarioDescription(object):
     description (scenario within feature file)"""
 
     def __init__(self, scenario, filename, string):
-        self.file = filename
+        self.file = os.path.relpath(filename)
         self.line = None
 
         for pline, part in enumerate(string.splitlines()):
@@ -77,7 +79,7 @@ class FeatureDescription(object):
 
     def __init__(self, feature, filename, string):
         lines = [l.strip() for l in string.splitlines()]
-        self.file = filename
+        self.file = os.path.relpath(filename)
         self.line = None
         described_at = []
         description_lines = strings.get_stripped_lines(feature.description)
@@ -394,8 +396,19 @@ class Feature(object):
     def __repr__(self):
         return u'<Feature: "%s">' % self.name
 
+    def get_head(self):
+        return "Feature: %s" % self.name
+
     def represented(self, color=True):
-        return ''
+        length = self.max_length + 1
+
+        filename = self.described_at.file
+        line = self.described_at.line
+        head = strings.rfill(self.get_head(), length, append="# %s:%d\n" % (filename, line))
+        for description, line in zip(self.description.splitlines(), self.described_at.description_at):
+            head += strings.rfill("  %s" % description, length, append="# %s:%d\n" % (filename, line))
+
+        return head
 
     @classmethod
     def from_string(new_feature, string, with_file=None):

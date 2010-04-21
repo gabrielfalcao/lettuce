@@ -23,8 +23,6 @@ from nose.tools import assert_equals, with_setup
 from lettuce import Runner
 from lettuce.fs import FeatureLoader
 from lettuce.core import Feature
-from lettuce.core import Scenario
-from lettuce.core import Step
 
 current_dir = abspath(dirname(__file__))
 cjoin = lambda *x: join(current_dir, *x)
@@ -40,17 +38,21 @@ def assert_stdout(expected):
     string = sys.stdout.getvalue()
     assert_equals(string, expected)
 
-def _test_feature_representation_without_colors():
+def assert_lines(one, other):
+    for line1, line2 in zip(one.splitlines(), other.splitlines()):
+        assert_equals(line1, line2)
+
+def test_feature_representation_without_colors():
     "Feature represented without colors"
     feature_file = cjoin('1st_feature_dir', 'some.feature')
 
     feature = Feature.from_file(feature_file)
-    assert_equals(
+    assert_lines(
         feature.represented(color=False),
-        "Feature: Adition                                       # 1st_feature_dir/some.feature:5\n"
-        "  In order to avoid silly mistakes                     # 1st_feature_dir/some.feature:6\n"
-        "  As a math idiot                                      # 1st_feature_dir/some.feature:7\n"
-        "  I want to be told the sum of two numbers             # 1st_feature_dir/some.feature:8\n"
+        "Feature: Addition                                      # tests/functional/1st_feature_dir/some.feature:5\n"
+        "  In order to avoid silly mistakes                     # tests/functional/1st_feature_dir/some.feature:6\n"
+        "  As a math idiot                                      # tests/functional/1st_feature_dir/some.feature:7\n"
+        "  I want to be told the sum of two numbers             # tests/functional/1st_feature_dir/some.feature:8\n"
     )
 
 def _test_scenario_representation_without_colors():
@@ -60,7 +62,7 @@ def _test_scenario_representation_without_colors():
     feature = Feature.from_file(feature_file)
     assert_equals(
         feature.scenarios[0].represented(color=False),
-        "  Scenario Outline: Add two numbers                    # 1st_feature_dir/some.feature:10\n"
+        "  Scenario Outline: Add two numbers                    # tests/functional/1st_feature_dir/some.feature:10\n"
     )
 
 def _test_undefined_step_representation_without_colors():
@@ -70,11 +72,11 @@ def _test_undefined_step_representation_without_colors():
     feature = Feature.from_file(feature_file)
     assert_equals(
         feature.scenarios[0].steps[0].represented(color=False),
-        "     Given I do nothing                    # runner_features/first.feature:7\n"
+        "     Given I do nothing                    # tests/functional/runner_features/first.feature:7\n"
     )
     assert_equals(
         feature.scenarios[0].steps[1].represented(color=False),
-        "     Then I see that the test passes       # runner_features/first.feature:8\n"
+        "     Then I see that the test passes       # tests/functional/runner_features/first.feature:8\n"
     )
 
 def _test_defined_step_representation_without_colors():
@@ -87,11 +89,11 @@ def _test_defined_step_representation_without_colors():
 
     assert_equals(
         feature.scenarios[0].solved_steps[0].represented(color=False),
-        "     Given I do nothing                    # runner_features/dumb_steps.py:6\n"
+        "     Given I do nothing                    # tests/functional/runner_features/dumb_steps.py:6\n"
     )
     assert_equals(
         feature.scenarios[0].solved_steps[1].represented(color=False),
-        "     Then I see that the test passes       # runner_features/dumb_steps.py:7\n"
+        "     Then I see that the test passes       # tests/functional/runner_features/dumb_steps.py:7\n"
     )
 
 @with_setup(prepare_stdout)
@@ -102,12 +104,12 @@ def _test_output_with_success_colorless():
     runner.run()
 
     assert_stdout(
-    "Feature: Dumb feature                     # runner_features/first.feature: 1\n"
+    "Feature: Dumb feature                     # tests/functional/runner_features/first.feature: 1\n"
     "  In order to test success\n"
     "  As a programmer\n"
     "  I want to see that the output is green\n"
     "\n"
-    "  Scenario: Do nothing                    # runner_features/first.feature: 6\n"
-    "    Given I do nothing                    # runner_features/dumb_steps.py: 6\n"
-    "    Then I see that the test passes       # runner_features/dumb_steps.py: 8\n"
+    "  Scenario: Do nothing                    # tests/functional/runner_features/first.feature: 6\n"
+    "    Given I do nothing                    # tests/functional/runner_features/dumb_steps.py: 6\n"
+    "    Then I see that the test passes       # tests/functional/runner_features/dumb_steps.py: 8\n"
     )
