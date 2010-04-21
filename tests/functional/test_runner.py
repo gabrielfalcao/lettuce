@@ -55,7 +55,7 @@ def test_feature_representation_without_colors():
         "  I want to be told the sum of two numbers             # tests/functional/1st_feature_dir/some.feature:8\n"
     )
 
-def _test_scenario_representation_without_colors():
+def test_scenario_representation_without_colors():
     "Scenario represented without colors"
     feature_file = cjoin('1st_feature_dir', 'some.feature')
 

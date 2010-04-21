@@ -330,6 +330,10 @@ class Scenario(object):
     def _set_definition(self, definition):
         self.described_at = definition
 
+    def represented(self, color=True):
+        head = '%sScenario Outline: %s' % (' ' * self.indentation, self.name)
+        return strings.rfill(head, self.feature.max_length + 1, append='# %s:%d\n' % (self.described_at.file, self.described_at.line))
+
     @classmethod
     def from_string(new_scenario, string, with_file=None, original_string=None):
         """ Creates a new scenario from string"""
