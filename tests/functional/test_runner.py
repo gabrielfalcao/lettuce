@@ -55,8 +55,8 @@ def test_feature_representation_without_colors():
         "  I want to be told the sum of two numbers             # tests/functional/1st_feature_dir/some.feature:8\n"
     )
 
-def test_scenario_representation_without_colors():
-    "Scenario represented without colors"
+def test_scenario_outline_representation_without_colors():
+    "Scenario Outline represented without colors"
     feature_file = cjoin('1st_feature_dir', 'some.feature')
 
     feature = Feature.from_file(feature_file)
@@ -65,35 +65,47 @@ def test_scenario_representation_without_colors():
         "  Scenario Outline: Add two numbers                    # tests/functional/1st_feature_dir/some.feature:10\n"
     )
 
-def _test_undefined_step_representation_without_colors():
+def test_scenario_representation_without_colors():
+    "Scenario represented without colors"
+    feature_file = cjoin('runner_features', 'first.feature')
+
+    feature = Feature.from_file(feature_file)
+    assert_equals(
+        feature.scenarios[0].represented(color=False),
+        "  Scenario: Do nothing                   # tests/functional/runner_features/first.feature:6\n"
+    )
+
+def test_undefined_step_represent_string():
     "Undefined step represented without colors"
     feature_file = cjoin('runner_features', 'first.feature')
 
     feature = Feature.from_file(feature_file)
+    step = feature.scenarios[0].steps[0]
     assert_equals(
-        feature.scenarios[0].steps[0].represented(color=False),
-        "     Given I do nothing                    # tests/functional/runner_features/first.feature:7\n"
-    )
-    assert_equals(
-        feature.scenarios[0].steps[1].represented(color=False),
-        "     Then I see that the test passes       # tests/functional/runner_features/first.feature:8\n"
+        step.represent_string(step.sentence, color=False),
+        "    Given I do nothing                   # tests/functional/runner_features/first.feature:7\n"
     )
 
-def _test_defined_step_representation_without_colors():
+    assert_equals(
+        step.represent_string("foo bar", color=False),
+        "    foo bar                              # tests/functional/runner_features/first.feature:7\n"
+    )
+
+def test_defined_step_represent_string():
     "Defined step represented without colors"
     feature_file = cjoin('runner_features', 'first.feature')
-    loader = FeatureLoader('runner_features')
+    feature_dir = cjoin('runner_features')
+    loader = FeatureLoader(feature_dir)
+
     loader.find_and_load_step_definitions()
 
     feature = Feature.from_file(feature_file)
+    step = feature.scenarios[0].steps[0]
+    step.run(True)
 
     assert_equals(
-        feature.scenarios[0].solved_steps[0].represented(color=False),
-        "     Given I do nothing                    # tests/functional/runner_features/dumb_steps.py:6\n"
-    )
-    assert_equals(
-        feature.scenarios[0].solved_steps[1].represented(color=False),
-        "     Then I see that the test passes       # tests/functional/runner_features/dumb_steps.py:7\n"
+        step.represent_string(step.sentence, color=False),
+        "    Given I do nothing                   # tests/functional/runner_features/dumb_steps.py:6\n"
     )
 
 @with_setup(prepare_stdout)

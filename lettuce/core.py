@@ -40,7 +40,7 @@ class StepDefinition(object):
     gets a few metadata from file, such as filename and line number"""
     def __init__(self, step, function):
         self.function = function
-        self.file = function.func_code.co_filename
+        self.file = os.path.relpath(function.func_code.co_filename)
         self.line = function.func_code.co_firstlineno + 1
         self.step = step
 
@@ -100,6 +100,8 @@ class Step(object):
     has_definition = False
     indentation = 4
     table_indentation = indentation + 2
+    defined_at = None
+
     def __init__(self, sentence, remaining_lines, line=None, filename=None):
         self.sentence = sentence
         self._remaining_lines = remaining_lines
@@ -138,6 +140,13 @@ class Step(object):
                 max_length = value_size
 
         return max_length
+
+    def represent_string(self, string, color=True):
+        head = ' ' * self.indentation + string
+        where = self.described_at
+        if self.defined_at:
+            where = self.defined_at
+        return strings.rfill(head, self.scenario.feature.max_length + 1, append='# %s:%d\n' % (where.file, where.line))
 
     def __repr__(self):
         return u'<Step: "%s">' % self.sentence
@@ -331,7 +340,8 @@ class Scenario(object):
         self.described_at = definition
 
     def represented(self, color=True):
-        head = '%sScenario Outline: %s' % (' ' * self.indentation, self.name)
+        comp = self.outlines and ' Outline' or ''
+        head = '%sScenario%s: %s' % (' ' * self.indentation, comp, self.name)
         return strings.rfill(head, self.feature.max_length + 1, append='# %s:%d\n' % (self.described_at.file, self.described_at.line))
 
     @classmethod

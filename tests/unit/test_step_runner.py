@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+from os.path import relpath
 from lettuce import step
 from lettuce.core import Step
 from lettuce.core import Feature
@@ -164,7 +164,7 @@ def test_steps_are_aware_of_its_definitions():
     step1 = scenario_result.steps_passed[0]
 
     assert_equals(step1.defined_at.line, 66)
-    assert_equals(step1.defined_at.file, __file__.rstrip("c"))
+    assert_equals(step1.defined_at.file, relpath(__file__.rstrip("c")))
 
 def test_steps_that_match_groups_takes_them_as_parameters():
     "Steps that match groups takes them as parameters"
