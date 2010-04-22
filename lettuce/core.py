@@ -17,6 +17,7 @@
 import os
 import re
 from lettuce import strings
+from lettuce.terrain import world
 from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
 from lettuce.exceptions import ReasonToFail
@@ -165,26 +166,34 @@ class Step(object):
 
         return matched, StepDefinition(self, func)
 
+    def pre_run(self, ignore_case):
+        matched, step_definition = self._get_match(ignore_case)
+        if not self.defined_at:
+            if not matched:
+                raise NoDefinitionFound(self)
+
+            self.has_definition = True
+            self.defined_at = step_definition
+
+        return matched, step_definition
+
     def run(self, ignore_case):
         """Runs a step, trying to resolve it on available step
         definitions"""
-        matched, step_definition = self._get_match(ignore_case)
+        matched, step_definition = self.pre_run(ignore_case)
 
-        if not matched:
-            raise NoDefinitionFound(self)
-        else:
-            self.has_definition = True
-            self.defined_at = step_definition
-            try:
-                kw = matched.groupdict()
-                if kw:
-                    step_definition(**kw)
-                else:
-                    groups = matched.groups()
-                    step_definition(*groups)
-            except Exception, e:
-                self.why = ReasonToFail(e)
-                raise
+        try:
+            kw = matched.groupdict()
+
+            if kw:
+                step_definition(**kw)
+            else:
+                groups = matched.groups()
+                step_definition(*groups)
+
+        except Exception, e:
+            self.why = ReasonToFail(e)
+            raise
 
     @classmethod
     def from_string(cls, string, with_file=None, original_string=None):
@@ -274,11 +283,13 @@ class Scenario(object):
         steps_failed = []
         steps_undefined = []
 
+        world._output.write(self.represented(color=world._is_colored))
         for callback in CALLBACK_REGISTRY['scenario']['before_each']:
             callback(self)
 
         for step in self.steps:
             try:
+                step.pre_run(ignore_case)
                 for callback in CALLBACK_REGISTRY['step']['before_each']:
                     callback(step)
 
@@ -475,6 +486,8 @@ class Feature(object):
         return scenarios, description
 
     def run(self, ignore_case=True):
+        world._output.write(self.represented(color=world._is_colored))
+        world._output.write("\n")
         for callback in CALLBACK_REGISTRY['feature']['before_each']:
             callback(self)
 
@@ -491,6 +504,10 @@ class FeatureResult(object):
         self.feature = feature
         self.scenario_results = scenario_results
 
+    @property
+    def passed(self):
+        return all([result.passed for result in self.scenario_results])
+
 class ScenarioResult(object):
     """Object that holds results of each step ran from within a scenario"""
     def __init__(self, scenario, steps_passed, steps_failed, steps_skipped,
@@ -505,3 +522,36 @@ class ScenarioResult(object):
 
         all_lists = [steps_passed + steps_skipped + steps_undefined]
         self.total_steps = sum(map(len, all_lists))
+
+    @property
+    def passed(self):
+        return self.total_steps is len(self.steps_passed)
+
+class TotalResult(object):
+    def __init__(self, feature_results):
+        self.feature_results = feature_results
+        self.scenario_results = []
+        self.steps_passed = 0
+        self.steps = 0
+        for feature_result in self.feature_results:
+            for scenario_result in feature_result.scenario_results:
+                self.scenario_results.append(scenario_result)
+                self.steps_passed += len(scenario_result.steps_passed)
+                self.steps += scenario_result.total_steps
+
+    @property
+    def features_ran(self):
+        return len(self.feature_results)
+
+    @property
+    def features_passed(self):
+        return len([result.passed for result in self.feature_results])
+
+    @property
+    def scenarios_ran(self):
+        return len(self.scenario_results)
+
+    @property
+    def scenarios_passed(self):
+        return len([result.passed for result in self.scenario_results])
+

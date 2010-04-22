@@ -21,7 +21,7 @@ release = 'barium'
 import sys
 
 from lettuce import fs
-from lettuce.core import Feature
+from lettuce.core import Feature, TotalResult
 
 from lettuce.terrain import after
 from lettuce.terrain import before
@@ -48,7 +48,6 @@ class Runner(object):
         import it from within `base_path`
         """
         sys.path.insert(0, base_path)
-        fs.FileSystem.pushd(base_path)
         self.terrain = None
         self.loader = fs.FeatureLoader(base_path)
         self.verbosity = verbosity
@@ -64,10 +63,12 @@ class Runner(object):
                 raise SystemExit(1)
 
         sys.path.remove(base_path)
-        fs.FileSystem.popd()
 
-        world._runner = self
-        world._shell = Shell(linebreak=True, disabled=verbosity is not 4)
+        if verbosity is 3:
+            from lettuce.plugins import shell_output
+
+        world._output = sys.stdout
+        world._is_colored = verbosity is 4
 
     def run(self):
         """ Find and load step definitions, and them find and load
@@ -78,10 +79,31 @@ class Runner(object):
         for callback in CALLBACK_REGISTRY['all']['before']:
             callback()
 
+        results = []
         for filename in self.loader.find_feature_files():
             feature = Feature.from_file(filename)
-            feature.run()
+            results.append(feature.run())
 
         for callback in CALLBACK_REGISTRY['all']['after']:
             callback()
 
+        total = TotalResult(results)
+        world._output.write("\n")
+
+        world._output.write("%d feature (%d passed)\n" % (
+            total.features_ran,
+            total.features_passed
+            )
+        )
+
+        world._output.write("%d scenario (%d passed)\n" % (
+            total.scenarios_ran,
+            total.scenarios_passed
+            )
+        )
+
+        world._output.write("%d steps (%d passed)\n" % (
+            total.steps,
+            total.steps_passed
+            )
+        )

@@ -25,6 +25,7 @@ from nose.tools import assert_equals, with_setup
 from lettuce import Runner
 from lettuce.fs import FeatureLoader
 from lettuce.core import Feature
+from lettuce.terrain import world
 
 current_dir = abspath(dirname(__file__))
 cjoin = lambda *x: join(current_dir, *x)
@@ -39,6 +40,7 @@ def prepare_stdout():
 def assert_stdout(expected):
     string = sys.stdout.getvalue()
     assert_equals(string, expected)
+    sys.stdout = sys.__stdout__
 
 def prepare_stderr():
     if isinstance(sys.stderr, StringIO):
@@ -52,8 +54,13 @@ def assert_stderr(expected):
     assert_equals(string, expected)
 
 def assert_lines(one, other):
-    for line1, line2 in zip(one.splitlines(), other.splitlines()):
+    lines_one = one.splitlines()
+    lines_other = other.splitlines()
+
+    for line1, line2 in zip(lines_one, lines_other):
         assert_equals(line1, line2)
+
+    assert_equals(len(lines_one), len(lines_other))
 
 def assert_stdout_lines(other):
     return assert_lines(sys.stdout.getvalue(), other)
@@ -132,7 +139,8 @@ def test_defined_step_represent_string():
     feature_file = cjoin('runner_features', 'first.feature')
     feature_dir = cjoin('runner_features')
     loader = FeatureLoader(feature_dir)
-
+    world._output = StringIO()
+    world._is_colored = False
     loader.find_and_load_step_definitions()
 
     feature = Feature.from_file(feature_file)
@@ -152,16 +160,18 @@ def test_output_with_success_colorless():
     runner.run()
 
     assert_stdout_lines(
-    "Feature: Dumb feature                     # tests/functional/runner_features/first.feature: 1\n"
-    "  In order to test success                # tests/functional/runner_features/first.feature: 2\n"
-    "  As a programmer                         # tests/functional/runner_features/first.feature: 3\n"
-    "  I want to see that the output is green  # tests/functional/runner_features/first.feature: 4\n"
+    "Feature: Dumb feature                    # tests/functional/runner_features/first.feature:1\n"
+    "  In order to test success               # tests/functional/runner_features/first.feature:2\n"
+    "  As a programmer                        # tests/functional/runner_features/first.feature:3\n"
+    "  I want to see that the output is green # tests/functional/runner_features/first.feature:4\n"
     "\n"
-    "  Scenario: Do nothing                    # tests/functional/runner_features/first.feature: 6\n"
-    "    Given I do nothing                    # tests/functional/runner_features/dumb_steps.py: 6\n"
-    "\033[A    Given I do nothing                    # tests/functional/runner_features/dumb_steps.py: 6\n"
-    "    Then I see that the test passes       # tests/functional/runner_features/dumb_steps.py: 8\n"
-    "\033[A    Then I see that the test passes       # tests/functional/runner_features/dumb_steps.py: 8\n"
+    "  Scenario: Do nothing                   # tests/functional/runner_features/first.feature:6\n"
+    "    Given I do nothing                   # tests/functional/runner_features/dumb_steps.py:6\n"
+    "\033[A    Given I do nothing                   # tests/functional/runner_features/dumb_steps.py:6\n"
+    "    Then I see that the test passes      # tests/functional/runner_features/dumb_steps.py:8\n"
+    "\033[A    Then I see that the test passes      # tests/functional/runner_features/dumb_steps.py:8\n"
+    "\n"
+    "1 feature (1 passed)\n"
+    "1 scenario (1 passed)\n"
+    "2 steps (2 passed)\n"
     )
-
-
