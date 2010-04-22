@@ -46,7 +46,6 @@ def test_terrain_import_exception():
 
     lettuce._import('terrain').AndRaise(Exception('foo bar'))
 
-    lettuce.fs.FileSystem.pushd("[some path]")
     lettuce.fs.FeatureLoader("[some path]")
     lettuce.sys.stderr.write(string)
     lettuce.sys.path.insert(0, '[some path]')

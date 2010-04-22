@@ -52,7 +52,7 @@ def test_after_each_all_is_executed_before_each_all():
         world.all_steps.append("3")
 
     @after.all
-    def set_state_to_after():
+    def set_state_to_after(total):
         world.all_steps.append('after')
 
     runner = Runner(join(abspath(dirname(__file__)), '2nd_feature_dir'))

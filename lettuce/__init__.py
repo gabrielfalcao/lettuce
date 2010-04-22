@@ -30,8 +30,6 @@ from lettuce.terrain import world
 from lettuce.decorators import step
 from lettuce.registry import CALLBACK_REGISTRY
 
-from couleur import Shell
-
 __all__ = ['after', 'before', 'step', 'world']
 
 def _import(name):
@@ -67,9 +65,6 @@ class Runner(object):
         if verbosity is 3:
             from lettuce.plugins import shell_output
 
-        world._output = sys.stdout
-        world._is_colored = verbosity is 4
-
     def run(self):
         """ Find and load step definitions, and them find and load
         features under `base_path` specified on constructor
@@ -84,26 +79,7 @@ class Runner(object):
             feature = Feature.from_file(filename)
             results.append(feature.run())
 
-        for callback in CALLBACK_REGISTRY['all']['after']:
-            callback()
-
         total = TotalResult(results)
-        world._output.write("\n")
 
-        world._output.write("%d feature (%d passed)\n" % (
-            total.features_ran,
-            total.features_passed
-            )
-        )
-
-        world._output.write("%d scenario (%d passed)\n" % (
-            total.scenarios_ran,
-            total.scenarios_passed
-            )
-        )
-
-        world._output.write("%d steps (%d passed)\n" % (
-            total.steps,
-            total.steps_passed
-            )
-        )
+        for callback in CALLBACK_REGISTRY['all']['after']:
+            callback(total)

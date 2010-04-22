@@ -25,3 +25,33 @@ def print_step_running(step):
 @after.each_step
 def print_step_ran(step):
     sys.stdout.write("\033[A" + step.represent_string(step.sentence))
+
+@before.each_scenario
+def print_scenario_running(scenario):
+    sys.stdout.write(scenario.represented())
+
+@before.each_feature
+def print_feature_running(feature):
+    sys.stdout.write(feature.represented())
+    sys.stdout.write("\n")
+
+@after.all
+def print_end(total):
+    sys.stdout.write("\n")
+    sys.stdout.write("%d feature (%d passed)\n" % (
+        total.features_ran,
+        total.features_passed
+        )
+    )
+
+    sys.stdout.write("%d scenario (%d passed)\n" % (
+        total.scenarios_ran,
+        total.scenarios_passed
+        )
+    )
+
+    sys.stdout.write("%d steps (%d passed)\n" % (
+        total.steps,
+        total.steps_passed
+        )
+    )

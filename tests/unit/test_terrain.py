@@ -21,7 +21,7 @@ from lettuce import step
 from lettuce.terrain import after
 from lettuce.terrain import before
 from lettuce.terrain import world
-from lettuce.core import Feature
+from lettuce.core import Feature, TotalResult
 
 
 FEATURE1 = '''
@@ -148,9 +148,6 @@ def test_after_each_all_is_executed_before_each_all():
 
     lettuce._import('terrain')
 
-    lettuce.fs.FileSystem.pushd('some_basepath')
-    lettuce.fs.FileSystem.popd()
-
     lettuce.fs.FeatureLoader('some_basepath').AndReturn(loader_mock)
 
     lettuce.sys.path.insert(0, 'some_basepath')
@@ -170,8 +167,9 @@ def test_after_each_all_is_executed_before_each_all():
         world.all_steps.append("during")
 
     @after.all
-    def set_state_to_after():
+    def set_state_to_after(total):
         world.all_steps.append('after')
+        isinstance(total, TotalResult)
 
     mox.ReplayAll()
 

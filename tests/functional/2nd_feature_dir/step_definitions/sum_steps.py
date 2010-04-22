@@ -30,7 +30,7 @@ def it_should_result_in_z(step, z):
     assert_equals(world.sum, int(z))
 
 @after.all
-def clear_sum():
+def clear_sum(total_results):
     if hasattr(world, 'sum'):
         del world.sum
 

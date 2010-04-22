@@ -17,7 +17,6 @@
 import os
 import re
 from lettuce import strings
-from lettuce.terrain import world
 from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
 from lettuce.exceptions import ReasonToFail
@@ -283,7 +282,6 @@ class Scenario(object):
         steps_failed = []
         steps_undefined = []
 
-        world._output.write(self.represented(color=world._is_colored))
         for callback in CALLBACK_REGISTRY['scenario']['before_each']:
             callback(self)
 
@@ -486,8 +484,6 @@ class Feature(object):
         return scenarios, description
 
     def run(self, ignore_case=True):
-        world._output.write(self.represented(color=world._is_colored))
-        world._output.write("\n")
         for callback in CALLBACK_REGISTRY['feature']['before_each']:
             callback(self)
 
