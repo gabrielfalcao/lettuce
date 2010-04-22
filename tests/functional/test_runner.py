@@ -91,7 +91,7 @@ def test_feature_representation_without_colors():
 
     feature = Feature.from_file(feature_file)
     assert_lines(
-        feature.represented(color=False),
+        feature.represented(),
         "Feature: Addition                                      # tests/functional/1st_feature_dir/some.feature:5\n"
         "  In order to avoid silly mistakes                     # tests/functional/1st_feature_dir/some.feature:6\n"
         "  As a math idiot                                      # tests/functional/1st_feature_dir/some.feature:7\n"
@@ -104,7 +104,7 @@ def test_scenario_outline_representation_without_colors():
 
     feature = Feature.from_file(feature_file)
     assert_equals(
-        feature.scenarios[0].represented(color=False),
+        feature.scenarios[0].represented(),
         "  Scenario Outline: Add two numbers                    # tests/functional/1st_feature_dir/some.feature:10\n"
     )
 
@@ -114,7 +114,7 @@ def test_scenario_representation_without_colors():
 
     feature = Feature.from_file(feature_file)
     assert_equals(
-        feature.scenarios[0].represented(color=False),
+        feature.scenarios[0].represented(),
         "  Scenario: Do nothing                   # tests/functional/runner_features/first.feature:6\n"
     )
 
@@ -125,12 +125,12 @@ def test_undefined_step_represent_string():
     feature = Feature.from_file(feature_file)
     step = feature.scenarios[0].steps[0]
     assert_equals(
-        step.represent_string(step.sentence, color=False),
+        step.represent_string(step.sentence),
         "    Given I do nothing                   # tests/functional/runner_features/first.feature:7\n"
     )
 
     assert_equals(
-        step.represent_string("foo bar", color=False),
+        step.represent_string("foo bar"),
         "    foo bar                              # tests/functional/runner_features/first.feature:7\n"
     )
 
@@ -148,7 +148,7 @@ def test_defined_step_represent_string():
     step.run(True)
 
     assert_equals(
-        step.represent_string(step.sentence, color=False),
+        step.represent_string(step.sentence),
         "    Given I do nothing                   # tests/functional/runner_features/dumb_steps.py:6\n"
     )
 

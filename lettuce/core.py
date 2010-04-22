@@ -14,8 +14,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import os
+
 import re
+import os
+
 from lettuce import strings
 from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
@@ -142,7 +144,7 @@ class Step(object):
 
         return max_length
 
-    def represent_string(self, string, color=True):
+    def represent_string(self, string):
         head = ' ' * self.indentation + string
         where = self.described_at
         if self.defined_at:
@@ -349,7 +351,7 @@ class Scenario(object):
     def _set_definition(self, definition):
         self.described_at = definition
 
-    def represented(self, color=True):
+    def represented(self):
         comp = self.outlines and ' Outline' or ''
         head = '%sScenario%s: %s' % (' ' * self.indentation, comp, self.name)
         return strings.rfill(head, self.feature.max_length + 1, append='# %s:%d\n' % (self.described_at.file, self.described_at.line))
@@ -423,7 +425,7 @@ class Feature(object):
     def get_head(self):
         return "Feature: %s" % self.name
 
-    def represented(self, color=True):
+    def represented(self):
         length = self.max_length + 1
 
         filename = self.described_at.file
@@ -550,4 +552,3 @@ class TotalResult(object):
     @property
     def scenarios_passed(self):
         return len([result.passed for result in self.scenario_results])
-
