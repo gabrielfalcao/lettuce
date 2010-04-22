@@ -69,7 +69,8 @@ class ScenarioDescription(object):
         self.line = None
 
         for pline, part in enumerate(string.splitlines()):
-            if re.search(re.escape(scenario.name), part):
+            part = part.strip()
+            if re.match("Scenario( Outline)?[:] " + re.escape(scenario.name), part):
                 self.line = pline + 1
                 break
 

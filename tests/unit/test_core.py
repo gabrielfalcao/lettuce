@@ -40,3 +40,24 @@ def test_step_description():
     assert_not_equals(description.file, __file__)
     assert_equals(description.line, 10)
 
+def test_scenario_description():
+    "Scenario description takes a line, filename and original string, and keeps " \
+    "the relative path for filename"
+
+    string = '''
+    asdasdasdasd
+    8fg6f8g23o83g
+    dfjdsfjsdScenario: NAMEOFSCENARIOjdkasbdkajsb
+Fsdad
+          Scenario: NAMEOFSCENARIO
+ da  sodnasndjasdasd
+    '''
+
+    class ScenarioFake:
+        name = 'NAMEOFSCENARIO'
+
+    description = core.ScenarioDescription(ScenarioFake, __file__, string)
+    assert_equals(description.file, os.path.relpath(__file__))
+    assert_not_equals(description.file, __file__)
+    assert_equals(description.line, 6)
+
