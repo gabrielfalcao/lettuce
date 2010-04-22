@@ -55,6 +55,9 @@ def assert_lines(one, other):
     for line1, line2 in zip(one.splitlines(), other.splitlines()):
         assert_equals(line1, line2)
 
+def assert_stdout_lines(other):
+    return assert_lines(sys.stdout.getvalue(), other)
+
 @with_setup(prepare_stderr)
 def test_try_to_import_terrain():
     "Runner tries to import terrain, but has a nice output when it fail"
@@ -142,21 +145,23 @@ def test_defined_step_represent_string():
     )
 
 @with_setup(prepare_stdout)
-def _test_output_with_success_colorless():
+def test_output_with_success_colorless():
     "Testing the output of a successful feature"
 
     runner = Runner(join(abspath(dirname(__file__)), 'runner_features'), verbosity=3)
     runner.run()
 
-    assert_stdout(
+    assert_stdout_lines(
     "Feature: Dumb feature                     # tests/functional/runner_features/first.feature: 1\n"
-    "  In order to test success\n"
-    "  As a programmer\n"
-    "  I want to see that the output is green\n"
+    "  In order to test success                # tests/functional/runner_features/first.feature: 2\n"
+    "  As a programmer                         # tests/functional/runner_features/first.feature: 3\n"
+    "  I want to see that the output is green  # tests/functional/runner_features/first.feature: 4\n"
     "\n"
     "  Scenario: Do nothing                    # tests/functional/runner_features/first.feature: 6\n"
     "    Given I do nothing                    # tests/functional/runner_features/dumb_steps.py: 6\n"
+    "\033[A    Given I do nothing                    # tests/functional/runner_features/dumb_steps.py: 6\n"
     "    Then I see that the test passes       # tests/functional/runner_features/dumb_steps.py: 8\n"
+    "\033[A    Then I see that the test passes       # tests/functional/runner_features/dumb_steps.py: 8\n"
     )
 
 
