@@ -41,8 +41,8 @@ def test_step_description():
     assert_equals(description.line, 10)
 
 def test_scenario_description():
-    "Scenario description takes a line, filename and original string, and keeps " \
-    "the relative path for filename"
+    "Scenario description takes a scenario, filename and a string, and keeps " \
+    "the relative path for filename and line"
 
     string = '''
     asdasdasdasd
@@ -60,4 +60,26 @@ Fsdad
     assert_equals(description.file, os.path.relpath(__file__))
     assert_not_equals(description.file, __file__)
     assert_equals(description.line, 6)
+
+def test_feature_description():
+    "Feature description takes a feature, filename and original string, and keeps " \
+    "the relative path for filename, line and description lines"
+
+    string = '''
+    # lang: en-us
+    Feature: FEATURE NAME! #@@$%ˆ&*)(*%$E#
+    here comes
+    the description
+    of the scenario
+    really!
+    '''
+
+    class FeatureFake:
+        description = 'the description\nof the scenario\n'
+
+    description = core.FeatureDescription(FeatureFake, __file__, string)
+    assert_equals(description.file, os.path.relpath(__file__))
+    assert_not_equals(description.file, __file__)
+    assert_equals(description.line, 3)
+    assert_equals(description.description_at, (5, 6))
 

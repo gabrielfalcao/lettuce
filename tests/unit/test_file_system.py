@@ -7,12 +7,14 @@ from nose.tools import assert_raises
 from lettuce import fs as io
 
 def test_has_a_stack_list():
+    "FileSystem stack list"
     assert hasattr(io.FileSystem, 'stack'), \
            'FileSystem should have a stack'
     assert isinstance(io.FileSystem.stack, list), \
            'FileSystem.stack should be a list'
 
 def test_instance_stack_is_not_the_same_as_class_level():
+    "FileSystem stack list has different lifecycle in FileSystem objects"
     class MyFs(io.FileSystem):
         pass
 
@@ -21,6 +23,7 @@ def test_instance_stack_is_not_the_same_as_class_level():
     assert_equals(MyFs().stack, [])
 
 def test_pushd_appends_current_dir_to_stack_if_empty():
+    "Default behaviour of pushd() is adding the current dir to the stack"
     mox = Mox()
     old_os = io.os
     io.os = mox.CreateMockAnything()
@@ -46,6 +49,7 @@ def test_pushd_appends_current_dir_to_stack_if_empty():
         io.os = old_os
 
 def test_pushd():
+    "FileSystem.pushd"
     mox = Mox()
     old_os = io.os
     io.os = mox.CreateMockAnything()
@@ -67,6 +71,7 @@ def test_pushd():
         io.os = old_os
 
 def test_pop_with_more_than_1_item():
+    "FileSystem.popd with more than 1 item"
     mox = Mox()
     old_os = io.os
     io.os = mox.CreateMockAnything()
@@ -87,6 +92,7 @@ def test_pop_with_more_than_1_item():
         io.os = old_os
 
 def test_pop_with_1_item():
+    "FileSystem.pop behaviour with only one item"
     mox = Mox()
     old_os = io.os
     io.os = mox.CreateMockAnything()
@@ -105,6 +111,7 @@ def test_pop_with_1_item():
         io.os = old_os
 
 def test_pop_with_no_item():
+    "FileSystem.pop behaviour without items in stack"
     mox = Mox()
     old_os = io.os
     io.os = mox.CreateMockAnything()
@@ -123,18 +130,22 @@ def test_pop_with_no_item():
         io.os = old_os
 
 def test_filename_with_extension():
+    "FileSystem.filename with extension"
     got = io.FileSystem.filename('/path/to/filename.jpg')
     assert_equals(got, 'filename.jpg')
 
 def test_filename_without_extension():
+    "FileSystem.filename without extension"
     got = io.FileSystem.filename('/path/to/filename.jpg', False)
     assert_equals(got, 'filename')
 
 def test_dirname():
+    "FileSystem.dirname"
     got = io.FileSystem.dirname('/path/to/filename.jpg')
     assert_equals(got, '/path/to')
 
 def test_exists():
+    "FileSystem.exists"
     mox = Mox()
     old_exists = io.exists
     io.exists = mox.CreateMockAnything()
@@ -150,6 +161,7 @@ def test_exists():
         io.exists = old_exists
 
 def test_extract_zip_non_verbose():
+    "FileSystem.extract_zip non-verbose"
     mox = Mox()
     class MyFs(io.FileSystem):
         stack = []
@@ -204,6 +216,7 @@ def test_extract_zip_non_verbose():
         mox.UnsetStubs()
 
 def test_extract_zip_verbose():
+    "FileSystem.extract_zip verbose"
     mox = Mox()
     sys.stdout = StringIO()
     class MyFs(io.FileSystem):
@@ -265,6 +278,7 @@ def test_extract_zip_verbose():
         sys.stdout = sys.__stdout__
 
 def test_locate_non_recursive():
+    "FileSystem.locate non-recursive"
     mox = Mox()
 
     old_glob = io.glob
@@ -288,6 +302,7 @@ def test_locate_non_recursive():
         io.glob = old_glob
 
 def test_locate_recursive():
+    "FileSystem.locate recursive"
     mox = Mox()
 
     base_path = '../to/project'
@@ -315,6 +330,7 @@ def test_locate_recursive():
         mox.UnsetStubs()
 
 def test_mkdir_success():
+    "FileSystem.mkdir with success"
     mox = Mox()
 
     mox.StubOutWithMock(io, 'os')
@@ -332,6 +348,7 @@ def test_mkdir_success():
         mox.UnsetStubs()
 
 def test_mkdir_ignore_dirs_already_exists():
+    "FileSystem.mkdir in a existent dir"
     mox = Mox()
 
     mox.StubOutWithMock(io, 'os')
@@ -354,6 +371,7 @@ def test_mkdir_ignore_dirs_already_exists():
         mox.UnsetStubs()
 
 def test_mkdir_raises_on_oserror_errno_not_17():
+    "FileSystem.mkdir raises on errno not 17"
     mox = Mox()
 
     mox.StubOutWithMock(io, 'os')
@@ -370,33 +388,13 @@ def test_mkdir_raises_on_oserror_errno_not_17():
     mox.ReplayAll()
     try:
 
-        assert_raises(OSError, MyFs.mkdir, '/make/all/those/subdirs')
-        mox.VerifyAll()
-    finally:
-        mox.UnsetStubs()
-
-def tes_mkdir_raises_on_oserror_errno_not_17():
-    mox = Mox()
-
-    mox.StubOutWithMock(io, 'os')
-    mox.StubOutWithMock(io.os, 'path')
-
-    class MyFs(io.FileSystem):
-        pass
-
-    oserror = OSError()
-    oserror.errno = 0
-
-    io.os.makedirs('/make/all/those/subdirs').AndRaise(oserror)
-
-    mox.ReplayAll()
-    try:
         assert_raises(OSError, MyFs.mkdir, '/make/all/those/subdirs')
         mox.VerifyAll()
     finally:
         mox.UnsetStubs()
 
 def tes_mkdir_raises_when_path_is_not_a_dir():
+    "Test mkdir raises when path is not a dir"
     mox = Mox()
 
     mox.StubOutWithMock(io, 'os')
