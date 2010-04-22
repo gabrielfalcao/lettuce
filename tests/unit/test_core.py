@@ -74,12 +74,53 @@ def test_feature_description():
     really!
     '''
 
-    class FeatureFake:
+    class FakeFeature:
         description = 'the description\nof the scenario\n'
 
-    description = core.FeatureDescription(FeatureFake, __file__, string)
+    description = core.FeatureDescription(FakeFeature, __file__, string)
     assert_equals(description.file, os.path.relpath(__file__))
     assert_not_equals(description.file, __file__)
     assert_equals(description.line, 3)
     assert_equals(description.description_at, (5, 6))
+
+def test_step_represent_string_when_not_defined():
+    "Step.represent_string behaviour when not defined"
+
+    class FakeFeature:
+        max_length = 10
+
+    class FakeScenario:
+        feature = FakeFeature
+
+    relative_path = os.path.relpath(__file__)
+    step = core.Step('some sentence', '', 239, __file__)
+    step.scenario = FakeScenario
+
+    assert_equals(
+        step.represent_string('test'),
+        "    test   # %s:239\n" % relative_path
+    )
+
+
+def test_step_represent_string_when_defined():
+    "Step.represent_string behaviour when defined"
+
+    class FakeFeature:
+        max_length = 10
+
+    class FakeScenario:
+        feature = FakeFeature
+
+    class FakeScenarioDefinition:
+        line = 421
+        file = 'should/be/filename'
+
+    step = core.Step('some sentence', '', 239, "not a file")
+    step.scenario = FakeScenario
+    step.defined_at = FakeScenarioDefinition
+    assert_equals(
+        step.represent_string('foobar'),
+        "    foobar # should/be/filename:421\n"
+    )
+
 
