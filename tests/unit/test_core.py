@@ -14,8 +14,29 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import lettuce
+import os
+from lettuce import core
+from nose.tools import assert_equals
+from nose.tools import assert_not_equals
 
-def test_has_version():
-    "A nice python module is supposed to have a version"
-    assert lettuce.version
+def test_step_definition():
+    "Step definition takes a function and a step, keeps its definition " \
+    "relative path, and line + 1 (to consider the decorator)"
+
+    def dumb():
+        pass
+
+    definition = core.StepDefinition("FOO BAR", dumb)
+    assert_equals(definition.function, dumb)
+    assert_equals(definition.file, os.path.relpath(__file__))
+    assert_equals(definition.line, 27)
+
+def test_step_description():
+    "Step description takes a line and filename, and keeps the relative path for " \
+    "filename"
+
+    description = core.StepDescription(10, __file__)
+    assert_equals(description.file, os.path.relpath(__file__))
+    assert_not_equals(description.file, __file__)
+    assert_equals(description.line, 10)
+

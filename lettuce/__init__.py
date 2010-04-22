@@ -54,9 +54,14 @@ class Runner(object):
         self.verbosity = verbosity
         try:
             self.terrain = _import("terrain")
-        except ImportError, e:
+        except Exception, e:
             if not "No module named terrain" in str(e):
-                raise e
+                string = 'Lettuce has tried to load the conventional environment ' \
+                    'module "terrain"\nbut it has errors, check its contents and ' \
+                    'try to run lettuce again.\n'
+
+                sys.stderr.write(string)
+                raise SystemExit(1)
 
         sys.path.remove(base_path)
         fs.FileSystem.popd()

@@ -14,7 +14,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import os
 import sys
+
 from StringIO import StringIO
 
 from os.path import dirname, abspath, join
@@ -38,9 +40,40 @@ def assert_stdout(expected):
     string = sys.stdout.getvalue()
     assert_equals(string, expected)
 
+def prepare_stderr():
+    if isinstance(sys.stderr, StringIO):
+        del sys.stderr
+
+    std = StringIO()
+    sys.stderr = std
+
+def assert_stderr(expected):
+    string = sys.stderr.getvalue()
+    assert_equals(string, expected)
+
 def assert_lines(one, other):
     for line1, line2 in zip(one.splitlines(), other.splitlines()):
         assert_equals(line1, line2)
+
+@with_setup(prepare_stderr)
+def test_try_to_import_terrain():
+    "Runner tries to import terrain, but has a nice output when it fail"
+    sandbox_path = cjoin('sandbox')
+    original_path = abspath(".")
+    os.chdir(sandbox_path)
+
+    try:
+        Runner(".")
+        raise AssertionError('The runner should raise ImportError !')
+    except SystemExit:
+        assert_stderr(
+            'Lettuce has tried to load the conventional environment module ' \
+            '"terrain"\n'
+            'but it has errors, check its contents and try to run lettuce again.\n'
+        )
+
+    finally:
+        os.chdir(original_path)
 
 def test_feature_representation_without_colors():
     "Feature represented without colors"
@@ -125,3 +158,5 @@ def _test_output_with_success_colorless():
     "    Given I do nothing                    # tests/functional/runner_features/dumb_steps.py: 6\n"
     "    Then I see that the test passes       # tests/functional/runner_features/dumb_steps.py: 8\n"
     )
+
+
