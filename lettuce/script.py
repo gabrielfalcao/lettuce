@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# <Lettuce - Behaviour Driven Development for python>
+# Copyright (C) <2010>  Gabriel Falcão <gabriel@nacaolivre.org>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import os
+import sys
+import optparse
+
+import lettuce
+
+def main(args=sys.argv[1:]):
+    base_path = os.path.join(os.path.dirname(os.curdir), 'features')
+    parser = optparse.OptionParser(
+        usage="%prog or type %prog -h (--help) for help",
+        version=lettuce.__version__
+    )
+
+    parser.add_option("-b", "--basepath",
+                      dest="base_path",
+                      default=base_path,
+                      help='The path to look for features and step definitions')
+
+    parser.add_option("-v", "--verbosity",
+                      dest="verbosity",
+                      default=4,
+                      help='The verbosity level')
+
+
+    options, args = parser.parse_args
+
+    runner = lettuce.Runner(options.base_path, int(options.verbosity))
+
+    runner.run()
