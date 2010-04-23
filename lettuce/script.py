@@ -25,13 +25,8 @@ def main(args=sys.argv[1:]):
     base_path = os.path.join(os.path.dirname(os.curdir), 'features')
     parser = optparse.OptionParser(
         usage="%prog or type %prog -h (--help) for help",
-        version=lettuce.__version__
+        version=lettuce.version
     )
-
-    parser.add_option("-b", "--basepath",
-                      dest="base_path",
-                      default=base_path,
-                      help='The path to look for features and step definitions')
 
     parser.add_option("-v", "--verbosity",
                       dest="verbosity",
@@ -39,8 +34,13 @@ def main(args=sys.argv[1:]):
                       help='The verbosity level')
 
 
-    options, args = parser.parse_args
+    options, args = parser.parse_args()
+    if args:
+        base_path = os.path.abspath(args[0])
 
-    runner = lettuce.Runner(options.base_path, int(options.verbosity))
+    runner = lettuce.Runner(base_path, int(options.verbosity))
 
     runner.run()
+
+if __name__ == '__main__':
+    main()
