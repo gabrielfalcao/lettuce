@@ -22,7 +22,8 @@ from StringIO import StringIO
 from os.path import dirname, abspath, join
 from nose.tools import assert_equals, with_setup
 
-from lettuce import Runner
+from lettuce import Runner, CALLBACK_REGISTRY
+
 from lettuce.fs import FeatureLoader
 from lettuce.core import Feature
 from lettuce.terrain import world
@@ -31,6 +32,7 @@ current_dir = abspath(dirname(__file__))
 cjoin = lambda *x: join(current_dir, *x)
 
 def prepare_stdout():
+    CALLBACK_REGISTRY.clear()
     if isinstance(sys.stdout, StringIO):
         del sys.stdout
 
@@ -43,6 +45,7 @@ def assert_stdout(expected):
     sys.stdout = sys.__stdout__
 
 def prepare_stderr():
+    CALLBACK_REGISTRY.clear()
     if isinstance(sys.stderr, StringIO):
         del sys.stderr
 
@@ -154,7 +157,7 @@ def test_defined_step_represent_string():
 
 @with_setup(prepare_stdout)
 def test_output_with_success_colorless():
-    "Testing the output of a successful feature"
+    "Testing the colorless output of a successful feature"
 
     runner = Runner(join(abspath(dirname(__file__)), 'runner_features'), verbosity=3)
     runner.run()
@@ -175,3 +178,28 @@ def test_output_with_success_colorless():
     "1 scenario (1 passed)\n"
     "2 steps (2 passed)\n"
     )
+
+@with_setup(prepare_stdout)
+def test_output_with_success_colorful():
+    "Testing the output of a successful feature"
+
+    runner = Runner(join(abspath(dirname(__file__)), 'runner_features'), verbosity=4)
+    runner.run()
+
+    assert_stdout_lines(
+        "\033[1;37mFeature: Dumb feature                    \033[1;30m# tests/functional/runner_features/first.feature:1\033[0m\n" \
+        "\033[1;37m  In order to test success               \033[1;30m# tests/functional/runner_features/first.feature:2\033[0m\n" \
+        "\033[1;37m  As a programmer                        \033[1;30m# tests/functional/runner_features/first.feature:3\033[0m\n" \
+        "\033[1;37m  I want to see that the output is green \033[1;30m# tests/functional/runner_features/first.feature:4\033[0m\n" \
+        "\n" \
+        "\033[1;37m  Scenario: Do nothing                   \033[1;30m# tests/functional/runner_features/first.feature:6\033[0m\n" \
+        "\033[1;30m    Given I do nothing                   \033[1;30m# tests/functional/runner_features/dumb_steps.py:6\033[0m\n" \
+        "\033[A\033[1;32m    Given I do nothing                   \033[1;30m# tests/functional/runner_features/dumb_steps.py:6\033[0m\n" \
+        "\033[1;30m    Then I see that the test passes      \033[1;30m# tests/functional/runner_features/dumb_steps.py:8\033[0m\n" \
+        "\033[A\033[1;32m    Then I see that the test passes      \033[1;30m# tests/functional/runner_features/dumb_steps.py:8\033[0m\n" \
+        "\n" \
+        "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m2 steps (\033[1;32m2 passed\033[1;37m)\033[0m\n"
+    )
+

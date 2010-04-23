@@ -20,21 +20,31 @@ STEP_REGISTRY = {}
 world = threading.local()
 world._set = False
 
-CALLBACK_REGISTRY = {
-    'all': {
-        'before': [],
-        'after': []
-    },
-    'step': {
-        'before_each': [],
-        'after_each': []
-    },
-    'scenario': {
-        'before_each': [],
-        'after_each': []
-    },
-    'feature': {
-        'before_each': [],
-        'after_each': []
+class CallbackDict(dict):
+    def clear(self):
+        for action_dict in self.values():
+            for callback_list in action_dict.values():
+                while callback_list:
+                    callback_list.pop()
+
+
+CALLBACK_REGISTRY = CallbackDict(
+    {
+        'all': {
+            'before': [],
+            'after': []
+        },
+        'step': {
+            'before_each': [],
+            'after_each': []
+        },
+        'scenario': {
+            'before_each': [],
+            'after_each': []
+        },
+        'feature': {
+            'before_each': [],
+            'after_each': []
+        }
     }
-}
+)
