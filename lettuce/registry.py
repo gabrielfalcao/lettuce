@@ -21,11 +21,22 @@ world = threading.local()
 world._set = False
 
 class CallbackDict(dict):
+    def _function_matches(self, one, other):
+        params = 'co_filename', 'co_firstlineno'
+        matches = []
+
+        for param in params:
+            one_got = getattr(one.func_code, param)
+            other_got = getattr(other.func_code, param)
+            matches.append(one_got == other_got)
+
+        return all(matches)
+
     def append_to(self, where, when, function):
         found = False
 
         for other_function in self[where][when]:
-            if other_function.func_code.co_filename == function.func_code.co_filename and other_function.func_code.co_firstlineno == function.func_code.co_firstlineno:
+            if self._function_matches(other_function,function):
                 found = True
 
         if not found:
