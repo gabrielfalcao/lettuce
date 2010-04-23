@@ -22,7 +22,13 @@ world._set = False
 
 class CallbackDict(dict):
     def append_to(self, where, when, function):
-        if function not in self[where][when]:
+        found = False
+
+        for other_function in self[where][when]:
+            if other_function.func_code.co_filename == function.func_code.co_filename and other_function.func_code.co_firstlineno == function.func_code.co_firstlineno:
+                found = True
+
+        if not found:
             self[where][when].append(function)
 
     def clear(self):

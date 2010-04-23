@@ -64,9 +64,10 @@ class Runner(object):
 
         if verbosity is 3:
             from lettuce.plugins import shell_output
-
+            reload(shell_output)
         if verbosity is 4:
             from lettuce.plugins import colored_shell_output
+            reload(colored_shell_output)
 
     def run(self):
         """ Find and load step definitions, and them find and load
