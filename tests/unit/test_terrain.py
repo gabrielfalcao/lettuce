@@ -22,7 +22,7 @@ from lettuce.terrain import after
 from lettuce.terrain import before
 from lettuce.terrain import world
 from lettuce.core import Feature, TotalResult
-
+from lettuce.registry import CALLBACK_REGISTRY
 
 FEATURE1 = '''
 Feature: Before and After callbacks all along lettuce
@@ -135,6 +135,7 @@ def test_after_each_all_is_executed_before_each_all():
     "terrain.before.each_all and terrain.after.each_all decorators"
     import lettuce
     from lettuce.fs import FeatureLoader
+    CALLBACK_REGISTRY.clear()
     world.all_steps = []
 
     mox = Mox()

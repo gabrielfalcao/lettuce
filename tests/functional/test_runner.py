@@ -179,6 +179,8 @@ def test_output_with_success_colorless():
     "2 steps (2 passed)\n"
     )
 
+    CALLBACK_REGISTRY.clear()
+
 @with_setup(prepare_stdout)
 def test_output_with_success_colorful():
     "Testing the output of a successful feature"
@@ -203,3 +205,4 @@ def test_output_with_success_colorful():
         "\033[1;37m2 steps (\033[1;32m2 passed\033[1;37m)\033[0m\n"
     )
 
+    CALLBACK_REGISTRY.clear()

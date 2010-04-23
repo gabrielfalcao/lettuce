@@ -28,7 +28,7 @@ def test_step_definition():
 
     definition = core.StepDefinition("FOO BAR", dumb)
     assert_equals(definition.function, dumb)
-    assert_equals(definition.file, os.path.relpath(__file__))
+    assert_equals(definition.file, os.path.relpath(__file__).rstrip("c"))
     assert_equals(definition.line, 27)
 
 def test_step_description():
