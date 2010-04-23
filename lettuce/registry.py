@@ -21,6 +21,10 @@ world = threading.local()
 world._set = False
 
 class CallbackDict(dict):
+    def append_to(self, where, when, function):
+        if function not in self[where][when]:
+            self[where][when].append(function)
+
     def clear(self):
         for action_dict in self.values():
             for callback_list in action_dict.values():

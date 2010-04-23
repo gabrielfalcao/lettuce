@@ -33,9 +33,6 @@ cjoin = lambda *x: join(current_dir, *x)
 
 def prepare_stdout():
     CALLBACK_REGISTRY.clear()
-    if isinstance(sys.stdout, StringIO):
-        del sys.stdout
-
     std = StringIO()
     sys.stdout = std
 
@@ -46,9 +43,6 @@ def assert_stdout(expected):
 
 def prepare_stderr():
     CALLBACK_REGISTRY.clear()
-    if isinstance(sys.stderr, StringIO):
-        del sys.stderr
-
     std = StringIO()
     sys.stderr = std
 
@@ -203,6 +197,41 @@ def test_output_with_success_colorful():
         "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
         "\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
         "\033[1;37m2 steps (\033[1;32m2 passed\033[1;37m)\033[0m\n"
+    )
+
+    CALLBACK_REGISTRY.clear()
+
+@with_setup(prepare_stdout)
+def _test_output_with_success_colorful_many_features():
+    "Testing the output of many successful features"
+
+    runner = Runner(join(abspath(dirname(__file__)), 'many_successful_features'), verbosity=3)
+    runner.run()
+
+    assert_stdout_lines(
+        "Feature: First feature, of many              # tests/functional/many_successful_features/one.feature:1\n"
+        "  In order to make lettuce more robust       # tests/functional/many_successful_features/one.feature:2\n"
+        "  As a programmer                            # tests/functional/many_successful_features/one.feature:3\n"
+        "  I want to test its output on many features # tests/functional/many_successful_features/one.feature:4\n"
+        "\n"
+        "  Scenario: Do nothing                       # tests/functional/many_successful_features/one.feature:6\n"
+        "    Given I do nothing                       # tests/functional/many_successful_features/dumb_steps.py:6\n"
+        "\033[Am    Given I do nothing                       # tests/functional/many_successful_features/dumb_steps.py:6\n"
+        "    Then I see that the test passes          # tests/functional/many_successful_features/dumb_steps.py:8\n"
+        "\033[Am    Then I see that the test passes          # tests/functional/many_successful_features/dumb_steps.py:8\n"
+        "\n\n"
+        "Feature: Second feature, of many    # tests/functional/many_successful_features/two.feature:1\n"
+        "  I just want to see it green :)    # tests/functional/many_successful_features/two.feature:2\n"
+        "\n"
+        "  Scenario: Do nothing              # tests/functional/many_successful_features/two.feature:4\n"
+        "    Given I do nothing              # tests/functional/many_successful_features/dumb_steps.py:6\n"
+        "\033[Am    Given I do nothing              # tests/functional/many_successful_features/dumb_steps.py:6\n"
+        "    Then I see that the test passes # tests/functional/many_successful_features/dumb_steps.py:8\n"
+        "\033[Am    Then I see that the test passes # tests/functional/many_successful_features/dumb_steps.py:8\n"
+        "\n"
+        "2 features (2 passed)\n"
+        "2 scenarios (2 passed)\n"
+        "4 steps (4 passed)\n"
     )
 
     CALLBACK_REGISTRY.clear()

@@ -21,42 +21,41 @@ world._set = True
 class before:
     @classmethod
     def all(cls, function):
-        CALLBACK_REGISTRY['all'][cls.__name__].append(function)
+        CALLBACK_REGISTRY.append_to('all', cls.__name__, function)
         return function
 
     @classmethod
     def each_step(cls, function):
-        CALLBACK_REGISTRY['step']['%s_each' % cls.__name__].append(function)
+        CALLBACK_REGISTRY.append_to('step', "%s_each" % cls.__name__, function)
         return function
 
     @classmethod
     def each_scenario(cls, function):
-        CALLBACK_REGISTRY['scenario']['%s_each' % cls.__name__].append(function)
+        CALLBACK_REGISTRY.append_to('scenario', "%s_each" % cls.__name__, function)
         return function
 
     @classmethod
     def each_feature(cls, function):
-        CALLBACK_REGISTRY['feature']['%s_each' % cls.__name__].append(function)
+        CALLBACK_REGISTRY.append_to('feature', "%s_each" % cls.__name__, function)
         return function
 
 class after:
     @classmethod
     def all(cls, function):
-        CALLBACK_REGISTRY['all'][cls.__name__].append(function)
+        CALLBACK_REGISTRY.append_to('all', cls.__name__, function)
         return function
 
     @classmethod
     def each_step(cls, function):
-        CALLBACK_REGISTRY['step']['%s_each' % cls.__name__].append(function)
+        CALLBACK_REGISTRY.append_to('step', "%s_each" % cls.__name__, function)
         return function
 
     @classmethod
     def each_scenario(cls, function):
-        CALLBACK_REGISTRY['scenario']['%s_each' % cls.__name__].append(function)
+        CALLBACK_REGISTRY.append_to('scenario', "%s_each" % cls.__name__, function)
         return function
 
     @classmethod
     def each_feature(cls, function):
-        CALLBACK_REGISTRY['feature']['%s_each' % cls.__name__].append(function)
+        CALLBACK_REGISTRY.append_to('feature', "%s_each" % cls.__name__, function)
         return function
-
