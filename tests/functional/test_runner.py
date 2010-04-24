@@ -173,12 +173,10 @@ def test_output_with_success_colorless():
         "  Scenario: Do nothing                   # tests/functional/runner_features/first.feature:6\n"
         "    Given I do nothing                   # tests/functional/runner_features/dumb_steps.py:6\n"
         "\033[A    Given I do nothing                   # tests/functional/runner_features/dumb_steps.py:6\n"
-        "    Then I see that the test passes      # tests/functional/runner_features/dumb_steps.py:8\n"
-        "\033[A    Then I see that the test passes      # tests/functional/runner_features/dumb_steps.py:8\n"
         "\n"
         "1 feature (1 passed)\n"
         "1 scenario (1 passed)\n"
-        "2 steps (2 passed)\n"
+        "1 step (1 passed)\n"
     )
 
 @with_setup(prepare_stdout)
@@ -198,12 +196,10 @@ def test_output_with_success_colorful():
         "\033[1;37m  Scenario: Do nothing                   \033[1;30m# tests/functional/runner_features/first.feature:6\033[0m\n" \
         "\033[1;30m    Given I do nothing                   \033[1;30m# tests/functional/runner_features/dumb_steps.py:6\033[0m\n" \
         "\033[A\033[1;32m    Given I do nothing                   \033[1;30m# tests/functional/runner_features/dumb_steps.py:6\033[0m\n" \
-        "\033[1;30m    Then I see that the test passes      \033[1;30m# tests/functional/runner_features/dumb_steps.py:8\033[0m\n" \
-        "\033[A\033[1;32m    Then I see that the test passes      \033[1;30m# tests/functional/runner_features/dumb_steps.py:8\033[0m\n" \
         "\n" \
         "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
         "\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
-        "\033[1;37m2 steps (\033[1;32m2 passed\033[1;37m)\033[0m\n"
+        "\033[1;37m1 step (\033[1;32m1 passed\033[1;37m)\033[0m\n"
     )
 
 @with_setup(prepare_stdout)
