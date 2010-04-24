@@ -13,7 +13,8 @@ Lettuce is a BDD tool for python, 100% inspired on [cucumber](http://cukes.info/
 
 # Motivation
 
-1. I love python, and ever did. But I also ever missed something that make writing tests easier and funnier.
-2. Writting tests in python use to be caotic, which makes testing sucks, which tempts developer do don't write code. At the end, the code may sucks even more than writting tests could be :/
-2. I like [nose](http://code.google.com/p/python-nose/) which is has pythonic set of tools, and I do like it, althrough as the project I am working on grows, tests grows as well, and become harder to understand.
-3. [Cucumber](http://cukes.info/) makes [Ruby](http://www.ruby-lang.org/) even more sexy. I needed to try this for Python.
+1. Testing must be funny and easy
+2. Most python developers code in python
+3. I love python, and ever did. But I also ever missed something that make writing tests easier and funnier.
+4. I like [nose](http://code.google.com/p/python-nose/) which is has pythonic set of tools, and I like it, althrough as the project I am working on grows, tests grows as well, and become harder to understand.
+5. [Cucumber](http://cukes.info/) makes [Ruby](http://www.ruby-lang.org/) even more sexy. Python is sexy too.
