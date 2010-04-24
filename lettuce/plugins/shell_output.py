@@ -32,26 +32,33 @@ def print_scenario_running(scenario):
 
 @before.each_feature
 def print_feature_running(feature):
+    sys.stdout.write("\n")
     sys.stdout.write(feature.represented())
     sys.stdout.write("\n")
 
 @after.all
 def print_end(total):
     sys.stdout.write("\n")
-    sys.stdout.write("%d feature (%d passed)\n" % (
+    word = total.features_ran > 1 and "features" or "feature"
+    sys.stdout.write("%d %s (%d passed)\n" % (
         total.features_ran,
+        word,
         total.features_passed
         )
     )
 
-    sys.stdout.write("%d scenario (%d passed)\n" % (
+    word = total.scenarios_ran > 1 and "scenarios" or "scenario"
+    sys.stdout.write("%d %s (%d passed)\n" % (
         total.scenarios_ran,
+        word,
         total.scenarios_passed
         )
     )
 
-    sys.stdout.write("%d steps (%d passed)\n" % (
+    word = total.steps > 1 and "steps" or "step"
+    sys.stdout.write("%d %s (%d passed)\n" % (
         total.steps,
+        word,
         total.steps_passed
         )
     )

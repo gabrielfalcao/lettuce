@@ -35,7 +35,8 @@ class FeatureLoader(object):
             root = FileSystem.dirname(filename)
             sys.path.insert(0, root)
             to_load = FileSystem.filename(filename, with_extension=False)
-            __import__(to_load)
+            module = __import__(to_load)
+            reload(module) # always take fresh meat :)
             sys.path.remove(root)
 
     def find_feature_files(self):

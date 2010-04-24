@@ -22,7 +22,7 @@ from StringIO import StringIO
 from os.path import dirname, abspath, join
 from nose.tools import assert_equals, with_setup
 
-from lettuce import Runner, CALLBACK_REGISTRY
+from lettuce import Runner, CALLBACK_REGISTRY, STEP_REGISTRY
 
 from lettuce.fs import FeatureLoader
 from lettuce.core import Feature
@@ -33,16 +33,23 @@ cjoin = lambda *x: join(current_dir, *x)
 
 def prepare_stdout():
     CALLBACK_REGISTRY.clear()
+
+    if isinstance(sys.stdout, StringIO):
+        del sys.stdout
+
     std = StringIO()
     sys.stdout = std
 
 def assert_stdout(expected):
     string = sys.stdout.getvalue()
     assert_equals(string, expected)
-    sys.stdout = sys.__stdout__
 
 def prepare_stderr():
     CALLBACK_REGISTRY.clear()
+    STEP_REGISTRY.clear()
+    if isinstance(sys.stderr, StringIO):
+        del sys.stderr
+
     std = StringIO()
     sys.stderr = std
 
@@ -60,7 +67,7 @@ def assert_lines(one, other):
     assert_equals(len(lines_one), len(lines_other))
 
 def assert_stdout_lines(other):
-    return assert_lines(sys.stdout.getvalue(), other)
+    assert_lines(sys.stdout.getvalue(), other)
 
 @with_setup(prepare_stderr)
 def test_try_to_import_terrain():
@@ -157,23 +164,22 @@ def test_output_with_success_colorless():
     runner.run()
 
     assert_stdout_lines(
-    "Feature: Dumb feature                    # tests/functional/runner_features/first.feature:1\n"
-    "  In order to test success               # tests/functional/runner_features/first.feature:2\n"
-    "  As a programmer                        # tests/functional/runner_features/first.feature:3\n"
-    "  I want to see that the output is green # tests/functional/runner_features/first.feature:4\n"
-    "\n"
-    "  Scenario: Do nothing                   # tests/functional/runner_features/first.feature:6\n"
-    "    Given I do nothing                   # tests/functional/runner_features/dumb_steps.py:6\n"
-    "\033[A    Given I do nothing                   # tests/functional/runner_features/dumb_steps.py:6\n"
-    "    Then I see that the test passes      # tests/functional/runner_features/dumb_steps.py:8\n"
-    "\033[A    Then I see that the test passes      # tests/functional/runner_features/dumb_steps.py:8\n"
-    "\n"
-    "1 feature (1 passed)\n"
-    "1 scenario (1 passed)\n"
-    "2 steps (2 passed)\n"
+        "\n"
+        "Feature: Dumb feature                    # tests/functional/runner_features/first.feature:1\n"
+        "  In order to test success               # tests/functional/runner_features/first.feature:2\n"
+        "  As a programmer                        # tests/functional/runner_features/first.feature:3\n"
+        "  I want to see that the output is green # tests/functional/runner_features/first.feature:4\n"
+        "\n"
+        "  Scenario: Do nothing                   # tests/functional/runner_features/first.feature:6\n"
+        "    Given I do nothing                   # tests/functional/runner_features/dumb_steps.py:6\n"
+        "\033[A    Given I do nothing                   # tests/functional/runner_features/dumb_steps.py:6\n"
+        "    Then I see that the test passes      # tests/functional/runner_features/dumb_steps.py:8\n"
+        "\033[A    Then I see that the test passes      # tests/functional/runner_features/dumb_steps.py:8\n"
+        "\n"
+        "1 feature (1 passed)\n"
+        "1 scenario (1 passed)\n"
+        "2 steps (2 passed)\n"
     )
-
-    CALLBACK_REGISTRY.clear()
 
 @with_setup(prepare_stdout)
 def test_output_with_success_colorful():
@@ -183,6 +189,7 @@ def test_output_with_success_colorful():
     runner.run()
 
     assert_stdout_lines(
+        "\n" \
         "\033[1;37mFeature: Dumb feature                    \033[1;30m# tests/functional/runner_features/first.feature:1\033[0m\n" \
         "\033[1;37m  In order to test success               \033[1;30m# tests/functional/runner_features/first.feature:2\033[0m\n" \
         "\033[1;37m  As a programmer                        \033[1;30m# tests/functional/runner_features/first.feature:3\033[0m\n" \
@@ -199,16 +206,14 @@ def test_output_with_success_colorful():
         "\033[1;37m2 steps (\033[1;32m2 passed\033[1;37m)\033[0m\n"
     )
 
-    CALLBACK_REGISTRY.clear()
-
 @with_setup(prepare_stdout)
-def _test_output_with_success_colorful_many_features():
+def test_output_with_success_colorless_many_features():
     "Testing the output of many successful features"
-
     runner = Runner(join(abspath(dirname(__file__)), 'many_successful_features'), verbosity=3)
     runner.run()
 
     assert_stdout_lines(
+        "\n"
         "Feature: First feature, of many              # tests/functional/many_successful_features/one.feature:1\n"
         "  In order to make lettuce more robust       # tests/functional/many_successful_features/one.feature:2\n"
         "  As a programmer                            # tests/functional/many_successful_features/one.feature:3\n"
@@ -216,22 +221,54 @@ def _test_output_with_success_colorful_many_features():
         "\n"
         "  Scenario: Do nothing                       # tests/functional/many_successful_features/one.feature:6\n"
         "    Given I do nothing                       # tests/functional/many_successful_features/dumb_steps.py:6\n"
-        "\033[Am    Given I do nothing                       # tests/functional/many_successful_features/dumb_steps.py:6\n"
+        "\033[A    Given I do nothing                       # tests/functional/many_successful_features/dumb_steps.py:6\n"
         "    Then I see that the test passes          # tests/functional/many_successful_features/dumb_steps.py:8\n"
-        "\033[Am    Then I see that the test passes          # tests/functional/many_successful_features/dumb_steps.py:8\n"
-        "\n\n"
+        "\033[A    Then I see that the test passes          # tests/functional/many_successful_features/dumb_steps.py:8\n"
+        "\n"
         "Feature: Second feature, of many    # tests/functional/many_successful_features/two.feature:1\n"
         "  I just want to see it green :)    # tests/functional/many_successful_features/two.feature:2\n"
         "\n"
         "  Scenario: Do nothing              # tests/functional/many_successful_features/two.feature:4\n"
         "    Given I do nothing              # tests/functional/many_successful_features/dumb_steps.py:6\n"
-        "\033[Am    Given I do nothing              # tests/functional/many_successful_features/dumb_steps.py:6\n"
+        "\033[A    Given I do nothing              # tests/functional/many_successful_features/dumb_steps.py:6\n"
         "    Then I see that the test passes # tests/functional/many_successful_features/dumb_steps.py:8\n"
-        "\033[Am    Then I see that the test passes # tests/functional/many_successful_features/dumb_steps.py:8\n"
+        "\033[A    Then I see that the test passes # tests/functional/many_successful_features/dumb_steps.py:8\n"
         "\n"
         "2 features (2 passed)\n"
         "2 scenarios (2 passed)\n"
         "4 steps (4 passed)\n"
     )
 
-    CALLBACK_REGISTRY.clear()
+@with_setup(prepare_stdout)
+def test_output_with_success_colorful_many_features():
+    "Testing the colorful output of many successful features"
+
+    runner = Runner(join(abspath(dirname(__file__)), 'many_successful_features'), verbosity=4)
+    runner.run()
+
+    assert_stdout_lines(
+        "\n"
+        "\033[1;37mFeature: First feature, of many              \033[1;30m# tests/functional/many_successful_features/one.feature:1\033[0m\n"
+        "\033[1;37m  In order to make lettuce more robust       \033[1;30m# tests/functional/many_successful_features/one.feature:2\033[0m\n"
+        "\033[1;37m  As a programmer                            \033[1;30m# tests/functional/many_successful_features/one.feature:3\033[0m\n"
+        "\033[1;37m  I want to test its output on many features \033[1;30m# tests/functional/many_successful_features/one.feature:4\033[0m\n"
+        "\n"
+        "\033[1;37m  Scenario: Do nothing                       \033[1;30m# tests/functional/many_successful_features/one.feature:6\033[0m\n"
+        "\033[1;30m    Given I do nothing                       \033[1;30m# tests/functional/many_successful_features/dumb_steps.py:6\033[0m\n"
+        "\033[A\033[1;32m    Given I do nothing                       \033[1;30m# tests/functional/many_successful_features/dumb_steps.py:6\033[0m\n"
+        "\033[1;30m    Then I see that the test passes          \033[1;30m# tests/functional/many_successful_features/dumb_steps.py:8\033[0m\n"
+        "\033[A\033[1;32m    Then I see that the test passes          \033[1;30m# tests/functional/many_successful_features/dumb_steps.py:8\033[0m\n"
+        "\n"
+        "\033[1;37mFeature: Second feature, of many    \033[1;30m# tests/functional/many_successful_features/two.feature:1\033[0m\n"
+        "\033[1;37m  I just want to see it green :)    \033[1;30m# tests/functional/many_successful_features/two.feature:2\033[0m\n"
+        "\n"
+        "\033[1;37m  Scenario: Do nothing              \033[1;30m# tests/functional/many_successful_features/two.feature:4\033[0m\n"
+        "\033[1;30m    Given I do nothing              \033[1;30m# tests/functional/many_successful_features/dumb_steps.py:6\033[0m\n"
+        "\033[A\033[1;32m    Given I do nothing              \033[1;30m# tests/functional/many_successful_features/dumb_steps.py:6\033[0m\n"
+        "\033[1;30m    Then I see that the test passes \033[1;30m# tests/functional/many_successful_features/dumb_steps.py:8\033[0m\n"
+        "\033[A\033[1;32m    Then I see that the test passes \033[1;30m# tests/functional/many_successful_features/dumb_steps.py:8\033[0m\n"
+        "\n"
+        "\033[1;37m2 features (\033[1;32m2 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m2 scenarios (\033[1;32m2 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m4 steps (\033[1;32m4 passed\033[1;37m)\033[0m\n"
+    )

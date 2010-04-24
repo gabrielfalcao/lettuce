@@ -44,6 +44,8 @@ def print_scenario_running(scenario):
 def print_feature_running(feature):
     string = feature.represented()
     lines = string.splitlines()
+
+    sys.stdout.write("\n")
     for line in lines:
         line = wrap_file_and_line(line, '\033[1;30m', '\033[0m')
         sys.stdout.write("\033[1;37m%s\n" % line)
@@ -53,20 +55,27 @@ def print_feature_running(feature):
 @after.all
 def print_end(total):
     sys.stdout.write("\n")
-    sys.stdout.write("\033[1;37m%d feature (\033[1;32m%d passed\033[1;37m)\033[0m\n" % (
+
+    word = total.features_ran > 1 and "features" or "feature"
+    sys.stdout.write("\033[1;37m%d %s (\033[1;32m%d passed\033[1;37m)\033[0m\n" % (
         total.features_ran,
+        word,
         total.features_passed
         )
     )
 
-    sys.stdout.write("\033[1;37m%d scenario (\033[1;32m%d passed\033[1;37m)\033[0m\n" % (
+    word = total.scenarios_ran > 1 and "scenarios" or "scenario"
+    sys.stdout.write("\033[1;37m%d %s (\033[1;32m%d passed\033[1;37m)\033[0m\n" % (
         total.scenarios_ran,
+        word,
         total.scenarios_passed
         )
     )
 
-    sys.stdout.write("\033[1;37m%d steps (\033[1;32m%d passed\033[1;37m)\033[0m\n" % (
+    word = total.steps > 1 and "steps" or "step"
+    sys.stdout.write("\033[1;37m%d %s (\033[1;32m%d passed\033[1;37m)\033[0m\n" % (
         total.steps,
+        word,
         total.steps_passed
         )
     )

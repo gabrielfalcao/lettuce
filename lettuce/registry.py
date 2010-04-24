@@ -16,11 +16,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import threading
 
-STEP_REGISTRY = {}
 world = threading.local()
 world._set = False
 
-class CallbackDict(dict):
+class CleanableDict(dict):
+    def clear(self):
+        for k in self.keys():
+            del self[k]
+
+class CallbackDict(CleanableDict):
     def _function_matches(self, one, other):
         params = 'co_filename', 'co_firstlineno'
         matches = []
@@ -49,6 +53,7 @@ class CallbackDict(dict):
                     callback_list.pop()
 
 
+STEP_REGISTRY = CleanableDict()
 CALLBACK_REGISTRY = CallbackDict(
     {
         'all': {

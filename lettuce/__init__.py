@@ -29,8 +29,9 @@ from lettuce.terrain import world
 
 from lettuce.decorators import step
 from lettuce.registry import CALLBACK_REGISTRY
+from lettuce.registry import STEP_REGISTRY
 
-__all__ = ['after', 'before', 'step', 'world']
+__all__ = ['after', 'before', 'step', 'world', 'STEP_REGISTRY', 'CALLBACK_REGISTRY']
 
 def _import(name):
     return __import__(name)
@@ -65,6 +66,7 @@ class Runner(object):
         if verbosity is 3:
             from lettuce.plugins import shell_output
             reload(shell_output)
+
         if verbosity is 4:
             from lettuce.plugins import colored_shell_output
             reload(colored_shell_output)
