@@ -25,6 +25,9 @@ setup(name='lettuce',
     author_email='gabriel@nacaolivre.org',
     url='http://github.com/gabrielfalcao/lettuce',
     scripts = ['lettuce/lettuce'],
-    packages=['lettuce']
+    packages=[
+          'lettuce',
+          'lettuce.plugins'
+    ]
 )
 
