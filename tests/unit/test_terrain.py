@@ -135,7 +135,6 @@ def test_after_each_all_is_executed_before_each_all():
     "terrain.before.each_all and terrain.after.each_all decorators"
     import lettuce
     from lettuce.fs import FeatureLoader
-    CALLBACK_REGISTRY.clear()
     world.all_steps = []
 
     mox = Mox()
@@ -159,6 +158,10 @@ def test_after_each_all_is_executed_before_each_all():
     lettuce.Feature.from_file('some_basepath/foo.feature'). \
         AndReturn(Feature.from_string(FEATURE2))
 
+    mox.ReplayAll()
+
+    runner = lettuce.Runner('some_basepath')
+    CALLBACK_REGISTRY.clear()
     @before.all
     def set_state_to_before():
         world.all_steps.append('before')
@@ -172,9 +175,6 @@ def test_after_each_all_is_executed_before_each_all():
         world.all_steps.append('after')
         isinstance(total, TotalResult)
 
-    mox.ReplayAll()
-
-    runner = lettuce.Runner('some_basepath')
     runner.run()
 
     mox.VerifyAll()

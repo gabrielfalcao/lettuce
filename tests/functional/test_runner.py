@@ -279,5 +279,5 @@ def test_output_when_could_not_find_features():
 
     assert_stdout_lines(
         '\033[1;31mOops!\033[0m\n'
-        '\033[1;37mcould not find features at \033[1;33m%s\033[0m\n' % path
+        '\033[1;37mcould not find features at \033[1;33m./%s\033[0m\n' % path
     )
