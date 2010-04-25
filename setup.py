@@ -24,8 +24,7 @@ setup(name='lettuce',
     author=u'Gabriel Falcão',
     author_email='gabriel@nacaolivre.org',
     url='http://github.com/gabrielfalcao/lettuce',
-    packages=[
-          'lettuce',
-    ]
+    scripts = ['lettuce/lettuce'],
+    packages=['lettuce']
 )
 
