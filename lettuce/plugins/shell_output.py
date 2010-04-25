@@ -14,6 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import os
 import sys
 from lettuce.terrain import after
 from lettuce.terrain import before
@@ -62,3 +63,15 @@ def print_end(total):
         total.steps_passed
         )
     )
+
+def print_no_features_found(where):
+    where = os.path.relpath(where)
+    if not where.startswith(os.sep):
+        where = '.%s%s' % (os.sep, where)
+
+    sys.stdout.write('Oops!\n')
+    sys.stdout.write(
+        'could not find features at '
+        '%s\n' % where
+    )
+

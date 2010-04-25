@@ -38,7 +38,9 @@ def main(args=sys.argv[1:]):
     if args:
         base_path = os.path.abspath(args[0])
 
-    runner = lettuce.Runner(base_path, int(options.verbosity))
+    if isinstance(options.verbosity, int):
+        options.verbosity = int(options.verbosity)
+    runner = lettuce.Runner(base_path, options.verbosity)
 
     runner.run()
 

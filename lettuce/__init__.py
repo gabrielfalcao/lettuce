@@ -63,25 +63,35 @@ class Runner(object):
 
         sys.path.remove(base_path)
 
-        if verbosity is 3:
-            from lettuce.plugins import shell_output
-            reload(shell_output)
+        if verbosity is 0:
+            from lettuce.plugins import non_verbose as output
+        elif verbosity is 3:
+            from lettuce.plugins import shell_output as output
+        else:
+            from lettuce.plugins import colored_shell_output as output
 
-        if verbosity is 4:
-            from lettuce.plugins import colored_shell_output
-            reload(colored_shell_output)
+        reload(output)
+
+        self.output = output
 
     def run(self):
         """ Find and load step definitions, and them find and load
         features under `base_path` specified on constructor
         """
+
         self.loader.find_and_load_step_definitions()
 
         for callback in CALLBACK_REGISTRY['all']['before']:
             callback()
 
         results = []
-        for filename in self.loader.find_feature_files():
+        features_files = self.loader.find_feature_files()
+
+        if not features_files:
+            self.output.print_no_features_found(self.loader.base_dir)
+            return
+
+        for filename in features_files:
             feature = Feature.from_file(filename)
             results.append(feature.run())
 

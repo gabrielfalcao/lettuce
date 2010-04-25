@@ -19,7 +19,7 @@ import sys
 
 from StringIO import StringIO
 
-from os.path import dirname, abspath, join
+from os.path import dirname, abspath, join, relpath
 from nose.tools import assert_equals, with_setup
 
 from lettuce import Runner, CALLBACK_REGISTRY, STEP_REGISTRY
@@ -267,4 +267,17 @@ def test_output_with_success_colorful_many_features():
         "\033[1;37m2 features (\033[1;32m2 passed\033[1;37m)\033[0m\n" \
         "\033[1;37m2 scenarios (\033[1;32m2 passed\033[1;37m)\033[0m\n" \
         "\033[1;37m4 steps (\033[1;32m4 passed\033[1;37m)\033[0m\n"
+    )
+
+@with_setup(prepare_stdout)
+def test_output_when_could_not_find_features():
+    "Testing the colorful output of many successful features"
+
+    path = relpath(join(abspath(dirname(__file__)), 'unexistent-folder'))
+    runner = Runner(path, verbosity=4)
+    runner.run()
+
+    assert_stdout_lines(
+        '\033[1;31mOops!\033[0m\n'
+        '\033[1;37mcould not find features at \033[1;33m%s\033[0m\n' % path
     )
