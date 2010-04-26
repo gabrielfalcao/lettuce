@@ -50,3 +50,36 @@ def rfill(string, times, char=" ", append=""):
         string += char
 
     return string + append
+
+def getlen(string):
+    return len(string) + 1
+
+def dicts_to_string(dicts, order):
+    keys_and_sizes = dict([(k, getlen(k)) for k in dicts[0].keys()])
+
+    for key in keys_and_sizes:
+        for data in dicts:
+            current_size = keys_and_sizes[key]
+            value = unicode(data[key])
+            size = getlen(value)
+            if size > current_size:
+                keys_and_sizes[key] = size
+
+
+    names = []
+    for key in order:
+        size = keys_and_sizes[key]
+        name = " %s" % rfill(key, size)
+        names.append(name)
+
+    table = ["|%s|" % "|".join(names)]
+    for data in dicts:
+        names = []
+        for key in order:
+            value = data[key]
+            size = keys_and_sizes[key]
+            names.append( " %s" % rfill(unicode(value), size))
+
+        table.append("|%s|" % "|".join(names))
+
+    return "\n".join(table) + "\n"

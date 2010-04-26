@@ -138,3 +138,26 @@ def test_rfill_append():
         strings.rfill("ab", 10, append="# path/to/file.extension: 2"),
         "ab        # path/to/file.extension: 2"
     )
+
+def test_dicts_to_string():
+    "strings.dicts_to_string"
+
+    dicts = [
+        {
+            'name': u'Gabriel Falcão',
+            'age': 22
+        },
+        {
+            'name': 'Laryssa',
+            'age': 19
+        }
+
+    ]
+
+    assert_equals(
+        strings.dicts_to_string(dicts, ['name', 'age']),
+        "| name           | age |\n"
+        "| Gabriel Falcão | 22  |\n"
+        "| Laryssa        | 19  |\n"
+    )
+
