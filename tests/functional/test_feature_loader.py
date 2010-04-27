@@ -25,7 +25,7 @@ cjoin = lambda *x: join(current_dir, 'simple_features', *x)
 def test_feature_finder_finds_all_feature_files_within_a_dir():
     "FeatureLoader finds all feature files within a directory"
 
-    ff = FeatureLoader(current_dir)
+    ff = FeatureLoader(cjoin())
     files = ff.find_feature_files()
 
     assert_equals(
@@ -37,9 +37,6 @@ def test_feature_finder_finds_all_feature_files_within_a_dir():
             cjoin('2nd_feature_dir', 'before_and_after_all.feature'),
             cjoin('2nd_feature_dir', 'with_defined_steps.feature'),
             cjoin('3rd_feature_dir', 'my_steps_are_anywhere.feature'),
-            cjoin('runner_features', 'first.feature'),
-            cjoin('many_successful_features', 'one.feature'),
-            cjoin('many_successful_features', 'two.feature'),
         ])
     )
 
