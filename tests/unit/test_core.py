@@ -19,6 +19,13 @@ from lettuce import core
 from nose.tools import assert_equals
 from nose.tools import assert_not_equals
 
+STEP_WITH_TABLE = u'''
+Given I have the following items in my shelf:
+      | name  | description                                           |
+      | Glass | a nice glass to drink grape juice                     |
+      | Pasta | a pasta to cook and eat with grape juice in the glass |
+'''
+
 def test_step_definition():
     "Step definition takes a function and a step, keeps its definition " \
     "relative path, and line + 1 (to consider the decorator)"
@@ -29,7 +36,7 @@ def test_step_definition():
     definition = core.StepDefinition("FOO BAR", dumb)
     assert_equals(definition.function, dumb)
     assert_equals(definition.file, os.path.relpath(__file__).rstrip("c"))
-    assert_equals(definition.line, 27)
+    assert_equals(definition.line, 34)
 
 def test_step_description():
     "Step description takes a line and filename, and keeps the relative path for " \
@@ -123,4 +130,14 @@ def test_step_represent_string_when_defined():
         "    foobar # should/be/filename:421\n"
     )
 
+def test_step_represent_table():
+    "Step.represent_data_list"
 
+    step = core.Step.from_string(STEP_WITH_TABLE)
+
+    assert_equals(
+        step.represent_data_list(),
+        '      | name  | description                                           |\n'
+        '      | Glass | a nice glass to drink grape juice                     |\n'
+        '      | Pasta | a pasta to cook and eat with grape juice in the glass |\n'
+    )

@@ -151,6 +151,10 @@ class Step(object):
             where = self.defined_at
         return strings.rfill(head, self.scenario.feature.max_length + 1, append='# %s:%d\n' % (where.file, where.line))
 
+    def represent_data_list(self):
+        lines = strings.dicts_to_string(self.data_list, self.keys).splitlines()
+        return "\n".join([(" " * self.table_indentation) + line for line in lines]) + "\n"
+
     def __repr__(self):
         return u'<Step: "%s">' % self.sentence
 
