@@ -20,7 +20,7 @@ from lettuce.fs import FeatureLoader
 from lettuce.core import Feature
 
 current_dir = abspath(dirname(__file__))
-cjoin = lambda *x: join(current_dir, *x)
+cjoin = lambda *x: join(current_dir, 'simple_features', *x)
 
 def test_feature_finder_finds_all_feature_files_within_a_dir():
     "FeatureLoader finds all feature files within a directory"

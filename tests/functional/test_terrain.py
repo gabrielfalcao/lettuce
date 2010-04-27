@@ -26,7 +26,7 @@ def test_imports_terrain_under_path_that_is_run():
 
     assert not hasattr(world, 'works_fine')
 
-    runner = Runner(join(abspath(dirname(__file__)), '1st_feature_dir'))
+    runner = Runner(join(abspath(dirname(__file__)), 'simple_features', '1st_feature_dir'))
     assert runner.terrain
     assert hasattr(world, 'works_fine')
     assert world.works_fine
@@ -55,7 +55,7 @@ def test_after_each_all_is_executed_before_each_all():
     def set_state_to_after(total):
         world.all_steps.append('after')
 
-    runner = Runner(join(abspath(dirname(__file__)), '2nd_feature_dir'))
+    runner = Runner(join(abspath(dirname(__file__)), 'simple_features', '2nd_feature_dir'))
     runner.run()
 
     assert_equals(
