@@ -141,3 +141,25 @@ def test_step_represent_table():
         '      | Glass | a nice glass to drink grape juice                     |\n'
         '      | Pasta | a pasta to cook and eat with grape juice in the glass |\n'
     )
+
+SCENARIO_OUTLINE = u'''
+Scenario: Regular numbers
+                               Given I do fill description with '<value_one>'
+                               And then, age with with '<and_other>'
+Examples:
+         |     value_one       | and_other                   |
+         | first| primeiro |
+         |second |segundo|
+'''
+
+def test_scenario_outline_represent_examples():
+    "Step.represent_data_list"
+
+    step = core.Scenario.from_string(SCENARIO_OUTLINE)
+
+    assert_equals(
+        step.represent_examples(),
+        '    | value_one | and_other |\n'
+        '    | first     | primeiro  |\n'
+        '    | second    | segundo   |\n'
+    )

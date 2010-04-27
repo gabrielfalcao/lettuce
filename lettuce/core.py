@@ -220,13 +220,14 @@ class Scenario(object):
     described_at = None
     indentation = 2
     table_indentation = indentation + 2
-    def __init__(self, name, remaining_lines, outlines, with_file=None,
+    def __init__(self, name, remaining_lines, keys, outlines, with_file=None,
                  original_string=None):
 
         self.name = name
         self.steps = self._parse_remaining_lines(remaining_lines,
                                                  with_file,
                                                  original_string)
+        self.keys = keys
         self.outlines = outlines
         if with_file and original_string:
             scenario_definition = ScenarioDescription(self, with_file,
@@ -360,13 +361,17 @@ class Scenario(object):
         head = '%sScenario%s: %s' % (' ' * self.indentation, comp, self.name)
         return strings.rfill(head, self.feature.max_length + 1, append='# %s:%d\n' % (self.described_at.file, self.described_at.line))
 
+    def represent_examples(self):
+        lines = strings.dicts_to_string(self.outlines, self.keys).splitlines()
+        return "\n".join([(" " * self.table_indentation) + line for line in lines]) + '\n'
+
     @classmethod
     def from_string(new_scenario, string, with_file=None, original_string=None):
         """ Creates a new scenario from string"""
 
         splitted = strings.split_wisely(string, "Example[s]?[:]", True)
         string = splitted[0]
-
+        keys = []
         outlines = []
         if len(splitted) is 2:
             part = splitted[1]
@@ -378,6 +383,7 @@ class Scenario(object):
 
         scenario =  new_scenario(name=line,
                                  remaining_lines=lines,
+                                 keys=keys,
                                  outlines=outlines,
                                  with_file=with_file,
                                  original_string=original_string)
