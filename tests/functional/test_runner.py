@@ -69,6 +69,9 @@ def assert_lines(one, other):
 def assert_stdout_lines(other):
     assert_lines(sys.stdout.getvalue(), other)
 
+def feature_name(name):
+    return join(abspath(dirname(__file__)), 'output_features', name, "%s.feature" % name)
+
 @with_setup(prepare_stderr)
 def test_try_to_import_terrain():
     "Runner tries to import terrain, but has a nice output when it fail"
@@ -281,3 +284,93 @@ def test_output_when_could_not_find_features():
         '\033[1;31mOops!\033[0m\n'
         '\033[1;37mcould not find features at \033[1;33m./%s\033[0m\n' % path
     )
+
+@with_setup(prepare_stdout)
+def test_output_when_could_not_find_features_colorless():
+    "Testing the colorful output of many successful features colorless"
+
+    path = relpath(join(abspath(dirname(__file__)), 'unexistent-folder'))
+    runner = Runner(path, verbosity=3)
+    runner.run()
+
+    assert_stdout_lines(
+        'Oops!\n'
+        'could not find features at ./%s\n' % path
+    )
+
+@with_setup(prepare_stdout)
+def test_output_with_success_colorless_with_table():
+    "Testing the colorless output of success with table"
+
+    runner = Runner(feature_name('success_table'), verbosity=3)
+    runner.run()
+
+    assert_stdout_lines(
+        '\n'
+        'Feature: Table Success           # tests/functional/output_features/success_table/success_table.feature:1\n'
+        '\n'
+        '  Scenario: Add two numbers      # tests/functional/output_features/success_table/success_table.feature:2\n'
+        '    Given I have 0 bucks         # tests/functional/output_features/success_table/success_table_steps.py:28\n'
+        '\033[A    Given I have 0 bucks         # tests/functional/output_features/success_table/success_table_steps.py:28\n'
+        '    And that I have these items: # tests/functional/output_features/success_table/success_table_steps.py:32\n'
+        '      | name    | price  |\n'
+        '      | Porsche | 200000 |\n'
+        '      | Ferrari | 400000 |\n'
+        '\033[A\033[A\033[A\033[A    And that I have these items: # tests/functional/output_features/success_table/success_table_steps.py:32\n'
+        '      | name    | price  |\n'
+        '      | Porsche | 200000 |\n'
+        '      | Ferrari | 400000 |\n'
+        '    When I sell the "Ferrari"    # tests/functional/output_features/success_table/success_table_steps.py:42\n'
+        '\033[A    When I sell the "Ferrari"    # tests/functional/output_features/success_table/success_table_steps.py:42\n'
+        '    Then I have 400000 bucks     # tests/functional/output_features/success_table/success_table_steps.py:28\n'
+        '\033[A    Then I have 400000 bucks     # tests/functional/output_features/success_table/success_table_steps.py:28\n'
+        '    And my garage contains:      # tests/functional/output_features/success_table/success_table_steps.py:47\n'
+        '      | name    | price  |\n'
+        '      | Porsche | 200000 |\n'
+        '\033[A\033[A\033[A    And my garage contains:      # tests/functional/output_features/success_table/success_table_steps.py:47\n'
+        '      | name    | price  |\n'
+        '      | Porsche | 200000 |\n'
+        '\n'
+        '1 feature (1 passed)\n'
+        '1 scenario (1 passed)\n'
+        '5 steps (5 passed)\n'
+    )
+
+@with_setup(prepare_stdout)
+def test_output_with_success_colorful_with_table():
+    "Testing the colorful output of success with table"
+
+    runner = Runner(feature_name('success_table'), verbosity=4)
+    runner.run()
+
+    assert_stdout_lines(
+        '\n'
+        '\033[1;37mFeature: Table Success           \033[1;30m# tests/functional/output_features/success_table/success_table.feature:1\033[0m\n'
+        '\n'
+        '\033[1;37m  Scenario: Add two numbers      \033[1;30m# tests/functional/output_features/success_table/success_table.feature:2\033[0m\n'
+        '\033[1;30m    Given I have 0 bucks         \033[1;30m# tests/functional/output_features/success_table/success_table_steps.py:28\033[0m\n'
+        '\033[A\033[1;32m    Given I have 0 bucks         \033[1;30m# tests/functional/output_features/success_table/success_table_steps.py:28\033[0m\n'
+        '\033[1;30m    And that I have these items: \033[1;30m# tests/functional/output_features/success_table/success_table_steps.py:32\033[0m\n'
+        '\033[1;30m      | name    | price  |\033[0m\n'
+        '\033[1;30m      | Porsche | 200000 |\033[0m\n'
+        '\033[1;30m      | Ferrari | 400000 |\033[0m\n'
+        '\033[A\033[A\033[A\033[A\033[1;32m    And that I have these items: \033[1;30m# tests/functional/output_features/success_table/success_table_steps.py:32\033[0m\n'
+        '\033[1;32m      | name    | price  |\033[0m\n'
+        '\033[1;32m      | Porsche | 200000 |\033[0m\n'
+        '\033[1;32m      | Ferrari | 400000 |\033[0m\n'
+        '\033[1;30m    When I sell the "Ferrari"    \033[1;30m# tests/functional/output_features/success_table/success_table_steps.py:42\033[0m\n'
+        '\033[A\033[1;32m    When I sell the "Ferrari"    \033[1;30m# tests/functional/output_features/success_table/success_table_steps.py:42\033[0m\n'
+        '\033[1;30m    Then I have 400000 bucks     \033[1;30m# tests/functional/output_features/success_table/success_table_steps.py:28\033[0m\n'
+        '\033[A\033[1;32m    Then I have 400000 bucks     \033[1;30m# tests/functional/output_features/success_table/success_table_steps.py:28\033[0m\n'
+        '\033[1;30m    And my garage contains:      \033[1;30m# tests/functional/output_features/success_table/success_table_steps.py:47\033[0m\n'
+        '\033[1;30m      | name    | price  |\033[0m\n'
+        '\033[1;30m      | Porsche | 200000 |\033[0m\n'
+        '\033[A\033[A\033[A\033[1;32m    And my garage contains:      \033[1;30m# tests/functional/output_features/success_table/success_table_steps.py:47\033[0m\n'
+        '\033[1;32m      | name    | price  |\033[0m\n'
+        '\033[1;32m      | Porsche | 200000 |\033[0m\n'
+        '\n'
+        "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m5 steps (\033[1;32m5 passed\033[1;37m)\033[0m\n"
+    )
+

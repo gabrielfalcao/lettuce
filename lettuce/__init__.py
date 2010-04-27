@@ -18,6 +18,7 @@
 version = '0.1'
 release = 'barium'
 
+import os
 import sys
 
 from lettuce import fs
@@ -46,8 +47,14 @@ class Runner(object):
         """ lettuce.Runner will try to find a terrain.py file and
         import it from within `base_path`
         """
-        sys.path.insert(0, base_path)
+
         self.terrain = None
+        self.single_feature = None
+        if os.path.isfile(base_path) and os.path.exists(base_path):
+            self.single_feature = base_path
+            base_path = os.path.dirname(base_path)
+
+        sys.path.insert(0, base_path)
         self.loader = fs.FeatureLoader(base_path)
         self.verbosity = verbosity
         try:
@@ -85,7 +92,10 @@ class Runner(object):
             callback()
 
         results = []
-        features_files = self.loader.find_feature_files()
+        if self.single_feature:
+            features_files = [self.single_feature]
+        else:
+            features_files = self.loader.find_feature_files()
 
         if not features_files:
             self.output.print_no_features_found(self.loader.base_dir)

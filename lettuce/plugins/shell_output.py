@@ -22,10 +22,17 @@ from lettuce.terrain import before
 @before.each_step
 def print_step_running(step):
     sys.stdout.write(step.represent_string(step.sentence))
+    if step.data_list:
+        sys.stdout.write(step.represent_data_list())
 
 @after.each_step
 def print_step_ran(step):
+    if step.data_list:
+        sys.stdout.write("\033[A" * (len(step.data_list) + 1))
+
     sys.stdout.write("\033[A" + step.represent_string(step.sentence))
+    if step.data_list:
+        sys.stdout.write(step.represent_data_list())
 
 @before.each_scenario
 def print_scenario_running(scenario):
