@@ -26,6 +26,7 @@ Feature: Count steps ran
         Given I have a defined step
         When other step fails
         Then it won't reach here
+        Then I have a defined step
 """
 
 FEATURE2 = """
@@ -70,10 +71,6 @@ def have_a_defined_step(*args, **kw):
 def and_another(*args, **kw):
     assert False, 'It should fail'
 
-@step("it won't reach here")
-def wont_reach_here(*args, **kw):
-    raise NotImplementedError('You should never reach here!')
-
 @step("define a step")
 def define_a_step(*args, **kw):
     assert True
@@ -88,8 +85,9 @@ def test_can_count_steps_and_its_states():
     scenario_result = feature_result.scenario_results[0]
     assert_equals(len(scenario_result.steps_passed), 1)
     assert_equals(len(scenario_result.steps_failed), 1)
+    assert_equals(len(scenario_result.steps_undefined), 1)
     assert_equals(len(scenario_result.steps_skipped), 1)
-    assert_equals(scenario_result.total_steps, 3)
+    assert_equals(scenario_result.total_steps, 4)
 
 def test_can_point_undefined_steps():
     "The scenario result has also the undefined steps."
@@ -163,7 +161,7 @@ def test_steps_are_aware_of_its_definitions():
 
     step1 = scenario_result.steps_passed[0]
 
-    assert_equals(step1.defined_at.line, 66)
+    assert_equals(step1.defined_at.line, 67)
     assert_equals(step1.defined_at.file, relpath(__file__.rstrip("c")))
 
 def test_steps_that_match_groups_takes_them_as_parameters():

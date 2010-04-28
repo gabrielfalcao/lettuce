@@ -104,6 +104,10 @@ class Step(object):
     indentation = 4
     table_indentation = indentation + 2
     defined_at = None
+    ran = False
+    passed = False
+    failed = False
+    why = None
 
     def __init__(self, sentence, remaining_lines, line=None, filename=None):
         self.sentence = sentence
@@ -186,7 +190,7 @@ class Step(object):
         """Runs a step, trying to resolve it on available step
         definitions"""
         matched, step_definition = self.pre_run(ignore_case)
-
+        self.ran = True
         try:
             kw = matched.groupdict()
 
@@ -196,8 +200,10 @@ class Step(object):
                 groups = matched.groups()
                 step_definition(*groups)
 
+            self.passed = True
         except Exception, e:
             self.why = ReasonToFail(e)
+            self.failed = True
             raise
 
     @classmethod
@@ -298,24 +304,27 @@ class Scenario(object):
                 for callback in CALLBACK_REGISTRY['step']['before_each']:
                     callback(step)
 
-                step.run(ignore_case)
+                if not steps_failed and not steps_undefined:
+                    step.run(ignore_case)
+                    steps_passed.append(step)
 
-                for callback in CALLBACK_REGISTRY['step']['after_each']:
-                    callback(step)
-
-                steps_passed.append(step)
             except AssertionError:
                 steps_failed.append(step)
-                break
+                continue
             except NoDefinitionFound, e:
                 steps_undefined.append(e.step)
                 continue
+
+            finally:
+                for callback in CALLBACK_REGISTRY['step']['after_each']:
+                    callback(step)
 
         for callback in CALLBACK_REGISTRY['scenario']['after_each']:
             callback(self)
 
 
         skip = lambda x: x not in steps_passed and x not in steps_undefined and x not in steps_failed
+
         steps_skipped = filter(skip, self.steps)
 
         return ScenarioResult(
