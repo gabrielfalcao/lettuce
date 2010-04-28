@@ -305,7 +305,6 @@ class Scenario(object):
 
                 steps_passed.append(step)
             except AssertionError:
-                steps_passed.append(step)
                 steps_failed.append(step)
                 break
             except NoDefinitionFound, e:
@@ -315,7 +314,8 @@ class Scenario(object):
         for callback in CALLBACK_REGISTRY['scenario']['after_each']:
             callback(self)
 
-        skip = lambda x: x not in steps_passed and x not in steps_undefined
+
+        skip = lambda x: x not in steps_passed and x not in steps_undefined and x not in steps_failed
         steps_skipped = filter(skip, self.steps)
 
         return ScenarioResult(
@@ -528,7 +528,7 @@ class ScenarioResult(object):
         self.steps_skipped = steps_skipped
         self.steps_undefined = steps_undefined
 
-        all_lists = [steps_passed + steps_skipped + steps_undefined]
+        all_lists = [steps_passed + steps_skipped + steps_undefined + steps_failed]
         self.total_steps = sum(map(len, all_lists))
 
     @property

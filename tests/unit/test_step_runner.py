@@ -86,7 +86,7 @@ def test_can_count_steps_and_its_states():
     feature_result = f.run()
 
     scenario_result = feature_result.scenario_results[0]
-    assert_equals(len(scenario_result.steps_passed), 2)
+    assert_equals(len(scenario_result.steps_passed), 1)
     assert_equals(len(scenario_result.steps_failed), 1)
     assert_equals(len(scenario_result.steps_skipped), 1)
     assert_equals(scenario_result.total_steps, 3)
@@ -181,9 +181,9 @@ def test_steps_that_match_groups_takes_them_as_parameters():
 
 def test_steps_that_match_named_groups_takes_them_as_parameters():
     "Steps that match named groups takes them as parameters"
-    @step(r'When a (?P<what>foreign) at "(?P<city>.*)"')
+    @step(r'When a (?P<what>\w+) at "(?P<city>.*)"')
     def given_action_named(step, what, city):
-        assert_equals(what, 'person')
+        assert_equals(what, 'foreign')
         assert_equals(city, 'Rio de Janeiro')
 
     f = Feature.from_string(FEATURE5)

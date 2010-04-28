@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+import time
 from lettuce import step
 from lettuce import world
 from lettuce.terrain import before
@@ -27,7 +27,8 @@ def set_balance():
 @step('I have (\d+) bucks')
 def compare_bucks(step, cash):
     assert_equals(world.my_balance, int(cash))
-
+    time.sleep(1)
+    
 @step('I have these items')
 def havetheseitems(step):
     cars = {}
@@ -35,14 +36,15 @@ def havetheseitems(step):
         key = data['name']
         value = int(data['price'])
         cars[key] = value
-
+    time.sleep(1)
     world.cars = cars
 
 @step('sell the "([^"]+)"')
 def sell_item(step, name):
     world.my_balance += world.cars[name]
     del world.cars[name]
-
+    time.sleep(1)
+    
 @step('my garage contains:')
 def alsothese(step):
     cars = {}
@@ -50,6 +52,6 @@ def alsothese(step):
         key = data['name']
         value = int(data['price'])
         cars[key] = value
-
+    time.sleep(1)
     assert_equals(cars, world.cars)
 
