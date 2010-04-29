@@ -30,9 +30,20 @@ def print_step_ran(step):
     if step.data_list:
         sys.stdout.write("\033[A" * (len(step.data_list) + 1))
 
-    sys.stdout.write("\033[A" + step.represent_string(step.sentence))
+    if step.defined_at:
+        sys.stdout.write("\033[A" + step.represent_string(step.sentence))
+
+    else:
+        sys.stdout.write(step.represent_string(step.sentence).rstrip() + " (undefined)\n")
+
     if step.data_list:
         sys.stdout.write(step.represent_data_list())
+
+    if step.failed:
+        print_spaced = lambda x: sys.stdout.write("%s%s\n" % (" " * step.indentation, x))
+
+        for line in step.why.traceback.splitlines():
+            print_spaced(line)
 
 @before.each_scenario
 def print_scenario_running(scenario):

@@ -50,7 +50,15 @@ class StepDefinition(object):
         """Method that actually wrapps the call to step definition
         callback. Sends step object as first argument
         """
-        return self.function(self.step, *args, **kw)
+        try:
+            ret = self.function(self.step, *args, **kw)
+            self.step.passed = True
+        except Exception, e:
+            self.step.failed = True
+            self.step.why = ReasonToFail(e)
+            raise e
+
+        return ret
 
 class StepDescription(object):
     """A simple object that holds filename and line number of a step
@@ -105,9 +113,8 @@ class Step(object):
     table_indentation = indentation + 2
     defined_at = None
     ran = False
-    passed = False
-    failed = False
-    why = None
+    passed = None
+    failed = None
 
     def __init__(self, sentence, remaining_lines, line=None, filename=None):
         self.sentence = sentence
@@ -191,20 +198,16 @@ class Step(object):
         definitions"""
         matched, step_definition = self.pre_run(ignore_case)
         self.ran = True
-        try:
-            kw = matched.groupdict()
+        kw = matched.groupdict()
 
-            if kw:
-                step_definition(**kw)
-            else:
-                groups = matched.groups()
-                step_definition(*groups)
+        if kw:
+            step_definition(**kw)
+        else:
+            groups = matched.groups()
+            step_definition(*groups)
 
-            self.passed = True
-        except Exception, e:
-            self.why = ReasonToFail(e)
-            self.failed = True
-            raise
+        self.passed = True
+        return True
 
     @classmethod
     def from_string(cls, string, with_file=None, original_string=None):
@@ -310,10 +313,9 @@ class Scenario(object):
 
             except AssertionError:
                 steps_failed.append(step)
-                continue
+
             except NoDefinitionFound, e:
                 steps_undefined.append(e.step)
-                continue
 
             finally:
                 for callback in CALLBACK_REGISTRY['step']['after_each']:
@@ -562,7 +564,7 @@ class TotalResult(object):
 
     @property
     def features_passed(self):
-        return len([result.passed for result in self.feature_results])
+        return len([result for result in self.feature_results if result.passed])
 
     @property
     def scenarios_ran(self):
@@ -570,4 +572,4 @@ class TotalResult(object):
 
     @property
     def scenarios_passed(self):
-        return len([result.passed for result in self.scenario_results])
+        return len([result for result in self.scenario_results if result.passed])

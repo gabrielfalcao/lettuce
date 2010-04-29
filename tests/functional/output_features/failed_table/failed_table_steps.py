@@ -27,6 +27,3 @@ def tof(step):
 @step('this one will be skipped')
 def wbs(step):
     assert True
-
-
-
