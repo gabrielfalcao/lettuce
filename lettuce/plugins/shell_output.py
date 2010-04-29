@@ -14,6 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import re
 import os
 import sys
 from lettuce.terrain import after
@@ -74,13 +75,32 @@ def print_end(total):
         )
     )
 
+    steps_details = []
+    for kind in ("failed","skipped",  "undefined"):
+        attr = 'steps_%s' % kind
+        stotal = getattr(total, attr)
+        if stotal:
+            steps_details.append(
+                "%d %s" % (stotal, kind)
+            )
+
+    steps_details.append("%d passed" % total.steps_passed)
     word = total.steps > 1 and "steps" or "step"
-    sys.stdout.write("%d %s (%d passed)\n" % (
+    sys.stdout.write("%d %s (%s)\n" % (
         total.steps,
         word,
-        total.steps_passed
+        ", ".join(steps_details)
         )
     )
+
+    if total.proposed_definitions:
+        sys.stdout.write("\nYou can implement step definitions for undefined steps with these snippets:\n\n")
+        sys.stdout.write("from lettuce import step\n\n")
+        for step in total.proposed_definitions:
+            method_name = "_".join(re.findall("\w+", step.sentence)).lower()
+            sys.stdout.write("@step(r'%s')\n" % re.escape(step.sentence).replace(r'\ ', ' '))
+            sys.stdout.write("def %s(step):\n" % method_name)
+            sys.stdout.write("    pass\n")
 
 def print_no_features_found(where):
     where = os.path.relpath(where)

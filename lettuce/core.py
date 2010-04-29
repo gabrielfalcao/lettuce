@@ -551,12 +551,20 @@ class TotalResult(object):
         self.feature_results = feature_results
         self.scenario_results = []
         self.steps_passed = 0
+        self.steps_failed = 0
+        self.steps_skipped = 0
+        self.steps_undefined= 0
+        self.proposed_definitions = []
         self.steps = 0
         for feature_result in self.feature_results:
             for scenario_result in feature_result.scenario_results:
                 self.scenario_results.append(scenario_result)
                 self.steps_passed += len(scenario_result.steps_passed)
+                self.steps_failed += len(scenario_result.steps_failed)
+                self.steps_skipped += len(scenario_result.steps_skipped)
+                self.steps_undefined += len(scenario_result.steps_undefined)
                 self.steps += scenario_result.total_steps
+                self.proposed_definitions.extend(scenario_result.steps_undefined)
 
     @property
     def features_ran(self):
