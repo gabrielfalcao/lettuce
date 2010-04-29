@@ -20,6 +20,10 @@ import sys
 from lettuce.terrain import after
 from lettuce.terrain import before
 
+def wrt(what):
+    sys.stdout.write(what)
+
+
 def wrap_file_and_line(string, start, end):
     return re.sub(r'([#] [^:]+[:]\d+)', '%s\g<1>%s' % (start, end), string)
 
@@ -32,10 +36,13 @@ def wp(l):
     return l
 
 def write_out(what):
-    sys.stdout.write(wp(what))
+    wrt(wp(what))
 
 @before.each_step
 def print_step_running(step):
+    if not step.defined_at:
+        return
+
     string = step.represent_string(step.sentence)
     string = wrap_file_and_line(string, '\033[1;30m', '\033[0m')
     write_out("\033[1;30m%s" % string)
@@ -50,30 +57,43 @@ def print_step_ran(step):
 
     string = step.represent_string(step.sentence)
 
-    string = wrap_file_and_line(string, '\033[1;30m', '\033[0m')
+    if not step.failed:
+        string = wrap_file_and_line(string, '\033[1;30m', '\033[0m')
+
+
+    prefix = '\033[A'
 
     if step.failed:
         color = "\033[0;31m"
-    else:
+        string = wrap_file_and_line(string, '\033[1;41;33m', '\033[0m')
+
+    elif step.passed:
         color = "\033[1;32m"
 
-    write_out("\033[A%s%s" % (color, string))
+    elif step.defined_at:
+        color = "\033[0;36m"
+
+    else:
+        color = "\033[0;33m"
+        prefix = ""
+
+    write_out("%s%s%s" % (prefix, color, string))
 
     if step.data_list:
         for line in step.represent_data_list().splitlines():
             write_out("%s%s\033[0m\n" % (color, line))
 
     if step.failed:
-        sys.stdout.write(color)
-        pspaced = lambda x: sys.stdout.write("%s%s" % (" " * step.indentation, x))
+        wrt("\033[1;31m")
+        pspaced = lambda x: wrt("%s%s" % (" " * step.indentation, x))
         lines = step.why.traceback.splitlines()
 
         for pindex, line in enumerate(lines):
             pspaced(line)
             if pindex + 1 < len(lines):
-                sys.stdout.write("\n")
+                wrt("\n")
 
-        sys.stdout.write("\033[0m\n")
+        wrt("\033[0m\n")
 
 @before.each_scenario
 def print_scenario_running(scenario):
@@ -98,28 +118,68 @@ def print_end(total):
     write_out("\n")
 
     word = total.features_ran > 1 and "features" or "feature"
-    write_out("\033[1;37m%d %s (\033[1;32m%d passed\033[1;37m)\033[0m\n" % (
+
+    color = "\033[1;32m"
+    if total.features_passed is 0:
+        color = "\033[0;31m"
+
+    write_out("\033[1;37m%d %s (%s%d passed\033[1;37m)\033[0m\n" % (
         total.features_ran,
         word,
+        color,
         total.features_passed
         )
     )
 
+    color = "\033[1;32m"
+    if total.scenarios_passed is 0:
+        color = "\033[0;31m"
+
     word = total.scenarios_ran > 1 and "scenarios" or "scenario"
-    write_out("\033[1;37m%d %s (\033[1;32m%d passed\033[1;37m)\033[0m\n" % (
+    write_out("\033[1;37m%d %s (%s%d passed\033[1;37m)\033[0m\n" % (
         total.scenarios_ran,
         word,
+        color,
         total.scenarios_passed
         )
     )
 
+    steps_details = []
+    kinds_and_colors = {
+        'failed': '\033[0;31m',
+        'skipped': '\033[0;36m',
+        'undefined': '\033[0;33m'
+    }
+
+
+    for kind, color in kinds_and_colors.items():
+        attr = 'steps_%s' % kind
+        stotal = getattr(total, attr)
+        if stotal:
+            steps_details.append(
+                "%s%d %s" % (color, stotal, kind)
+            )
+
+    steps_details.append("\033[1;32m%d passed\033[1;37m" % total.steps_passed)
     word = total.steps > 1 and "steps" or "step"
-    write_out("\033[1;37m%d %s (\033[1;32m%d passed\033[1;37m)\033[0m\n" % (
+    content = "\033[1;37m, ".join(steps_details)
+
+    word = total.steps > 1 and "steps" or "step"
+    write_out("\033[1;37m%d %s (%s)\033[0m\n" % (
         total.steps,
         word,
-        total.steps_passed
+        content
         )
     )
+
+    if total.proposed_definitions:
+        wrt("\n\033[0;33mYou can implement step definitions for undefined steps with these snippets:\n\n")
+        wrt("from lettuce import step\n\n")
+        for step in total.proposed_definitions:
+            method_name = "_".join(re.findall("\w+", step.sentence)).lower()
+            wrt("@step(r'%s')\n" % re.escape(step.sentence).replace(r'\ ', ' '))
+            wrt("def %s(step):\n" % method_name)
+            wrt("    pass\033[0m\n")
 
 def print_no_features_found(where):
     where = os.path.relpath(where)
