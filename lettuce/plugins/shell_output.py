@@ -20,47 +20,50 @@ import sys
 from lettuce.terrain import after
 from lettuce.terrain import before
 
+def wrt(what):
+    sys.stdout.write(what)
+
 @before.each_step
 def print_step_running(step):
-    sys.stdout.write(step.represent_string(step.sentence))
+    wrt(step.represent_string(step.sentence))
     if step.data_list:
-        sys.stdout.write(step.represent_data_list())
+        wrt(step.represent_data_list())
 
 @after.each_step
 def print_step_ran(step):
     if step.data_list:
-        sys.stdout.write("\033[A" * (len(step.data_list) + 1))
+        wrt("\033[A" * (len(step.data_list) + 1))
 
     if step.defined_at:
-        sys.stdout.write("\033[A" + step.represent_string(step.sentence))
+        wrt("\033[A" + step.represent_string(step.sentence))
 
     else:
-        sys.stdout.write(step.represent_string(step.sentence).rstrip() + " (undefined)\n")
+        wrt(step.represent_string(step.sentence).rstrip() + " (undefined)\n")
 
     if step.data_list:
-        sys.stdout.write(step.represent_data_list())
+        wrt(step.represent_data_list())
 
     if step.failed:
-        print_spaced = lambda x: sys.stdout.write("%s%s\n" % (" " * step.indentation, x))
+        print_spaced = lambda x: wrt("%s%s\n" % (" " * step.indentation, x))
 
         for line in step.why.traceback.splitlines():
             print_spaced(line)
 
 @before.each_scenario
 def print_scenario_running(scenario):
-    sys.stdout.write(scenario.represented())
+    wrt(scenario.represented())
 
 @before.each_feature
 def print_feature_running(feature):
-    sys.stdout.write("\n")
-    sys.stdout.write(feature.represented())
-    sys.stdout.write("\n")
+    wrt("\n")
+    wrt(feature.represented())
+    wrt("\n")
 
 @after.all
 def print_end(total):
-    sys.stdout.write("\n")
+    wrt("\n")
     word = total.features_ran > 1 and "features" or "feature"
-    sys.stdout.write("%d %s (%d passed)\n" % (
+    wrt("%d %s (%d passed)\n" % (
         total.features_ran,
         word,
         total.features_passed
@@ -68,7 +71,7 @@ def print_end(total):
     )
 
     word = total.scenarios_ran > 1 and "scenarios" or "scenario"
-    sys.stdout.write("%d %s (%d passed)\n" % (
+    wrt("%d %s (%d passed)\n" % (
         total.scenarios_ran,
         word,
         total.scenarios_passed
@@ -86,7 +89,7 @@ def print_end(total):
 
     steps_details.append("%d passed" % total.steps_passed)
     word = total.steps > 1 and "steps" or "step"
-    sys.stdout.write("%d %s (%s)\n" % (
+    wrt("%d %s (%s)\n" % (
         total.steps,
         word,
         ", ".join(steps_details)
@@ -94,21 +97,21 @@ def print_end(total):
     )
 
     if total.proposed_definitions:
-        sys.stdout.write("\nYou can implement step definitions for undefined steps with these snippets:\n\n")
-        sys.stdout.write("from lettuce import step\n\n")
+        wrt("\nYou can implement step definitions for undefined steps with these snippets:\n\n")
+        wrt("from lettuce import step\n\n")
         for step in total.proposed_definitions:
             method_name = "_".join(re.findall("\w+", step.sentence)).lower()
-            sys.stdout.write("@step(r'%s')\n" % re.escape(step.sentence).replace(r'\ ', ' '))
-            sys.stdout.write("def %s(step):\n" % method_name)
-            sys.stdout.write("    pass\n")
+            wrt("@step(r'%s')\n" % re.escape(step.sentence).replace(r'\ ', ' '))
+            wrt("def %s(step):\n" % method_name)
+            wrt("    pass\n")
 
 def print_no_features_found(where):
     where = os.path.relpath(where)
     if not where.startswith(os.sep):
         where = '.%s%s' % (os.sep, where)
 
-    sys.stdout.write('Oops!\n')
-    sys.stdout.write(
+    wrt('Oops!\n')
+    wrt(
         'could not find features at '
         '%s\n' % where
     )

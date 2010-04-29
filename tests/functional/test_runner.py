@@ -417,3 +417,49 @@ def test_output_with_failed_colorless_with_table():
             'step_file': '/Users/gabriel.falcao/Projetos/lettuce/tests/functional/output_features/failed_table/failed_table_steps.py'
         }
     )
+
+@with_setup(prepare_stdout)
+def test_output_with_failed_colorful_with_table():
+    "Testing the colorful output of failed with table"
+
+    runner = Runner(feature_name('failed_table'), verbosity=4)
+    runner.run()
+
+    assert_stdout_lines(
+        "\n"
+        "\033[1;37mFeature: Table Fail                           \033[1;30m# tests/functional/output_features/failed_table/failed_table.feature:1\033[0m\n"
+        "\n"
+        "\033[1;37m  Scenario: See it fail                       \033[1;30m# tests/functional/output_features/failed_table/failed_table.feature:2\033[0m\n"
+        "\033[1;30m    Given I have a dumb step that passes      \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:20\033[0m\n"
+        "\033[A\033[1;32m    Given I have a dumb step that passes      \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:20\033[0m\n"
+        "\033[1;30m    And this one fails                        \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:24\033[0m\n"
+        "\033[A\033[0;31m    And this one fails                        \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:24\033[0m\n"
+        "\033[0;31m    Traceback (most recent call last):\n"
+        '      File "%(lettuce_core_file)s", line 54, in __call__\n'
+        "        ret = self.function(self.step, *args, **kw)\n"
+        '      File "%(step_file)s", line 25, in tof\n'
+        "        assert False\n"
+        "    AssertionError\033[0m\n"
+        "\033[1;30m    Then this one will be skipped             \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:28\033[0m\n"
+        "\033[A\033[0;36m    Then this one will be skipped             \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:28\033[0m\n"
+        "\033[1;30m    And this one will be skipped              \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:28\033[1;30m\n"
+        "\033[A\033[1;36m    And this one will be skipped              \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:28\033[0m\n"
+        "\033[0;33m    And this one does not even has definition \033[1;30m# tests/functional/output_features/failed_table/failed_table.feature:12\033[0m\n"
+        "\n"
+        "\033[1;37m1 feature (\033[0;31m0 passed\033[1;37m)\033[0m\n"
+        "\033[1;37m1 scenario (\033[0;31m0 passed\033[1;37m)\033[0m\n"
+        "\033[1;37m5 steps (\033[0;31m1 failed\033[1;37m, \033[0;36mm2 skipped\033[1;37m, \033[0;33m1 undefined\033[1;37m, \033[1;32m1 passed\033[1;37m)\033[0m\n"
+        "\n"
+        "\033[0;33mYou can implement step definitions for undefined steps with these snippets:\n"
+        "\n"
+        "from lettuce import step\n"
+        "\n"
+        "@step(r'And this one does not even has definition')\n"
+        "def and_this_one_does_not_even_has_definition(step):\n"
+        "    pass\n"
+        "\033[0m" % {
+            'lettuce_core_file':'/Users/gabriel.falcao/Projetos/lettuce/lettuce/core.py',
+            'step_file': '/Users/gabriel.falcao/Projetos/lettuce/tests/functional/output_features/failed_table/failed_table_steps.py'
+        }
+    )
+

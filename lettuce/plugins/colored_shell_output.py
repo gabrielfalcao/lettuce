@@ -49,11 +49,31 @@ def print_step_ran(step):
         write_out("\033[A" * (len(step.data_list) + 1))
 
     string = step.represent_string(step.sentence)
+
     string = wrap_file_and_line(string, '\033[1;30m', '\033[0m')
-    write_out("\033[A\033[1;32m%s" % string)
+
+    if step.failed:
+        color = "\033[0;31m"
+    else:
+        color = "\033[1;32m"
+
+    write_out("\033[A%s%s" % (color, string))
+
     if step.data_list:
         for line in step.represent_data_list().splitlines():
-            write_out("\033[1;32m%s\033[0m\n" % line)
+            write_out("%s%s\033[0m\n" % (color, line))
+
+    if step.failed:
+        sys.stdout.write(color)
+        pspaced = lambda x: sys.stdout.write("%s%s" % (" " * step.indentation, x))
+        lines = step.why.traceback.splitlines()
+
+        for pindex, line in enumerate(lines):
+            pspaced(line)
+            if pindex + 1 < len(lines):
+                sys.stdout.write("\n")
+
+        sys.stdout.write("\033[0m\n")
 
 @before.each_scenario
 def print_scenario_running(scenario):
