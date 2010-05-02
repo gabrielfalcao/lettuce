@@ -463,3 +463,73 @@ def test_output_with_failed_colorful_with_table():
         }
     )
 
+@with_setup(prepare_stdout)
+def test_output_with_successful_outline_colorless():
+    "Testing the colorless output of a scenario outline"
+
+    runner = Runner(feature_name('success_outline'), verbosity=3)
+    runner.run()
+
+    assert_stdout_lines(
+        '\n'
+        'Feature: Successful Scenario Outline                          # tests/functional/output_features/success_outline/success_outline.feature:1\n'
+        '  As lettuce author                                           # tests/functional/output_features/success_outline/success_outline.feature:2\n'
+        '  In order to finish the first release                        # tests/functional/output_features/success_outline/success_outline.feature:3\n'
+        '  I want to make scenario outlines work :)                    # tests/functional/output_features/success_outline/success_outline.feature:4\n'
+        '\n'
+        '  Scenario Outline: fill a web form                           # tests/functional/output_features/success_outline/success_outline.feature:6\n'
+        '    Given I open browser at "http://www.my-website.com/"      # tests/functional/output_features/success_outline/success_outline_steps.py:21\n'
+        '    And click on "sign-up"                                    # tests/functional/output_features/success_outline/success_outline_steps.py:25\n'
+        '    When I fill the field "username" with "<username>"        # tests/functional/output_features/success_outline/success_outline_steps.py:29\n'
+        '    And I fill the field "password" with "<password>"         # tests/functional/output_features/success_outline/success_outline_steps.py:29\n'
+        '    And I fill the field "password-confirm" with "<password>" # tests/functional/output_features/success_outline/success_outline_steps.py:29\n'
+        '    And I fill the field "email" with "<email>"               # tests/functional/output_features/success_outline/success_outline_steps.py:29\n'
+        '    And I click "done"                                        # tests/functional/output_features/success_outline/success_outline_steps.py:33\n'
+        '    Then I see the message "<message>"                        # tests/functional/output_features/success_outline/success_outline_steps.py:37\n'
+        '\n'
+        '  Examples:\n'
+        '    | username | password | email          | message       |\n'
+        '    | john     | doe-1234 | john@gmail.org | Welcome, John |\n'
+        '    | mary     | wee-9876 | mary@email.com | Welcome, Mary |\n'
+        '    | foo      | foo-bar  | foo@bar.com    | Welcome, Foo  |\n'
+        '\n'
+        '1 feature (1 passed)\n'
+        '1 scenario (1 passed)\n'
+        '8 steps (8 passed)\n'
+    )
+
+@with_setup(prepare_stdout)
+def test_output_with_successful_outline_colorful():
+    "Testing the colorful output of a scenario outline"
+
+    runner = Runner(feature_name('success_outline'), verbosity=4)
+    runner.run()
+
+    assert_stdout_lines(
+        '\n'
+        '\033[1;37mFeature: Successful Scenario Outline                          \033[1;30m# tests/functional/output_features/success_outline/success_outline.feature:1\033[0m\n'
+        '\033[1;37m  As lettuce author                                           \033[1;30m# tests/functional/output_features/success_outline/success_outline.feature:2\033[0m\n'
+        '\033[1;37m  In order to finish the first release                        \033[1;30m# tests/functional/output_features/success_outline/success_outline.feature:3\033[0m\n'
+        '\033[1;37m  I want to make scenario outlines work :)                    \033[1;30m# tests/functional/output_features/success_outline/success_outline.feature:4\033[0m\n'
+        '\n'
+        '\033[1;37m  Scenario Outline: fill a web form                           \033[1;30m# tests/functional/output_features/success_outline/success_outline.feature:6\033[0m\n'
+        '\033[0;36m    Given I open browser at "http://www.my-website.com/"      \033[1;30m# tests/functional/output_features/success_outline/success_outline_steps.py:21\033[0m\n'
+        '\033[0;36m    And click on "sign-up"                                    \033[1;30m# tests/functional/output_features/success_outline/success_outline_steps.py:25\033[0m\n'
+        '\033[0;36m    When I fill the field "username" with "<username>"        \033[1;30m# tests/functional/output_features/success_outline/success_outline_steps.py:29\033[0m\n'
+        '\033[0;36m    And I fill the field "password" with "<password>"         \033[1;30m# tests/functional/output_features/success_outline/success_outline_steps.py:29\033[0m\n'
+        '\033[0;36m    And I fill the field "password-confirm" with "<password>" \033[1;30m# tests/functional/output_features/success_outline/success_outline_steps.py:29\033[0m\n'
+        '\033[0;36m    And I fill the field "email" with "<email>"               \033[1;30m# tests/functional/output_features/success_outline/success_outline_steps.py:29\033[0m\n'
+        '\033[0;36m    And I click "done"                                        \033[1;30m# tests/functional/output_features/success_outline/success_outline_steps.py:33\033[0m\n'
+        '\033[0;36m    Then I see the message "<message>"                        \033[1;30m# tests/functional/output_features/success_outline/success_outline_steps.py:37\033[0m\n'
+        '\n'
+        '\033[1;37m  Examples:\033[0m\n'
+        '\033[0;36m   \033[1;37m |\033[0;36m username\033[1;37m |\033[0;36m password\033[1;37m |\033[0;36m email         \033[1;37m |\033[0;36m message      \033[1;37m |\033[0;36m\033[0m\n'
+        '\033[1;32m   \033[1;37m |\033[1;32m john    \033[1;37m |\033[1;32m doe-1234\033[1;37m |\033[1;32m john@gmail.org\033[1;37m |\033[1;32m Welcome, John\033[1;37m |\033[1;32m\033[0m\n'
+        '\033[1;32m   \033[1;37m |\033[1;32m mary    \033[1;37m |\033[1;32m wee-9876\033[1;37m |\033[1;32m mary@email.com\033[1;37m |\033[1;32m Welcome, Mary\033[1;37m |\033[1;32m\033[0m\n'
+        '\033[1;32m   \033[1;37m |\033[1;32m foo     \033[1;37m |\033[1;32m foo-bar \033[1;37m |\033[1;32m foo@bar.com   \033[1;37m |\033[1;32m Welcome, Foo \033[1;37m |\033[1;32m\033[0m\n'
+        '\n'
+        "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m8 steps (\033[1;32m8 passed\033[1;37m)\033[0m\n"
+    )
+

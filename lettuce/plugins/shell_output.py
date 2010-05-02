@@ -31,6 +31,9 @@ def print_step_running(step):
 
 @after.each_step
 def print_step_ran(step):
+    if step.scenario.outlines:
+        return
+
     if step.data_list:
         wrt("\033[A" * (len(step.data_list) + 1))
 
@@ -52,6 +55,15 @@ def print_step_ran(step):
 @before.each_scenario
 def print_scenario_running(scenario):
     wrt(scenario.represented())
+
+@after.each_scenario
+def print_scenario_ran(scenario):
+    if not scenario.outlines:
+        return
+
+    wrt("\n")
+    wrt("%sExamples:\n" % (" " * scenario.indentation))
+    wrt(scenario.represent_examples())
 
 @before.each_feature
 def print_feature_running(feature):

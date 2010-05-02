@@ -30,6 +30,10 @@ def wrap_file_and_line(string, start, end):
 def wp(l):
     if l.startswith("\033[1;32m"):
         l = l.replace(" |", "\033[1;37m |\033[1;32m")
+    if l.startswith("\033[1;36m"):
+        l = l.replace(" |", "\033[1;37m |\033[1;36m")
+    if l.startswith("\033[0;36m"):
+        l = l.replace(" |", "\033[1;37m |\033[0;36m")
     if l.startswith("\033[1;30m"):
         l = l.replace(" |", "\033[1;37m |\033[1;30m")
 
@@ -43,15 +47,23 @@ def print_step_running(step):
     if not step.defined_at:
         return
 
+    color = '\033[1;30m'
+
+    if step.scenario.outlines:
+        color = '\033[0;36m'
+
     string = step.represent_string(step.sentence)
     string = wrap_file_and_line(string, '\033[1;30m', '\033[0m')
-    write_out("\033[1;30m%s" % string)
+    write_out("%s%s" % (color, string))
     if step.data_list:
         for line in step.represent_data_list().splitlines():
             write_out("\033[1;30m%s\033[0m\n" % line)
 
 @after.each_step
 def print_step_ran(step):
+    if step.scenario.outlines:
+        return
+
     if step.data_list:
         write_out("\033[A" * (len(step.data_list) + 1))
 
@@ -100,6 +112,21 @@ def print_scenario_running(scenario):
     string = scenario.represented()
     string = wrap_file_and_line(string, '\033[1;30m', '\033[0m')
     write_out("\033[1;37m%s" % string)
+
+@after.each_scenario
+def print_scenario_ran(scenario):
+    if not scenario.outlines:
+        return
+
+    wrt("\n")
+    wrt("\033[1;37m%sExamples:\033[0m\n" % (" " * scenario.indentation))
+    lines = scenario.represent_examples().splitlines()
+
+    first_line = lines.pop(0)
+    write_out("\033[0;36m%s\033[0m\n" % first_line)
+
+    for line in lines:
+        write_out("\033[1;32m%s\033[0m\n" % line)
 
 @before.each_feature
 def print_feature_running(feature):
