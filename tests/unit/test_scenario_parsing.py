@@ -249,21 +249,33 @@ def test_full_featured_feature():
     for step, expected_sentence in zip(scenario1.solved_steps, expected_sentences):
         assert_equals(step.sentence, expected_sentence)
 
-    assert_equals(len(scenario4.solved_steps), 12)
-    expected_sentences = [
-        'Given I have entered 20 into the calculator',
-        'And I have entered 30 into the calculator',
-        'When I press add',
-        'Then the result should be 50 on the screen',
-        'Given I have entered 2 into the calculator',
-        'And I have entered 5 into the calculator',
-        'When I press add',
-        'Then the result should be 7 on the screen',
-        'Given I have entered 0 into the calculator',
-        'And I have entered 40 into the calculator',
-        'When I press add',
-        'Then the result should be 40 on the screen',
-    ]
-
-    for step, expected_sentence in zip(scenario4.solved_steps, expected_sentences):
-        assert_equals(step.sentence, expected_sentence)
+    expected_evaluated = (
+        (
+            {'button': 'add', 'input_1': '20', 'input_2': '30', 'output': '50'}, [
+                'Given I have entered 20 into the calculator',
+                'And I have entered 30 into the calculator',
+                'When I press add',
+                'Then the result should be 50 on the screen',
+            ]
+        ),
+        (
+            {'button': 'add', 'input_1': '2', 'input_2': '5', 'output': '7'}, [
+                'Given I have entered 2 into the calculator',
+                'And I have entered 5 into the calculator',
+                'When I press add',
+                'Then the result should be 7 on the screen',
+                ]
+        ),
+        (
+            {'button': 'add', 'input_1': '0', 'input_2': '40', 'output': '40'}, [
+                'Given I have entered 0 into the calculator',
+                'And I have entered 40 into the calculator',
+                'When I press add',
+                'Then the result should be 40 on the screen',
+            ],
+        )
+    )
+    for ((got_examples, got_steps), (expected_examples, expected_steps)) in zip(scenario4.evaluated(), expected_evaluated):
+        sentences_of = lambda x: x.sentence
+        assert_equals(got_examples, expected_examples)
+        assert_equals(map(sentences_of, got_steps), expected_steps)

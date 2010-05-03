@@ -115,6 +115,7 @@ class Step(object):
     ran = False
     passed = None
     failed = None
+    related_outline = None
 
     def __init__(self, sentence, remaining_lines, line=None, filename=None):
         self.sentence = sentence
@@ -182,8 +183,10 @@ class Step(object):
 
         return matched, StepDefinition(self, func)
 
-    def pre_run(self, ignore_case):
+    def pre_run(self, ignore_case, with_outline=None):
         matched, step_definition = self._get_match(ignore_case)
+        self.related_outline = with_outline
+
         if not self.defined_at:
             if not matched:
                 raise NoDefinitionFound(self)
@@ -238,6 +241,9 @@ class Scenario(object):
                                                  original_string)
         self.keys = keys
         self.outlines = outlines
+        self.with_file = with_file
+        self.original_string = original_string
+
         if with_file and original_string:
             scenario_definition = ScenarioDescription(self, with_file,
                                                       original_string)
@@ -290,6 +296,17 @@ class Scenario(object):
     def __repr__(self):
         return u'<Scenario: "%s">' % self.name
 
+    def evaluated(self):
+        for outline in self.outlines:
+            steps = []
+            for step in self.steps:
+                sentence = step.sentence
+                for k, v in outline.items():
+                    sentence = sentence.replace(u'<%s>' % k, v)
+
+                steps.append(step)
+            yield (outline, steps)
+
     def run(self, ignore_case):
         """Runs a scenario, running each of its steps. Also call
         before_each and after_each callbacks for steps and scenario"""
@@ -301,29 +318,40 @@ class Scenario(object):
         for callback in CALLBACK_REGISTRY['scenario']['before_each']:
             callback(self)
 
-        for step in self.steps:
-            try:
-                step.pre_run(ignore_case)
-                for callback in CALLBACK_REGISTRY['step']['before_each']:
-                    callback(step)
+        def run_scenario(almost_self, steps, outline=None, run_callbacks=False):
+            for step in steps:
+                try:
+                    step.pre_run(ignore_case, with_outline=outline)
 
-                if not steps_failed and not steps_undefined:
-                    step.run(ignore_case)
-                    steps_passed.append(step)
+                    if run_callbacks:
+                        for callback in CALLBACK_REGISTRY['step']['before_each']:
+                            callback(step)
 
-            except AssertionError:
-                steps_failed.append(step)
+                    if not steps_failed and not steps_undefined:
+                        step.run(ignore_case)
+                        steps_passed.append(step)
 
-            except NoDefinitionFound, e:
-                steps_undefined.append(e.step)
+                except AssertionError:
+                    steps_failed.append(step)
 
-            finally:
-                for callback in CALLBACK_REGISTRY['step']['after_each']:
-                    callback(step)
+                except NoDefinitionFound, e:
+                    steps_undefined.append(e.step)
+
+                finally:
+                    if run_callbacks:
+                        for callback in CALLBACK_REGISTRY['step']['after_each']:
+                            callback(step)
+
+        if self.outlines:
+            first = True
+            for outline, steps in self.evaluated():
+                run_scenario(self, steps, outline, run_callbacks=first)
+                first = False
+        else:
+            run_scenario(self, self.steps, run_callbacks=True)
 
         for callback in CALLBACK_REGISTRY['scenario']['after_each']:
             callback(self)
-
 
         skip = lambda x: x not in steps_passed and x not in steps_undefined and x not in steps_failed
 
@@ -558,7 +586,11 @@ class TotalResult(object):
         self.steps = 0
         for feature_result in self.feature_results:
             for scenario_result in feature_result.scenario_results:
-                self.scenario_results.append(scenario_result)
+                for outline in scenario_result.scenario.outlines:
+                    self.scenario_results.append(scenario_result)
+                else:
+                    self.scenario_results.append(scenario_result)
+
                 self.steps_passed += len(scenario_result.steps_passed)
                 self.steps_failed += len(scenario_result.steps_failed)
                 self.steps_skipped += len(scenario_result.steps_skipped)

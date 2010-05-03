@@ -494,8 +494,8 @@ def test_output_with_successful_outline_colorless():
         '    | foo      | foo-bar  | foo@bar.com    | Welcome, Foo  |\n'
         '\n'
         '1 feature (1 passed)\n'
-        '1 scenario (1 passed)\n'
-        '8 steps (8 passed)\n'
+        '4 scenarios (4 passed)\n'
+        '24 steps (24 passed)\n'
     )
 
 @with_setup(prepare_stdout)
@@ -529,7 +529,49 @@ def test_output_with_successful_outline_colorful():
         '\033[1;32m   \033[1;37m |\033[1;32m foo     \033[1;37m |\033[1;32m foo-bar \033[1;37m |\033[1;32m foo@bar.com   \033[1;37m |\033[1;32m Welcome, Foo \033[1;37m |\033[1;32m\033[0m\n'
         '\n'
         "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
-        "\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
-        "\033[1;37m8 steps (\033[1;32m8 passed\033[1;37m)\033[0m\n"
+        "\033[1;37m4 scenarios (\033[1;32m4 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m24 steps (\033[1;32m24 passed\033[1;37m)\033[0m\n"
     )
 
+@with_setup(prepare_stdout)
+def test_output_with_failful_outline_colorless():
+    "Testing the colorless output of a scenario outline"
+
+    runner = Runner(feature_name('fail_outline'), verbosity=3)
+    runner.run()
+
+    assert_stdout_lines(
+        '\n'
+        'Feature: Failful Scenario Outline                             # tests/functional/output_features/fail_outline/fail_outline.feature:1\n'
+        '  As lettuce author                                           # tests/functional/output_features/fail_outline/fail_outline.feature:2\n'
+        '  In order to finish the first release                        # tests/functional/output_features/fail_outline/fail_outline.feature:3\n'
+        '  I want to make scenario outlines work :)                    # tests/functional/output_features/fail_outline/fail_outline.feature:4\n'
+        '\n'
+        '  Scenario Outline: fill a web form                           # tests/functional/output_features/fail_outline/fail_outline.feature:6\n'
+        '    Given I open browser at "http://www.my-website.com/"      # tests/functional/output_features/fail_outline/fail_outline_steps.py:21\n'
+        '    And click on "sign-up"                                    # tests/functional/output_features/fail_outline/fail_outline_steps.py:25\n'
+        '    When I fill the field "username" with "<username>"        # tests/functional/output_features/fail_outline/fail_outline_steps.py:29\n'
+        '    And I fill the field "password" with "<password>"         # tests/functional/output_features/fail_outline/fail_outline_steps.py:29\n'
+        '    And I fill the field "password-confirm" with "<password>" # tests/functional/output_features/fail_outline/fail_outline_steps.py:29\n'
+        '    And I fill the field "email" with "<email>"               # tests/functional/output_features/fail_outline/fail_outline_steps.py:29\n'
+        '    And I click "done"                                        # tests/functional/output_features/fail_outline/fail_outline_steps.py:33\n'
+        '    Then I see the message "<message>"                        # tests/functional/output_features/fail_outline/fail_outline_steps.py:37\n'
+        '\n'
+        '  Examples:\n'
+        '    | username | password | email          | message       |\n'
+        '    | john     | doe-1234 | john@gmail.org | Welcome, John |\n'
+        '    | mary     | wee-9876 | mary@email.com | Welcome, Mary |\n'
+        '    File "%(lettuce_core_file)s", line 54, in __call__\n'
+        "      ret = self.function(self.step, *args, **kw)\n"
+        '    File "%(step_file)s", line 31, in when_i_fill_the_field_x_with_y\n'
+        "      assert False\n"
+        "    AssertionError\n"
+        '    | foo      | foo-bar  | foo@bar.com    | Welcome, Foo  |\n'
+        '\n'
+        '1 feature (1 passed)\n'
+        '1 scenario (1 passed)\n'
+        '8 steps (8 passed)\n' % {
+            'lettuce_core_file':'/Users/gabriel.falcao/Projetos/lettuce/lettuce/core.py',
+            'step_file': '/Users/gabriel.falcao/Projetos/lettuce/tests/functional/output_features/fail_outline/fail_outline_steps.py'
+        }
+    )
