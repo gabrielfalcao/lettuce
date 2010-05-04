@@ -275,7 +275,7 @@ def test_full_featured_feature():
             ],
         )
     )
-    for ((got_examples, got_steps), (expected_examples, expected_steps)) in zip(scenario4.evaluated(), expected_evaluated):
+    for ((got_examples, got_steps), (expected_examples, expected_steps)) in zip(scenario4.evaluated, expected_evaluated):
         sentences_of = lambda x: x.sentence
         assert_equals(got_examples, expected_examples)
         assert_equals(map(sentences_of, got_steps), expected_steps)

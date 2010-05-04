@@ -494,7 +494,7 @@ def test_output_with_successful_outline_colorless():
         '    | foo      | foo-bar  | foo@bar.com    | Welcome, Foo  |\n'
         '\n'
         '1 feature (1 passed)\n'
-        '4 scenarios (4 passed)\n'
+        '3 scenarios (3 passed)\n'
         '24 steps (24 passed)\n'
     )
 
@@ -529,7 +529,7 @@ def test_output_with_successful_outline_colorful():
         '\033[1;32m   \033[1;37m |\033[1;32m foo     \033[1;37m |\033[1;32m foo-bar \033[1;37m |\033[1;32m foo@bar.com   \033[1;37m |\033[1;32m Welcome, Foo \033[1;37m |\033[1;32m\033[0m\n'
         '\n'
         "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
-        "\033[1;37m4 scenarios (\033[1;32m4 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m3 scenarios (\033[1;32m3 passed\033[1;37m)\033[0m\n" \
         "\033[1;37m24 steps (\033[1;32m24 passed\033[1;37m)\033[0m\n"
     )
 
@@ -569,7 +569,7 @@ def test_output_with_failful_outline_colorless():
         '    | foo      | foo-bar  | foo@bar.com    | Welcome, Foo  |\n'
         '\n'
         '1 feature (1 passed)\n'
-        '1 scenario (1 passed)\n'
+        '3 scenarios (3 passed)\n'
         '8 steps (8 passed)\n' % {
             'lettuce_core_file':'/Users/gabriel.falcao/Projetos/lettuce/lettuce/core.py',
             'step_file': '/Users/gabriel.falcao/Projetos/lettuce/tests/functional/output_features/fail_outline/fail_outline_steps.py'

@@ -52,7 +52,7 @@ def print_step_running(step):
     if step.scenario.outlines:
         color = '\033[0;36m'
 
-    string = step.represent_string(step.sentence)
+    string = step.represent_string(step.original_sentence)
     string = wrap_file_and_line(string, '\033[1;30m', '\033[0m')
     write_out("%s%s" % (color, string))
     if step.data_list:
@@ -67,7 +67,7 @@ def print_step_ran(step):
     if step.data_list:
         write_out("\033[A" * (len(step.data_list) + 1))
 
-    string = step.represent_string(step.sentence)
+    string = step.represent_string(step.original_sentence)
 
     if not step.failed:
         string = wrap_file_and_line(string, '\033[1;30m', '\033[0m')
@@ -203,8 +203,8 @@ def print_end(total):
         wrt("\n\033[0;33mYou can implement step definitions for undefined steps with these snippets:\n\n")
         wrt("from lettuce import step\n\n")
         for step in total.proposed_definitions:
-            method_name = "_".join(re.findall("\w+", step.sentence)).lower()
-            wrt("@step(r'%s')\n" % re.escape(step.sentence).replace(r'\ ', ' '))
+            method_name = "_".join(re.findall("\w+", step.original_sentence)).lower()
+            wrt("@step(r'%s')\n" % re.escape(step.original_sentence).replace(r'\ ', ' '))
             wrt("def %s(step):\n" % method_name)
             wrt("    pass\033[0m\n")
 

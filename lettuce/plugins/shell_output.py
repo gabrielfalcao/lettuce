@@ -25,7 +25,7 @@ def wrt(what):
 
 @before.each_step
 def print_step_running(step):
-    wrt(step.represent_string(step.sentence))
+    wrt(step.represent_string(step.original_sentence))
     if step.data_list:
         wrt(step.represent_data_list())
 
@@ -38,10 +38,10 @@ def print_step_ran(step):
         wrt("\033[A" * (len(step.data_list) + 1))
 
     if step.defined_at:
-        wrt("\033[A" + step.represent_string(step.sentence))
+        wrt("\033[A" + step.represent_string(step.original_sentence))
 
     else:
-        wrt(step.represent_string(step.sentence).rstrip() + " (undefined)\n")
+        wrt(step.represent_string(step.original_sentence).rstrip() + " (undefined)\n")
 
     if step.data_list:
         wrt(step.represent_data_list())
@@ -63,7 +63,25 @@ def print_scenario_ran(scenario):
 
     wrt("\n")
     wrt("%sExamples:\n" % (" " * scenario.indentation))
-    wrt(scenario.represent_examples())
+
+    lines = scenario.represent_examples().splitlines()
+    first_line = lines.pop(0)
+    wrt(first_line + "\n")
+
+    for line, (outline, steps) in zip(lines, scenario.evaluated):
+        failed = False
+        for step in steps:
+            if step.why:
+                failed = True
+                print_spaced = lambda x: wrt("%s%s\n" % (" " * scenario.indentation, x))
+                for ln in step.why.traceback.splitlines():
+                    print_spaced(ln)
+
+        if not failed:
+            wrt(line + "\n")
+
+        else:
+            break
 
 @before.each_feature
 def print_feature_running(feature):
@@ -112,8 +130,8 @@ def print_end(total):
         wrt("\nYou can implement step definitions for undefined steps with these snippets:\n\n")
         wrt("from lettuce import step\n\n")
         for step in total.proposed_definitions:
-            method_name = "_".join(re.findall("\w+", step.sentence)).lower()
-            wrt("@step(r'%s')\n" % re.escape(step.sentence).replace(r'\ ', ' '))
+            method_name = "_".join(re.findall("\w+", step.original_sentence)).lower()
+            wrt("@step(r'%s')\n" % re.escape(step.original_sentence).replace(r'\ ', ' '))
             wrt("def %s(step):\n" % method_name)
             wrt("    pass\n")
 

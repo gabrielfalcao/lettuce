@@ -112,6 +112,7 @@ class Step(object):
     indentation = 4
     table_indentation = indentation + 2
     defined_at = None
+    why = None
     ran = False
     passed = None
     failed = None
@@ -119,6 +120,7 @@ class Step(object):
 
     def __init__(self, sentence, remaining_lines, line=None, filename=None):
         self.sentence = sentence
+        self.original_sentence = sentence
         self._remaining_lines = remaining_lines
         keys, data_list = self._parse_remaining_lines(remaining_lines)
 
@@ -296,15 +298,20 @@ class Scenario(object):
     def __repr__(self):
         return u'<Scenario: "%s">' % self.name
 
+    @property
     def evaluated(self):
         for outline in self.outlines:
             steps = []
             for step in self.steps:
-                sentence = step.sentence
+                old_sentence = sentence = step.sentence
                 for k, v in outline.items():
                     sentence = sentence.replace(u'<%s>' % k, v)
 
-                steps.append(step)
+                new_step = Step(sentence, step._remaining_lines)
+                new_step.original_sentence = old_sentence
+                new_step.scenario = self
+
+                steps.append(new_step)
             yield (outline, steps)
 
     def run(self, ignore_case):
@@ -344,7 +351,7 @@ class Scenario(object):
 
         if self.outlines:
             first = True
-            for outline, steps in self.evaluated():
+            for outline, steps in self.evaluated:
                 run_scenario(self, steps, outline, run_callbacks=first)
                 first = False
         else:
@@ -588,7 +595,8 @@ class TotalResult(object):
             for scenario_result in feature_result.scenario_results:
                 for outline in scenario_result.scenario.outlines:
                     self.scenario_results.append(scenario_result)
-                else:
+
+                if not scenario_result.scenario.outlines:
                     self.scenario_results.append(scenario_result)
 
                 self.steps_passed += len(scenario_result.steps_passed)
