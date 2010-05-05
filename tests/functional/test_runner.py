@@ -576,3 +576,48 @@ def test_output_with_failful_outline_colorless():
             'step_file': '/Users/gabriel.falcao/Projetos/lettuce/tests/functional/output_features/fail_outline/fail_outline_steps.py'
         }
     )
+
+@with_setup(prepare_stdout)
+def test_output_with_failful_outline_colorful():
+    "Testing the colorful output of a scenario outline"
+
+    runner = Runner(feature_name('fail_outline'), verbosity=4)
+    runner.run()
+
+    assert_stdout_lines(
+        '\n'
+        '\033[1;37mFeature: Failful Scenario Outline                             \033[1;30m# tests/functional/output_features/fail_outline/fail_outline.feature:1\033[0m\n'
+        '\033[1;37m  As lettuce author                                           \033[1;30m# tests/functional/output_features/fail_outline/fail_outline.feature:2\033[0m\n'
+        '\033[1;37m  In order to finish the first release                        \033[1;30m# tests/functional/output_features/fail_outline/fail_outline.feature:3\033[0m\n'
+        '\033[1;37m  I want to make scenario outlines work :)                    \033[1;30m# tests/functional/output_features/fail_outline/fail_outline.feature:4\033[0m\n'
+        '\n'
+        '\033[1;37m  Scenario Outline: fill a web form                           \033[1;30m# tests/functional/output_features/fail_outline/fail_outline.feature:6\033[0m\n'
+        '\033[0;36m    Given I open browser at "http://www.my-website.com/"      \033[1;30m# tests/functional/output_features/fail_outline/fail_outline_steps.py:21\033[0m\n'
+        '\033[0;36m    And click on "sign-up"                                    \033[1;30m# tests/functional/output_features/fail_outline/fail_outline_steps.py:25\033[0m\n'
+        '\033[0;36m    When I fill the field "username" with "<username>"        \033[1;30m# tests/functional/output_features/fail_outline/fail_outline_steps.py:29\033[0m\n'
+        '\033[0;36m    And I fill the field "password" with "<password>"         \033[1;30m# tests/functional/output_features/fail_outline/fail_outline_steps.py:29\033[0m\n'
+        '\033[0;36m    And I fill the field "password-confirm" with "<password>" \033[1;30m# tests/functional/output_features/fail_outline/fail_outline_steps.py:29\033[0m\n'
+        '\033[0;36m    And I fill the field "email" with "<email>"               \033[1;30m# tests/functional/output_features/fail_outline/fail_outline_steps.py:29\033[0m\n'
+        '\033[0;36m    And I click "done"                                        \033[1;30m# tests/functional/output_features/fail_outline/fail_outline_steps.py:33\033[0m\n'
+        '\033[0;36m    Then I see the message "<message>"                        \033[1;30m# tests/functional/output_features/fail_outline/fail_outline_steps.py:37\033[0m\n'
+        '\n'
+        '\033[1;37m  Examples:\033[0m\n'
+        '\033[0;36m   \033[1;37m |\033[0;36m username\033[1;37m |\033[0;36m password\033[1;37m |\033[0;36m email         \033[1;37m |\033[0;36m message      \033[1;37m |\033[0;36m\033[0m\n'
+        '\033[1;32m   \033[1;37m |\033[1;32m john    \033[1;37m |\033[1;32m doe-1234\033[1;37m |\033[1;32m john@gmail.org\033[1;37m |\033[1;32m Welcome, John\033[1;37m |\033[1;32m\033[0m\n'
+        '\033[1;32m   \033[1;37m |\033[1;32m mary    \033[1;37m |\033[1;32m wee-9876\033[1;37m |\033[1;32m mary@email.com\033[1;37m |\033[1;32m Welcome, Mary\033[1;37m |\033[1;32m\033[0m\n'
+        "\033[1;31m    Traceback (most recent call last):\n"
+        '      File "%(lettuce_core_file)s", line 54, in __call__\n'
+        "        ret = self.function(self.step, *args, **kw)\n"
+        '      File "%(step_file)s", line 30, in when_i_fill_the_field_x_with_y\n'
+        "        if field == 'password' and value == 'wee-9876':  assert False\n"
+        "    AssertionError\033[0m\n"
+        '\033[1;32m   \033[1;37m |\033[1;32m foo     \033[1;37m |\033[1;32m foo-bar \033[1;37m |\033[1;32m foo@bar.com   \033[1;37m |\033[1;32m Welcome, Foo \033[1;37m |\033[1;32m\033[0m\n'
+        '\n'
+        "\033[1;37m1 feature (\033[0;31m0 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m3 scenarios (\033[1;32m2 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m24 steps (\033[0;31m1 failed\033[1;37m, \033[0;36m4 skipped\033[1;37m, \033[1;32m19 passed\033[1;37m)\033[0m\n" % {
+            'lettuce_core_file':'/Users/gabriel.falcao/Projetos/lettuce/lettuce/core.py',
+            'step_file': '/Users/gabriel.falcao/Projetos/lettuce/tests/functional/output_features/fail_outline/fail_outline_steps.py'
+        }
+    )
+

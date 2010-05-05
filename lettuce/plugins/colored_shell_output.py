@@ -17,6 +17,7 @@
 import os
 import re
 import sys
+from lettuce import strings
 from lettuce.terrain import after
 from lettuce.terrain import before
 
@@ -34,6 +35,8 @@ def wp(l):
         l = l.replace(" |", "\033[1;37m |\033[1;36m")
     if l.startswith("\033[0;36m"):
         l = l.replace(" |", "\033[1;37m |\033[0;36m")
+    if l.startswith("\033[0;31m"):
+        l = l.replace(" |", "\033[1;37m |\033[0;31m")
     if l.startswith("\033[1;30m"):
         l = l.replace(" |", "\033[1;37m |\033[1;30m")
 
@@ -113,20 +116,31 @@ def print_scenario_running(scenario):
     string = wrap_file_and_line(string, '\033[1;30m', '\033[0m')
     write_out("\033[1;37m%s" % string)
 
-@after.each_scenario
-def print_scenario_ran(scenario):
-    if not scenario.outlines:
-        return
+@after.outline
+def print_outline(scenario, order, outline, reasons_to_fail):
+    table = strings.dicts_to_string(scenario.outlines, scenario.keys)
+    lines = table.splitlines()
+    head = lines.pop(0)
 
-    wrt("\n")
-    wrt("\033[1;37m%sExamples:\033[0m\n" % (" " * scenario.indentation))
-    lines = scenario.represent_examples().splitlines()
+    wline = lambda x: write_out("\033[0;36m%s%s\033[0m\n" % (" " * scenario.table_indentation, x))
+    wline_success = lambda x: write_out("\033[1;32m%s%s\033[0m\n" % (" " * scenario.table_indentation, x))
+    wline_red = lambda x: wrt("%s%s" % (" " * scenario.table_indentation, x))
+    if order is 0:
+        wrt("\n")
+        wrt("\033[1;37m%sExamples:\033[0m\n" % (" " * scenario.indentation))
+        wline(head)
 
-    first_line = lines.pop(0)
-    write_out("\033[0;36m%s\033[0m\n" % first_line)
+    line = lines[order]
+    wline_success(line)
+    if reasons_to_fail:
+        elines = reasons_to_fail[0].traceback.splitlines()
+        wrt("\033[1;31m")
+        for pindex, line in enumerate(elines):
+            wline_red(line)
+            if pindex + 1 < len(elines):
+                wrt("\n")
 
-    for line in lines:
-        write_out("\033[1;32m%s\033[0m\n" % line)
+        wrt("\033[0m\n")
 
 @before.each_feature
 def print_feature_running(feature):
