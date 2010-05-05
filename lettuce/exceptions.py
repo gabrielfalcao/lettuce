@@ -38,3 +38,9 @@ class ReasonToFail(object):
         self.exception = exc
         self.cause = unicode(exc)
         self.traceback = traceback.format_exc(exc)
+
+class LettuceSyntaxError(SyntaxError):
+    def __init__(self, filename, string):
+        self.filename = filename
+        self.msg = "Syntax error at: %s\n%s\n" % (filename, string)
+

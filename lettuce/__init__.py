@@ -32,6 +32,8 @@ from lettuce.decorators import step
 from lettuce.registry import CALLBACK_REGISTRY
 from lettuce.registry import STEP_REGISTRY
 
+from lettuce.exceptions import LettuceSyntaxError
+
 __all__ = ['after', 'before', 'step', 'world', 'STEP_REGISTRY', 'CALLBACK_REGISTRY']
 
 def _import(name):
@@ -101,9 +103,13 @@ class Runner(object):
             self.output.print_no_features_found(self.loader.base_dir)
             return
 
-        for filename in features_files:
-            feature = Feature.from_file(filename)
-            results.append(feature.run())
+        try:
+            for filename in features_files:
+                feature = Feature.from_file(filename)
+                results.append(feature.run())
+        except LettuceSyntaxError, e:
+            sys.stderr.write(e.msg)
+            raise SystemExit(2)
 
         total = TotalResult(results)
 

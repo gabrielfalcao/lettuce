@@ -21,7 +21,7 @@ import lettuce
 from StringIO import StringIO
 
 from os.path import dirname, abspath, join, relpath
-from nose.tools import assert_equals, with_setup
+from nose.tools import assert_equals, with_setup, assert_raises
 
 from lettuce import Runner, CALLBACK_REGISTRY, STEP_REGISTRY
 
@@ -32,6 +32,7 @@ from lettuce.terrain import world
 current_dir = abspath(dirname(__file__))
 lettuce_dir = abspath(dirname(lettuce.__file__))
 ojoin = lambda *x: join(current_dir, 'output_features', *x)
+sjoin = lambda *x: join(current_dir, 'syntax_features', *x)
 lettuce_path = lambda *x: abspath(join(lettuce_dir, *x))
 
 def prepare_stdout():
@@ -72,8 +73,14 @@ def assert_lines(one, other):
 def assert_stdout_lines(other):
     assert_lines(sys.stdout.getvalue(), other)
 
+def assert_stderr_lines(other):
+    assert_lines(sys.stderr.getvalue(), other)
+
 def feature_name(name):
     return join(abspath(dirname(__file__)), 'output_features', name, "%s.feature" % name)
+
+def syntax_feature_name(name):
+    return sjoin(name, "%s.feature" % name)
 
 @with_setup(prepare_stderr)
 def test_try_to_import_terrain():
@@ -394,7 +401,7 @@ def test_output_with_failed_colorless_with_table():
         "    And this one fails                        # tests/functional/output_features/failed_table/failed_table_steps.py:24\n"
         "\033[A    And this one fails                        # tests/functional/output_features/failed_table/failed_table_steps.py:24\n"
         "    Traceback (most recent call last):\n"
-        '      File "%(lettuce_core_file)s", line 54, in __call__\n'
+        '      File "%(lettuce_core_file)s", line 55, in __call__\n'
         "        ret = self.function(self.step, *args, **kw)\n"
         '      File "%(step_file)s", line 25, in tof\n'
         "        assert False\n"
@@ -438,7 +445,7 @@ def test_output_with_failed_colorful_with_table():
         "\033[1;30m    And this one fails                        \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:24\033[0m\n"
         "\033[A\033[0;31m    And this one fails                        \033[1;41;33m# tests/functional/output_features/failed_table/failed_table_steps.py:24\033[0m\n"
         "\033[1;31m    Traceback (most recent call last):\n"
-        '      File "%(lettuce_core_file)s", line 54, in __call__\n'
+        '      File "%(lettuce_core_file)s", line 55, in __call__\n'
         "        ret = self.function(self.step, *args, **kw)\n"
         '      File "%(step_file)s", line 25, in tof\n'
         "        assert False\n"
@@ -565,7 +572,7 @@ def test_output_with_failful_outline_colorless():
         '    | john     | doe-1234 | john@gmail.org | Welcome, John |\n'
         '    | mary     | wee-9876 | mary@email.com | Welcome, Mary |\n'
         "    Traceback (most recent call last):\n"
-        '      File "%(lettuce_core_file)s", line 54, in __call__\n'
+        '      File "%(lettuce_core_file)s", line 55, in __call__\n'
         "        ret = self.function(self.step, *args, **kw)\n"
         '      File "%(step_file)s", line 30, in when_i_fill_the_field_x_with_y\n'
         "        if field == 'password' and value == 'wee-9876':  assert False\n"
@@ -609,7 +616,7 @@ def test_output_with_failful_outline_colorful():
         '\033[1;32m   \033[1;37m |\033[1;32m john    \033[1;37m |\033[1;32m doe-1234\033[1;37m |\033[1;32m john@gmail.org\033[1;37m |\033[1;32m Welcome, John\033[1;37m |\033[1;32m\033[0m\n'
         '\033[1;32m   \033[1;37m |\033[1;32m mary    \033[1;37m |\033[1;32m wee-9876\033[1;37m |\033[1;32m mary@email.com\033[1;37m |\033[1;32m Welcome, Mary\033[1;37m |\033[1;32m\033[0m\n'
         "\033[1;31m    Traceback (most recent call last):\n"
-        '      File "%(lettuce_core_file)s", line 54, in __call__\n'
+        '      File "%(lettuce_core_file)s", line 55, in __call__\n'
         "        ret = self.function(self.step, *args, **kw)\n"
         '      File "%(step_file)s", line 30, in when_i_fill_the_field_x_with_y\n'
         "        if field == 'password' and value == 'wee-9876':  assert False\n"
@@ -624,3 +631,15 @@ def test_output_with_failful_outline_colorful():
         }
     )
 
+@with_setup(prepare_stderr)
+def test_many_features_a_file():
+    "syntax checking Fail if a file has more than one feature"
+
+    filename = syntax_feature_name('many_features_a_file')
+    runner = Runner(filename, verbosity=4)
+    assert_raises(SystemExit, runner.run)
+
+    assert_stderr_lines(
+        'Syntax error at: %s\n'
+        'A feature file must contain ONLY ONE feature!\n' % filename
+    )

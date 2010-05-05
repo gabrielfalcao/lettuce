@@ -23,6 +23,7 @@ from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
 from lettuce.exceptions import ReasonToFail
 from lettuce.exceptions import NoDefinitionFound
+from lettuce.exceptions import LettuceSyntaxError
 
 def parse_hashes(lines):
     keys = []
@@ -519,7 +520,16 @@ class Feature(object):
     def from_string(new_feature, string, with_file=None):
         """Creates a new feature from string"""
         lines = strings.get_stripped_lines(string)
+
+        found = len(re.findall(r'Feature:(.*)', string))
+        if found > 1:
+            raise LettuceSyntaxError(
+                with_file,
+                'A feature file must contain ONLY ONE feature!'
+            )
+
         while lines:
+
             matched = re.search(r'Feature:(.*)', lines[0], re.I)
             if matched:
                 name = matched.groups()[0].strip()
