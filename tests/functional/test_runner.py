@@ -561,16 +561,17 @@ def test_output_with_failful_outline_colorless():
         '    | username | password | email          | message       |\n'
         '    | john     | doe-1234 | john@gmail.org | Welcome, John |\n'
         '    | mary     | wee-9876 | mary@email.com | Welcome, Mary |\n'
-        '    File "%(lettuce_core_file)s", line 54, in __call__\n'
-        "      ret = self.function(self.step, *args, **kw)\n"
-        '    File "%(step_file)s", line 31, in when_i_fill_the_field_x_with_y\n'
-        "      assert False\n"
+        "    Traceback (most recent call last):\n"
+        '      File "%(lettuce_core_file)s", line 54, in __call__\n'
+        "        ret = self.function(self.step, *args, **kw)\n"
+        '      File "%(step_file)s", line 30, in when_i_fill_the_field_x_with_y\n'
+        "        if field == 'password' and value == 'wee-9876':  assert False\n"
         "    AssertionError\n"
         '    | foo      | foo-bar  | foo@bar.com    | Welcome, Foo  |\n'
         '\n'
-        '1 feature (1 passed)\n'
-        '3 scenarios (3 passed)\n'
-        '8 steps (8 passed)\n' % {
+        '1 feature (0 passed)\n'
+        '3 scenarios (2 passed)\n'
+        '24 steps (1 failed, 4 skipped, 19 passed)\n' % {
             'lettuce_core_file':'/Users/gabriel.falcao/Projetos/lettuce/lettuce/core.py',
             'step_file': '/Users/gabriel.falcao/Projetos/lettuce/tests/functional/output_features/fail_outline/fail_outline_steps.py'
         }

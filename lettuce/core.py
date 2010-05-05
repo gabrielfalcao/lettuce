@@ -17,7 +17,7 @@
 
 import re
 import os
-
+from copy import deepcopy
 from lettuce import strings
 from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
@@ -128,6 +128,15 @@ class Step(object):
         self.data_list = list(data_list)
         self.described_at = StepDescription(line, filename)
 
+    def solve_and_clone(self, data):
+        sentence = self.sentence
+        for k, v in data.items():
+            sentence = sentence.replace(u'<%s>' % k, v)
+
+        new = deepcopy(self)
+        new.sentence = sentence
+        return new
+
     def _calc_list_length(self, lst):
         length = self.table_indentation + 2
         for item in lst:
@@ -146,7 +155,10 @@ class Step(object):
 
     @property
     def max_length(self):
-        max_length = len(self.sentence) + self.indentation
+        max_length_sentence = len(self.sentence) + self.indentation
+        max_length_original = len(self.original_sentence) + self.indentation
+
+        max_length = max([max_length_original, max_length_sentence])
         for data in self.data_list:
             key_size = self._calc_key_length(data)
             if key_size > max_length:
@@ -303,30 +315,32 @@ class Scenario(object):
         for outline in self.outlines:
             steps = []
             for step in self.steps:
-                old_sentence = sentence = step.sentence
-                for k, v in outline.items():
-                    sentence = sentence.replace(u'<%s>' % k, v)
-
-                new_step = Step(sentence, step._remaining_lines)
-                new_step.original_sentence = old_sentence
+                new_step = step.solve_and_clone(outline)
+                new_step.original_sentence = step.sentence
                 new_step.scenario = self
-
                 steps.append(new_step)
+
             yield (outline, steps)
 
     def run(self, ignore_case):
         """Runs a scenario, running each of its steps. Also call
         before_each and after_each callbacks for steps and scenario"""
 
-        steps_passed = []
-        steps_failed = []
-        steps_undefined = []
-
+        results = []
         for callback in CALLBACK_REGISTRY['scenario']['before_each']:
             callback(self)
 
-        def run_scenario(almost_self, steps, outline=None, run_callbacks=False):
-            for step in steps:
+        def run_scenario(almost_self, order=-1, outline=None, run_callbacks=False):
+            all_steps = []
+            steps_passed = []
+            steps_failed = []
+            steps_undefined = []
+
+            reasons_to_fail = []
+            for step in self.steps:
+                if outline:
+                    step = step.solve_and_clone(outline)
+
                 try:
                     step.pre_run(ignore_case, with_outline=outline)
 
@@ -338,39 +352,48 @@ class Scenario(object):
                         step.run(ignore_case)
                         steps_passed.append(step)
 
-                except AssertionError:
+                except AssertionError, e:
                     steps_failed.append(step)
+                    reasons_to_fail.append(step.why)
 
                 except NoDefinitionFound, e:
                     steps_undefined.append(e.step)
 
                 finally:
+                    all_steps.append(step)
                     if run_callbacks:
                         for callback in CALLBACK_REGISTRY['step']['after_each']:
                             callback(step)
 
+
+            skip = lambda x: x not in steps_passed and x not in steps_undefined and x not in steps_failed
+
+            steps_skipped = filter(skip, all_steps)
+
+            if outline:
+                for callback in CALLBACK_REGISTRY['scenario']['outline']:
+                    callback(self, order, outline, reasons_to_fail)
+
+            return ScenarioResult(
+                self,
+                steps_passed,
+                steps_failed,
+                steps_skipped,
+                steps_undefined
+            )
+
         if self.outlines:
             first = True
-            for outline, steps in self.evaluated:
-                run_scenario(self, steps, outline, run_callbacks=first)
+            for index, outline in enumerate(self.outlines):
+                results.append(run_scenario(self, index, outline, run_callbacks=first))
                 first = False
         else:
-            run_scenario(self, self.steps, run_callbacks=True)
+            results.append(run_scenario(self, run_callbacks=True))
 
         for callback in CALLBACK_REGISTRY['scenario']['after_each']:
             callback(self)
 
-        skip = lambda x: x not in steps_passed and x not in steps_undefined and x not in steps_failed
-
-        steps_skipped = filter(skip, self.steps)
-
-        return ScenarioResult(
-            self,
-            steps_passed,
-            steps_failed,
-            steps_skipped,
-            steps_undefined
-        )
+        return results
 
     def _add_myself_to_steps(self):
         for step in self.steps:
@@ -545,7 +568,9 @@ class Feature(object):
         for callback in CALLBACK_REGISTRY['feature']['before_each']:
             callback(self)
 
-        scenarios_ran = [scenario.run(ignore_case) for scenario in self.scenarios]
+        scenarios_ran = []
+
+        [scenarios_ran.extend(scenario.run(ignore_case)) for scenario in self.scenarios]
 
         for callback in CALLBACK_REGISTRY['feature']['after_each']:
             callback(self)
@@ -593,12 +618,7 @@ class TotalResult(object):
         self.steps = 0
         for feature_result in self.feature_results:
             for scenario_result in feature_result.scenario_results:
-                for outline in scenario_result.scenario.outlines:
-                    self.scenario_results.append(scenario_result)
-
-                if not scenario_result.scenario.outlines:
-                    self.scenario_results.append(scenario_result)
-
+                self.scenario_results.append(scenario_result)
                 self.steps_passed += len(scenario_result.steps_passed)
                 self.steps_failed += len(scenario_result.steps_failed)
                 self.steps_skipped += len(scenario_result.steps_skipped)

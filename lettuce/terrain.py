@@ -56,6 +56,11 @@ class after:
         return function
 
     @classmethod
+    def outline(cls, function):
+        CALLBACK_REGISTRY.append_to('scenario', "outline", function)
+        return function
+
+    @classmethod
     def each_feature(cls, function):
         CALLBACK_REGISTRY.append_to('feature', "%s_each" % cls.__name__, function)
         return function

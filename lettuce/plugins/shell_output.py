@@ -17,6 +17,7 @@
 import re
 import os
 import sys
+from lettuce import strings
 from lettuce.terrain import after
 from lettuce.terrain import before
 
@@ -56,32 +57,25 @@ def print_step_ran(step):
 def print_scenario_running(scenario):
     wrt(scenario.represented())
 
-@after.each_scenario
-def print_scenario_ran(scenario):
-    if not scenario.outlines:
-        return
+@after.outline
+def print_outline(scenario, order, outline, reasons_to_fail):
+    table = strings.dicts_to_string(scenario.outlines, scenario.keys)
+    lines = table.splitlines()
+    head = lines.pop(0)
 
-    wrt("\n")
-    wrt("%sExamples:\n" % (" " * scenario.indentation))
+    wline = lambda x: wrt("%s%s\n" % (" " * scenario.table_indentation, x))
+    if order is 0:
+        wrt("\n")
+        wrt("%sExamples:\n" % (" " * scenario.indentation))
+        wline(head)
 
-    lines = scenario.represent_examples().splitlines()
-    first_line = lines.pop(0)
-    wrt(first_line + "\n")
-
-    for line, (outline, steps) in zip(lines, scenario.evaluated):
-        failed = False
-        for step in steps:
-            if step.why:
-                failed = True
-                print_spaced = lambda x: wrt("%s%s\n" % (" " * scenario.indentation, x))
-                for ln in step.why.traceback.splitlines():
-                    print_spaced(ln)
-
-        if not failed:
-            wrt(line + "\n")
-
-        else:
-            break
+    line = lines[order]
+    wline(line)
+    if reasons_to_fail:
+        print_spaced = lambda x: wrt("%s%s\n" % (" " * scenario.table_indentation, x))
+        elines = reasons_to_fail[0].traceback.splitlines()
+        for line in elines:
+            print_spaced(line)
 
 @before.each_feature
 def print_feature_running(feature):
