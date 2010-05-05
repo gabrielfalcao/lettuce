@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import sys
+import lettuce
 
 from StringIO import StringIO
 
@@ -29,7 +30,9 @@ from lettuce.core import Feature
 from lettuce.terrain import world
 
 current_dir = abspath(dirname(__file__))
-cjoin = lambda *x: join(current_dir, 'output_features', *x)
+lettuce_dir = abspath(dirname(lettuce.__file__))
+ojoin = lambda *x: join(current_dir, 'output_features', *x)
+lettuce_path = lambda *x: abspath(join(lettuce_dir, *x))
 
 def prepare_stdout():
     CALLBACK_REGISTRY.clear()
@@ -75,7 +78,7 @@ def feature_name(name):
 @with_setup(prepare_stderr)
 def test_try_to_import_terrain():
     "Runner tries to import terrain, but has a nice output when it fail"
-    sandbox_path = cjoin('..', 'sandbox')
+    sandbox_path = ojoin('..', 'sandbox')
     original_path = abspath(".")
     os.chdir(sandbox_path)
 
@@ -94,7 +97,7 @@ def test_try_to_import_terrain():
 
 def test_feature_representation_without_colors():
     "Feature represented without colors"
-    feature_file = cjoin('..', 'simple_features', '1st_feature_dir', 'some.feature')
+    feature_file = ojoin('..', 'simple_features', '1st_feature_dir', 'some.feature')
 
     feature = Feature.from_file(feature_file)
     assert_lines(
@@ -107,7 +110,7 @@ def test_feature_representation_without_colors():
 
 def test_scenario_outline_representation_without_colors():
     "Scenario Outline represented without colors"
-    feature_file = cjoin('..', 'simple_features', '1st_feature_dir', 'some.feature')
+    feature_file = ojoin('..', 'simple_features', '1st_feature_dir', 'some.feature')
 
     feature = Feature.from_file(feature_file)
     assert_equals(
@@ -117,7 +120,7 @@ def test_scenario_outline_representation_without_colors():
 
 def test_scenario_representation_without_colors():
     "Scenario represented without colors"
-    feature_file = cjoin('runner_features', 'first.feature')
+    feature_file = ojoin('runner_features', 'first.feature')
 
     feature = Feature.from_file(feature_file)
     assert_equals(
@@ -127,7 +130,7 @@ def test_scenario_representation_without_colors():
 
 def test_undefined_step_represent_string():
     "Undefined step represented without colors"
-    feature_file = cjoin('runner_features', 'first.feature')
+    feature_file = ojoin('runner_features', 'first.feature')
 
     feature = Feature.from_file(feature_file)
     step = feature.scenarios[0].steps[0]
@@ -143,8 +146,8 @@ def test_undefined_step_represent_string():
 
 def test_defined_step_represent_string():
     "Defined step represented without colors"
-    feature_file = cjoin('runner_features', 'first.feature')
-    feature_dir = cjoin('runner_features')
+    feature_file = ojoin('runner_features', 'first.feature')
+    feature_dir = ojoin('runner_features')
     loader = FeatureLoader(feature_dir)
     world._output = StringIO()
     world._is_colored = False
@@ -413,8 +416,8 @@ def test_output_with_failed_colorless_with_table():
         "@step(r'And this one does not even has definition')\n"
         "def and_this_one_does_not_even_has_definition(step):\n"
         "    pass\n" % {
-            'lettuce_core_file':'/Users/gabriel.falcao/Projetos/lettuce/lettuce/core.py',
-            'step_file': '/Users/gabriel.falcao/Projetos/lettuce/tests/functional/output_features/failed_table/failed_table_steps.py'
+            'lettuce_core_file': lettuce_path('core.py'),
+            'step_file': lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py'),
         }
     )
 
@@ -616,8 +619,8 @@ def test_output_with_failful_outline_colorful():
         "\033[1;37m1 feature (\033[0;31m0 passed\033[1;37m)\033[0m\n" \
         "\033[1;37m3 scenarios (\033[1;32m2 passed\033[1;37m)\033[0m\n" \
         "\033[1;37m24 steps (\033[0;31m1 failed\033[1;37m, \033[0;36m4 skipped\033[1;37m, \033[1;32m19 passed\033[1;37m)\033[0m\n" % {
-            'lettuce_core_file':'/Users/gabriel.falcao/Projetos/lettuce/lettuce/core.py',
-            'step_file': '/Users/gabriel.falcao/Projetos/lettuce/tests/functional/output_features/fail_outline/fail_outline_steps.py'
+            'lettuce_core_file': lettuce_path('core.py'),
+            'step_file': lettuce_path('..', 'tests', 'functional', 'output_features', 'fail_outline', 'fail_outline_steps.py')
         }
     )
 
