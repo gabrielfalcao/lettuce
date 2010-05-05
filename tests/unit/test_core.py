@@ -131,12 +131,12 @@ def test_step_represent_string_when_defined():
     )
 
 def test_step_represent_table():
-    "Step.represent_data_list"
+    "Step.represent_hashes"
 
     step = core.Step.from_string(STEP_WITH_TABLE)
 
     assert_equals(
-        step.represent_data_list(),
+        step.represent_hashes(),
         '      | name  | description                                           |\n'
         '      | Glass | a nice glass to drink grape juice                     |\n'
         '      | Pasta | a pasta to cook and eat with grape juice in the glass |\n'
@@ -153,7 +153,7 @@ Examples:
 '''
 
 def test_scenario_outline_represent_examples():
-    "Step.represent_data_list"
+    "Step.represent_hashes"
 
     step = core.Scenario.from_string(SCENARIO_OUTLINE)
 

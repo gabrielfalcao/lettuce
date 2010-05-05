@@ -24,18 +24,18 @@ from lettuce.registry import CALLBACK_REGISTRY
 from lettuce.exceptions import ReasonToFail
 from lettuce.exceptions import NoDefinitionFound
 
-def parse_data_list(lines):
+def parse_hashes(lines):
     keys = []
-    data_list = []
+    hashes = []
     if lines:
         first_line = lines.pop(0)
         keys = strings.split_wisely(first_line, "|", True)
 
         for line in lines:
             values = strings.split_wisely(line, "|", True)
-            data_list.append(dict(zip(keys, values)))
+            hashes.append(dict(zip(keys, values)))
 
-    return keys, data_list
+    return keys, hashes
 
 class StepDefinition(object):
     """A step definition is a wrapper for user-defined callbacks. It
@@ -122,10 +122,10 @@ class Step(object):
         self.sentence = sentence
         self.original_sentence = sentence
         self._remaining_lines = remaining_lines
-        keys, data_list = self._parse_remaining_lines(remaining_lines)
+        keys, hashes = self._parse_remaining_lines(remaining_lines)
 
         self.keys = tuple(keys)
-        self.data_list = list(data_list)
+        self.hashes = list(hashes)
         self.described_at = StepDescription(line, filename)
 
     def solve_and_clone(self, data):
@@ -159,7 +159,7 @@ class Step(object):
         max_length_original = len(self.original_sentence) + self.indentation
 
         max_length = max([max_length_original, max_length_sentence])
-        for data in self.data_list:
+        for data in self.hashes:
             key_size = self._calc_key_length(data)
             if key_size > max_length:
                 max_length = key_size
@@ -177,15 +177,15 @@ class Step(object):
             where = self.defined_at
         return strings.rfill(head, self.scenario.feature.max_length + 1, append='# %s:%d\n' % (where.file, where.line))
 
-    def represent_data_list(self):
-        lines = strings.dicts_to_string(self.data_list, self.keys).splitlines()
+    def represent_hashes(self):
+        lines = strings.dicts_to_string(self.hashes, self.keys).splitlines()
         return "\n".join([(" " * self.table_indentation) + line for line in lines]) + "\n"
 
     def __repr__(self):
         return u'<Step: "%s">' % self.sentence
 
     def _parse_remaining_lines(self, lines):
-        return parse_data_list(lines)
+        return parse_hashes(lines)
 
     def _get_match(self, ignore_case):
         matched, func = None, lambda: None
@@ -444,7 +444,7 @@ class Scenario(object):
         outlines = []
         if len(splitted) is 2:
             part = splitted[1]
-            keys, outlines = parse_data_list(strings.get_stripped_lines(part))
+            keys, outlines = parse_hashes(strings.get_stripped_lines(part))
 
         lines = strings.get_stripped_lines(string)
         scenario_line = lines.pop(0)

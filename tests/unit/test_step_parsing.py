@@ -56,10 +56,10 @@ def test_can_parse_tables():
 
     step = Step.from_string(STEP1)
 
-    assert isinstance(step.data_list, list)
-    assert_equals(len(step.data_list), 2)
+    assert isinstance(step.hashes, list)
+    assert_equals(len(step.hashes), 2)
     assert_equals(
-        step.data_list[0],
+        step.hashes[0],
         {
             'Name': 'Skol',
             'Type': 'Beer',
@@ -67,7 +67,7 @@ def test_can_parse_tables():
         }
     )
     assert_equals(
-        step.data_list[1],
+        step.hashes[1],
         {
             'Name': 'Nestea',
             'Type': 'Ice-tea',

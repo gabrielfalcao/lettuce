@@ -27,16 +27,16 @@ def wrt(what):
 @before.each_step
 def print_step_running(step):
     wrt(step.represent_string(step.original_sentence))
-    if step.data_list:
-        wrt(step.represent_data_list())
+    if step.hashes:
+        wrt(step.represent_hashes())
 
 @after.each_step
 def print_step_ran(step):
     if step.scenario.outlines:
         return
 
-    if step.data_list:
-        wrt("\033[A" * (len(step.data_list) + 1))
+    if step.hashes:
+        wrt("\033[A" * (len(step.hashes) + 1))
 
     if step.defined_at:
         wrt("\033[A" + step.represent_string(step.original_sentence))
@@ -44,8 +44,8 @@ def print_step_ran(step):
     else:
         wrt(step.represent_string(step.original_sentence).rstrip() + " (undefined)\n")
 
-    if step.data_list:
-        wrt(step.represent_data_list())
+    if step.hashes:
+        wrt(step.represent_hashes())
 
     if step.failed:
         print_spaced = lambda x: wrt("%s%s\n" % (" " * step.indentation, x))

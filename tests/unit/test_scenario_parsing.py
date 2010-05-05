@@ -137,7 +137,7 @@ def test_scenario_has_steps():
 
     assert_equals(scenario.steps[0].keys, ('Name', 'Duration'))
     assert_equals(
-        scenario.steps[0].data_list,
+        scenario.steps[0].hashes,
         [
             {'Name': 'Computer Science', 'Duration': '5 years'},
             {'Name': 'Nutrition', 'Duration': '4 years'},

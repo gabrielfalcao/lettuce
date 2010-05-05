@@ -31,7 +31,7 @@ def compare_bucks(step, cash):
 @step('I have these items')
 def havetheseitems(step):
     cars = {}
-    for data in step.data_list:
+    for data in step.hashes:
         key = data['name']
         value = int(data['price'])
         cars[key] = value
@@ -46,7 +46,7 @@ def sell_item(step, name):
 @step('my garage contains:')
 def alsothese(step):
     cars = {}
-    for data in step.data_list:
+    for data in step.hashes:
         key = data['name']
         value = int(data['price'])
         cars[key] = value

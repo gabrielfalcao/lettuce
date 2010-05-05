@@ -58,8 +58,8 @@ def print_step_running(step):
     string = step.represent_string(step.original_sentence)
     string = wrap_file_and_line(string, '\033[1;30m', '\033[0m')
     write_out("%s%s" % (color, string))
-    if step.data_list:
-        for line in step.represent_data_list().splitlines():
+    if step.hashes:
+        for line in step.represent_hashes().splitlines():
             write_out("\033[1;30m%s\033[0m\n" % line)
 
 @after.each_step
@@ -67,8 +67,8 @@ def print_step_ran(step):
     if step.scenario.outlines:
         return
 
-    if step.data_list:
-        write_out("\033[A" * (len(step.data_list) + 1))
+    if step.hashes:
+        write_out("\033[A" * (len(step.hashes) + 1))
 
     string = step.represent_string(step.original_sentence)
 
@@ -94,8 +94,8 @@ def print_step_ran(step):
 
     write_out("%s%s%s" % (prefix, color, string))
 
-    if step.data_list:
-        for line in step.represent_data_list().splitlines():
+    if step.hashes:
+        for line in step.represent_hashes().splitlines():
             write_out("%s%s\033[0m\n" % (color, line))
 
     if step.failed:
