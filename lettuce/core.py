@@ -521,12 +521,20 @@ class Feature(object):
         """Creates a new feature from string"""
         lines = strings.get_stripped_lines(string)
 
-        found = len(re.findall(r'Feature:(.*)', string))
+        found = len(re.findall(r'Feature:[ ]*\w+', string))
+
         if found > 1:
             raise LettuceSyntaxError(
                 with_file,
                 'A feature file must contain ONLY ONE feature!'
             )
+
+        elif found == 0:
+            raise LettuceSyntaxError(
+                with_file,
+                'Features must have a name. e.g: "Feature: This is my name"'
+            )
+
 
         while lines:
 

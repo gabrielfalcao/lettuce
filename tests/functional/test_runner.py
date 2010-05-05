@@ -633,13 +633,28 @@ def test_output_with_failful_outline_colorful():
 
 @with_setup(prepare_stderr)
 def test_many_features_a_file():
-    "syntax checking Fail if a file has more than one feature"
+    "syntax checking: Fail if a file has more than one feature"
 
     filename = syntax_feature_name('many_features_a_file')
-    runner = Runner(filename, verbosity=4)
+    runner = Runner(filename)
     assert_raises(SystemExit, runner.run)
 
     assert_stderr_lines(
         'Syntax error at: %s\n'
         'A feature file must contain ONLY ONE feature!\n' % filename
     )
+
+@with_setup(prepare_stderr)
+def test_feature_without_name():
+    "syntax checking: Fail on features without name"
+
+    filename = syntax_feature_name('feature_without_name')
+    runner = Runner(filename)
+    assert_raises(SystemExit, runner.run)
+
+    assert_stderr_lines(
+        'Syntax error at: %s\n'
+        'Features must have a name. e.g: "Feature: This is my name"\n'
+        % filename
+    )
+
