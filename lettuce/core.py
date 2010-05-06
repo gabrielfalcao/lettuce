@@ -19,6 +19,7 @@ import re
 import os
 from copy import deepcopy
 from lettuce import strings
+from lettuce import languages
 from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
 from lettuce.exceptions import ReasonToFail
@@ -37,6 +38,23 @@ def parse_hashes(lines):
             hashes.append(dict(zip(keys, values)))
 
     return keys, hashes
+
+class Language(object):
+    code = 'en'
+    name = 'English'
+    native = 'English'
+    feature = 'Feature'
+    scenario = 'Scenario'
+    examples = 'Examples|Scenarios'
+    scenario_outline = 'Scenario Outline'
+
+    def __init__(self, code=None):
+        if not code:
+            return
+
+        self.code = code
+        for attr, value in languages.LANGUAGES[code].items():
+            setattr(self, attr, value)
 
 class StepDefinition(object):
     """A step definition is a wrapper for user-defined callbacks. It
