@@ -401,7 +401,7 @@ def test_output_with_failed_colorless_with_table():
         "    And this one fails                        # tests/functional/output_features/failed_table/failed_table_steps.py:24\n"
         "\033[A    And this one fails                        # tests/functional/output_features/failed_table/failed_table_steps.py:24\n"
         "    Traceback (most recent call last):\n"
-        '      File "%(lettuce_core_file)s", line 73, in __call__\n'
+        '      File "%(lettuce_core_file)s", line 76, in __call__\n'
         "        ret = self.function(self.step, *args, **kw)\n"
         '      File "%(step_file)s", line 25, in tof\n'
         "        assert False\n"
@@ -445,7 +445,7 @@ def test_output_with_failed_colorful_with_table():
         "\033[1;30m    And this one fails                        \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:24\033[0m\n"
         "\033[A\033[0;31m    And this one fails                        \033[1;41;33m# tests/functional/output_features/failed_table/failed_table_steps.py:24\033[0m\n"
         "\033[1;31m    Traceback (most recent call last):\n"
-        '      File "%(lettuce_core_file)s", line 73, in __call__\n'
+        '      File "%(lettuce_core_file)s", line 76, in __call__\n'
         "        ret = self.function(self.step, *args, **kw)\n"
         '      File "%(step_file)s", line 25, in tof\n'
         "        assert False\n"
@@ -572,7 +572,7 @@ def test_output_with_failful_outline_colorless():
         '    | john     | doe-1234 | john@gmail.org | Welcome, John |\n'
         '    | mary     | wee-9876 | mary@email.com | Welcome, Mary |\n'
         "    Traceback (most recent call last):\n"
-        '      File "%(lettuce_core_file)s", line 73, in __call__\n'
+        '      File "%(lettuce_core_file)s", line 76, in __call__\n'
         "        ret = self.function(self.step, *args, **kw)\n"
         '      File "%(step_file)s", line 30, in when_i_fill_the_field_x_with_y\n'
         "        if field == 'password' and value == 'wee-9876':  assert False\n"
@@ -616,7 +616,7 @@ def test_output_with_failful_outline_colorful():
         '\033[1;32m   \033[1;37m |\033[1;32m john    \033[1;37m |\033[1;32m doe-1234\033[1;37m |\033[1;32m john@gmail.org\033[1;37m |\033[1;32m Welcome, John\033[1;37m |\033[1;32m\033[0m\n'
         '\033[1;32m   \033[1;37m |\033[1;32m mary    \033[1;37m |\033[1;32m wee-9876\033[1;37m |\033[1;32m mary@email.com\033[1;37m |\033[1;32m Welcome, Mary\033[1;37m |\033[1;32m\033[0m\n'
         "\033[1;31m    Traceback (most recent call last):\n"
-        '      File "%(lettuce_core_file)s", line 73, in __call__\n'
+        '      File "%(lettuce_core_file)s", line 76, in __call__\n'
         "        ret = self.function(self.step, *args, **kw)\n"
         '      File "%(step_file)s", line 30, in when_i_fill_the_field_x_with_y\n'
         "        if field == 'password' and value == 'wee-9876':  assert False\n"

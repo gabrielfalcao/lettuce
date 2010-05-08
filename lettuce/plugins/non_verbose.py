@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import logging
+from lettuce import core
 from lettuce.terrain import after
 from lettuce.terrain import before
 
@@ -65,7 +66,7 @@ def print_end(total):
     )
 
 def print_no_features_found(where):
-    where = os.path.relpath(where)
+    where = core.fs.relpath(where)
     if not where.startswith(os.sep):
         where = '.%s%s' % (os.sep, where)
 

@@ -18,6 +18,7 @@ import os
 import re
 import sys
 from lettuce import strings
+from lettuce import core
 from lettuce.terrain import after
 from lettuce.terrain import before
 
@@ -223,7 +224,7 @@ def print_end(total):
             wrt("    pass\033[0m\n")
 
 def print_no_features_found(where):
-    where = os.path.relpath(where)
+    where = core.fs.relpath(where)
     if not where.startswith(os.sep):
         where = '.%s%s' % (os.sep, where)
 

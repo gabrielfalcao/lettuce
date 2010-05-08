@@ -35,7 +35,7 @@ def test_step_definition():
 
     definition = core.StepDefinition("FOO BAR", dumb)
     assert_equals(definition.function, dumb)
-    assert_equals(definition.file, os.path.relpath(__file__).rstrip("c"))
+    assert_equals(definition.file, core.fs.relpath(__file__).rstrip("c"))
     assert_equals(definition.line, 34)
 
 def test_step_description():
@@ -43,7 +43,7 @@ def test_step_description():
     "filename"
 
     description = core.StepDescription(10, __file__)
-    assert_equals(description.file, os.path.relpath(__file__))
+    assert_equals(description.file, core.fs.relpath(__file__))
     assert_not_equals(description.file, __file__)
     assert_equals(description.line, 10)
 
@@ -64,7 +64,7 @@ Fsdad
         name = 'NAMEOFSCENARIO'
 
     description = core.ScenarioDescription(ScenarioFake, __file__, string)
-    assert_equals(description.file, os.path.relpath(__file__))
+    assert_equals(description.file, core.fs.relpath(__file__))
     assert_not_equals(description.file, __file__)
     assert_equals(description.line, 6)
 
@@ -85,7 +85,7 @@ def test_feature_description():
         description = 'the description\nof the scenario\n'
 
     description = core.FeatureDescription(FakeFeature, __file__, string)
-    assert_equals(description.file, os.path.relpath(__file__))
+    assert_equals(description.file, core.fs.relpath(__file__))
     assert_not_equals(description.file, __file__)
     assert_equals(description.line, 3)
     assert_equals(description.description_at, (5, 6))
@@ -99,7 +99,7 @@ def test_step_represent_string_when_not_defined():
     class FakeScenario:
         feature = FakeFeature
 
-    relative_path = os.path.relpath(__file__)
+    relative_path = core.fs.relpath(__file__)
     step = core.Step('some sentence', '', 239, __file__)
     step.scenario = FakeScenario
 

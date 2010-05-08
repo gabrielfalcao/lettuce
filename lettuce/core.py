@@ -20,11 +20,14 @@ import os
 from copy import deepcopy
 from lettuce import strings
 from lettuce import languages
+from lettuce.fs import FileSystem
 from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
 from lettuce.exceptions import ReasonToFail
 from lettuce.exceptions import NoDefinitionFound
 from lettuce.exceptions import LettuceSyntaxError
+
+fs = FileSystem()
 
 def parse_hashes(lines):
     keys = []
@@ -61,7 +64,7 @@ class StepDefinition(object):
     gets a few metadata from file, such as filename and line number"""
     def __init__(self, step, function):
         self.function = function
-        self.file = os.path.relpath(function.func_code.co_filename)
+        self.file = fs.relpath(function.func_code.co_filename)
         self.line = function.func_code.co_firstlineno + 1
         self.step = step
 
@@ -85,7 +88,7 @@ class StepDescription(object):
     def __init__(self, line, filename):
         self.file = filename
         if self.file:
-            self.file = os.path.relpath(self.file)
+            self.file = fs.relpath(self.file)
 
         self.line = line
 
@@ -94,7 +97,7 @@ class ScenarioDescription(object):
     description (scenario within feature file)"""
 
     def __init__(self, scenario, filename, string):
-        self.file = os.path.relpath(filename)
+        self.file = fs.relpath(filename)
         self.line = None
 
         for pline, part in enumerate(string.splitlines()):
@@ -109,7 +112,7 @@ class FeatureDescription(object):
 
     def __init__(self, feature, filename, string):
         lines = [l.strip() for l in string.splitlines()]
-        self.file = os.path.relpath(filename)
+        self.file = fs.relpath(filename)
         self.line = None
         described_at = []
         description_lines = strings.get_stripped_lines(feature.description)
