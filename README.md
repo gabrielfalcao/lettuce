@@ -19,4 +19,4 @@ Lettuce is a BDD tool for python, 100% inspired on [cucumber](http://cukes.info/
 4. Ruby has Capistrano, Python has Fabric. Ruby has cucumber, Python has lettuce.
 5. I personally don't like mixing many languages in small projects. Keeping all in python is better.
 6. I love python, and ever did. But I also ever missed something that make writing tests easier and funnier.
-7. I like [nose](http://code.google.com/p/python-nose/) which is has pythonic set of tools, and I like it, althrough as the project I am working on grows, tests grows as well, and become harder to understand.
+7. I like [nose](http://code.google.com/p/python-nose/), which is a unittest pythonic framework. However, as the project I work on grows, so do the tests, and it becomes harder to understand them.
