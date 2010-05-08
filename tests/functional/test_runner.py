@@ -20,13 +20,13 @@ import lettuce
 
 from StringIO import StringIO
 
-from os.path import dirname, abspath, join, relpath
+from os.path import dirname, abspath, join
 from nose.tools import assert_equals, with_setup, assert_raises
 
 from lettuce import Runner, CALLBACK_REGISTRY, STEP_REGISTRY
 
 from lettuce.fs import FeatureLoader
-from lettuce.core import Feature
+from lettuce.core import Feature, fs
 from lettuce.terrain import world
 
 current_dir = abspath(dirname(__file__))
@@ -286,7 +286,7 @@ def test_output_with_success_colorful_many_features():
 def test_output_when_could_not_find_features():
     "Testing the colorful output of many successful features"
 
-    path = relpath(join(abspath(dirname(__file__)), 'unexistent-folder'))
+    path = fs.relpath(join(abspath(dirname(__file__)), 'unexistent-folder'))
     runner = Runner(path, verbosity=4)
     runner.run()
 
@@ -299,7 +299,7 @@ def test_output_when_could_not_find_features():
 def test_output_when_could_not_find_features_colorless():
     "Testing the colorful output of many successful features colorless"
 
-    path = relpath(join(abspath(dirname(__file__)), 'unexistent-folder'))
+    path = fs.relpath(join(abspath(dirname(__file__)), 'unexistent-folder'))
     runner = Runner(path, verbosity=3)
     runner.run()
 
@@ -468,8 +468,8 @@ def test_output_with_failed_colorful_with_table():
         "def and_this_one_does_not_even_has_definition(step):\n"
         "    pass\033[0m"
         "\n" % {
-            'lettuce_core_file':'/Users/gabriel.falcao/Projetos/lettuce/lettuce/core.py',
-            'step_file': '/Users/gabriel.falcao/Projetos/lettuce/tests/functional/output_features/failed_table/failed_table_steps.py'
+            'lettuce_core_file': lettuce_path('core.py'),
+            'step_file': lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')
         }
     )
 
@@ -582,8 +582,8 @@ def test_output_with_failful_outline_colorless():
         '1 feature (0 passed)\n'
         '3 scenarios (2 passed)\n'
         '24 steps (1 failed, 4 skipped, 19 passed)\n' % {
-            'lettuce_core_file':'/Users/gabriel.falcao/Projetos/lettuce/lettuce/core.py',
-            'step_file': '/Users/gabriel.falcao/Projetos/lettuce/tests/functional/output_features/fail_outline/fail_outline_steps.py'
+            'lettuce_core_file': lettuce_path('core.py'),
+            'step_file': lettuce_path('..', 'tests', 'functional', 'output_features', 'fail_outline', 'fail_outline_steps.py')
         }
     )
 

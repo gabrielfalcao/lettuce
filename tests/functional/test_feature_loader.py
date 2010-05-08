@@ -15,9 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from nose.tools import assert_equals
-from os.path import dirname, join, abspath, relpath
+from os.path import dirname, join, abspath
 from lettuce.fs import FeatureLoader
-from lettuce.core import Feature
+from lettuce.core import Feature, fs
 
 current_dir = abspath(dirname(__file__))
 cjoin = lambda *x: join(current_dir, 'simple_features', *x)
@@ -67,7 +67,7 @@ def test_feature_loaded_from_file_has_feature_line_and_feature_filename():
     feature_file = cjoin('1st_feature_dir', 'more_features_here', 'another.feature')
 
     feature = Feature.from_file(feature_file)
-    assert_equals(feature.described_at.file, relpath(feature_file))
+    assert_equals(feature.described_at.file, fs.relpath(feature_file))
     assert_equals(feature.described_at.line, 2)
     assert_equals(feature.name, 'Division')
     assert_equals(feature.described_at.description_at, (3, 4))
@@ -78,7 +78,7 @@ def test_feature_loaded_from_file_has_description_at():
     feature_file = cjoin('1st_feature_dir', 'some.feature')
 
     feature = Feature.from_file(feature_file)
-    assert_equals(feature.described_at.file, relpath(feature_file))
+    assert_equals(feature.described_at.file, fs.relpath(feature_file))
     assert_equals(feature.described_at.line, 5)
     assert_equals(feature.name, 'Addition')
     assert_equals(feature.described_at.description_at, (6, 7, 8))
@@ -98,10 +98,10 @@ def test_feature_loaded_from_file_sets_scenario_line_and_scenario_filename():
     feature = Feature.from_file(feature_file)
     scenario1, scenario2 = feature.scenarios
 
-    assert_equals(scenario1.described_at.file, relpath(feature_file))
+    assert_equals(scenario1.described_at.file, fs.relpath(feature_file))
     assert_equals(scenario1.described_at.line, 6)
 
-    assert_equals(scenario2.described_at.file, relpath(feature_file))
+    assert_equals(scenario2.described_at.file, fs.relpath(feature_file))
     assert_equals(scenario2.described_at.line, 12)
 
 def test_feature_loaded_from_file_sets_step_line_and_step_filenames():
@@ -116,7 +116,7 @@ def test_feature_loaded_from_file_sets_step_line_and_step_filenames():
     step1, step2, step3, step4 = scenario.steps
 
     for step in scenario.steps:
-        assert_equals(step.described_at.file, relpath(feature_file))
+        assert_equals(step.described_at.file, fs.relpath(feature_file))
 
     assert_equals(step1.sentence, "* I have entered 10 into the calculator")
     assert_equals(step1.described_at.line, 7)
