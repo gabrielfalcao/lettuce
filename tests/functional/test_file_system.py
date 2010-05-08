@@ -19,7 +19,7 @@
 # Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-from os.path import abspath, dirname, join, split
+from os.path import abspath, dirname, join, split, curdir
 from nose.tools import assert_equals
 from lettuce.fs import FileSystem
 
@@ -29,6 +29,13 @@ def test_abspath():
     p2 = abspath(".")
 
     assert p == p2
+
+def test_relpath():
+    fs = FileSystem()
+    p = fs.relpath(join(curdir, 'other'))
+    p2 = join(dirname(curdir), 'other')
+
+    assert_equals(p, p2)
 
 def test_current_dir_with_join():
     fs = FileSystem()

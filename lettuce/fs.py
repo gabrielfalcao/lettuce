@@ -14,6 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import re
 import os
 import sys
 import codecs
@@ -127,6 +128,13 @@ class FileSystem(object):
     def abspath(cls, path):
         '''Returns the absolute path for the given path.'''
         return abspath(path)
+
+    @classmethod
+    def relpath(cls, path):
+        '''Returns the absolute path for the given path.'''
+        current_path = cls.current_dir()
+        absolute_path = cls.abspath(path)
+        return re.sub("^" + re.escape(current_path), '', absolute_path).lstrip("/")
 
     @classmethod
     def join(cls, *args):
