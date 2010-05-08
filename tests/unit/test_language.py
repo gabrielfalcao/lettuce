@@ -28,16 +28,3 @@ def test_language_is_english_by_default():
     assert_equals(lang.scenario, 'Scenario')
     assert_equals(lang.examples, 'Examples|Scenarios')
     assert_equals(lang.scenario_outline, 'Scenario Outline')
-
-def test_language_portuguese():
-    'Language class supports portuguese through code "pt"'
-    lang = Language('pt')
-
-    assert_equals(lang.code, 'pt')
-    assert_equals(lang.name, 'Portuguese')
-    assert_equals(lang.native, u'Português')
-    assert_equals(lang.feature, 'Funcionalidade')
-    assert_equals(lang.scenario, u'Cenário|Cenario')
-    assert_equals(lang.examples, 'Exemplos|Cenários')
-    assert_equals(lang.scenario_outline, 'Esquema do Cenário|Esquema do Cenario')
-
