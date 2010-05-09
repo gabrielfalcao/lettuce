@@ -269,7 +269,7 @@ class Scenario(object):
     indentation = 2
     table_indentation = indentation + 2
     def __init__(self, name, remaining_lines, keys, outlines, with_file=None,
-                 original_string=None):
+                 original_string=None, language=None):
 
         self.name = name
         self.steps = self._parse_remaining_lines(remaining_lines,
@@ -457,10 +457,13 @@ class Scenario(object):
         return "\n".join([(" " * self.table_indentation) + line for line in lines]) + '\n'
 
     @classmethod
-    def from_string(new_scenario, string, with_file=None, original_string=None):
+    def from_string(new_scenario, string, with_file=None, original_string=None, language=None):
         """ Creates a new scenario from string"""
 
-        splitted = strings.split_wisely(string, "Example[s]?[:]", True)
+        if not language:
+            language = Language()
+
+        splitted = strings.split_wisely(string, "Examples[:]", True)
         string = splitted[0]
         keys = []
         outlines = []
@@ -470,14 +473,20 @@ class Scenario(object):
 
         lines = strings.get_stripped_lines(string)
         scenario_line = lines.pop(0)
-        line = strings.remove_it(scenario_line, "Scenario( Outline)?[:] ")
+
+        line = strings.remove_it(scenario_line,
+                                 "(%s)[:] " % language.scenario_outline)
+        line = strings.remove_it(line,
+                                 "(%s)[:] " % language.scenario)
+
 
         scenario =  new_scenario(name=line,
                                  remaining_lines=lines,
                                  keys=keys,
                                  outlines=outlines,
                                  with_file=with_file,
-                                 original_string=original_string)
+                                 original_string=original_string,
+                                 language=language)
 
         return scenario
 
