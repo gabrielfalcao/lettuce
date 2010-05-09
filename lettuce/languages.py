@@ -25,8 +25,8 @@ LANGUAGES = {
         'scenario_outline': 'Scenario Outline',
     },
     'pt-br': {
-        'examples': 'Exemplos|Cenários',
-        'feature': 'Funcionalidade',
+        'examples': u'Exemplos|Cenários',
+        'feature': u'Funcionalidade',
         'name': 'Portuguese',
         'native': u'Português',
         'scenario': u'Cenário|Cenario',

@@ -28,6 +28,32 @@ Cenário: Consolidar o banco de dados de cursos universitários em arquivo texto
     E a 2a linha do arquivo 'cursos.txt' contém 'Nutrição:4'
 """
 
+SCENARIO_OUTLINE1 = u'''
+Esquema do Cenário: Cadastrar um aluno no banco de dados
+    Dado que eu preencho o campo "nome" com "<nome>"
+    E que eu preencho o campo "idade" com "<idade>"
+    Quando eu salvo o formulário
+    Então vejo a mensagem "Alumo <nome>, de <idade> anos foi cadastrado com sucesso!"
+
+Exemplos:
+    | nome    | idade |
+    | Gabriel | 22    |
+    | João    | 30    |
+'''
+
+SCENARIO_OUTLINE2 = u'''
+Esquema do Cenário: Cadastrar um aluno no banco de dados
+    Dado que eu preencho o campo "nome" com "<nome>"
+    E que eu preencho o campo "idade" com "<idade>"
+    Quando eu salvo o formulário
+    Então vejo a mensagem "Alumo <nome>, de <idade> anos foi cadastrado com sucesso!"
+
+Cenários:
+    | nome    | idade |
+    | Gabriel | 99    |
+    | João    | 100   |
+'''
+
 def test_language_portuguese():
     'Language: PT-BR -> Language class supports portuguese through code "pt-br"'
     lang = Language('pt-br')
@@ -56,3 +82,38 @@ def test_scenario_ptbr_from_string():
             {'Nome': u'Nutrição', u'Duração': '4 anos'},
         ]
     )
+
+def test_scenario_outline1_ptbr_from_string():
+    'Language: PT-BR -> Scenario.from_string, with scenario outline, first case'
+    ptbr = Language('pt-br')
+    scenario = Scenario.from_string(SCENARIO_OUTLINE1, language=ptbr)
+
+    assert_equals(
+        scenario.name,
+        'Cadastrar um aluno no banco de dados'
+    )
+    assert_equals(
+        scenario.outlines,
+        [
+            {'nome': u'Gabriel', u'idade': '22'},
+            {'nome': u'João', u'idade': '30'},
+        ]
+    )
+
+def test_scenario_outline2_ptbr_from_string():
+    'Language: PT-BR -> Scenario.from_string, with scenario outline, second case'
+    ptbr = Language('pt-br')
+    scenario = Scenario.from_string(SCENARIO_OUTLINE2, language=ptbr)
+
+    assert_equals(
+        scenario.name,
+        'Cadastrar um aluno no banco de dados'
+    )
+    assert_equals(
+        scenario.outlines,
+        [
+            {'nome': u'Gabriel', u'idade': '99'},
+            {'nome': u'João', u'idade': '100'},
+        ]
+    )
+

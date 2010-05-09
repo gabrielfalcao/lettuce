@@ -16,7 +16,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
-import os
 from copy import deepcopy
 from lettuce import strings
 from lettuce import languages
@@ -463,12 +462,13 @@ class Scenario(object):
         if not language:
             language = Language()
 
-        splitted = strings.split_wisely(string, "Examples[:]", True)
+        splitted = strings.split_wisely(string, u"(%s)[:]" % language.examples, True)
+
         string = splitted[0]
         keys = []
         outlines = []
-        if len(splitted) is 2:
-            part = splitted[1]
+        if len(splitted) > 1:
+            part = splitted[-1]
             keys, outlines = parse_hashes(strings.get_stripped_lines(part))
 
         lines = strings.get_stripped_lines(string)
@@ -478,7 +478,6 @@ class Scenario(object):
                                  "(%s)[:] " % language.scenario_outline)
         line = strings.remove_it(line,
                                  "(%s)[:] " % language.scenario)
-
 
         scenario =  new_scenario(name=line,
                                  remaining_lines=lines,

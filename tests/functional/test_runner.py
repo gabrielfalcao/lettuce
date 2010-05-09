@@ -26,7 +26,7 @@ from nose.tools import assert_equals, with_setup, assert_raises
 from lettuce import Runner, CALLBACK_REGISTRY, STEP_REGISTRY
 
 from lettuce.fs import FeatureLoader
-from lettuce.core import Feature, fs
+from lettuce.core import Feature, fs, StepDefinition
 from lettuce.terrain import world
 
 current_dir = abspath(dirname(__file__))
@@ -34,6 +34,8 @@ lettuce_dir = abspath(dirname(lettuce.__file__))
 ojoin = lambda *x: join(current_dir, 'output_features', *x)
 sjoin = lambda *x: join(current_dir, 'syntax_features', *x)
 lettuce_path = lambda *x: abspath(join(lettuce_dir, *x))
+
+call_line = StepDefinition.__call__.im_func.func_code.co_firstlineno + 5
 
 def prepare_stdout():
     CALLBACK_REGISTRY.clear()
@@ -401,7 +403,7 @@ def test_output_with_failed_colorless_with_table():
         "    And this one fails                        # tests/functional/output_features/failed_table/failed_table_steps.py:24\n"
         "\033[A    And this one fails                        # tests/functional/output_features/failed_table/failed_table_steps.py:24\n"
         "    Traceback (most recent call last):\n"
-        '      File "%(lettuce_core_file)s", line 76, in __call__\n'
+        '      File "%(lettuce_core_file)s", line %(call_line)d, in __call__\n'
         "        ret = self.function(self.step, *args, **kw)\n"
         '      File "%(step_file)s", line 25, in tof\n'
         "        assert False\n"
@@ -425,6 +427,7 @@ def test_output_with_failed_colorless_with_table():
         "    pass\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py'),
+            'call_line':call_line,
         }
     )
 
@@ -445,7 +448,7 @@ def test_output_with_failed_colorful_with_table():
         "\033[1;30m    And this one fails                        \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:24\033[0m\n"
         "\033[A\033[0;31m    And this one fails                        \033[1;41;33m# tests/functional/output_features/failed_table/failed_table_steps.py:24\033[0m\n"
         "\033[1;31m    Traceback (most recent call last):\n"
-        '      File "%(lettuce_core_file)s", line 76, in __call__\n'
+        '      File "%(lettuce_core_file)s", line %(call_line)d, in __call__\n'
         "        ret = self.function(self.step, *args, **kw)\n"
         '      File "%(step_file)s", line 25, in tof\n'
         "        assert False\n"
@@ -469,7 +472,8 @@ def test_output_with_failed_colorful_with_table():
         "    pass\033[0m"
         "\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
-            'step_file': lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')
+            'step_file': lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py'),
+            'call_line':call_line,
         }
     )
 
@@ -572,7 +576,7 @@ def test_output_with_failful_outline_colorless():
         '    | john     | doe-1234 | john@gmail.org | Welcome, John |\n'
         '    | mary     | wee-9876 | mary@email.com | Welcome, Mary |\n'
         "    Traceback (most recent call last):\n"
-        '      File "%(lettuce_core_file)s", line 76, in __call__\n'
+        '      File "%(lettuce_core_file)s", line %(call_line)d, in __call__\n'
         "        ret = self.function(self.step, *args, **kw)\n"
         '      File "%(step_file)s", line 30, in when_i_fill_the_field_x_with_y\n'
         "        if field == 'password' and value == 'wee-9876':  assert False\n"
@@ -583,7 +587,8 @@ def test_output_with_failful_outline_colorless():
         '3 scenarios (2 passed)\n'
         '24 steps (1 failed, 4 skipped, 19 passed)\n' % {
             'lettuce_core_file': lettuce_path('core.py'),
-            'step_file': lettuce_path('..', 'tests', 'functional', 'output_features', 'fail_outline', 'fail_outline_steps.py')
+            'step_file': lettuce_path('..', 'tests', 'functional', 'output_features', 'fail_outline', 'fail_outline_steps.py'),
+            'call_line':call_line,
         }
     )
 
@@ -616,7 +621,7 @@ def test_output_with_failful_outline_colorful():
         '\033[1;32m   \033[1;37m |\033[1;32m john    \033[1;37m |\033[1;32m doe-1234\033[1;37m |\033[1;32m john@gmail.org\033[1;37m |\033[1;32m Welcome, John\033[1;37m |\033[1;32m\033[0m\n'
         '\033[1;32m   \033[1;37m |\033[1;32m mary    \033[1;37m |\033[1;32m wee-9876\033[1;37m |\033[1;32m mary@email.com\033[1;37m |\033[1;32m Welcome, Mary\033[1;37m |\033[1;32m\033[0m\n'
         "\033[1;31m    Traceback (most recent call last):\n"
-        '      File "%(lettuce_core_file)s", line 76, in __call__\n'
+        '      File "%(lettuce_core_file)s", line %(call_line)d, in __call__\n'
         "        ret = self.function(self.step, *args, **kw)\n"
         '      File "%(step_file)s", line 30, in when_i_fill_the_field_x_with_y\n'
         "        if field == 'password' and value == 'wee-9876':  assert False\n"
@@ -627,7 +632,8 @@ def test_output_with_failful_outline_colorful():
         "\033[1;37m3 scenarios (\033[1;32m2 passed\033[1;37m)\033[0m\n" \
         "\033[1;37m24 steps (\033[0;31m1 failed\033[1;37m, \033[0;36m4 skipped\033[1;37m, \033[1;32m19 passed\033[1;37m)\033[0m\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
-            'step_file': lettuce_path('..', 'tests', 'functional', 'output_features', 'fail_outline', 'fail_outline_steps.py')
+            'step_file': lettuce_path('..', 'tests', 'functional', 'output_features', 'fail_outline', 'fail_outline_steps.py'),
+            'call_line':call_line,
         }
     )
 
