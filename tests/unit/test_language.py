@@ -28,3 +28,10 @@ def test_language_is_english_by_default():
     assert_equals(lang.scenario, 'Scenario')
     assert_equals(lang.examples, 'Examples|Scenarios')
     assert_equals(lang.scenario_outline, 'Scenario Outline')
+
+def test_language_has_first_of():
+    "Language() can pick up first occurrece of a string"
+    lang = Language()
+
+    assert_equals(lang.first_of_examples, 'Examples')
+

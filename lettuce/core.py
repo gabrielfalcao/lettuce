@@ -49,7 +49,7 @@ class Language(object):
     scenario = 'Scenario'
     examples = 'Examples|Scenarios'
     scenario_outline = 'Scenario Outline'
-
+    scenario_separator = 'Scenario( Outline)?'
     def __init__(self, code=None):
         if not code:
             return
@@ -57,6 +57,13 @@ class Language(object):
         self.code = code
         for attr, value in languages.LANGUAGES[code].items():
             setattr(self, attr, value)
+
+    def __getattr__(self, attr):
+        if not attr.startswith("first_of_"):
+            return super(Language, self).__getattribute__(attr)
+
+        name = re.sub(r'^first_of_', '', attr)
+        return getattr(self, name, '').split("|")[0]
 
 class StepDefinition(object):
     """A step definition is a wrapper for user-defined callbacks. It
@@ -492,12 +499,14 @@ class Scenario(object):
 class Feature(object):
     """ Object that represents a feature."""
     described_at = None
-    def __init__(self, name, remaining_lines, with_file, original_string):
+    def __init__(self, name, remaining_lines, with_file, original_string,
+                 language=None):
         self.name = name
         self.scenarios, self.description = self._parse_remaining_lines(
             remaining_lines,
             original_string,
-            with_file
+            with_file,
+            language
         )
 
         self.original_string = original_string
@@ -546,11 +555,14 @@ class Feature(object):
         return head
 
     @classmethod
-    def from_string(new_feature, string, with_file=None):
+    def from_string(new_feature, string, with_file=None, language=None):
         """Creates a new feature from string"""
         lines = strings.get_stripped_lines(string)
 
-        found = len(re.findall(r'Feature:[ ]*\w+', string))
+        if not language:
+            language = Language()
+
+        found = len(re.findall(r'%s:[ ]*\w+' % language.feature, string))
 
         if found > 1:
             raise LettuceSyntaxError(
@@ -567,7 +579,7 @@ class Feature(object):
 
         while lines:
 
-            matched = re.search(r'Feature:(.*)', lines[0], re.I)
+            matched = re.search(r'%s:(.*)' % language.feature, lines[0], re.I)
             if matched:
                 name = matched.groups()[0].strip()
                 break
@@ -577,7 +589,8 @@ class Feature(object):
         feature = new_feature(name=name,
                               remaining_lines=lines,
                               with_file=with_file,
-                              original_string=string)
+                              original_string=string,
+                              language=language)
         return feature
 
     @classmethod
@@ -592,20 +605,30 @@ class Feature(object):
     def _set_definition(self, definition):
         self.described_at = definition
 
-    def _parse_remaining_lines(self, lines, original_string, with_file=None):
+    def _parse_remaining_lines(self, lines, original_string, with_file=None,
+                               language=None  ):
+
+
         joined = "\n".join(lines[1:])
-        regex = re.compile("Scenario( Outline)?[:]\s", re.I)
-        joined = regex.sub('Scenario: ', joined)
-        parts = strings.split_wisely(joined, "Scenario[:] ")
+        regex = re.compile("(%s)[:]\s" % language.scenario_separator, re.I)
+        joined = regex.sub('%s: ' % language.first_of_scenario, joined)
+
+        parts = strings.split_wisely(joined, "%s[:] " % language.first_of_scenario)
 
         description = ""
 
-        if not re.search("^Scenario[:] ", joined):
+        if not re.search("^%s[:] " % language.first_of_scenario, joined):
             description = parts[0]
             parts.pop(0)
 
-        scenario_strings = ["Scenario: %s" % s for s in parts if s.strip()]
-        kw = dict(original_string=original_string, with_file=with_file)
+        scenario_strings = [
+            "%s: %s" % (language.first_of_scenario, s) for s in parts if s.strip()
+        ]
+        kw = dict(
+            original_string=original_string,
+            with_file=with_file,
+            language=language
+        )
 
         scenarios = [Scenario.from_string(s, **kw) for s in scenario_strings]
 

@@ -23,6 +23,7 @@ LANGUAGES = {
         'native': 'English',
         'scenario': 'Scenario',
         'scenario_outline': 'Scenario Outline',
+        'scenario_separator': 'Scenario( Outline)?',
     },
     'pt-br': {
         'examples': u'Exemplos|Cenários',
@@ -31,5 +32,6 @@ LANGUAGES = {
         'native': u'Português',
         'scenario': u'Cenário|Cenario',
         'scenario_outline': u'Esquema do Cenário|Esquema do Cenario',
+        'scenario_separator': u'(Esquema do )?Cenário|(Esquema do )?Cenario',
     },
 }

@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from nose.tools import assert_equals
-from lettuce.core import Language, Scenario
+from lettuce.core import Language, Scenario, Feature
 
 SCENARIO = u"""
 Cenário: Consolidar o banco de dados de cursos universitários em arquivo texto
@@ -33,7 +33,7 @@ Esquema do Cenário: Cadastrar um aluno no banco de dados
     Dado que eu preencho o campo "nome" com "<nome>"
     E que eu preencho o campo "idade" com "<idade>"
     Quando eu salvo o formulário
-    Então vejo a mensagem "Alumo <nome>, de <idade> anos foi cadastrado com sucesso!"
+    Então vejo a mensagem "Aluno <nome>, de <idade> anos foi cadastrado com sucesso!"
 
 Exemplos:
     | nome    | idade |
@@ -46,12 +46,28 @@ Esquema do Cenário: Cadastrar um aluno no banco de dados
     Dado que eu preencho o campo "nome" com "<nome>"
     E que eu preencho o campo "idade" com "<idade>"
     Quando eu salvo o formulário
-    Então vejo a mensagem "Alumo <nome>, de <idade> anos foi cadastrado com sucesso!"
+    Então vejo a mensagem "Aluno <nome>, de <idade> anos foi cadastrado com sucesso!"
 
 Cenários:
     | nome    | idade |
     | Gabriel | 99    |
     | João    | 100   |
+'''
+
+FEATURE = u'''
+Funcionalidade: Pesquisar alunos com matrícula vencida
+  Como gerente financeiro
+  Eu quero pesquisar alunos com matrícula vencida
+  Para propor um financiamento
+
+  Cenário: Pesquisar por nome do curso
+    Dado que eu preencho o campo "nome do curso" com "Nutrição"
+    Quando eu clico em "pesquisar"
+    Então vejo os resultados:
+      | nome  | valor devido |
+      | João  | R$ 512,66    |
+      | Maria | R$ 998,41    |
+      | Ana   | R$ 231,00    |
 '''
 
 def test_language_portuguese():
@@ -114,6 +130,39 @@ def test_scenario_outline2_ptbr_from_string():
         [
             {'nome': u'Gabriel', u'idade': '99'},
             {'nome': u'João', u'idade': '100'},
+        ]
+    )
+
+def test_feature_ptbr_from_string():
+    'Language: PT-BR -> Feature.from_string'
+    ptbr = Language('pt-br')
+    feature = Feature.from_string(FEATURE, language=ptbr)
+
+    assert_equals(
+        feature.name,
+        u'Pesquisar alunos com matrícula vencida'
+    )
+
+    assert_equals(
+        feature.description,
+        u"Como gerente financeiro\n"
+        u"Eu quero pesquisar alunos com matrícula vencida\n"
+        u"Para propor um financiamento"
+    )
+
+    (scenario, ) = feature.scenarios
+
+    assert_equals(
+        scenario.name,
+        'Pesquisar por nome do curso'
+    )
+
+    assert_equals(
+        scenario.steps[-1].hashes,
+        [
+            {'nome': u'João', u'valor devido': 'R$ 512,66'},
+            {'nome': u'Maria', u'valor devido': 'R$ 998,41'},
+            {'nome': u'Ana', u'valor devido': 'R$ 231,00'},
         ]
     )
 
