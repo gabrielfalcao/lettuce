@@ -1,5 +1,6 @@
 all: unit functional doctest
 
+filename=lettuce-`python -c 'import lettuce;print lettuce.version'`.tar.bz2
 unit: clean
 	@echo "Running unit tests ..."
 	@nosetests -s --verbosity=2 --with-coverage --cover-erase --cover-inclusive tests/unit/ --cover-package=lettuce
@@ -31,3 +32,7 @@ deploy-documentation:documentation withdraw-documentation
 
 deploy: deploy-documentation
 
+release: clean
+	@printf "Exporting to $(filename)... "
+	@git archive HEAD | bzip2 > $(filename)
+	@echo "DONE!"
