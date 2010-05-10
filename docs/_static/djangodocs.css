@@ -1,10 +1,20 @@
 /*** setup ***/
 html, body {background: url(./background.jpg)}
-body { font:14px Verdana,sans-serif; color:black}
+body { font:14px Helvetica, arial, sans-serif; color:black}
 #custom-doc { width:76.54em;*width:74.69em;min-width:995px; max-width:100em; margin:auto; text-align:left; padding-top:16px; margin-top:0}
 #hd { padding: 4px 0 12px 0}
 #bd { background:#C5D88A}
 #ft { color:#C5D88A; font-size:90%; padding-bottom: 2em}
+
+pre {
+     font-size:small; background:#333; border-width:1px 0; margin: 1em 0; padding: .3em .4em; overflow: hidden; line-height: 1.3em; color: #CCC;
+    -moz-border-radius:3px 3px 3px 3px;
+    -webkit-border-radius:3px 3px 3px 3px;
+    border-radius:3px 3px 3px 3px;
+    float:right;
+    padding:1em;
+    width:35em;
+}
 
 /*** links ***/
 a {text-decoration: none}
@@ -16,7 +26,7 @@ a:hover { color:#000}
 #bd a:hover { background-color:#E0FFB8; color:#234f32; text-decoration:none}
 #bd #sidebar a:hover { color:#ffe761; background:none}
 h2 a, h3 a, h4 a { text-decoration:none !important}
-a.reference em { color:green;font-style:normal;font-weight:bold;text-decoration:underline;}
+a.reference em { color: #595;font-style:normal;font-weight:bold;}
 
 /*** sidebar ***/
 #sidebar div.sphinxsidebarwrapper { font-size:92%; margin-right: 14px}
@@ -36,12 +46,21 @@ div.nav { margin: 0; font-size: 11px; text-align: right; color: #487858}
 #global-nav a { color:#ffe761}
 
 /*** content ***/
+#yui-main {
+-moz-border-radius:3px 3px 3px 3px;
+-moz-box-shadow:0 0 9px rgba(0, 0, 0, 0.5);
+-webkit-border-radius:3px 3px 3px 3px;
+-webkit-box-shadow:0 0 9px rgba(0, 0, 0, 0.5);
+border-radius:3px 3px 3px 3px;
+box-shadow:0 0 9px rgba(0, 0, 0, 0.5);
+background:none repeat scroll 0 0 #F0F7F0;
+}
 #yui-main div.yui-b { position: relative}
-#yui-main div.yui-b { background: #C5D88A; color: #164B2B; padding: 0.3em 2em 1em 2em}
+#yui-main div.yui-b { background: #FFF; color: #164B2B; padding: 0.3em 2em 1em 2em}
 
 /*** basic styles ***/
 dd { margin-left:15px}
-h1,h2,h3,h4 { margin-top:1em; font-family:"Trebuchet MS",sans-serif; font-weight:normal}
+h1,h2,h3,h4 { margin-top:1em;  font-weight:normal}
 h1 { font-size:218%; margin-top:0.6em; margin-bottom:.4em; line-height:1.1em}
 h2 { font-size:175%; margin-bottom:.6em; line-height:1.2em; color:#092e20}
 h3 { font-size:150%; font-weight:bold; margin-bottom:.2em; color:#487858}
@@ -49,7 +68,7 @@ h4 { font-size:125%; font-weight:bold; margin-top:1.5em; margin-bottom:3px}
 div.figure { text-align: center}
 div.figure p.caption { font-size:1em; margin-top:0; margin-bottom:1.5em; color: black}
 hr { color:#ccc; background-color:#ccc; height:1px; border:0}
-p, ul, dl { margin-top:.6em; margin-bottom:1em; color: #333}
+p, ul, dl { margin-top:.6em; color: #333}
 #yui-main div.yui-b img { max-width: 50em; margin-left: auto; margin-right: auto; display: block}
 caption { font-size:1em; font-weight:bold; margin-top:0.5em; margin-bottom:0.5em; margin-left: 2px; text-align: center}
 blockquote { padding: 0 1em; margin: 1em 0; font:125%/1.2em "Trebuchet MS", sans-serif; color:#234f32}
@@ -98,10 +117,17 @@ dt .literal, table .literal { background:none}
 #bd a.reference tt.literal { border-bottom: 1px #234f32 dotted}
 
 /*** notes & admonitions ***/
-.note, .admonition { padding:.8em 1em .8em; margin: 1em 0; border:1px solid #94da3a}
+.note, .admonition {
+padding:.8em 1em .8em; margin: 1em 0; background-color: #E8FFE8;
+-moz-border-radius:3px 3px 3px 3px;
+-moz-box-shadow:0 1px 2px rgba(0, 0, 0, 0.3);
+-webkit-border-radius:3px 3px 3px 3px;
+-webkit-box-shadow:0 1px 2px rgba(0, 0, 0, 0.3);
+border-radius:3px 3px 3px 3px;
+box-shadow:0 1px 2px rgba(0, 0, 0, 0.3);
+}
 .admonition-title { font-weight:bold; margin-top:0 !important; margin-bottom:0 !important}
 .admonition .last { margin-bottom:0 !important}
-.note, .admonition { padding-left:65px; background: white url(docicons-note.png) .8em .8em no-repeat}
 div.admonition-philosophy { padding-left:65px; background:url(docicons-philosophy.png) .8em .8em no-repeat}
 div.admonition-behind-the-scenes { padding-left:65px; background:url(docicons-behindscenes.png) .8em .8em no-repeat}
 
@@ -126,7 +152,8 @@ div#contents ul li { margin-bottom: 0}
 div#contents ul ul li { margin-top: 0.3em}
 
 /*** IE hacks ***/
-* pre { width: 100%}
+* pre { width: 100%; font-family: Monaco, monospace; font-size: 12px;
+}
 .footer {
     color: white;
 }
