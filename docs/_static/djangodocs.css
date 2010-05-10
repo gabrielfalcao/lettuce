@@ -10,6 +10,8 @@ pre {
     font-family: Monaco, monospace;
     font-size: 12px;
     background:#333;
+    background:-moz-linear-gradient(-90deg, #333, #222 60%);
+    background: -webkit-gradient(linear, 0 top, 0 bottom, from(#333), to(#222), color-stop(60%, #222));
     border-width:1px 0;
     margin: 1em 0;
     padding: .3em .4em;
