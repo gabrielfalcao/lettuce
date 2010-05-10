@@ -52,7 +52,7 @@ div.nav { margin: 0; font-size: 11px; text-align: right; color: #487858}
 #global-nav { position:absolute; top:5px; margin-left: -5px; padding:7px 0; color:#263E2B}
 #global-nav a {padding:0 4px}
 #global-nav a.about {padding-left:0}
-#global-nav a { color:#ffe761}
+#global-nav a { color:#fff}
 
 /*** content ***/
 #yui-main {
