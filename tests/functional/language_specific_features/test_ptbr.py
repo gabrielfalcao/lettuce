@@ -49,7 +49,7 @@ def assert_stdout_lines(other):
     assert_lines(one, other)
 
 @with_setup(prepare_stdout)
-def test_output_with_success_colorless():
+def _test_output_with_success_colorless():
     "Language: pt-br -> sucess colorless"
 
     runner = Runner(join_path('pt-br', 'success', 'dumb.feature'), verbosity=3)
