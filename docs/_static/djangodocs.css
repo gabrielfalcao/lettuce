@@ -16,7 +16,7 @@ a:hover { color:#000}
 #bd a:hover { background-color:#E0FFB8; color:#234f32; text-decoration:none}
 #bd #sidebar a:hover { color:#ffe761; background:none}
 h2 a, h3 a, h4 a { text-decoration:none !important}
-a.reference em { font-style: normal}
+a.reference em { color:green;font-style:normal;font-weight:bold;text-decoration:underline;}
 
 /*** sidebar ***/
 #sidebar div.sphinxsidebarwrapper { font-size:92%; margin-right: 14px}

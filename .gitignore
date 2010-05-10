@@ -6,3 +6,4 @@ docs/_build
 lettuce.egg-info/
 build/
 dist/
+.DS_Store

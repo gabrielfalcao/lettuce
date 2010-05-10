@@ -1,8 +1,8 @@
  .. _index:
 .. rubric:: All you need to know, from the leaves to the root
 
-quickstart
-==========
+nutshell
+========
 
 **install it**
 
@@ -54,6 +54,13 @@ quickstart
 ::
 
    user@machine:~/Projects/my-project$ lettuce features/
+
+hands on!
+=========
+
+Is this your first experience with Lettuce ?!?
+
+So, why not jump all and go straight to the :ref:`quick start <intro-quickstart>` ?!
 
 introduction
 ============
