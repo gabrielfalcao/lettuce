@@ -29,14 +29,15 @@ from lettuce.exceptions import LettuceSyntaxError
 fs = FileSystem()
 
 def parse_hashes(lines):
+    lines = map(unicode, lines)
     keys = []
     hashes = []
     if lines:
         first_line = lines.pop(0)
-        keys = strings.split_wisely(first_line, "|", True)
+        keys = strings.split_wisely(first_line, u"|", True)
 
         for line in lines:
-            values = strings.split_wisely(line, "|", True)
+            values = strings.split_wisely(line, u"|", True)
             hashes.append(dict(zip(keys, values)))
 
     return keys, hashes
@@ -50,20 +51,28 @@ class Language(object):
     examples = 'Examples|Scenarios'
     scenario_outline = 'Scenario Outline'
     scenario_separator = 'Scenario( Outline)?'
-    def __init__(self, code=None):
-        if not code:
-            return
+    def __init__(self, code=u'en'):
 
         self.code = code
         for attr, value in languages.LANGUAGES[code].items():
             setattr(self, attr, value)
 
     def __getattr__(self, attr):
-        if not attr.startswith("first_of_"):
+        if not attr.startswith(u"first_of_"):
             return super(Language, self).__getattribute__(attr)
 
-        name = re.sub(r'^first_of_', '', attr)
-        return getattr(self, name, '').split("|")[0]
+        name = re.sub(r'^first_of_', u'', attr)
+        return unicode(getattr(self, name, u'').split(u"|")[0])
+
+    @classmethod
+    def guess_from_string(cls, string):
+        match = re.search(u"language:[ ]*([^\s]+)", string)
+        if match:
+            instance = cls(match.group(1))
+        else:
+            instance = cls()
+
+        return instance
 
 class StepDefinition(object):
     """A step definition is a wrapper for user-defined callbacks. It
@@ -102,13 +111,13 @@ class ScenarioDescription(object):
     """A simple object that holds filename and line number of a scenario
     description (scenario within feature file)"""
 
-    def __init__(self, scenario, filename, string):
+    def __init__(self, scenario, filename, string, language):
         self.file = fs.relpath(filename)
         self.line = None
 
         for pline, part in enumerate(string.splitlines()):
             part = part.strip()
-            if re.match("Scenario( Outline)?[:] " + re.escape(scenario.name), part):
+            if re.match(u"%s: " % language.scenario_separator + re.escape(scenario.name), part):
                 self.line = pline + 1
                 break
 
@@ -116,7 +125,7 @@ class FeatureDescription(object):
     """A simple object that holds filename and line number of a feature
     description"""
 
-    def __init__(self, feature, filename, string):
+    def __init__(self, feature, filename, string, language):
         lines = [l.strip() for l in string.splitlines()]
         self.file = fs.relpath(filename)
         self.line = None
@@ -125,7 +134,7 @@ class FeatureDescription(object):
         for pline, part in enumerate(lines):
             part = part.strip()
             line = pline + 1
-            if part.startswith("Feature:"):
+            if part.startswith(u"%s:" % language.first_of_feature):
                 self.line = line
             else:
                 for description in description_lines:
@@ -203,11 +212,11 @@ class Step(object):
         where = self.described_at
         if self.defined_at:
             where = self.defined_at
-        return strings.rfill(head, self.scenario.feature.max_length + 1, append='# %s:%d\n' % (where.file, where.line))
+        return strings.rfill(head, self.scenario.feature.max_length + 1, append=u'# %s:%d\n' % (where.file, where.line))
 
     def represent_hashes(self):
         lines = strings.dicts_to_string(self.hashes, self.keys).splitlines()
-        return "\n".join([(" " * self.table_indentation) + line for line in lines]) + "\n"
+        return "\n".join([(u" " * self.table_indentation) + line for line in lines]) + "\n"
 
     def __repr__(self):
         return u'<Step: "%s">' % self.sentence
@@ -277,7 +286,11 @@ class Scenario(object):
     def __init__(self, name, remaining_lines, keys, outlines, with_file=None,
                  original_string=None, language=None):
 
+        if not language:
+            language = language()
+
         self.name = name
+        self.language = language
         self.steps = self._parse_remaining_lines(remaining_lines,
                                                  with_file,
                                                  original_string)
@@ -288,7 +301,8 @@ class Scenario(object):
 
         if with_file and original_string:
             scenario_definition = ScenarioDescription(self, with_file,
-                                                      original_string)
+                                                      original_string,
+                                                      language)
             self._set_definition(scenario_definition)
 
         self.solved_steps = list(self._resolve_steps(self.steps, self.outlines,
@@ -302,7 +316,7 @@ class Scenario(object):
         else:
             prefix = "Scenario:"
 
-        max_length = len("%s %s" % (prefix, self.name)) + self.indentation
+        max_length = len(u"%s %s" % (prefix, self.name)) + self.indentation
 
         for step in self.steps:
             if step.max_length > max_length:
@@ -442,7 +456,7 @@ class Scenario(object):
     def _parse_remaining_lines(self, lines, with_file, original_string):
         step_strings = []
         for line in lines:
-            if strings.wise_startswith(line, "|"):
+            if strings.wise_startswith(line, u"|"):
                 step_strings[-1] += "\n%s" % line
             else:
                 step_strings.append(line)
@@ -454,13 +468,19 @@ class Scenario(object):
         self.described_at = definition
 
     def represented(self):
-        comp = self.outlines and ' Outline' or ''
-        head = '%sScenario%s: %s' % (' ' * self.indentation, comp, self.name)
-        return strings.rfill(head, self.feature.max_length + 1, append='# %s:%d\n' % (self.described_at.file, self.described_at.line))
+        make_prefix = lambda x: "%s%s: " % (u' ' * self.indentation, x)
+        if self.outlines:
+            prefix = make_prefix(self.language.first_of_scenario_outline)
+        else:
+            prefix = make_prefix(self.language.first_of_scenario)
+
+        head = prefix + self.name
+
+        return strings.rfill(head, self.feature.max_length + 1, append=u'# %s:%d\n' % (self.described_at.file, self.described_at.line))
 
     def represent_examples(self):
         lines = strings.dicts_to_string(self.outlines, self.keys).splitlines()
-        return "\n".join([(" " * self.table_indentation) + line for line in lines]) + '\n'
+        return "\n".join([(u" " * self.table_indentation) + line for line in lines]) + '\n'
 
     @classmethod
     def from_string(new_scenario, string, with_file=None, original_string=None, language=None):
@@ -469,7 +489,7 @@ class Scenario(object):
         if not language:
             language = Language()
 
-        splitted = strings.split_wisely(string, u"(%s)[:]" % language.examples, True)
+        splitted = strings.split_wisely(string, u"(%s):" % language.examples, True)
 
         string = splitted[0]
         keys = []
@@ -482,9 +502,9 @@ class Scenario(object):
         scenario_line = lines.pop(0)
 
         line = strings.remove_it(scenario_line,
-                                 "(%s)[:] " % language.scenario_outline)
+                                 "(%s): " % language.scenario_outline)
         line = strings.remove_it(line,
-                                 "(%s)[:] " % language.scenario)
+                                 "(%s): " % language.scenario)
 
         scenario =  new_scenario(name=line,
                                  remaining_lines=lines,
@@ -501,12 +521,17 @@ class Feature(object):
     described_at = None
     def __init__(self, name, remaining_lines, with_file, original_string,
                  language=None):
+
+        if not language:
+            language = language()
+
         self.name = name
+        self.language = language
+
         self.scenarios, self.description = self._parse_remaining_lines(
             remaining_lines,
             original_string,
-            with_file,
-            language
+            with_file
         )
 
         self.original_string = original_string
@@ -514,14 +539,15 @@ class Feature(object):
         if with_file:
             feature_definition = FeatureDescription(self,
                                                     with_file,
-                                                    original_string)
+                                                    original_string,
+                                                    language)
             self._set_definition(feature_definition)
 
         self._add_myself_to_scenarios()
 
     @property
     def max_length(self):
-        max_length = len("Feature: %s" % self.name)
+        max_length = len(u"%s: %s" % (self.language.first_of_feature, self.name))
         for line in self.description.splitlines():
             length = len(line.strip()) + Scenario.indentation
             if length > max_length:
@@ -538,19 +564,19 @@ class Feature(object):
             scenario.feature = self
 
     def __repr__(self):
-        return u'<Feature: "%s">' % self.name
+        return u'<%s: "%s">' % (self.language.first_of_feature, self.name)
 
     def get_head(self):
-        return "Feature: %s" % self.name
+        return "%s: %s" % (self.language.first_of_feature, self.name)
 
     def represented(self):
         length = self.max_length + 1
 
         filename = self.described_at.file
         line = self.described_at.line
-        head = strings.rfill(self.get_head(), length, append="# %s:%d\n" % (filename, line))
+        head = strings.rfill(self.get_head(), length, append=u"# %s:%d\n" % (filename, line))
         for description, line in zip(self.description.splitlines(), self.described_at.description_at):
-            head += strings.rfill("  %s" % description, length, append="# %s:%d\n" % (filename, line))
+            head += strings.rfill(u"  %s" % description, length, append=u"# %s:%d\n" % (filename, line))
 
         return head
 
@@ -599,35 +625,43 @@ class Feature(object):
         f = open(filename)
         string = f.read()
         f.close()
-        feature = new_feature.from_string(string, with_file=filename)
+        language = Language.guess_from_string(string)
+        feature = new_feature.from_string(string, with_file=filename, language=language)
         return feature
 
     def _set_definition(self, definition):
         self.described_at = definition
 
-    def _parse_remaining_lines(self, lines, original_string, with_file=None,
-                               language=None  ):
+    def _parse_remaining_lines(self, lines, original_string, with_file=None):
 
+        joined = u"\n".join(lines[1:])
 
-        joined = "\n".join(lines[1:])
-        regex = re.compile("(%s)[:]\s" % language.scenario_separator, re.I)
-        joined = regex.sub('%s: ' % language.first_of_scenario, joined)
+        # replacing occurrencies of Scenario Outline, with just "Scenario"
+        scenario_prefix = u'%s:' % self.language.first_of_scenario
+        regex = re.compile(u"%s:\s" % self.language.scenario_separator, re.U | re.I)
+        joined = regex.sub(scenario_prefix, joined)
 
-        parts = strings.split_wisely(joined, "%s[:] " % language.first_of_scenario)
+        parts = strings.split_wisely(joined, scenario_prefix)
 
-        description = ""
+        "como um\n"
+        "para blablaa\n"
+        "cenario: asdsad\n"
+        "Dado que ssss\n"
+        "Quando ssss\n"
 
-        if not re.search("^%s[:] " % language.first_of_scenario, joined):
+        description = u""
+
+        if not re.search("^" + scenario_prefix, joined):
             description = parts[0]
             parts.pop(0)
 
         scenario_strings = [
-            "%s: %s" % (language.first_of_scenario, s) for s in parts if s.strip()
+            u"%s: %s" % (self.language.first_of_scenario, s) for s in parts if s.strip()
         ]
         kw = dict(
             original_string=original_string,
             with_file=with_file,
-            language=language
+            language=self.language
         )
 
         scenarios = [Scenario.from_string(s, **kw) for s in scenario_strings]

@@ -17,21 +17,21 @@
 
 LANGUAGES = {
     'en': {
-        'examples': 'Examples|Scenarios',
-        'feature': 'Feature',
-        'name': 'English',
-        'native': 'English',
-        'scenario': 'Scenario',
-        'scenario_outline': 'Scenario Outline',
-        'scenario_separator': 'Scenario( Outline)?',
+        'examples': u'Examples|Scenarios',
+        'feature': u'Feature',
+        'name': u'English',
+        'native': u'English',
+        'scenario': u'Scenario',
+        'scenario_outline': u'Scenario Outline',
+        'scenario_separator': u'(Scenario Outline|Scenario)',
     },
     'pt-br': {
         'examples': u'Exemplos|Cenários',
         'feature': u'Funcionalidade',
-        'name': 'Portuguese',
+        'name': u'Portuguese',
         'native': u'Português',
-        'scenario': u'Cenário|Cenario',
+        'scenario': u'Cenario|Cenário',
         'scenario_outline': u'Esquema do Cenário|Esquema do Cenario',
-        'scenario_separator': u'(Esquema do )?Cenário|(Esquema do )?Cenario',
+        'scenario_separator': u'(Esquema do Cenário|Esquema do Cenario|Cenario|Cenário)',
     },
 }

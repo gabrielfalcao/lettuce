@@ -17,17 +17,22 @@
 import re
 
 def escape_if_necessary(what):
+    what = unicode(what)
     if len(what) is 1:
         what = "[%s]" % what
 
     return what
 
 def get_stripped_lines(string):
+    string = unicode(string)
     lines = [l.strip() for l in string.splitlines()]
     return [l for l in lines if l]
 
 def split_wisely(string, sep, strip=False):
-    regex = re.compile(escape_if_necessary(sep),  re.I | re.M)
+    string = unicode(string)
+    sep = unicode(sep)
+
+    regex = re.compile(escape_if_necessary(sep),  re.UNICODE | re.M | re.I)
 
     items = filter(lambda x: x, regex.split(string))
     if strip:
@@ -38,13 +43,16 @@ def split_wisely(string, sep, strip=False):
     return [i for i in items if i]
 
 def wise_startswith(string, seed):
-    regex = "^%s" % re.escape(seed)
+    string = unicode(string)
+    seed = unicode(seed)
+    regex = u"^%s" % re.escape(seed)
     return bool(re.search(regex, string, re.I))
 
 def remove_it(string, what):
     return re.sub(what, "", string).strip()
 
-def rfill(string, times, char=" ", append=""):
+def rfill(string, times, char=u" ", append=u""):
+    string = unicode(string)
     missing = times - len(string)
     for x in range(missing):
         string += char

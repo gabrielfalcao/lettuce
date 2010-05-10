@@ -5,5 +5,5 @@ Funcionalidade: feature burra
   Eu quero que este teste passe
   Para testar um cenário de sucesso
 
-  Cenário: Fazer nada
+  Cenario: Fazer nada
     Dado que eu faço nada
