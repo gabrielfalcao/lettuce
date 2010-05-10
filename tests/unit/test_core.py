@@ -63,7 +63,8 @@ Fsdad
     class ScenarioFake:
         name = 'NAMEOFSCENARIO'
 
-    description = core.ScenarioDescription(ScenarioFake, __file__, string)
+
+    description = core.ScenarioDescription(ScenarioFake, __file__, string, core.Language())
     assert_equals(description.file, core.fs.relpath(__file__))
     assert_not_equals(description.file, __file__)
     assert_equals(description.line, 6)
@@ -84,7 +85,7 @@ def test_feature_description():
     class FakeFeature:
         description = 'the description\nof the scenario\n'
 
-    description = core.FeatureDescription(FakeFeature, __file__, string)
+    description = core.FeatureDescription(FakeFeature, __file__, string, core.Language())
     assert_equals(description.file, core.fs.relpath(__file__))
     assert_not_equals(description.file, __file__)
     assert_equals(description.line, 3)

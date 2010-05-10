@@ -30,7 +30,7 @@ LANGUAGES = {
         'feature': u'Funcionalidade',
         'name': u'Portuguese',
         'native': u'Português',
-        'scenario': u'Cenario|Cenário',
+        'scenario': u'Cenário|Cenario',
         'scenario_outline': u'Esquema do Cenário|Esquema do Cenario',
         'scenario_separator': u'(Esquema do Cenário|Esquema do Cenario|Cenario|Cenário)',
     },
