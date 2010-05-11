@@ -55,6 +55,30 @@ nutshell
 
    user@machine:~/Projects/my-project$ lettuce features/
 
+
+getting involved !
+==================
+
+**github project page**
+
+Fork it, propose features, explore the code
+
+`github.com/gabrielfalcao/lettuce <http://github.com/gabrielfalcao/lettuce>`_.
+
+**feedback**
+
+`issue tracker <http://github.com/gabrielfalcao/lettuce/issues>`_.
+
+**discuss**
+
+* `lettuce users mailing list <http://groups.google.com/group/lettuce-users>`_.
+
+* `lettuce development mailing list <http://groups.google.com/group/lettuce-developers>`_.
+
+**donate**
+
+`support lettuce development <http://pledgie.com/campaigns/10604>`_
+
 hands on!
 =========
 
@@ -68,6 +92,7 @@ introduction
     * **what is Lettuce, and what it does:**
 
       * :ref:`overview <intro-overview>`
+      * :ref:`installation <intro-install>`
       * :ref:`installation <intro-install>`
 
 what the feature ?!
