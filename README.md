@@ -24,4 +24,5 @@ Lettuce is a BDD tool for python, 100% inspired on [cucumber](http://cukes.info/
 # Special thanks
 
 1. [Cucumber](http://cukes.info/) crew, for creating such a AWESOME project, and for inspiring [Lettuce](http://lettuce.it/).
-2. [Tatiana](http://github.com/tatiana) for helping a lot with documentation
+2. [Tatiana](http://github.com/tatiana) for helping a lot with documentation.
+2. [Django](http://djangoproject.com) which documentation structure was borrowed.
