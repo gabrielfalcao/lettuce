@@ -14,7 +14,7 @@ Lettuce is a BDD tool for python, 100% inspired on [cucumber](http://cukes.info/
 # Motivation
 
 1. [Cucumber](http://cukes.info/) makes [Ruby](http://www.ruby-lang.org/) even more sexy. Python needed something like it.
-2. Testing must be funny and easy
+2. Testing must be funny and easy.
 3. Most python developers code in python, not ruby.
 4. Ruby has Capistrano, Python has Fabric. Ruby has cucumber, Python has lettuce.
 5. I personally don't like mixing many languages in small projects. Keeping all in python is better.
@@ -25,4 +25,4 @@ Lettuce is a BDD tool for python, 100% inspired on [cucumber](http://cukes.info/
 
 1. [Cucumber](http://cukes.info/) crew, for creating such a AWESOME project, and for inspiring [Lettuce](http://lettuce.it/).
 2. [Tatiana](http://github.com/tatiana) for helping a lot with documentation.
-2. [Django](http://djangoproject.com) which documentation structure was borrowed.
+3. [Django](http://djangoproject.com) which documentation structure was borrowed.
