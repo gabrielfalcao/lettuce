@@ -49,7 +49,7 @@ def assert_stdout_lines(other):
     assert_lines(one, other)
 
 @with_setup(prepare_stdout)
-def _test_output_with_success_colorless():
+def test_output_with_success_colorless():
     "Language: pt-br -> sucess colorless"
 
     runner = Runner(join_path('pt-br', 'success', 'dumb.feature'), verbosity=3)
@@ -58,11 +58,11 @@ def _test_output_with_success_colorless():
     assert_stdout_lines(
         "\n"
         "Funcionalidade: feature burra       # tests/functional/language_specific_features/pt-br/success/dumb.feature:3\n"
-        "  In order to test success          # tests/functional/language_specific_features/pt-br/success/dumb.feature:2\n"
-        "  Eu quero que este teste passe     # tests/functional/language_specific_features/pt-br/success/dumb.feature:3\n"
-        "  Para testar um cenário de sucesso # tests/functional/language_specific_features/pt-br/success/dumb.feature:4\n"
+        "  Como um programador               # tests/functional/language_specific_features/pt-br/success/dumb.feature:4\n"
+        "  Eu quero que este teste passe     # tests/functional/language_specific_features/pt-br/success/dumb.feature:5\n"
+        "  Para testar um cenário de sucesso # tests/functional/language_specific_features/pt-br/success/dumb.feature:6\n"
         "\n"
-        "  Cenário: Fazer nada               # tests/functional/language_specific_features/pt-br/success/dumb.feature:6\n"
+        "  Cenário: Fazer nada               # tests/functional/language_specific_features/pt-br/success/dumb.feature:8\n"
         "    Dado que eu faço nada           # tests/functional/language_specific_features/pt-br/success/dumb_steps.py:6\n"
         "\033[A    Dado que eu faço nada           # tests/functional/language_specific_features/pt-br/success/dumb_steps.py:6\n"
         "\n"
