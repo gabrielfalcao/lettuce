@@ -70,3 +70,33 @@ def test_output_with_success_colorless():
         "1 scenario (1 passed)\n"
         "1 step (1 passed)\n"
     )
+
+@with_setup(prepare_stdout)
+def test_output_of_table_with_success_colorless():
+    "Language: pt-br -> sucess table colorless"
+
+    runner = Runner(join_path('pt-br', 'success', 'table.feature'), verbosity=3)
+    runner.run()
+
+    assert_stdout_lines(
+        "\n"
+        "Funcionalidade: feature burra, com tabela      # tests/functional/language_specific_features/pt-br/success/table.feature:3\n"
+        "  Como um programador                          # tests/functional/language_specific_features/pt-br/success/table.feature:4\n"
+        "  Eu quero testar steps com tabelas            # tests/functional/language_specific_features/pt-br/success/table.feature:5\n"
+        "  Para ver o output em pt-br                   # tests/functional/language_specific_features/pt-br/success/table.feature:6\n"
+        "\n"
+        "  Cenário: Fazer nada, com tabelas :)          # tests/functional/language_specific_features/pt-br/success/table.feature:8\n"
+        "    Dado que eu brinco com os seguintes itens: # tests/functional/language_specific_features/pt-br/success/table_steps.py:6\n"
+        "      | id | description  |\n"
+        "      | 12 | some desc    |\n"
+        "      | 64 | another desc |\n"
+        "\033[A\033[A\033[A\033[A    Dado que eu brinco com os seguintes itens: # tests/functional/language_specific_features/pt-br/success/table_steps.py:6\n"
+        "      | id | description  |\n"
+        "      | 12 | some desc    |\n"
+        "      | 64 | another desc |\n"
+        "\n"
+        "1 feature (1 passed)\n"
+        "1 scenario (1 passed)\n"
+        "1 step (1 passed)\n"
+    )
+
