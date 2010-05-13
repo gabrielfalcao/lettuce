@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
+import codecs
 from copy import deepcopy
 from lettuce import strings
 from lettuce import languages
@@ -622,7 +623,7 @@ class Feature(object):
     @classmethod
     def from_file(new_feature, filename):
         """Creates a new feature from filename"""
-        f = open(filename)
+        f = codecs.open(filename, "r", "utf-8")
         string = f.read()
         f.close()
         language = Language.guess_from_string(string)
