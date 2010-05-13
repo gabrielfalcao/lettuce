@@ -1,6 +1,14 @@
-all: unit functional doctest
+all: check_dependencies unit functional doctest
 
 filename=lettuce-`python -c 'import lettuce;print lettuce.version'`.tar.bz2
+
+check_dependencies:
+	@echo "Checking for dependencies to run tests ..."
+	@python -c 'import mox' 2>/dev/null || echo 'You must install mox to run tests'
+	@python -c 'import mox' 2>/dev/null || exit 3
+	@python -c 'import sphinx' 2>/dev/null || echo 'You must install sphinx to run tests'
+	@python -c 'import sphinx' 2>/dev/null || exit 3
+	
 unit: clean
 	@echo "Running unit tests ..."
 	@nosetests -s --verbosity=2 --with-coverage --cover-erase --cover-inclusive tests/unit/ --cover-package=lettuce
