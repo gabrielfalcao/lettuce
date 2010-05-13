@@ -73,7 +73,7 @@ def test_feature_description():
     "Feature description takes a feature, filename and original string, and keeps " \
     "the relative path for filename, line and description lines"
 
-    string = '''
+    string = u'''
     # lang: en-us
     Feature: FEATURE NAME! #@@$%ˆ&*)(*%$E#
     here comes
