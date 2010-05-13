@@ -74,13 +74,13 @@ def test_language_portuguese():
     'Language: PT-BR -> Language class supports portuguese through code "pt-br"'
     lang = Language('pt-br')
 
-    assert_equals(lang.code, 'pt-br')
-    assert_equals(lang.name, 'Portuguese')
+    assert_equals(lang.code, u'pt-br')
+    assert_equals(lang.name, u'Portuguese')
     assert_equals(lang.native, u'Português')
-    assert_equals(lang.feature, 'Funcionalidade')
+    assert_equals(lang.feature, u'Funcionalidade')
     assert_equals(lang.scenario, u'Cenário|Cenario')
-    assert_equals(lang.examples, 'Exemplos|Cenários')
-    assert_equals(lang.scenario_outline, 'Esquema do Cenário|Esquema do Cenario')
+    assert_equals(lang.examples, u'Exemplos|Cenários')
+    assert_equals(lang.scenario_outline, u'Esquema do Cenário|Esquema do Cenario')
 
 def test_scenario_ptbr_from_string():
     'Language: PT-BR -> Scenario.from_string'
@@ -89,7 +89,7 @@ def test_scenario_ptbr_from_string():
 
     assert_equals(
         scenario.name,
-        'Consolidar o banco de dados de cursos universitários em arquivo texto'
+        u'Consolidar o banco de dados de cursos universitários em arquivo texto'
     )
     assert_equals(
         scenario.steps[0].hashes,
