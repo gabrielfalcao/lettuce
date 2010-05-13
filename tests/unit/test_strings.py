@@ -156,8 +156,8 @@ def test_dicts_to_string():
 
     assert_equals(
         strings.dicts_to_string(dicts, ['name', 'age']),
-        "| name           | age |\n"
-        "| Gabriel Falcão | 22  |\n"
-        "| Laryssa        | 19  |\n"
+        u"| name           | age |\n"
+        u"| Gabriel Falcão | 22  |\n"
+        u"| Laryssa        | 19  |\n"
     )
 
