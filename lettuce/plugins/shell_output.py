@@ -67,7 +67,7 @@ def print_outline(scenario, order, outline, reasons_to_fail):
     wline = lambda x: wrt("%s%s\n" % (" " * scenario.table_indentation, x))
     if order is 0:
         wrt("\n")
-        wrt("%sExamples:\n" % (" " * scenario.indentation))
+        wrt("%s%s:\n" % (" " * scenario.indentation, scenario.language.first_of_examples))
         wline(head)
 
     line = lines[order]

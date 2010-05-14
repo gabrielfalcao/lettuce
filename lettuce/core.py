@@ -313,9 +313,9 @@ class Scenario(object):
     @property
     def max_length(self):
         if self.outlines:
-            prefix = "Scenario Outline:"
+            prefix = self.language.first_of_scenario_outline + ":"
         else:
-            prefix = "Scenario:"
+            prefix = self.language.first_of_scenario + ":"
 
         max_length = len(u"%s %s" % (prefix, self.name)) + self.indentation
 
