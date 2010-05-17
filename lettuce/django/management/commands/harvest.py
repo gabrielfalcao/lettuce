@@ -14,7 +14,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from django.conf import settings
 from django.core.management.base import NoArgsCommand
+from django.test.utils import setup_test_environment
+from django.test.utils import teardown_test_environment
 
 from lettuce import Runner
 from lettuce import registry
@@ -30,6 +33,9 @@ class Command(NoArgsCommand):
         raise SystemExit(int(failed))
 
     def handle_noargs(self, **options):
+        settings.DEBUG = False
+        setup_test_environment()
+
         verbosity = int(options.get('verbosity', 4))
 
         self.server.start()
@@ -45,3 +51,4 @@ class Command(NoArgsCommand):
 
         finally:
             self.server.stop(failed)
+            teardown_test_environment()
