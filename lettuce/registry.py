@@ -75,3 +75,7 @@ CALLBACK_REGISTRY = CallbackDict(
         }
     }
 )
+
+def clear():
+    STEP_REGISTRY.clear()
+    CALLBACK_REGISTRY.clear()
