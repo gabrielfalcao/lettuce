@@ -217,11 +217,17 @@ def print_end(total):
     if total.proposed_definitions:
         wrt("\n\033[0;33mYou can implement step definitions for undefined steps with these snippets:\n\n")
         wrt("from lettuce import step\n\n")
-        for step in total.proposed_definitions:
+
+        last = len(total.proposed_definitions) - 1
+        for current, step in enumerate(total.proposed_definitions):
             method_name = "_".join(re.findall("\w+", step.original_sentence)).lower()
             wrt("@step(r'%s')\n" % re.escape(step.original_sentence).replace(r'\ ', ' '))
             wrt("def %s(step):\n" % method_name)
-            wrt("    pass\033[0m\n")
+            wrt("    pass")
+            if current is last:
+                wrt("\033[0m")
+
+            wrt("\n")
 
 def print_no_features_found(where):
     where = core.fs.relpath(where)
