@@ -45,7 +45,9 @@ def main(args=sys.argv[1:]):
 
     runner = lettuce.Runner(base_path, options.verbosity)
 
-    runner.run()
+    result = runner.run()
+    if result.steps != result.steps_passed:
+        raise SystemExit(1)
 
 if __name__ == '__main__':
     main()
