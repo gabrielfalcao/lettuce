@@ -115,3 +115,5 @@ class Runner(object):
 
         for callback in CALLBACK_REGISTRY['all']['after']:
             callback(total)
+
+        return total
