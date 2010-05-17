@@ -21,7 +21,7 @@ from setuptools import setup
 setup(name='lettuce',
     version=version,
     description='Behaviour Driven Development for python',
-    author=u'Gabriel Falcão',
+    author='Gabriel Falcão',
     author_email='gabriel@nacaolivre.org',
     url='http://github.com/gabrielfalcao/lettuce',
     scripts = ['lettuce/lettuce'],
