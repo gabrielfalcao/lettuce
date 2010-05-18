@@ -49,6 +49,10 @@ class Command(NoArgsCommand):
                 if result.steps != result.steps_passed:
                     failed = True
 
+        except Exception, e:
+            import traceback
+            traceback.print_exc(e)
+
         finally:
             self.server.stop(failed)
             teardown_test_environment()

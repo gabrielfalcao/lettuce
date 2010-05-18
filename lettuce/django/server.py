@@ -42,7 +42,6 @@ class ThreadedServer(threading.Thread):
         httpd.set_app(WSGIHandler())
         httpd.serve_forever()
 
-
 def wait_for_server(address, port):
     url = "http://%s:%d" % (address, port)
     running = False
@@ -51,6 +50,7 @@ def wait_for_server(address, port):
         try:
             urllib.urlopen(url)
             running = True
+
         except IOError:
             pass
 

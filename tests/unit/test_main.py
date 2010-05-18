@@ -17,12 +17,11 @@
 
 import lettuce
 from nose.tools import assert_equals
-from nose.tools import assert_raises
 from mox import Mox
 
 def test_has_version():
     "A nice python module is supposed to have a version"
-    assert_equals(lettuce.version, '0.1rc4')
+    assert_equals(lettuce.version, '0.1rc5')
 
 def test_import():
     "lettuce importer does import"
