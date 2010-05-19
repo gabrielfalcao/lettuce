@@ -125,8 +125,8 @@ def print_end(total):
         wrt("\nYou can implement step definitions for undefined steps with these snippets:\n\n")
         wrt("from lettuce import step\n\n")
         for step in total.proposed_definitions:
-            method_name = "_".join(re.findall("\w+", step.original_sentence)).lower()
-            wrt("@step(r'%s')\n" % re.escape(step.original_sentence).replace(r'\ ', ' '))
+            method_name = step.proposed_method_name
+            wrt("@step(r'%s')\n" % step.proposed_sentence)
             wrt("def %s(step):\n" % method_name)
             wrt("    pass\n")
 

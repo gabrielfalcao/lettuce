@@ -166,6 +166,25 @@ class Step(object):
         self.hashes = list(hashes)
         self.described_at = StepDescription(line, filename)
 
+        self.proposed_method_name, self.proposed_sentence = self.propose_definition()
+
+    def propose_definition(self):
+
+        group_regex = re.compile(r'("[^"]+")')
+        match_groups = group_regex.search(self.original_sentence)
+
+        sentence = unicode(self.original_sentence)
+        method_name = sentence
+        if match_groups:
+            for index, match in enumerate(group_regex.findall(sentence)):
+                sentence = sentence.replace(match, '"(.*)"')
+                method_name = method_name.replace(match, "group%d" % (index + 1))
+        else:
+            sentence = re.escape(sentence).replace(r'\ ', ' ')
+
+        method_name = "_".join(re.findall("\w+", method_name)).lower()
+        return method_name, sentence
+
     def solve_and_clone(self, data):
         sentence = self.sentence
         for k, v in data.items():
