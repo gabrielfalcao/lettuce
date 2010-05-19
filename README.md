@@ -21,6 +21,32 @@ Lettuce is a BDD tool for python, 100% inspired on [cucumber](http://cukes.info/
 6. I love python, and ever did. But I also ever missed something that make writing tests easier and funnier.
 7. I like [nose](http://code.google.com/p/python-nose/), which is a unittest pythonic framework. However, as the project I work on grows, so do the tests, and it becomes harder to understand them.
 
+# Dependencies
+
+* [nose](http://code.google.com/p/python-nose/)
+    > [sudo] pip install nose
+* [mox](http://code.google.com/p/pymox/)
+    > [sudo] pip install mox
+* [sphinx](http://sphinx.pocoo.org/)
+    > [sudo] pip install sphinx
+
+*extra dependencies, specific for those who will* **hack** *lettuce*
+
+* [lxml](http://codespeak.net/lxml/)
+    > [sudo] pip install lxml
+* [django](http://djangoproject.com/)
+    > [sudo] pip install django
+
+# Contributing
+
+1. fork and clone the project
+2. install dependencies
+3. run the tests with make:
+    > make unit functional integration doctest
+4. hack at will
+5. commit, push etc
+6. send a pull request
+
 # Special thanks
 
 1. [Cucumber](http://cukes.info/) crew, for creating such a AWESOME project, and for inspiring [Lettuce](http://lettuce.it/).

@@ -6,10 +6,16 @@ export PYTHONPATH:=  ${PWD}
 
 check_dependencies:
 	@echo "Checking for dependencies to run tests ..."
-	@python -c 'import mox' 2>/dev/null || echo 'You must install mox to run tests'
-	@python -c 'import mox' 2>/dev/null || exit 3
-	@python -c 'import sphinx' 2>/dev/null || echo 'You must install sphinx to run tests'
-	@python -c 'import sphinx' 2>/dev/null || exit 3
+	@python -c "import nose" 2>/dev/null || echo "You must install nose in order to run lettuce's tests"
+	@python -c "import nose" 2>/dev/null || exit 3
+	@python -c "import mox" 2>/dev/null || echo "You must install mox in order to run lettuce's tests"
+	@python -c "import mox" 2>/dev/null || exit 3
+	@python -c "import sphinx" 2>/dev/null || echo "You must install sphinx in order to run lettuce's tests"
+	@python -c "import sphinx" 2>/dev/null || exit 3
+	@python -c "import lxml" 2>/dev/null || echo "You must install lxml in order to run lettuce's tests"
+	@python -c "import lxml" 2>/dev/null || exit 3
+	@python -c "import django" 2>/dev/null || echo "You must install django in order to run lettuce's tests"
+	@python -c "import django" 2>/dev/null || exit 3
 
 unit: clean
 	@echo "Running unit tests ..."
