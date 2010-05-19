@@ -14,6 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from optparse import make_option
 from django.conf import settings
 from django.core.management.base import NoArgsCommand
 from django.test.utils import setup_test_environment
@@ -29,6 +30,11 @@ class Command(NoArgsCommand):
     help = u'Run lettuce tests within each django app'
     server = Server()
 
+    option_list = NoArgsCommand.option_list[1:] + (
+        make_option('-v', '--verbosity', action='store', dest='verbosity', default='4',
+            type='choice', choices=['0', '3', '4'],
+            help='Verbosity level; 0=no output, 3=colorless output, 2=normal output (colorful)'),
+    )
     def stopserver(self, failed=False):
         raise SystemExit(int(failed))
 
