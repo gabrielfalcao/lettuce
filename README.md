@@ -23,15 +23,15 @@ Lettuce is a BDD tool for python, 100% inspired on [cucumber](http://cukes.info/
 
 # Dependencies
 
+**you will need to install these dependencies in order to** *hack* **lettuce** :)
+all them are used within lettuce tests
+
 * [nose](http://code.google.com/p/python-nose/)
     > [sudo] pip install nose
 * [mox](http://code.google.com/p/pymox/)
     > [sudo] pip install mox
 * [sphinx](http://sphinx.pocoo.org/)
     > [sudo] pip install sphinx
-
-*extra dependencies, specific for those who will* **hack** *lettuce*
-
 * [lxml](http://codespeak.net/lxml/)
     > [sudo] pip install lxml
 * [django](http://djangoproject.com/)
@@ -40,7 +40,7 @@ Lettuce is a BDD tool for python, 100% inspired on [cucumber](http://cukes.info/
 # Contributing
 
 1. fork and clone the project
-2. install dependencies
+2. install the dependencies above
 3. run the tests with make:
     > make unit functional integration doctest
 4. hack at will
