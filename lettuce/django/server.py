@@ -22,24 +22,38 @@ from django.core.handlers.wsgi import WSGIHandler
 from django.core.servers.basehttp import WSGIServer
 from django.core.servers.basehttp import WSGIRequestHandler
 
+class StopabbleHandler(object):
+    """WSGI middleware that intercepts HTTP method DELETE at / and
+    kills through StopIteration exception server"""
+
+    def __init__(self, application):
+        self.application = application
+
+    def __call__(self, environ, start_response):
+        if environ['PATH_INFO'] == '/' and environ['REQUEST_METHOD'] == 'DELETE':
+            raise StopIteration
+
+        return self.application(environ, start_response)
+
+class MutedRequestHandler(WSGIRequestHandler):
+    """ A RequestHandler that silences output, in order to don't
+    mess with Lettuce's output"""
+
+    def log_message(self, *args, **kw):
+        pass # do nothing
+
+
 class ThreadedServer(threading.Thread):
     """
     Runs django's builtin in background
     """
     address = '0.0.0.0'
-    port = 8000
-
-    class RequestHandler(WSGIRequestHandler):
-        """ A RequestHandler that silences output, in order to don't
-        mess with Lettuce's output"""
-
-        def log_message(self, *args, **kw):
-            pass # do nothing
+    port = 9000
 
     def run(self):
         server_address = (self.address, self.port)
-        httpd = WSGIServer(server_address, self.RequestHandler)
-        httpd.set_app(WSGIHandler())
+        httpd = WSGIServer(server_address, MutedRequestHandler)
+        httpd.set_app(StopabbleHandler(WSGIHandler()))
         httpd.serve_forever()
 
 def wait_for_server(address, port):
@@ -59,7 +73,7 @@ class Server(object):
     that lettuce can be used with selenium, webdriver, windmill or any
     browser tool"""
 
-    def __init__(self, address='0.0.0.0', port=8000):
+    def __init__(self, address='0.0.0.0', port=9000):
         self.address = unicode(address)
         self.port = int(port)
         self._actual_server = ThreadedServer()
@@ -69,12 +83,8 @@ class Server(object):
         self._actual_server.setDaemon(True)
         self._actual_server.start()
         wait_for_server(self.address, self.port)
+        print "Django's builtin server is running at %s:%d" % (self.address, self.port)
 
     def stop(self, fail=False):
         code = int(fail)
         return sys.exit(code)
-
-
-
-
-
