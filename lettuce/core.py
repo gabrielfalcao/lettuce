@@ -750,7 +750,7 @@ class TotalResult(object):
         self.steps_failed = 0
         self.steps_skipped = 0
         self.steps_undefined= 0
-        self.proposed_definitions = []
+        self._proposed_definitions = []
         self.steps = 0
         for feature_result in self.feature_results:
             for scenario_result in feature_result.scenario_results:
@@ -760,7 +760,19 @@ class TotalResult(object):
                 self.steps_skipped += len(scenario_result.steps_skipped)
                 self.steps_undefined += len(scenario_result.steps_undefined)
                 self.steps += scenario_result.total_steps
-                self.proposed_definitions.extend(scenario_result.steps_undefined)
+                self._proposed_definitions.extend(scenario_result.steps_undefined)
+
+
+    def _filter_proposed_definitions(self):
+        sentences = []
+        for step in self._proposed_definitions:
+            if step.proposed_sentence not in sentences:
+                sentences.append(step.proposed_sentence)
+                yield step
+
+    @property
+    def proposed_definitions(self):
+        return list(self._filter_proposed_definitions())
 
     @property
     def features_ran(self):

@@ -774,3 +774,30 @@ def test_output_snippets_with_groups_within_single_quotes_colorful():
         u'    pass\033[0m\n'
     )
 
+@with_setup(prepare_stdout)
+def test_output_snippets_with_groups_within_redundant_quotes():
+    "Testing that the proposed snippet is clever enough to avoid duplicating the same snippet"
+
+    runner = Runner(feature_name('redundant-steps-quotes'), verbosity=3)
+    runner.run()
+
+    assert_stdout_lines(
+        u'\n'
+        u'Feature: avoid duplicating same snippet                          # tests/functional/output_features/redundant-steps-quotes/redundant-steps-quotes.feature:1\n'
+        u'\n'
+        u'  Scenario: Propose matched groups                               # tests/functional/output_features/redundant-steps-quotes/redundant-steps-quotes.feature:2\n'
+        u'    Given I have "stuff here" and "more @#$%ˆ& bizar sutff h3r3" # tests/functional/output_features/redundant-steps-quotes/redundant-steps-quotes.feature:3 (undefined)\n'
+        u'    Given I have "blablabla" and "12345"                         # tests/functional/output_features/redundant-steps-quotes/redundant-steps-quotes.feature:4 (undefined)\n'
+        u'\n'
+        u'1 feature (0 passed)\n'
+        u'1 scenario (0 passed)\n'
+        u'2 steps (2 undefined, 0 passed)\n'
+        u'\n'
+        u'You can implement step definitions for undefined steps with these snippets:\n'
+        u'\n'
+        u'from lettuce import step\n'
+        u'\n'
+        u'@step(r\'Given I have "(.*)" and "(.*)"\')\n'
+        u'def given_i_have_group1_and_group2(step):\n'
+        u'    pass\n'
+    )
