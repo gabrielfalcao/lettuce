@@ -719,3 +719,58 @@ def test_output_snippets_with_groups_within_double_quotes_colorful():
         u'    pass\033[0m\n'
     )
 
+
+@with_setup(prepare_stdout)
+def test_output_snippets_with_groups_within_single_quotes_colorless():
+    "Testing that the proposed snippet is clever enough to identify groups within single quotes. colorless"
+
+    runner = Runner(feature_name('single-quoted-snippet'), verbosity=3)
+    runner.run()
+
+    assert_stdout_lines(
+        u'\n'
+        u'Feature: single-quoted snippet proposal                          # tests/functional/output_features/single-quoted-snippet/single-quoted-snippet.feature:1\n'
+        u'\n'
+        u'  Scenario: Propose matched groups                               # tests/functional/output_features/single-quoted-snippet/single-quoted-snippet.feature:2\n'
+        u'    Given I have \'stuff here\' and \'more @#$%ˆ& bizar sutff h3r3\' # tests/functional/output_features/single-quoted-snippet/single-quoted-snippet.feature:3 (undefined)\n'
+        u'\n'
+        u'1 feature (0 passed)\n'
+        u'1 scenario (0 passed)\n'
+        u'1 step (1 undefined, 0 passed)\n'
+        u'\n'
+        u'You can implement step definitions for undefined steps with these snippets:\n'
+        u'\n'
+        u'from lettuce import step\n'
+        u'\n'
+        u'@step(r\'Given I have \\\'(.*)\\\' and \\\'(.*)\\\'\')\n'
+        u'def given_i_have_group1_and_group2(step):\n'
+        u'    pass\n'
+    )
+
+@with_setup(prepare_stdout)
+def test_output_snippets_with_groups_within_single_quotes_colorful():
+    "Testing that the proposed snippet is clever enough to identify groups within single quotes. colorful"
+
+    runner = Runner(feature_name('single-quoted-snippet'), verbosity=4)
+    runner.run()
+
+    assert_stdout_lines(
+        u'\n'
+        u'\033[1;37mFeature: single-quoted snippet proposal                          \033[1;30m# tests/functional/output_features/single-quoted-snippet/single-quoted-snippet.feature:1\033[0m\n'
+        u'\n'
+        u'\033[1;37m  Scenario: Propose matched groups                               \033[1;30m# tests/functional/output_features/single-quoted-snippet/single-quoted-snippet.feature:2\033[0m\n'
+        u'\033[0;33m    Given I have \'stuff here\' and \'more @#$%ˆ& bizar sutff h3r3\' \033[1;30m# tests/functional/output_features/single-quoted-snippet/single-quoted-snippet.feature:3\033[0m\n'
+        u'\n'
+        "\033[1;37m1 feature (\033[0;31m0 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m1 scenario (\033[0;31m0 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m1 step (\033[0;33m1 undefined\033[1;37m, \033[1;32m0 passed\033[1;37m)\033[0m\n"
+        u'\n'
+        u'\033[0;33mYou can implement step definitions for undefined steps with these snippets:\n'
+        u'\n'
+        u'from lettuce import step\n'
+        u'\n'
+        u'@step(r\'Given I have \\\'(.*)\\\' and \\\'(.*)\\\'\')\n'
+        u'def given_i_have_group1_and_group2(step):\n'
+        u'    pass\033[0m\n'
+    )
+

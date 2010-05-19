@@ -170,16 +170,28 @@ class Step(object):
 
     def propose_definition(self):
 
-        group_regex = re.compile(r'("[^"]+")')
-        match_groups = group_regex.search(self.original_sentence)
-
         sentence = unicode(self.original_sentence)
         method_name = sentence
-        if match_groups:
-            for index, match in enumerate(group_regex.findall(sentence)):
-                sentence = sentence.replace(match, '"(.*)"')
-                method_name = method_name.replace(match, "group%d" % (index + 1))
-        else:
+
+        groups = [
+            ('"', re.compile(r'("[^"]+")')), # double quotes
+            ("'", re.compile(r"('[^']+')")), # single quotes
+        ]
+
+        matched = False
+        for char, group in groups:
+            match_groups = group.search(self.original_sentence)
+
+            if match_groups:
+                matched = True
+                for index, match in enumerate(group.findall(sentence)):
+                    if char == "'":
+                        char = re.escape(char)
+
+                    sentence = sentence.replace(match, '%s(.*)%s' % (char, char))
+                    method_name = method_name.replace(match, "group%d" % (index + 1))
+
+        if not matched:
             sentence = re.escape(sentence).replace(r'\ ', ' ')
 
         method_name = "_".join(re.findall("\w+", method_name)).lower()
