@@ -1,5 +1,5 @@
 {% extends "!layout.html" %}
-{% set script_files = script_files + [pathto("_static/jquery-1.4.2.min.js", 1)] %}
+
 {%- macro secondnav() %}
   {%- if prev %}
     &laquo; <a href="{{ prev.link|e }}" title="{{ prev.title|e }}">previous</a>
@@ -98,10 +98,4 @@ try {
 var pageTracker = _gat._getTracker("UA-1277640-6");
 pageTracker._trackPageview();
 } catch(err) {}</script>
-
-<script type="text/javascript">
-    $(function(){
-
-    });
-</script>
 {% endblock %}

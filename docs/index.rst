@@ -104,9 +104,9 @@ walkthrough
 
 **tutorials**
 
-    * :ref:`writting your first feature <tutorial-simple>`
-    * :ref:`steps with tables <tutorial-tables>`
-    * :ref:`scenario Outlines <tutorial-scenario-outlines>`
+    * :ref:`write your first feature <tutorial-simple>`
+    * :ref:`handling data with tables <tutorial-tables>`
+    * :ref:`say "no" to repetition, meet scenario outlines <tutorial-scenario-outlines>`
     * :ref:`taking actions before and after tests <tutorial-hooks>`
 
 furthermore
