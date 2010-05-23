@@ -1,4 +1,5 @@
 .. _tutorial-tables:
+.. rubric:: All you need to know, from leaves to root
 
 Handling data with tables
 =========================
@@ -12,7 +13,7 @@ the new state of those.
 It means that as you write tests with lettuce, it can be very useful
 to handle data within steps.
 
-Step tables are here for you:
+Step tables are here for you
 
 .. highlight:: ruby
 
@@ -28,22 +29,16 @@ Step tables are here for you:
          | name     | monthly due | billed |
          | Anton    | $ 500       | no     |
          | Jack     | $ 400       | no     |
-         | John     | $ 540       | no     |
-         | Garrick  | $ 438.11    | no     |
          | Gabriel  | $ 300       | no     |
          | Gloria   | $ 442.65    | no     |
-         | Gaye     | $ 630.22    | no     |
          | Ken      | $ 907.86    | no     |
          | Leonard  | $ 742.84    | no     |
        When I bill names starting with "G"
        Then I see those billed students:
-         | Garrick  | $ 438.11    | yes    |
-         | Gabriel  | $ 300       | yes    |
-         | Gloria   | $ 442.65    | yes    |
-         | Gaye     | $ 630.22    | yes    |
+         | Gabriel  | $ 300       | no     |
+         | Gloria   | $ 442.65    | no     |
        And those that weren't:
          | Anton    | $ 500       | no     |
          | Jack     | $ 400       | no     |
-         | John     | $ 540       | no     |
          | Ken      | $ 907.86    | no     |
          | Leonard  | $ 742.84    | no     |

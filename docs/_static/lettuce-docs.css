@@ -1,6 +1,7 @@
-/*** setup ***/
+@import url(reset-fonts-grids.css);
+
 html, body {background: url(./background.jpg)}
-body { font:14px Helvetica, arial, sans-serif; color:black}
+body {font:14px Helvetica, arial, sans-serif; color:black}
 #custom-doc { width:76.54em;*width:74.69em;min-width:995px; max-width:100em; margin:auto; text-align:left; padding-top:16px; margin-top:0}
 #hd { padding: 4px 0 12px 0}
 #bd { background:#C5D88A}
@@ -171,4 +172,45 @@ div#contents ul ul li { margin-top: 0.3em}
 
 img {
     margin: 10px 0 10px 0;
+}#index p.rubric { font-size:150%; font-weight:normal; margin-bottom:.2em; color:#252; }
+
+#index div.section dt { font-weight: normal; }
+
+#index #lettuce-nutshell, #index #lettuce-getting-involved {
+    background:none repeat scroll 0 0 #F0F7F0;
+    margin: 2em 0 2em 2em;
+
+    border-radius:6px 6px;
+    -webkit-border-radius:6px;
+    -moz-border-radius:6px 6px;
+
+    box-shadow:0 1px 2px rgba(0, 0, 0, 0.6);
+    -webkit-box-shadow:0 1px 2px rgba(0, 0, 0, 0.6);
+    -moz-box-shadow:0 1px 2px rgba(0, 0, 0, 0.6);
+
+    overflow:visible;
+    float:right;
+    clear:both;
+    margin:2em 0 2em 2em;
+    padding:1em;
+    width: 400px;
+}
+#index #lettuce-nutshell, #index #lettuce-getting-involved a {color: #386848}
+#index #lettuce-nutshell, #index #lettuce-getting-involved h1 {color: #333}
+#index #lettuce-nutshell, #index #lettuce-getting-involved h2 { margin: 0; }
+#index #lettuce-nutshell, #index #lettuce-getting-involved strong { font-size: 20px;}
+
+#index #lettuce-getting-involved {
+    padding: 2em 0 2em 6em;
+    background:#FFFFD0;
+    width: 356px;
+}
+#index #lettuce-getting-involved h1 {
+    font-weight: bold;
+    margin: 0;
+}
+#index #lettuce-getting-involved a {
+    font-weight: bold;
+    font-size: 14px;
+    color: #666630;
 }

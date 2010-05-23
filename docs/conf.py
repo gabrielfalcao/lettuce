@@ -1,28 +1,24 @@
 # -*- coding: utf-8 -*-
+# <Lettuce - Behaviour Driven Development for python>
+# Copyright (C) <2010>  Gabriel Falcão <gabriel@nacaolivre.org>
 #
-# Django documentation build configuration file, created by
-# sphinx-quickstart on Thu Mar 27 09:06:53 2008.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
 #
-# This file is execfile()d with the current directory set to its containing dir.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
 #
-# The contents of this file are pickled, so don't put values in the namespace
-# that aren't pickleable (module imports are okay, they're removed automatically).
-#
-# All configuration values have a default value; values that are commented out
-# serve to show the default value.
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
-from os.path import dirname, abspath, join
-# If your extensions are in another directory, add it here.
-_localfile = lambda *x: join(abspath(dirname(__file__)), *x)
-sys.path.append(_localfile("_ext"))
-sys.path.append(_localfile("../"))
+from lettuce import version, release
 
-# General configuration
-# ---------------------
-import lettuce
-# Add any Sphinx extension module names here, as strings. They can be extensions
-# coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
+copyright = u'Gabriel Falcão <gabriel@nacaolivre.org>'
+
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
@@ -30,95 +26,24 @@ extensions = [
     'sphinx.ext.coverage'
 ]
 
-# Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
-
-# The suffix of source filenames.
 source_suffix = '.rst'
-
-# The master toctree document.
 master_doc = 'contents'
-
-# General substitutions.
 project = 'Lettuce'
-copyright = u'Gabriel Falcão <gabriel@nacaolivre.org>'
 
-# The default replacements for |version| and |release|, also used in various
-# other places throughout the built documents.
-#
-# The short X.Y version.
-version = lettuce.version
-# The full version, including alpha/beta/rc tags.
-release = "%s (%s release)" % (version, lettuce.release)
-
-# There are two options for replacing |today|: either, you set today to some
-# non-false value, then it is used:
-#today = ''
-# Else, today_fmt is used as the format for a strftime call.
+release = "%s (%s release)" % (version, release)
 today_fmt = '%B %d, %Y'
 
-# List of documents that shouldn't be included in the build.
-#unused_docs = []
-
-# If true, '()' will be appended to :func: etc. cross-reference text.
 add_function_parentheses = True
-
-# If true, the current module name will be prepended to all description
-# unit titles (such as .. function::).
-add_module_names = False
-
-# If true, sectionauthor and moduleauthor directives will be shown in the
-# output. They are ignored by default.
-show_authors = False
-
-# The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'bw'
-
-# Sphinx will recurse into subversion configuration folders and try to read
-# any document file within. These should be ignored.
-# Note: exclude_dirnames is new in Sphinx 0.5
-exclude_dirnames = ['.git']
-
-# Options for HTML output
-# -----------------------
-
-# The style sheet to use for HTML and HTML Help pages. A file of that name
-# must exist either in Sphinx' static/ path, or in one of the custom paths
-# given in html_static_path.
-html_style = 'default.css'
-
-# Add any paths that contain custom static files (such as style sheets) here,
-# relative to this directory. They are copied after the builtin static files,
-# so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["_static"]
-
-# If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
-# using the given strftime format.
-html_last_updated_fmt = '%b %d, %Y'
-
-# If true, SmartyPants will be used to convert quotes and dashes to
-# typographically correct entities.
+add_module_names = True
+show_authors = True
 html_use_smartypants = True
-
-# HTML translator class for the builder
-html_translator_class = "djangodocs.DjangoHTMLTranslator"
-
-# Content template for the index page.
-#html_index = ''
-
-# Custom sidebar templates, maps document names to template names.
-#html_sidebars = {}
-
-# Additional templates that should be rendered to pages, maps page names to
-# template names.
-html_additional_pages = {}
-
-# If false, no module index is generated.
-#html_use_modindex = True
-
-# If true, the reST sources are included in the HTML build as _sources/<name>.
 html_copy_source = True
-
-# Output file base name for HTML help builder.
-htmlhelp_basename = 'Lettucedoc'
+pygments_style = 'bw'
+exclude_dirnames = ['.git']
+html_style = 'lettuce-docs.css'
+html_static_path = ["_static"]
+html_last_updated_fmt = '%b %d, %Y'
+html_translator_class = "adjusts.LettuceHTMLTranslator"
+html_additional_pages = {}
 
