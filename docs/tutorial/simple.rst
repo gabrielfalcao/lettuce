@@ -1,7 +1,7 @@
 .. _tutorial-simple:
 
-About Lettuce
-=============
+Introduction
+============
 
 Lettuce_ is an extremely useful and charming tool for BDD_ (Behavior
 Driven Development). It can execute plain-text functional descriptions
