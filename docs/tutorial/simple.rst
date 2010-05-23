@@ -63,8 +63,8 @@ First round
 -----------
 
 
-(a) Describe behaviour in English
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[a] describe behaviour
+~~~~~~~~~~~~~~~~~~~~~~
 
 Start describing the expected behaviour of factorial in `zero.feature` using English:
 
@@ -87,8 +87,8 @@ Start describing the expected behaviour of factorial in `zero.feature` using Eng
     zero.feature must be inside features directory and its extension must
     be .feature. However, you're free to choose its name.
 
-(b) Write a step definition in Python
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[b] define steps in python
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Now, let's define the steps of the scenario, so Lettuce acan
 understand the behaviour description. Write `steps.py` file using
@@ -130,7 +130,7 @@ the idea of how to use Lettuce.
 
 **Notice that, until now, we haven't defined the factorial function (it's returning -1).**
 
-(c) Run and watch it fail
+[c] run and watch it fail
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Go to the tests directory and run from the terminal:
@@ -149,8 +149,8 @@ won't be reached:
 Our only scenario failed :(
 Let's solve it...
 
-(d) Write code to make the step pass
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[d] write code to make it pass
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Well, by definition, we know that the factorial of 0 is 1. As our only
 feature is this... we could force factorial to return 1.
@@ -178,7 +178,7 @@ feature is this... we could force factorial to return 1.
     def factorial(number):
         return 1
 
-(e) Run again and watch it pass
+[e] run again and watch it pass
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Again, run from the terminal:
@@ -205,8 +205,8 @@ Second round
 Let's provide more tests so our problem is better described, and so we
 provide a more accurate implementation of factorial:
 
-(a) Describe behaviour in English
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[a] describe behaviour
+~~~~~~~~~~~~~~~~~~~~~~
 
 Let's provide two new scenarios, for numbers 1 and 2:
 
@@ -234,13 +234,13 @@ Let's provide two new scenarios, for numbers 1 and 2:
         When I compute its factorial
         Then I see the number 2
 
-(b) Write a step definition in Python
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[b] define steps in python
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As we haven't changed the definition, no need to make changes on this
 step.
 
-(c) Run and watch it fail
+[c] run and watch it fail
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -256,8 +256,8 @@ fails. :(
 
 .. image:: ./screenshot3.png
 
-(d) Write code to make the step pass
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[d] write code to make it pass
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Let's provide a solution so we get the right factorial for all
 scenarions, specially for number 2:
@@ -289,7 +289,8 @@ scenarions, specially for number 2:
         else:
             return number
 
-(e) Run again and watch it pass
+[e] run again and watch it pass
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. highlight:: bash
 
@@ -307,8 +308,8 @@ Third round
 Let's provide more tests so our problem is better described and we get
 new errors so we'll be able to solve them.
 
-(a) Describe behaviour in English
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[a] describe behaviour
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. highlight:: ruby
 
@@ -344,13 +345,13 @@ new errors so we'll be able to solve them.
         When I compute its factorial
         Then I see the number 24
 
-(b) Write a step definition in Python
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[b] define steps in python
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 As we haven't changed the definition, no need to make changes on this
 step.
 
-(c) Run and watch it fail
+[c] run and watch it fail
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. highlight:: bash
@@ -361,8 +362,8 @@ step.
 
 .. image:: ./screenshot5.png
 
-(d) Write code to make the step pass
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[d] write code to make it pass
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. highlight:: python
 
@@ -391,8 +392,8 @@ step.
         else:
             return number*factorial(number-1)
 
-(e) Run again and see the step pass
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[e] run again and watch it pass
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. highlight:: bash
 
@@ -451,7 +452,7 @@ reducing "copy & paste" work and making your tests more clear.
 .. Note::
 
    If you overwrite zero.feature using the example above, and goto
-   step (e), you'll see your description expanding to the five
+   step [e], you'll see your description expanding to the five
    previous scenarious:
 
 .. image:: ./screenshot7.png
