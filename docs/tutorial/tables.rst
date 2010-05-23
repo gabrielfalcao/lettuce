@@ -43,7 +43,8 @@ Step tables are here for you
 
 In the example above there are 4 steps, in which 3 contains tables.
 
-Let us pretend that we are using Django_ and write a step definition that uses the table
+Let us pretend that we are using Django_ and write a step definition
+that uses the table.
 
 .. highlight:: python
 
@@ -105,3 +106,4 @@ step as this equivalent dict
               },
           ]
 
+.. _Django: http://djangoproject.com/

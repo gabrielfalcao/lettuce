@@ -5,7 +5,7 @@ Lettuce documentation contents
 ==============================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    index
    intro/overview
@@ -23,6 +23,7 @@ Lettuce documentation contents
    reference/languages
    recipes/webdriver
    recipes/nose
+   recipes/django-lxml
 
 Indices, glossary and tables
 ============================

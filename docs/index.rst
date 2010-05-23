@@ -1,4 +1,4 @@
- .. _index:
+.. _index:
 .. rubric:: All you need to know, from leaves to root
 
 nutshell
@@ -51,6 +51,7 @@ nutshell
 **watch it pass**
 
 .. highlight:: bash
+
 ::
 
    user@machine:~/Projects/my-project$ lettuce features/
