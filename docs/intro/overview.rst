@@ -42,24 +42,6 @@ natural language, composing it with one one or more scenarios.
 Each scenario has one possible behaviour of the feature you want to implement.
 To make the scenarios run python code, you define :ref:`steps <reference-steps`.
 
-Comparation with other BDD tools
-================================
-
-Cucumber
-~~~~~~~~
-
-This awesome tool not just inspires Lettuce. Actually, Cucumber_ has
-all Lettuce features, but have a lot of more features. Putting
-bluntly, Lettuce does not have all Cucumber_ features, and don't mean
-to.
-
-Pyccuracy
-~~~~~~~~~
-
-Pyccuracy_ is a BDD tool that works only for web browser
-tests. Pyccuracy also has totally different principles when compared
-with Cucumber, thus
-
 Hands on!
 =========
 
@@ -68,6 +50,5 @@ When you feel a bit comfortable, go to the :ref:`first part of the tutorial <tut
 
 .. _Agile: http://agilemanifesto.org
 .. _Cucumber: http://cukes.info
-.. _Pyccuracy: http://github.com/heynemann/pyccuracy
 .. _TDD: http://en.wikipedia.org/wiki/Test_Driven_Development
 .. _BDD: http://en.wikipedia.org/wiki/Behavior_Driven_Development

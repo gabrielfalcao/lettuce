@@ -1,5 +1,5 @@
  .. _index:
-.. rubric:: All you need to know, from the leaves to the root
+.. rubric:: All you need to know, from leaves to root
 
 nutshell
 ========
@@ -84,46 +84,45 @@ hands on!
 
 Is this your first experience with Lettuce ?!?
 
-So, why not jump all and go straight to the :ref:`quick start <intro-quickstart>` ?!
+So, why not jump all and go straight to the :ref:`quick start tutorial <tutorial-simple>` ?!
 
 introduction
 ============
 
-    * **what is Lettuce, and what it does:**
+**what is Lettuce, and what it does**
 
-      * :ref:`overview <intro-overview>`
-      * :ref:`installation <intro-install>`
-      * :ref:`installation <intro-install>`
+    * :ref:`overview <intro-overview>`
+    * :ref:`installation <intro-install>`
 
 what the feature ?!
 -------------------
 
-      :ref:`understand the terms behind Lettuce <intro-wtf>`
+    * :ref:`understand the terms behind Lettuce <intro-wtf>`
 
 walkthrough
 ===========
 
-    * **tutorial:**
+**tutorials**
 
-      1. :ref:`writting your first feature <tutorial-simple>`
-      2. :ref:`wteps with tables <tutorial-tables>`
-      3. :ref:`scenario Outlines <tutorial-scenario-outlines>`
-      4. :ref:`taking actions before and after tests <tutorial-hooks>`
+    * :ref:`writting your first feature <tutorial-simple>`
+    * :ref:`steps with tables <tutorial-tables>`
+    * :ref:`scenario Outlines <tutorial-scenario-outlines>`
+    * :ref:`taking actions before and after tests <tutorial-hooks>`
 
 furthermore
 ===========
 
-    * **reference and concepts:**
+**reference and concepts**
 
-      * :ref:`features <reference-features>`
-      * :ref:`scenarios <reference-scenarios>`
-      * :ref:`steps <reference-steps>`
-      * :ref:`world <reference-world>`
-      * :ref:`hooks <reference-hooks>`
-      * :ref:`language support <reference-languages>`
+    * :ref:`features, scenarios and steps <reference-features>`
+    * :ref:`world <reference-world>`
+    * :ref:`hooks <reference-hooks>`
+    * :ref:`language support <reference-languages>`
 
 recipes
 =======
 
-    * :ref:`browser testing with webdriver <recipes-webdriver>`
-    * :ref:`best assertions with nose <recipes-nose>`
+**make your own salad**
+
+    * :ref:`nicer assertions with nose <recipes-nose>`
+    * :ref:`testing django with lxml's CSSSelector <recipes-django-lxml>`
