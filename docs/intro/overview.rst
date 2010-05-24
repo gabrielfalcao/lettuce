@@ -40,7 +40,7 @@ Give to developers ability to describe :ref:`features <intro-wtf>` in
 natural language, composing it with one one or more scenarios.
 
 Each scenario has one possible behaviour of the feature you want to implement.
-To make the scenarios run python code, you define :ref:`steps <reference-steps`.
+To make the scenarios run python code, you define :ref:`steps <reference-features>`.
 
 Hands on!
 =========

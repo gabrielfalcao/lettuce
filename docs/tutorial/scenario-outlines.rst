@@ -1,9 +1,7 @@
 .. _tutorial-scenario-outlines:
 
+scenario outlines
 =================
-Scenario Outlines
-=================
-
 
 On our :ref:`first description file<tutorial-simple>`, `zero.feature`, all scenarios were
 similar. This made us repeat most of the text again and again.

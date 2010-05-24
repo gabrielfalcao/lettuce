@@ -1,6 +1,6 @@
 .. _tutorial-simple:
 
-Introduction
+introduction
 ============
 
 Lettuce_ is an extremely useful and charming tool for BDD_ (Behavior
@@ -16,7 +16,7 @@ its development.
 
 .. image:: ./flow.png
 
-Get Lettuce
+get lettuce
 ===========
 
 Make sure you've got Python installed and then run from the terminal:
@@ -27,7 +27,7 @@ Make sure you've got Python installed and then run from the terminal:
 
    user@machine:~$ [sudo] pip install lettuce
 
-Define a problem
+define a problem
 ================
 
 Let's choose a problem to lettuce:
@@ -39,7 +39,7 @@ Let's choose a problem to lettuce:
    product of all positive integers less than or equal to n. The
    factorial of 0 is
 
-Project structure
+project structure
 =================
 
 Build the directory tree bellow such as the files `zero.feature` and `steps.py` are empty.
@@ -54,12 +54,12 @@ Build the directory tree bellow such as the files `zero.feature` and `steps.py` 
                     - zero.feature
                     - steps.py
 
-Lettuce it!
+lettuce it!
 ===========
 
 Lets begin to describe and solve our problem...
 
-First round
+first round
 -----------
 
 
@@ -199,7 +199,7 @@ However, one test is not enough for checking the quality of our
 solution... So let's lettuce it again!
 
 
-Second round
+second round
 ------------
 
 Let's provide more tests so our problem is better described, and so we
@@ -302,7 +302,7 @@ scenarions, specially for number 2:
 
 Great! Three scenarios described and they are alright!
 
-Third round
+third round
 -----------
 
 Let's provide more tests so our problem is better described and we get
@@ -403,7 +403,7 @@ step.
 
 .. image:: ./screenshot6.png
 
-Forth round
+forth round
 -----------
 
 All steps should be repeated as long as you can keep doing them - the

@@ -1,6 +1,6 @@
 .. _tutorial-tables:
 
-Handling data with tables
+handling data with tables
 =========================
 
 Let us put that you are writting a MVC application. Along the tests
