@@ -107,8 +107,7 @@ walkthrough
 
     * :ref:`write your first feature <tutorial-simple>`
     * :ref:`handling data with tables <tutorial-tables>`
-    * :ref:`say "no" to repetition, meet scenario outlines <tutorial-scenario-outlines>`
-    * :ref:`taking actions before and after tests <tutorial-hooks>`
+    * :ref:`don't repeat yourself, meet scenario outlines <tutorial-scenario-outlines>`
 
 furthermore
 ===========
@@ -116,8 +115,7 @@ furthermore
 **reference and concepts**
 
     * :ref:`features, scenarios and steps <reference-features>`
-    * :ref:`world <reference-world>`
-    * :ref:`hooks <reference-hooks>`
+    * :ref:`terrain, world and hooks <reference-terrain>`
     * :ref:`language support <reference-languages>`
 
 recipes

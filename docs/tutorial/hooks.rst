@@ -1,5 +1,0 @@
-.. _tutorial-hooks:
-
-=====
-Hooks
-=====

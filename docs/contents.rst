@@ -14,14 +14,9 @@ Lettuce documentation contents
    tutorial/simple
    tutorial/tables
    tutorial/scenario-outlines
-   tutorial/hooks
    reference/features
-   reference/scenarios
-   reference/steps
-   reference/hooks
-   reference/world
+   reference/terrain
    reference/languages
-   recipes/webdriver
    recipes/nose
    recipes/django-lxml
 
