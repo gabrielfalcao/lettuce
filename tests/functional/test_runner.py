@@ -688,7 +688,7 @@ def test_output_snippets_with_groups_within_double_quotes_colorless():
         u'from lettuce import step\n'
         u'\n'
         u'@step(r\'Given I have "(.*)" and "(.*)"\')\n'
-        u'def given_i_have_group1_and_group2(step):\n'
+        u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    pass\n'
     )
 
@@ -715,7 +715,7 @@ def test_output_snippets_with_groups_within_double_quotes_colorful():
         u'from lettuce import step\n'
         u'\n'
         u'@step(r\'Given I have "(.*)" and "(.*)"\')\n'
-        u'def given_i_have_group1_and_group2(step):\n'
+        u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    pass\033[0m\n'
     )
 
@@ -743,7 +743,7 @@ def test_output_snippets_with_groups_within_single_quotes_colorless():
         u'from lettuce import step\n'
         u'\n'
         u'@step(r\'Given I have \\\'(.*)\\\' and \\\'(.*)\\\'\')\n'
-        u'def given_i_have_group1_and_group2(step):\n'
+        u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    pass\n'
     )
 
@@ -770,7 +770,7 @@ def test_output_snippets_with_groups_within_single_quotes_colorful():
         u'from lettuce import step\n'
         u'\n'
         u'@step(r\'Given I have \\\'(.*)\\\' and \\\'(.*)\\\'\')\n'
-        u'def given_i_have_group1_and_group2(step):\n'
+        u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    pass\033[0m\n'
     )
 
@@ -798,6 +798,6 @@ def test_output_snippets_with_groups_within_redundant_quotes():
         u'from lettuce import step\n'
         u'\n'
         u'@step(r\'Given I have "(.*)" and "(.*)"\')\n'
-        u'def given_i_have_group1_and_group2(step):\n'
+        u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    pass\n'
     )

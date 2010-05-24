@@ -222,7 +222,7 @@ def print_end(total):
         for current, step in enumerate(total.proposed_definitions):
             method_name = step.proposed_method_name
             wrt("@step(r'%s')\n" % step.proposed_sentence)
-            wrt("def %s(step):\n" % method_name)
+            wrt("def %s:\n" % method_name)
             wrt("    pass")
             if current is last:
                 wrt("\033[0m")

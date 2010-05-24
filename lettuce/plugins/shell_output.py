@@ -127,7 +127,7 @@ def print_end(total):
         for step in total.proposed_definitions:
             method_name = step.proposed_method_name
             wrt("@step(r'%s')\n" % step.proposed_sentence)
-            wrt("def %s(step):\n" % method_name)
+            wrt("def %s:\n" % method_name)
             wrt("    pass\n")
 
 def print_no_features_found(where):

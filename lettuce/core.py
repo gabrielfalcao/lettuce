@@ -179,6 +179,7 @@ class Step(object):
         ]
 
         matched = False
+        attribute_names = []
         for char, group in groups:
             match_groups = group.search(self.original_sentence)
 
@@ -189,12 +190,18 @@ class Step(object):
                         char = re.escape(char)
 
                     sentence = sentence.replace(match, '%s(.*)%s' % (char, char))
-                    method_name = method_name.replace(match, "group%d" % (index + 1))
+                    group_name = "group%d" % (index + 1)
+                    method_name = method_name.replace(match, group_name)
+                    attribute_names.append(group_name)
 
         if not matched:
             sentence = re.escape(sentence).replace(r'\ ', ' ')
 
-        method_name = "_".join(re.findall("\w+", method_name)).lower()
+        method_name = '%s(step%s)' % (
+            "_".join(re.findall("\w+", method_name)).lower(),
+            attribute_names and (", %s" % ", ".join(attribute_names)) or ""
+        )
+
         return method_name, sentence
 
     def solve_and_clone(self, data):
