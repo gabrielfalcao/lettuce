@@ -17,6 +17,5 @@
 
 from lettuce.django.apps import harvest_lettuces
 from lettuce.django.server import Server
-from lettuce.django.server import wait_for_server
 
-__all__ = ['harvest_lettuces', 'Server', 'wait_for_server']
+__all__ = ['harvest_lettuces', 'Server']
