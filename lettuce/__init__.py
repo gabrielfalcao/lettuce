@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-version = '0.1rc8'
+version = '0.1rc9'
 release = 'barium'
 
 import os

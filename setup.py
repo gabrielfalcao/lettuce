@@ -27,6 +27,7 @@ setup(name='lettuce',
     scripts = ['lettuce/lettuce'],
     packages=[
           'lettuce',
+          'lettuce.django',
           'lettuce.plugins'
     ]
 )
