@@ -54,5 +54,5 @@ deploy: deploy-documentation
 
 release: clean
 	@printf "Exporting to $(filename)... "
-	@git archive HEAD | bzip2 > $(filename)
+	@tar cjf $(filename) lettuce setup.py README.md COPYING
 	@echo "DONE!"
