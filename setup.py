@@ -16,7 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from lettuce import version
-from setuptools import setup
+from setuptools import setup, find_packages
+
+prefix = lambda name: "lettuce.%s" % name
+get_packages = map(prefix, find_packages('lettuce'))
 
 setup(name='lettuce',
     version=version,
@@ -25,10 +28,6 @@ setup(name='lettuce',
     author_email='gabriel@nacaolivre.org',
     url='http://github.com/gabrielfalcao/lettuce',
     scripts = ['lettuce/lettuce'],
-    packages=[
-          'lettuce',
-          'lettuce.django',
-          'lettuce.plugins'
-    ]
+    packages=get_packages(),
 )
 
