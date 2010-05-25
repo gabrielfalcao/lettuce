@@ -52,7 +52,7 @@ class Command(NoArgsCommand):
                 registry.clear()
                 result = Runner(path, verbosity).run()
 
-                if result.steps != result.steps_passed:
+                if not result or result.steps != result.steps_passed:
                     failed = True
 
         except Exception, e:
