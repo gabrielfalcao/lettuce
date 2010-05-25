@@ -46,4 +46,3 @@ html_static_path = ["_static"]
 html_last_updated_fmt = '%b %d, %Y'
 html_translator_class = "adjusts.LettuceHTMLTranslator"
 html_additional_pages = {}
-
