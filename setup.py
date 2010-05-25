@@ -15,12 +15,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import os
 from lettuce import version
-from setuptools import setup, find_packages
+from setuptools import setup
 
-prefix = lambda name: "lettuce.%s" % name
-get_packages = map(prefix, find_packages('lettuce'))
-
+def get_packages():
+    # setuptools can't do the job :(
+    packages = []
+    for root, dirnames, filenames in os.walk('lettuce'):
+        if '__init__.py' in filenames:
+            packages.append(".".join(os.path.split(root)))
+            
+    return packages
+    
 setup(name='lettuce',
     version=version,
     description='Behaviour Driven Development for python',
@@ -28,6 +35,6 @@ setup(name='lettuce',
     author_email='gabriel@nacaolivre.org',
     url='http://github.com/gabrielfalcao/lettuce',
     scripts = ['lettuce/lettuce'],
-    packages=get_packages(),
+    packages=get_packages()
 )
 
