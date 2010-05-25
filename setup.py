@@ -24,10 +24,11 @@ def get_packages():
     packages = []
     for root, dirnames, filenames in os.walk('lettuce'):
         if '__init__.py' in filenames:
-            packages.append(".".join(os.path.split(root)))
+            packages.append(".".join(os.path.split(root)).strip("."))
             
     return packages
     
+import ipdb;ipdb.set_trace()
 setup(name='lettuce',
     version=version,
     description='Behaviour Driven Development for python',
