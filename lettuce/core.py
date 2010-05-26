@@ -682,12 +682,6 @@ class Feature(object):
 
         parts = strings.split_wisely(joined, scenario_prefix)
 
-        "como um\n"
-        "para blablaa\n"
-        "cenario: asdsad\n"
-        "Dado que ssss\n"
-        "Quando ssss\n"
-
         description = u""
 
         if not re.search("^" + scenario_prefix, joined):
