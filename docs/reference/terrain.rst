@@ -111,6 +111,8 @@ let's see it from outside in
 @before.all
 ^^^^^^^^^^^
 
+this hook is runned before lettuce look for and load feature files
+
 the decorated function takes **NO** parameters
 
 .. highlight:: python
@@ -126,6 +128,9 @@ the decorated function takes **NO** parameters
 
 @after.all
 ^^^^^^^^^^
+
+this hook is runned after lettuce run all features, scenarios and
+steps
 
 the decorated function takes a :ref:`total-result` as parameter, so
 that you can use the result statistics somehow
