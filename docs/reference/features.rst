@@ -107,3 +107,10 @@ then, `Feature.get_head()` would give:
 ::
 
     feature.get_head() == 'Funcionalidade: alguma funcionalidade'
+
+.. _total-result:
+
+TotalResult
+~~~~~~~~~~~
+
+

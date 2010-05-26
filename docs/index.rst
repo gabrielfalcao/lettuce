@@ -103,8 +103,6 @@ what the feature ?!
 walkthrough
 ===========
 
-**tutorials**
-
     * :ref:`write your first feature <tutorial-simple>`
     * :ref:`handling data with tables <tutorial-tables>`
     * :ref:`don't repeat yourself, meet scenario outlines <tutorial-scenario-outlines>`
@@ -114,8 +112,8 @@ furthermore
 
 **reference and concepts**
 
-    * :ref:`features, scenarios and steps <reference-features>`
-    * :ref:`terrain, world and hooks <reference-terrain>`
+    * :ref:`terrain, world and hooks <reference-terrain>`, how to
+      setup a environment for lettuce
     * :ref:`language support <reference-languages>`
 
 recipes
