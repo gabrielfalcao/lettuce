@@ -11,13 +11,6 @@ you stumbled here looking for a introduction, it might be a good idea
 to read :ref:`the feature tutorial <tutorial-simple>` for a
 introduction.
 
-
-Feature
-~~~~~~~
-
-The class `Feature` is at lettuce's core, and after parsed and
-resolved from a feature file, you can use those members:
-
 In order to exemplify the usage of attributes and methods below, let's
 consider that there is a feature in a file called `some.feature`
 
@@ -34,8 +27,37 @@ consider that there is a feature in a file called `some.feature`
       The feature
       Description
 
-      Scenario: ...
-        ...
+      Scenario: try out something
+        Given I show lettuce running
+        Then I should be happy
+
+.. _feature-class:
+Feature
+~~~~~~~
+
+Feature.name
+^^^^^^^^^^^^^^^^^
+
+a string containing the name of the feature
+
+.. highlight:: python
+
+::
+
+    feature.name == 'some feature'
+
+Feature.scenarios
+^^^^^^^^^^^^^^^^^
+
+a list of scenario objects
+
+the attribute `scenarios` could be used as follows
+
+.. highlight:: python
+
+::
+
+    feature.scenarios[0].name == 'try out something'
 
 Feature.described_at
 ^^^^^^^^^^^^^^^^^^^^
@@ -109,8 +131,88 @@ then, `Feature.get_head()` would give:
     feature.get_head() == 'Funcionalidade: alguma funcionalidade'
 
 .. _total-result:
-
 TotalResult
 ~~~~~~~~~~~
 
+TotalResult.features_ran
+^^^^^^^^^^^^^^^^^^^^^^^^
 
+integer, the total of features ran
+
+TotalResult.features_passed
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+integer, the total of features passed
+
+TotalResult.scenarios_ran
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+integer, the total of scenarios ran
+
+TotalResult.scenarios_passed
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+integer, the total of scenarios passed
+
+TotalResult.steps
+^^^^^^^^^^^^^^^^^
+
+integer, the number of steps that were supposed to run
+
+TotalResult.proposed_definitions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+a list of :ref:`step-class` that have no :ref:`step-definition`
+
+.. _scenario-class:
+Scenario
+~~~~~~~~
+
+Scenario.steps
+^^^^^^^^^^^^^^
+
+a list of scenario objects
+
+the attribute `scenarios` could be used as follows
+
+.. highlight:: python
+
+::
+
+    scenario.steps[0].sentence == 'try out something'
+
+.. _step-class:
+Step
+~~~~
+
+Step.sentence
+^^^^^^^^^^^^^
+
+the string that represents the step
+
+.. highlight:: python
+
+::
+
+    step.sentence == 'Given I show lettuce running'
+
+.. _step-definition:
+step definition
+~~~~~~~~~~~~~~~
+
+a decorator that can be used on any python function, takes a regex string as parameter, so that the function can me matched against steps.
+
+
+.. highlight:: python
+
+::
+
+    from lettuce import step
+
+    @step('I am (happy|sad)')
+    def show_lettuce_running_here(step, action):
+        if action == 'happy':
+            return # everything is fine!
+
+        else:
+            assert False, 'you should be happy, dude!'
