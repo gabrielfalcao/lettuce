@@ -1,6 +1,6 @@
 all: check_dependencies unit functional integration doctest
 
-filename=lettuce-`python -c 'import lettuce;print lettuce.version'`.tar.bz2
+filename=lettuce-`python -c 'import lettuce;print lettuce.version'`.tar.gz
 
 export PYTHONPATH:=  ${PWD}
 
@@ -54,5 +54,5 @@ deploy: deploy-documentation
 
 release: clean
 	@printf "Exporting to $(filename)... "
-	@tar cjf $(filename) lettuce setup.py README.md COPYING
+	@tar czf $(filename) lettuce setup.py README.md COPYING
 	@echo "DONE!"
