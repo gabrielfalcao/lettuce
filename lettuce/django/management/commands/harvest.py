@@ -23,12 +23,11 @@ from django.test.utils import teardown_test_environment
 from lettuce import Runner
 from lettuce import registry
 
-from lettuce.django import Server
+from lettuce.django import server
 from lettuce.django import harvest_lettuces
 
 class Command(NoArgsCommand):
     help = u'Run lettuce tests within each django app'
-    server = Server()
 
     option_list = NoArgsCommand.option_list[1:] + (
         make_option('-v', '--verbosity', action='store', dest='verbosity', default='4',
@@ -44,7 +43,7 @@ class Command(NoArgsCommand):
 
         verbosity = int(options.get('verbosity', 4))
 
-        self.server.start()
+        server.start()
 
         failed = False
         try:
@@ -60,5 +59,5 @@ class Command(NoArgsCommand):
             traceback.print_exc(e)
 
         finally:
-            self.server.stop(failed)
+            server.stop(failed)
             teardown_test_environment()

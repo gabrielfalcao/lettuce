@@ -17,6 +17,7 @@
 import os
 import sys
 import httplib
+import urlparse
 import tempfile
 import threading
 
@@ -110,7 +111,7 @@ class Server(object):
     that lettuce can be used with selenium, webdriver, windmill or any
     browser tool"""
 
-    def __init__(self, address='0.0.0.0', port=9000):
+    def __init__(self, address='0.0.0.0', port=8000):
         self.address = unicode(address)
         self.port = int(port)
         self._actual_server = ThreadedServer(self.address, self.port)
@@ -130,3 +131,9 @@ class Server(object):
         http.close()
         code = int(fail)
         return sys.exit(code)
+
+    def url(self, url):
+        return urlparse.urljoin("http://%s:%d" % (self.address, self.port), url)
+
+server = Server()
+django_url = server.url

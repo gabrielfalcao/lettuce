@@ -14,10 +14,11 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+import urllib2
 from lxml import html
 from nose.tools import assert_equals
 from lettuce import world, before, step
+from lettuce.django import django_url
 from django.test.client import Client
 
 @before.all
@@ -26,7 +27,11 @@ def set_client():
 
 @step(r'I navigate to "(.*)"')
 def given_i_navigate_to_group1(step, url):
-    world.dom = html.fromstring(world.browser.get(url).content)
+    url = django_url(url)
+    assert_equals(url, 'http://0.0.0.0:8000/')
+
+    raw = urllib2.urlopen(url).read()
+    world.dom = html.fromstring(raw)
 
 @step(r'I see the title of the page is "(.*)"')
 def then_i_see_the_title_of_the_page_is_group1(step, title):

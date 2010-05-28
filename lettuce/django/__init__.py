@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from lettuce.django.apps import harvest_lettuces
-from lettuce.django.server import Server
+from lettuce.django.server import server
+from lettuce.django.server import django_url
 
-__all__ = ['harvest_lettuces', 'Server']
+__all__ = ['harvest_lettuces', 'server', 'django_url']
