@@ -82,10 +82,17 @@ class ThreadedServer(threading.Thread):
 
         open(pidfile, 'w').write(unicode(os.getpid()))
 
-        server_address = (self.address, self.port)
-        try:
-            httpd = WSGIServer(server_address, MutedRequestHandler)
-        except WSGIServerException:
+        bound = False
+        max_port = 65535
+        while not bound or self.port > max_port:
+            try:
+                server_address = (self.address, self.port)
+                httpd = WSGIServer(server_address, MutedRequestHandler)
+                bound = True
+            except WSGIServerException:
+                self.port += 1
+
+        if not bound:
             raise LettuceServerException(
                 "the port %d already being used, could not start " \
                 "django's builtin server on it" % self.port
