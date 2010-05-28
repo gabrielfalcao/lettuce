@@ -28,7 +28,6 @@ def get_packages():
             
     return packages
     
-import ipdb;ipdb.set_trace()
 setup(name='lettuce',
     version=version,
     description='Behaviour Driven Development for python',
@@ -38,4 +37,3 @@ setup(name='lettuce',
     scripts = ['lettuce/lettuce'],
     packages=get_packages()
 )
-
