@@ -85,7 +85,7 @@ hands on!
 
 Is this your first experience with Lettuce ?!?
 
-So, why not jump all and go straight to the :ref:`quick start tutorial <tutorial-simple>` ?!
+So, why don't you go straight to the :ref:`quick start tutorial <tutorial-simple>` ?!
 
 introduction
 ============

@@ -19,7 +19,8 @@ You can install the latest stable release with pip
 Using control version's HEAD
 ============================
 
-You can use the bleeding edge version of Lettuce through taking the git HEAD.
+Otherwise, if you're a more adventurous developer, you can use the
+bleeding edge version of Lettuce by taking the git HEAD
 
 If you want so, you have basically 2 options:
 

@@ -8,26 +8,25 @@ Unless you are used to Cucumber_ nomenclature, you may be wondering
 about the terms that surround Lettuce concepts.
 
 If this is your case, this introduction will guide you through the
-very basic keywords that concept Lettuce.
-
+very basic keywords that cover Lettuce.
 
 Features
 ========
 
-Since Lettuce is based on the *behaviour* of the project that is being
-designed, you will think on features.
+Since Lettuce is based on the behaviour of the project that is being
+designed, first you need to think about features - the characteristics
+of the system.
 
-After enumerating features, you will create scenarios to describe its
-feature. Thus, scenarios are components of a feature.
+After enumerating features, you need to create scenarios which will
+describe that feature. Thus, scenarios are components of a feature.
 
-Let's learn by example, supposing we want to create a system to manage
-a contact book.
+Let's learn by example: suppose we want to create a system to manage a
+contact book.
 
 OK, one of the very basic feature of a contact book is adding names
-and phones of a person.
+and phones of a contact.
 
-See how this feature could be described with Lettuce above:
-
+This is how Lettuce allows you to describe such feature:
 
 .. highlight:: ruby
 
@@ -89,7 +88,8 @@ In the feature above we can notice a few elements, for instance:
 Scenarios
 =========
 
-One or more scenarios compose a feature. And there are two kinds of scenarios:
+One or more scenarios compose a feature. There are two kinds of
+scenarios:
 
 Simple
 ~~~~~~
@@ -102,10 +102,12 @@ The feature above is composed by two simple scenarios.
 Outlined
 ~~~~~~~~
 
-Outlined scenarios are very handy and avoid repetition.
+Outlined scenarios are very handy because they help you to avoid
+repetition.
 
-Supposing that we need fill the same formulary many times, each time
-with a different data set.
+Suppose that we need to fill the same formulary many times, each time
+with a different data set. This is how it could be done using scenario
+outlines:
 
 Let's see how it could be done with scenario outlines:
 
@@ -130,7 +132,8 @@ Let's see how it could be done with scenario outlines:
         | Lincoln     | lincoln@provider.net | 1987/09/10       |
         | Marcus      | marcus@other.org     | 1990/10/05       |
 
-In a nutshell, the scenario above is equivalent to write this amount of text:
+In a nutshell, the scenario above is equivalent to write the huge code
+bellow
 
 ::
 
@@ -163,8 +166,8 @@ In a nutshell, the scenario above is equivalent to write this amount of text:
         Fill the field "birthday" with "1990/10/05"
         Click on "confirm attendance" button
 
-As you can notice, scenario outlines are really useful and help you to
-avoid repetition of text and code.
+As you can notice, scenario outlines are very useful and help you on
+avoiding text and code repetition
 
 Steps and its definitions
 =========================
@@ -174,14 +177,14 @@ Comparable with Scenarios, Steps comes in two kinds:
 Simple steps
 ~~~~~~~~~~~~
 
-Simple steps are actually simple, they are matched with step
-definitions.
+Simple steps are actually simple and they are related to the step
+definitions inside the scenarios.
 
-Lettuce considers each line of a scenario as a simple step, the only
+Lettuce considers each line of a scenario as a simple step. The only
 exception is if the first non-blank character of the line is a pipe
-``|``, in this case Lettuce will consider the step as a tabular step.
+``|``. In this case, Lettuce will consider the step as a tabular step.
 
-In a nutshell, a simple step may look like this::
+For instance, a simple step may look like this::
 
     Given I go to the conference website
 
@@ -191,11 +194,11 @@ Tabular steps
 Analog to Outlined Scenarios, the tabular steps are very useful, and
 avoid repetition of text.
 
-Tabular steps are specially useful to set up some data set in aa
-scenario, or compare a set of data to results at the end of the
-scenario.
+Tabular steps are specially useful to set up some data set in a
+scenario, or to compare a set of data to the expected results in the
+end of the scenario.
 
-But nothing avoid you to use at your will.
+However, feel free to use this whenever you find it useful.
 
 Example::
 

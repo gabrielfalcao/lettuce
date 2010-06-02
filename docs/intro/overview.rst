@@ -7,17 +7,24 @@ Overview
 On BDD
 ======
 
-Behaviour-driven development is such a good approach to maintain a
-plain workflow, wasting the time with what really matter: *business
-value*.
+Behaviour-driven development is a very good approach for maintaining
+the workflow plain, so you only spend time with what really matters:
+business value.
 
-The common TDD_ approach, consists basically in writing unit tests,
-run, make it fail, write code, make it run, make it green. This is
-such a awesome practice, since you can build really trustable code,
-without wondering what can happen in the future of the project, thus
-creating a huge amount of code that doesn't make sense.  Aditionally,
-next steps use to be: do the same thing with functional, integration
-and acceptance tests.
+The common BDD approach basically consists in:
+
+1. writing some unit tests
+2. running these tests
+3. making these tests fail
+4. writing code
+5. making the code pass these tests (green status)
+
+This is a very awesome practice, since you can build huge and reliable
+software without fearing the future. You don't need to worry if those
+millions of lines of code won't make sense in 10 years, as long as
+they keep passing the tests. Despite BDD, other kind of tests are very
+important and usually follow a similar workflow: functional,
+integration and acceptance.
 
 Nevertheless, BDD_ brings new perspectives to you, one of them is the
 outside-in testing development. With this approach you can build your
@@ -27,20 +34,19 @@ reach unitary tests.
 Introducing Lettuce
 ===================
 
-Lettuce is a quite simple tool, it is mostly based on Cucumber_, which
-is a honking great tool, and has a lot more features than Lettuce.
+Lettuce is a very simple BDD tool based on the Cucumber, which
+currently has many more features than Lettuce.
 
-Although Lettuce aims on the most usual tasks on BDD_, specially
-focusing on those that make BDD_ be so fun :)
+Lettuce aims the most common tasks on BDD and it focus specially on
+those that make BDD so fun :)
 
 Lettuce pragma
 ==============
 
-Give to developers ability to describe :ref:`features <intro-wtf>` in
-natural language, composing it with one one or more scenarios.
+Provide to the developers the ability of describing :ref:`features <intro-wtf>` in a natural language, by creating one or more scenarios
 
 Each scenario has one possible behaviour of the feature you want to implement.
-To make the scenarios run python code, you define :ref:`steps <reference-features>`.
+To make the scenarios run python code, it is necessary to define :ref:`steps <reference-features>`.
 
 Hands on!
 =========
