@@ -13,11 +13,11 @@ business value.
 
 The common BDD approach basically consists in:
 
-1. writing some unit tests
-2. running these tests
-3. making these tests fail
-4. writing code
-5. making the code pass these tests (green status)
+* writing some unit tests
+* running these tests
+* making these tests fail
+* writing code
+* making the code pass these tests (green status)
 
 This is a very awesome practice, since you can build huge and reliable
 software without fearing the future. You don't need to worry if those

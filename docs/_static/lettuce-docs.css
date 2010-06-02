@@ -214,3 +214,7 @@ img {
     font-size: 14px;
     color: #666630;
 }
+
+tt.py-exc.literal {
+    color: red;
+}

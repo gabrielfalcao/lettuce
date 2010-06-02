@@ -56,7 +56,6 @@ nutshell
 
    user@machine:~/Projects/my-project$ lettuce features/
 
-
 getting involved !
 ==================
 
@@ -85,7 +84,8 @@ hands on!
 
 Is this your first experience with Lettuce ?!?
 
-So, why don't you go straight to the :ref:`quick start tutorial <tutorial-simple>` ?!
+So, why don't you go straight to the :ref:`quick start tutorial
+<tutorial-simple>` ?!
 
 introduction
 ============
@@ -122,4 +122,4 @@ recipes
 **make your own salad**
 
     * :ref:`nicer assertions with nose <recipes-nose>`
-    * :ref:`testing django with lxml's CSSSelector <recipes-django-lxml>`
+    * :ref:`testing django with lxml's CSSSelector <recipes-django-lxml>`, putting all examples together
