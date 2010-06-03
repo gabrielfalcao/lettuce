@@ -34,4 +34,13 @@ LANGUAGES = {
         'scenario_outline': u'Esquema do Cenário|Esquema do Cenario',
         'scenario_separator': u'(Esquema do Cenário|Esquema do Cenario|Cenario|Cenário)',
     },
+    'pl': {
+        'examples': u'Przykład',
+        'feature': u'Właściwość',
+        'name': u'Polish',
+        'native': u'Polski',
+        'scenario': u'Scenariusz',
+        'scenario_outline': u'Zarys Scenariusza',
+        'scenario_separator': u'(Zarys Scenariusza|Scenariusz)',
+    },
 }
