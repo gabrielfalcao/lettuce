@@ -23,7 +23,7 @@ from lettuce.terrain import after
 from lettuce.terrain import before
 
 def wrt(what):
-    sys.stdout.write(what)
+    sys.stdout.write(unicode(what))
 
 
 def wrap_file_and_line(string, start, end):

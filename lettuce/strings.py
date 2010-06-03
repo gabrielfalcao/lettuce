@@ -19,14 +19,14 @@ import re
 def escape_if_necessary(what):
     what = unicode(what)
     if len(what) is 1:
-        what = "[%s]" % what
+        what = u"[%s]" % what
 
     return what
 
 def get_stripped_lines(string):
     string = unicode(string)
-    lines = [l.strip() for l in string.splitlines()]
-    return [l for l in lines if l]
+    lines = [unicode(l.strip()) for l in string.splitlines()]
+    return filter(lambda x:x, lines)
 
 def split_wisely(string, sep, strip=False):
     string = unicode(string)
@@ -40,7 +40,7 @@ def split_wisely(string, sep, strip=False):
     else:
         items = [i.strip("\n") for i in items]
 
-    return [i for i in items if i]
+    return [unicode(i) for i in items if i]
 
 def wise_startswith(string, seed):
     string = unicode(string)
@@ -49,7 +49,7 @@ def wise_startswith(string, seed):
     return bool(re.search(regex, string, re.I))
 
 def remove_it(string, what):
-    return re.sub(what, "", string).strip()
+    return unicode(re.sub(unicode(what), "", unicode(string)).strip())
 
 def rfill(string, times, char=u" ", append=u""):
     string = unicode(string)
@@ -57,14 +57,13 @@ def rfill(string, times, char=u" ", append=u""):
     for x in range(missing):
         string += char
 
-    return string + append
+    return unicode(string) + unicode(append)
 
 def getlen(string):
     return len(string) + 1
 
 def dicts_to_string(dicts, order):
     keys_and_sizes = dict([(k, getlen(k)) for k in dicts[0].keys()])
-
     for key in keys_and_sizes:
         for data in dicts:
             current_size = keys_and_sizes[key]
@@ -73,21 +72,20 @@ def dicts_to_string(dicts, order):
             if size > current_size:
                 keys_and_sizes[key] = size
 
-
     names = []
     for key in order:
         size = keys_and_sizes[key]
-        name = " %s" % rfill(key, size)
+        name = u" %s" % rfill(key, size)
         names.append(name)
 
-    table = ["|%s|" % "|".join(names)]
+    table = [u"|%s|" % "|".join(names)]
     for data in dicts:
         names = []
         for key in order:
             value = data[key]
             size = keys_and_sizes[key]
-            names.append( " %s" % rfill(unicode(value), size))
+            names.append(u" %s" % rfill(unicode(value), size))
 
-        table.append("|%s|" % "|".join(names))
+        table.append(u"|%s|" % "|".join(names))
 
-    return "\n".join(table) + "\n"
+    return u"\n".join(table) + u"\n"

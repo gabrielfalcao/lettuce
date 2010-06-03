@@ -53,10 +53,12 @@ class Language(object):
     scenario_outline = 'Scenario Outline'
     scenario_separator = 'Scenario( Outline)?'
     def __init__(self, code=u'en'):
-
         self.code = code
         for attr, value in languages.LANGUAGES[code].items():
-            setattr(self, attr, value)
+            setattr(self, attr, unicode(value))
+
+    def __repr__(self):
+        return '<Language "%s">' % self.code
 
     def __getattr__(self, attr):
         if not attr.startswith(u"first_of_"):
@@ -189,8 +191,8 @@ class Step(object):
                     if char == "'":
                         char = re.escape(char)
 
-                    sentence = sentence.replace(match, '%s(.*)%s' % (char, char))
-                    group_name = "group%d" % (index + 1)
+                    sentence = sentence.replace(match, u'%s(.*)%s' % (char, char))
+                    group_name = u"group%d" % (index + 1)
                     method_name = method_name.replace(match, group_name)
                     attribute_names.append(group_name)
 
@@ -207,7 +209,7 @@ class Step(object):
     def solve_and_clone(self, data):
         sentence = self.sentence
         for k, v in data.items():
-            sentence = sentence.replace(u'<%s>' % k, v)
+            sentence = sentence.replace(u'<%s>' % unicode(k), unicode(v))
 
         new = deepcopy(self)
         new.sentence = sentence
@@ -255,7 +257,7 @@ class Step(object):
 
     def represent_hashes(self):
         lines = strings.dicts_to_string(self.hashes, self.keys).splitlines()
-        return "\n".join([(u" " * self.table_indentation) + line for line in lines]) + "\n"
+        return u"\n".join([(u" " * self.table_indentation) + line for line in lines]) + "\n"
 
     def __repr__(self):
         return u'<Step: "%s">' % self.sentence
@@ -450,7 +452,6 @@ class Scenario(object):
             skip = lambda x: x not in steps_passed and x not in steps_undefined and x not in steps_failed
 
             steps_skipped = filter(skip, all_steps)
-
             if outline:
                 for callback in CALLBACK_REGISTRY['scenario']['outline']:
                     callback(self, order, outline, reasons_to_fail)
@@ -507,7 +508,7 @@ class Scenario(object):
         self.described_at = definition
 
     def represented(self):
-        make_prefix = lambda x: "%s%s: " % (u' ' * self.indentation, x)
+        make_prefix = lambda x: u"%s%s: " % (u' ' * self.indentation, x)
         if self.outlines:
             prefix = make_prefix(self.language.first_of_scenario_outline)
         else:
@@ -529,7 +530,6 @@ class Scenario(object):
             language = Language()
 
         splitted = strings.split_wisely(string, u"(%s):" % language.examples, True)
-
         string = splitted[0]
         keys = []
         outlines = []
@@ -540,18 +540,18 @@ class Scenario(object):
         lines = strings.get_stripped_lines(string)
         scenario_line = lines.pop(0)
 
-        line = strings.remove_it(scenario_line,
-                                 "(%s): " % language.scenario_outline)
-        line = strings.remove_it(line,
-                                 "(%s): " % language.scenario)
+        for repl in (language.scenario_outline, language.scenario):
+            scenario_line = strings.remove_it(scenario_line, u"(%s): " % repl)
 
-        scenario =  new_scenario(name=line,
-                                 remaining_lines=lines,
-                                 keys=keys,
-                                 outlines=outlines,
-                                 with_file=with_file,
-                                 original_string=original_string,
-                                 language=language)
+        scenario = new_scenario(
+            name=scenario_line,
+            remaining_lines=lines,
+            keys=keys,
+            outlines=outlines,
+            with_file=with_file,
+            original_string=original_string,
+            language=language
+        )
 
         return scenario
 
@@ -606,7 +606,7 @@ class Feature(object):
         return u'<%s: "%s">' % (self.language.first_of_feature, self.name)
 
     def get_head(self):
-        return "%s: %s" % (self.language.first_of_feature, self.name)
+        return u"%s: %s" % (self.language.first_of_feature, self.name)
 
     def represented(self):
         length = self.max_length + 1
@@ -623,7 +623,6 @@ class Feature(object):
     def from_string(new_feature, string, with_file=None, language=None):
         """Creates a new feature from string"""
         lines = strings.get_stripped_lines(string)
-
         if not language:
             language = Language()
 
@@ -643,7 +642,6 @@ class Feature(object):
 
 
         while lines:
-
             matched = re.search(r'%s:(.*)' % language.feature, lines[0], re.I)
             if matched:
                 name = matched.groups()[0].strip()

@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import re
+
 import os
 import sys
 from lettuce import core
@@ -23,7 +23,7 @@ from lettuce.terrain import after
 from lettuce.terrain import before
 
 def wrt(what):
-    sys.stdout.write(what)
+    sys.stdout.write(unicode(what))
 
 @before.each_step
 def print_step_running(step):
