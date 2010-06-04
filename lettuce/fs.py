@@ -54,9 +54,11 @@ class FileSystem(object):
         self.stack = []
 
     @classmethod
-    def pushd(cls, path):
+    def pushd(cls, *path):
         """Change current dir to `path`, adding it to a stack. Can be
         undone by calling FileSystem.popd()"""
+
+        path = cls.join(*path)
         if not len(cls.stack):
             cls.stack.append(cls.current_dir())
 
@@ -144,7 +146,7 @@ class FileSystem(object):
     @classmethod
     def dirname(cls, path):
         '''Returns the directory name for the given file.'''
-        return dirname(path)
+        return cls.abspath(dirname(path))
 
     @classmethod
     def walk(cls, path):

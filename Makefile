@@ -19,15 +19,15 @@ check_dependencies:
 
 unit: clean
 	@echo "Running unit tests ..."
-	@nosetests -s --verbosity=2 --with-coverage --cover-erase --cover-inclusive tests/unit/ --cover-package=lettuce
+	@nosetests -s --verbosity=2 --with-coverage --cover-erase --cover-inclusive tests/unit --cover-package=lettuce
 
 functional: clean
 	@echo "Running functional tests ..."
-	@nosetests -s --verbosity=2 --with-coverage --cover-erase --cover-inclusive tests/functional/ --cover-package=lettuce
+	@nosetests -s --verbosity=2 --with-coverage --cover-erase --cover-inclusive tests/functional --cover-package=lettuce
 
 integration: clean
 	@echo "Running integration tests ..."
-	@cd tests/integration && make
+	@nosetests -s --verbosity=2 tests/integration
 
 doctest: clean
 	@cd docs && make doctest

@@ -15,19 +15,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
-import sys
 import lettuce
 
 from StringIO import StringIO
-
 from os.path import dirname, abspath, join
 from nose.tools import assert_equals, with_setup, assert_raises
-
-from lettuce import Runner, CALLBACK_REGISTRY, STEP_REGISTRY
-
 from lettuce.fs import FeatureLoader
 from lettuce.core import Feature, fs, StepDefinition
 from lettuce.terrain import world
+from lettuce import Runner
+
+from tests.asserts import assert_lines
+from tests.asserts import assert_stderr
+from tests.asserts import prepare_stderr
+from tests.asserts import prepare_stdout
+from tests.asserts import assert_stderr_lines
+from tests.asserts import assert_stdout_lines
 
 current_dir = abspath(dirname(__file__))
 lettuce_dir = abspath(dirname(lettuce.__file__))
@@ -36,47 +39,6 @@ sjoin = lambda *x: join(current_dir, 'syntax_features', *x)
 lettuce_path = lambda *x: abspath(join(lettuce_dir, *x))
 
 call_line = StepDefinition.__call__.im_func.func_code.co_firstlineno + 5
-
-def prepare_stdout():
-    CALLBACK_REGISTRY.clear()
-
-    if isinstance(sys.stdout, StringIO):
-        del sys.stdout
-
-    std = StringIO()
-    sys.stdout = std
-
-def assert_stdout(expected):
-    string = sys.stdout.getvalue()
-    assert_equals(string, expected)
-
-def prepare_stderr():
-    CALLBACK_REGISTRY.clear()
-    STEP_REGISTRY.clear()
-    if isinstance(sys.stderr, StringIO):
-        del sys.stderr
-
-    std = StringIO()
-    sys.stderr = std
-
-def assert_stderr(expected):
-    string = sys.stderr.getvalue()
-    assert_equals(string, expected)
-
-def assert_lines(one, other):
-    lines_one = one.splitlines()
-    lines_other = other.splitlines()
-
-    for line1, line2 in zip(lines_one, lines_other):
-        assert_equals(line1, line2)
-
-    assert_equals(len(lines_one), len(lines_other))
-
-def assert_stdout_lines(other):
-    assert_lines(sys.stdout.getvalue(), other)
-
-def assert_stderr_lines(other):
-    assert_lines(sys.stderr.getvalue(), other)
 
 def feature_name(name):
     return join(abspath(dirname(__file__)), 'output_features', name, "%s.feature" % name)
