@@ -3,19 +3,13 @@ all: check_dependencies unit functional integration doctest
 filename=lettuce-`python -c 'import lettuce;print lettuce.version'`.tar.gz
 
 export PYTHONPATH:=  ${PWD}
+export LETTUCE_DEPENDENCIES:= nose mox sphinx lxml django
 
 check_dependencies:
 	@echo "Checking for dependencies to run tests ..."
-	@python -c "import nose" 2>/dev/null || echo "You must install nose in order to run lettuce's tests"
-	@python -c "import nose" 2>/dev/null || exit 3
-	@python -c "import mox" 2>/dev/null || echo "You must install mox in order to run lettuce's tests"
-	@python -c "import mox" 2>/dev/null || exit 3
-	@python -c "import sphinx" 2>/dev/null || echo "You must install sphinx in order to run lettuce's tests"
-	@python -c "import sphinx" 2>/dev/null || exit 3
-	@python -c "import lxml" 2>/dev/null || echo "You must install lxml in order to run lettuce's tests"
-	@python -c "import lxml" 2>/dev/null || exit 3
-	@python -c "import django" 2>/dev/null || echo "You must install django in order to run lettuce's tests"
-	@python -c "import django" 2>/dev/null || exit 3
+	@for dependency in `echo $$LETTUCE_DEPENDENCIES`; do \
+		python -c "import $$dependency" 2>/dev/null || (echo "You must install $$dependency in order to run lettuce's tests" && exit 3) ; \
+		done
 
 unit: clean
 	@echo "Running unit tests ..."
