@@ -122,4 +122,3 @@ recipes
 **make your own salad**
 
     * :ref:`nicer assertions with nose <recipes-nose>`
-    * :ref:`testing django with lxml's CSSSelector <recipes-django-lxml>`, putting all examples together
