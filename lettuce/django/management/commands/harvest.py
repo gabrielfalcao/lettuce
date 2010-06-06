@@ -32,7 +32,7 @@ class Command(NoArgsCommand):
     option_list = NoArgsCommand.option_list[1:] + (
         make_option('-v', '--verbosity', action='store', dest='verbosity', default='4',
             type='choice', choices=['0', '3', '4'],
-            help='Verbosity level; 0=no output, 3=colorless output, 2=normal output (colorful)'),
+            help='Verbosity level; 0=no output, 3=colorless output, 4=normal output (colorful)'),
     )
     def stopserver(self, failed=False):
         raise SystemExit(int(failed))
