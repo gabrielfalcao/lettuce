@@ -100,7 +100,7 @@ def test_wise_startswith_ignores_case():
 def test_remove_it_accepts_regex_to_remove_all_from_string():
     "strings.remove_it accepts regex and remove all matches from string"
     assert_equals(
-        strings.remove_it("Gabriel Falcão", "[aã]"),
+        strings.remove_it(u"Gabriel Falcão", u"[aã]"),
         "Gbriel Flco"
     )
 
