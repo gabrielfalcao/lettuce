@@ -38,6 +38,8 @@ english example
 brazillian portuguese example
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+.. highlight:: ruby
+
 ::
 
     # language: pt-br

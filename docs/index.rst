@@ -107,6 +107,11 @@ walkthrough
     * :ref:`handling data with tables <tutorial-tables>`
     * :ref:`don't repeat yourself, meet scenario outlines <tutorial-scenario-outlines>`
 
+integrate!
+==========
+
+    * :ref:`Lettuce and Django <recipes-django-lxml>`, for the sake of web development fun
+
 furthermore
 ===========
 

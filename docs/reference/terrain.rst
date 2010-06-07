@@ -6,6 +6,8 @@ the "terrain"
 terrain is a "pun" with lettuce and its "living place", its about
 setup and teardown, and general hacking on your lettuce tests.
 
+.. _terrain-py:
+
 terrain.py
 ~~~~~~~~~~
 
