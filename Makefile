@@ -31,7 +31,7 @@ documentation:
 
 clean:
 	@printf "Cleaning up files that are already in .gitignore... "
-	@for pattern in `cat .gitignore`; do rm -rf $$pattern; find . -name "$$pattern" -exec rm -rf {} \;; done
+	@for pattern in `cat .gitignore`; do rm -rf $$pattern; done
 	@echo "OK!"
 
 withdraw-documentation:
