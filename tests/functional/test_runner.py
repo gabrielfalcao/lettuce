@@ -36,7 +36,7 @@ current_dir = abspath(dirname(__file__))
 lettuce_dir = abspath(dirname(lettuce.__file__))
 ojoin = lambda *x: join(current_dir, 'output_features', *x)
 sjoin = lambda *x: join(current_dir, 'syntax_features', *x)
-lettuce_path = lambda *x: abspath(join(lettuce_dir, *x))
+lettuce_path = lambda *x: fs.relpath(join(lettuce_dir, *x))
 
 call_line = StepDefinition.__call__.im_func.func_code.co_firstlineno + 5
 
@@ -388,7 +388,7 @@ def test_output_with_failed_colorless_with_table():
         "def and_this_one_does_not_even_has_definition(step):\n"
         "    pass\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
-            'step_file': lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py'),
+            'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')),
             'call_line':call_line,
         }
     )
@@ -434,7 +434,7 @@ def test_output_with_failed_colorful_with_table():
         "    pass\033[0m"
         "\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
-            'step_file': lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py'),
+            'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')),
             'call_line':call_line,
         }
     )
@@ -549,7 +549,7 @@ def test_output_with_failful_outline_colorless():
         '3 scenarios (2 passed)\n'
         '24 steps (1 failed, 4 skipped, 19 passed)\n' % {
             'lettuce_core_file': lettuce_path('core.py'),
-            'step_file': lettuce_path('..', 'tests', 'functional', 'output_features', 'fail_outline', 'fail_outline_steps.py'),
+            'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'fail_outline', 'fail_outline_steps.py')),
             'call_line':call_line,
         }
     )
@@ -594,7 +594,7 @@ def test_output_with_failful_outline_colorful():
         "\033[1;37m3 scenarios (\033[1;32m2 passed\033[1;37m)\033[0m\n" \
         "\033[1;37m24 steps (\033[0;31m1 failed\033[1;37m, \033[0;36m4 skipped\033[1;37m, \033[1;32m19 passed\033[1;37m)\033[0m\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
-            'step_file': lettuce_path('..', 'tests', 'functional', 'output_features', 'fail_outline', 'fail_outline_steps.py'),
+            'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'fail_outline', 'fail_outline_steps.py')),
             'call_line':call_line,
         }
     )
