@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import sys
+import time
+import socket
 import httplib
 import urlparse
 import tempfile
@@ -64,12 +66,21 @@ class ThreadedServer(threading.Thread):
         self.port = port
 
     def wait(self):
+        while True:
+            time.sleep(0.1)
+            http = httplib.HTTPConnection(self.address, self.port)
+            try:
+                http.request("GET", "/")
+            except socket.error:
+                http.close()
+                continue
+            break
+
         self.lock.acquire()
 
     def run(self):
         self.lock.acquire()
         pidfile = os.path.join(tempfile.gettempdir(), 'lettuce-django.pid')
-
         if os.path.exists(pidfile):
             pid = int(open(pidfile).read())
             try:
@@ -100,11 +111,12 @@ class ThreadedServer(threading.Thread):
             )
 
         httpd.set_app(StopabbleHandler(WSGIHandler()))
-        self.lock.release()
 
         global keep_running
         while keep_running:
             httpd.handle_request()
+            if self.lock.locked():
+                self.lock.release()
 
 class Server(object):
     """A silenced, lightweight and simple django's builtin server so
@@ -126,11 +138,15 @@ class Server(object):
 
     def stop(self, fail=False):
         http = httplib.HTTPConnection(self.address, self.port)
-        http.request("DELETE", "/")
-        http.getresponse().read()
-        http.close()
-        code = int(fail)
-        return sys.exit(code)
+        try:
+            http.request("DELETE", "/")
+            http.getresponse().read()
+        except socket.error:
+            pass
+        finally:
+            http.close()
+            code = int(fail)
+            return sys.exit(code)
 
     def url(self, url):
         return urlparse.urljoin("http://%s:%d" % (self.address, self.port), url)
