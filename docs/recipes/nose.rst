@@ -6,7 +6,7 @@ Lettuce recipe: Using nose for pretty assertions
 lettuce uses python's builtin exception :exc:`AssertionError` to mark
 tests as failed.
 
-althrogh in order to describe the assertion with a custom string you
+although in order to describe the assertion with a custom string you
 would need to do something like:
 
 .. highlight:: python

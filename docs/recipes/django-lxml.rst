@@ -6,7 +6,7 @@ Web development fun with Lettuce and Django
 Django_ is a awesome web framework, very mature, aims on simplicity
 and the best of all: it's funny to use it.
 
-To make it even funny, lettuce has builtin support to Django.
+To make it even funnier, lettuce has builtin support to Django.
 
 Getting started
 ~~~~~~~~~~~~~~~
