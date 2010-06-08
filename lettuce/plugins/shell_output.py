@@ -23,7 +23,7 @@ from lettuce.terrain import after
 from lettuce.terrain import before
 
 def wrt(what):
-    sys.stdout.write(unicode(what))
+    sys.stdout.write(what.encode('utf-8'))
 
 @before.each_step
 def print_step_running(step):

@@ -14,39 +14,15 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import sys
-
-from StringIO import StringIO
-
 from os.path import dirname, abspath, join
-from nose.tools import assert_equals, with_setup
+from nose.tools import with_setup
+from tests.asserts import prepare_stdout
+from tests.asserts import assert_stdout_lines
 
-from lettuce import Runner, CALLBACK_REGISTRY
+from lettuce import Runner
 
 current_dir = abspath(dirname(__file__))
 join_path = lambda *x: join(current_dir, *x)
-
-def prepare_stdout():
-    CALLBACK_REGISTRY.clear()
-
-    if isinstance(sys.stdout, StringIO):
-        del sys.stdout
-
-    std = StringIO()
-    sys.stdout = std
-
-def assert_lines(one, other):
-    lines_one = one.splitlines()
-    lines_other = other.splitlines()
-
-    for line1, line2 in zip(lines_one, lines_other):
-        assert_equals(line1, line2)
-
-    assert_equals(len(lines_one), len(lines_other))
-
-def assert_stdout_lines(other):
-    one = sys.stdout.getvalue()
-    assert_lines(one, other)
 
 @with_setup(prepare_stdout)
 def test_output_with_success_colorless():

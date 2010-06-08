@@ -44,12 +44,14 @@ def assert_lines(one, other):
 
 def assert_stderr(expected):
     string = sys.stderr.getvalue()
-    assert_equals(string, expected)
+    assert_equals(string.decode('utf-8'), expected)
+
 def assert_stdout(expected):
     string = sys.stdout.getvalue()
-    assert_equals(string, expected)
+    assert_equals(string.decode('utf-8'), expected)
+
 def assert_stdout_lines(other):
-    assert_lines(sys.stdout.getvalue(), other)
+    assert_lines(sys.stdout.getvalue().decode('utf-8'), other)
 def assert_stderr_lines(other):
-    assert_lines(sys.stderr.getvalue(), other)
+    assert_lines(sys.stderr.getvalue().decode('utf-8'), other)
 

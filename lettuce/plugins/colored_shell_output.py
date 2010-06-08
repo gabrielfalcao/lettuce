@@ -23,8 +23,7 @@ from lettuce.terrain import after
 from lettuce.terrain import before
 
 def wrt(what):
-    sys.stdout.write(unicode(what))
-
+    sys.stdout.write(what.encode('utf-8'))
 
 def wrap_file_and_line(string, start, end):
     return re.sub(r'([#] [^:]+[:]\d+)', '%s\g<1>%s' % (start, end), string)
