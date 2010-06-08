@@ -48,6 +48,16 @@ all them are used within lettuce tests
 5. commit, push etc
 6. send a pull request
 
+# mailing list
+
+## for users
+
+[http://groups.google.com/group/lettuce-users](http://groups.google.com/group/lettuce-users)
+
+## for developers
+
+[http://groups.google.com/group/lettuce-developers](http://groups.google.com/group/lettuce-developers)
+
 # Special thanks
 
 1. [Cucumber](http://cukes.info/) crew, for creating such a AWESOME project, and for inspiring [Lettuce](http://lettuce.it/).
