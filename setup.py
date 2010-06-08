@@ -25,13 +25,13 @@ def get_packages():
     for root, dirnames, filenames in os.walk('lettuce'):
         if '__init__.py' in filenames:
             packages.append(".".join(os.path.split(root)).strip("."))
-            
+
     return packages
-    
+
 setup(name='lettuce',
     version=version,
     description='Behaviour Driven Development for python',
-    author='Gabriel Falcão',
+    author=u'Gabriel Falcão',
     author_email='gabriel@nacaolivre.org',
     url='http://github.com/gabrielfalcao/lettuce',
     scripts = ['lettuce/lettuce'],
