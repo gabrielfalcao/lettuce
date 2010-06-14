@@ -31,7 +31,7 @@ def get_packages():
 setup(name='lettuce',
     version=version,
     description='Behaviour Driven Development for python',
-    author=u'Gabriel Falcão',
+    author=u'Gabriel Falcao',
     author_email='gabriel@nacaolivre.org',
     url='http://github.com/gabrielfalcao/lettuce',
     scripts = ['lettuce/lettuce'],
