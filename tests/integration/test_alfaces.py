@@ -15,11 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import commands
-from tests.asserts import assert_lines
 from tests.asserts import assert_equals
 from lettuce.fs import FileSystem
 
 current_directory = FileSystem.dirname(__file__)
+
 def test_django_agains_alfaces():
     'running the "harvest" django command with verbosity 3'
 
@@ -28,4 +28,19 @@ def test_django_agains_alfaces():
     status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3")
     assert_equals(status, 0)
 
+    assert "Test the django app DO NOTHING" in out
+    assert "Test the django app FOO BAR" in out
     FileSystem.popd()
+
+def test_django_agains_alfaces_foo():
+    'running the "harvest" will run only on configured apps if the setting LETTUCE_APPS is set'
+
+    FileSystem.pushd(current_directory, "django", "alfaces_foo")
+
+    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3")
+    assert_equals(status, 0)
+
+    assert "Test the django app FOO BAR" in out
+    assert "Test the django app DO NOTHING" not in out
+    FileSystem.popd()
+
