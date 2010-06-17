@@ -33,6 +33,10 @@ class Command(NoArgsCommand):
         make_option('-v', '--verbosity', action='store', dest='verbosity', default='4',
             type='choice', choices=['0', '3', '4'],
             help='Verbosity level; 0=no output, 3=colorless output, 4=normal output (colorful)'),
+        make_option('-a', '--apps', action='store', dest='apps', default='',
+            help='Run ONLY the django apps that are listed here. Comma separated'),
+        make_option('-A', '--avoid-apps', action='store', dest='avoid_apps', default='',
+            help='AVOID running the django apps that are listed here. Comma separated'),
     )
     def stopserver(self, failed=False):
         raise SystemExit(int(failed))
@@ -42,12 +46,14 @@ class Command(NoArgsCommand):
         setup_test_environment()
 
         verbosity = int(options.get('verbosity', 4))
+        apps_to_run = tuple(options.get('apps', '').split(","))
+        apps_to_avoid = tuple(options.get('avoid_apps', '').split(","))
 
         server.start()
 
         failed = False
         try:
-            for path in harvest_lettuces():
+            for path in harvest_lettuces(apps_to_run, apps_to_avoid):
                 registry.clear()
                 result = Runner(path, verbosity).run()
 

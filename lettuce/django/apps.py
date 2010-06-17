@@ -16,12 +16,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from os.path import join, dirname
-from django.db.models import get_apps
+from django.utils.importlib import import_module
 from django.conf import settings
 
 def _filter_django_apps(module):
     "returns only those apps that are not builtin django.contrib"
-    return not module.__name__.startswith("django.contrib")
+    name = module.__name__
+    return not name.startswith("django.contrib") and name != 'lettuce.django'
 
 def _filter_configured_apps(module):
     "returns only those apps that are in django.conf.settings.LETTUCE_APPS"
@@ -34,11 +35,26 @@ def _filter_configured_apps(module):
 
     return app_found
 
-def harvest_lettuces(path="features"):
+def get_apps():
+    return map(import_module, settings.INSTALLED_APPS)
+
+def harvest_lettuces(only_the_apps=None, avoid_apps=None, path="features"):
     "gets all installed apps that are not from django.contrib"
+
 
     apps = filter(_filter_django_apps, get_apps())
     apps = filter(_filter_configured_apps, apps)
+
+    if isinstance(only_the_apps, tuple) and any(only_the_apps):
+        def _filter_only_specified(module):
+            return module.__name__ in only_the_apps
+        apps = filter(_filter_only_specified, apps)
+
+    if isinstance(avoid_apps, tuple) and any(avoid_apps):
+        def _filter_avoid(module):
+            return module.__name__ not in avoid_apps
+
+        apps = filter(_filter_avoid, apps)
 
     joinpath = lambda app: join(dirname(app.__file__), path)
     return map(joinpath, apps)

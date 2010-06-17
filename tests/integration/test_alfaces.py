@@ -32,15 +32,52 @@ def test_django_agains_alfaces():
     assert "Test the django app FOO BAR" in out
     FileSystem.popd()
 
-def test_django_agains_alfaces_foo():
-    'running the "harvest" will run only on configured apps if the setting LETTUCE_APPS is set'
+def test_limit_by_app_getting_all_apps_by_comma():
+    'running "harvest" with --apps=multiple,apps,separated,by,comma'
 
-    FileSystem.pushd(current_directory, "django", "alfaces_foo")
+    FileSystem.pushd(current_directory, "django", "alfaces")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3")
+    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --apps=foobar,donothing")
     assert_equals(status, 0)
 
+    assert "Test the django app DO NOTHING" in out
     assert "Test the django app FOO BAR" in out
+    FileSystem.popd()
+
+def test_limit_by_app_getting_one_app():
+    'running "harvest" with --apps=one_app'
+
+    FileSystem.pushd(current_directory, "django", "alfaces")
+
+    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --apps=foobar")
+    assert_equals(status, 0)
+
     assert "Test the django app DO NOTHING" not in out
+    assert "Test the django app FOO BAR" in out
+    FileSystem.popd()
+
+def test_excluding_apps_separated_by_comma():
+    'running "harvest" with --avoid-apps=multiple,apps'
+
+    FileSystem.pushd(current_directory, "django", "alfaces")
+
+    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --avoid-apps=donothing,foobar")
+    assert_equals(status, 0)
+
+    assert "Test the django app DO NOTHING" not in out
+    assert "Test the django app FOO BAR" not in out
+    FileSystem.popd()
+
+
+def test_excluding_app():
+    'running "harvest" with --avoid-apps=one_app'
+
+    FileSystem.pushd(current_directory, "django", "alfaces")
+
+    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --avoid-apps=donothing")
+    assert_equals(status, 0)
+
+    assert "Test the django app DO NOTHING" not in out
+    assert "Test the django app FOO BAR" in out
     FileSystem.popd()
 

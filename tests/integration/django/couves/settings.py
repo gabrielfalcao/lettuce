@@ -1,6 +1,6 @@
 DEBUG = True
 
-ROOT_URLCONF = 'alfaces_foo.urls'
+ROOT_URLCONF = 'couves.urls'
 
 INSTALLED_APPS = (
     'lettuce.django',
