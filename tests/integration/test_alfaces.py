@@ -81,3 +81,14 @@ def test_excluding_app():
     assert "Test the django app FOO BAR" in out
     FileSystem.popd()
 
+def test_django_agains_couves():
+    'running the "harvest" will run only on configured apps if the setting LETTUCE_APPS is set'
+
+    FileSystem.pushd(current_directory, "django", "alfaces")
+
+    status, out = commands.getstatusoutput("python manage.py harvest --settings=onlyfoobarsettings --verbosity=3")
+    assert_equals(status, 0)
+
+    assert "Test the django app FOO BAR" in out
+    assert "Test the django app DO NOTHING" not in out
+    FileSystem.popd()

@@ -14,20 +14,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import commands
-from tests.asserts import assert_equals
-from lettuce.fs import FileSystem
 
-current_directory = FileSystem.dirname(__file__)
+from lettuce import before, after
 
-def test_django_agains_couves():
-    'it always call @after.all hooks, even after exceptions'
+@before.all
+def couves_before():
+    print "Couves before all"
 
-    FileSystem.pushd(current_directory, "django", "couves")
-
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3")
-    assert_equals(status, 0)
-
-    assert "Couves before all" in out
-    assert "Couves after all" in out
-    FileSystem.popd()
+@after.all
+def couves_after(total):
+    print "Couves after all"

@@ -103,17 +103,22 @@ class Runner(object):
             self.output.print_no_features_found(self.loader.base_dir)
             return
 
+        failed = False
         try:
             for filename in features_files:
                 feature = Feature.from_file(filename)
                 results.append(feature.run())
         except LettuceSyntaxError, e:
             sys.stderr.write(e.msg)
-            raise SystemExit(2)
+            failed = True
 
-        total = TotalResult(results)
+        finally:
+            if failed:
+                raise SystemExit(2)
 
-        for callback in CALLBACK_REGISTRY['all']['after']:
-            callback(total)
+            total = TotalResult(results)
 
-        return total
+            for callback in CALLBACK_REGISTRY['all']['after']:
+                callback(total)
+
+            return total
