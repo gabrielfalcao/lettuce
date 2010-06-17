@@ -25,6 +25,8 @@ pick up any django project, and add ``lettuce.django`` in its
 
        # ... other apps here ...
        'my_app',
+       'foobar',
+       'another_app',
        'lettuce.django', # this guy will do the job :)
    )
 
@@ -45,7 +47,16 @@ lettuce will look for a ``features`` folder inside every installed app:
          | my_app
                | features
                     - index.feature
-                    - index-steps.py
+                    - index.py
+         | foobar
+               | features
+                    - carrots.feature
+                    - foobar-steps.py
+         | another_app
+               | features
+                    - first.feature
+                    - second.feature
+                    - many_steps.py
 
 3. write your first feature
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -163,7 +174,7 @@ Lettuce is here for you. Within your steps you can use the
 
 
 what does ``django_url`` do ?!?
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It prepends a django-internal url with the HTTP server address.
 
@@ -207,11 +218,71 @@ project layout would like like this:
          | my_app
                | features
                     - index.feature
-                    - index-steps.py
+                    - index.py
+         | foobar
+               | features
+                    - carrots.feature
+                    - foobar-steps.py
+         | another_app
+               | features
+                    - first.feature
+                    - second.feature
+                    - many_steps.py
 
 notice the ``terrain.py`` file at the project root, there you can
 populate the :ref:`lettuce-world` and organize your features and steps
 with it :)
+
+to run or not to run ? That is the question !
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+During your development workflow you may face two situations:
+
+running tests from just certain apps
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Lettuce takes a comma-separated list of app names to run tests against.
+
+For example, the command below would run ONLY the tests within the apps `myapp` and `foobar`:
+
+.. highlight:: bash
+
+::
+
+   python manage.py harvest --apps=myapp,foobar
+
+you can also specify it at `settings.py` so that you won't need to type the same command-line parameters all the time:
+
+.. highlight:: python
+
+::
+
+   LETTUCE_APPS = (
+       'myapp',
+       'foobar',
+   )
+   INSTALLED_APPS = (
+       'django.contrib.auth',
+       'django.contrib.admin',
+       'my_app',
+       'foobar',
+       'another_app',
+       'lettuce.django',
+   )
+
+
+running tests from all apps, except by some
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Lettuce takes a comma-separated list of app names which tests must NOT be ran.
+
+For example, the command below would run ALL the tests BUT those within the apps `another_app` and `foobar`:
+
+.. highlight:: bash
+
+::
+
+   python manage.py harvest --avoid-apps=another_app,foobar
 
 .. _alfaces: http://github.com/gabrielfalcao/lettuce/tree/master/tests/integration/django/alfaces/
 .. _Django: http://djangoproject.com
