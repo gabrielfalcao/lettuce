@@ -118,3 +118,13 @@ def test_ignores_settings_avoid_apps_if_apps_argument_is_passed():
     assert "Test the django app DO NOTHING" in out
     FileSystem.popd()
 
+
+def test_no_server():
+    '"harvest" --no-server does not start the server'
+
+    FileSystem.pushd(current_directory, "django", "alfaces")
+
+    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --apps=foobar --no-server")
+
+    assert_equals(status, 0)
+    assert "Django's builtin server is running at" not in out

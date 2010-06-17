@@ -233,6 +233,22 @@ notice the ``terrain.py`` file at the project root, there you can
 populate the :ref:`lettuce-world` and organize your features and steps
 with it :)
 
+running without HTTP server
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+sometimes you may just do not want to run Django's builtin HTTP server
+running in background, in those cases all you need to do is run the
+`harvest` command with the `--no-server` or `-S` option.
+
+example:
+
+.. highlight:: bash
+
+::
+
+   python manage.py harvest --no-server
+   python manage.py harvest -S
+
 to run or not to run ? That is the question !
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

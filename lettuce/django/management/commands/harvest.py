@@ -37,6 +37,9 @@ class Command(NoArgsCommand):
             help='Run ONLY the django apps that are listed here. Comma separated'),
         make_option('-A', '--avoid-apps', action='store', dest='avoid_apps', default='',
             help='AVOID running the django apps that are listed here. Comma separated'),
+        make_option('-S', '--no-server', action='store_true', dest='no_server', default=False,
+            help="will not run django's builtin HTTP server"),
+
     )
     def stopserver(self, failed=False):
         raise SystemExit(int(failed))
@@ -49,7 +52,10 @@ class Command(NoArgsCommand):
         apps_to_run = tuple(options.get('apps', '').split(","))
         apps_to_avoid = tuple(options.get('avoid_apps', '').split(","))
 
-        server.start()
+        run_server = not options.get('no_server', False)
+
+        if run_server:
+            server.start()
 
         failed = False
         try:
