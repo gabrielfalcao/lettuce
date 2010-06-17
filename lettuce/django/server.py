@@ -22,9 +22,11 @@ import httplib
 import urlparse
 import tempfile
 import threading
+from StringIO import StringIO
 
 from django.core.handlers.wsgi import WSGIHandler
 from django.core.servers.basehttp import WSGIServer
+from django.core.servers.basehttp import ServerHandler
 from django.core.servers.basehttp import WSGIRequestHandler
 from django.core.servers.basehttp import WSGIServerException
 
@@ -50,9 +52,36 @@ class MutedRequestHandler(WSGIRequestHandler):
     """ A RequestHandler that silences output, in order to don't
     mess with Lettuce's output"""
 
+    dev_null = StringIO()
     def log_message(self, *args, **kw):
         pass # do nothing
 
+    def handle(self):
+        """Handle a single HTTP request"""
+        self.raw_requestline = self.rfile.readline()
+        if not self.parse_request(): # An error code has been sent, just exit
+            return
+
+        handler = LettuceServerHandler(
+            self.rfile,
+            self.wfile,
+            self.dev_null,
+            self.get_environ()
+        )
+        handler.request_handler = self      # backpointer for logging
+        handler.run(self.server.get_app())
+
+class LettuceServerHandler(ServerHandler):
+    def finish_response(self):
+        try:
+            ServerHandler.finish_response(self)
+
+        # avoiding broken pipes
+        # http://code.djangoproject.com/attachment/ticket/4444
+        except Exception:
+            exc_type, exc_value = sys.exc_info()[:2]
+            if not issubclass(exc_type, socket.error) or exc_value.args[0] is 32:
+                raise
 
 class ThreadedServer(threading.Thread):
     """
@@ -74,7 +103,6 @@ class ThreadedServer(threading.Thread):
             time.sleep(0.1)
             http = httplib.HTTPConnection(address, self.port)
             try:
-                print "Waiting for server..."
                 http.request("GET", "/")
             except socket.error:
                 http.close()
