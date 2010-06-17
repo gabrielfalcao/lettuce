@@ -81,7 +81,7 @@ def test_excluding_app():
     assert "Test the django app FOO BAR" in out
     FileSystem.popd()
 
-def test_django_agains_couves():
+def test_running_only_apps_within_lettuce_apps_setting():
     'running the "harvest" will run only on configured apps if the setting LETTUCE_APPS is set'
 
     FileSystem.pushd(current_directory, "django", "alfaces")
@@ -92,3 +92,29 @@ def test_django_agains_couves():
     assert "Test the django app FOO BAR" in out
     assert "Test the django app DO NOTHING" not in out
     FileSystem.popd()
+
+def test_running_all_apps_but_lettuce_avoid_apps():
+    'running the "harvest" will run all apps but those within LETTUCE_AVOID_APPS'
+
+    FileSystem.pushd(current_directory, "django", "alfaces")
+
+    status, out = commands.getstatusoutput("python manage.py harvest --settings=allbutfoobarsettings --verbosity=3")
+    assert_equals(status, 0)
+
+    assert "Test the django app FOO BAR" not in out
+    assert "Test the django app DO NOTHING" in out
+    FileSystem.popd()
+
+def test_ignores_settings_avoid_apps_if_apps_argument_is_passed():
+    'even if all apps are avoid in settings, it is possible to run a single app ' \
+    'by --apps argument'
+
+    FileSystem.pushd(current_directory, "django", "alfaces")
+
+    status, out = commands.getstatusoutput("python manage.py harvest --settings=avoidallappssettings --verbosity=3 --apps=foobar,donothing")
+    assert_equals(status, 0)
+
+    assert "Test the django app FOO BAR" in out
+    assert "Test the django app DO NOTHING" in out
+    FileSystem.popd()
+

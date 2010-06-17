@@ -66,10 +66,15 @@ class ThreadedServer(threading.Thread):
         self.port = port
 
     def wait(self):
+        address = self.address
+        if self.address == '0.0.0.0':
+            address = 'localhost'
+
         while True:
             time.sleep(0.1)
-            http = httplib.HTTPConnection(self.address, self.port)
+            http = httplib.HTTPConnection(address, self.port)
             try:
+                print "Waiting for server..."
                 http.request("GET", "/")
             except socket.error:
                 http.close()

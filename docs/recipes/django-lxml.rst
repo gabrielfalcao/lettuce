@@ -284,6 +284,26 @@ For example, the command below would run ALL the tests BUT those within the apps
 
    python manage.py harvest --avoid-apps=another_app,foobar
 
+you can also specify it at `settings.py` so that you won't need to type the same command-line parameters all the time:
+
+.. highlight:: python
+
+::
+
+   LETTUCE_AVOID_APPS = (
+       'another_app',
+       'foobar',
+   )
+
+   INSTALLED_APPS = (
+       'django.contrib.auth',
+       'django.contrib.admin',
+       'my_app',
+       'foobar',
+       'another_app',
+       'lettuce.django',
+   )
+
 .. _alfaces: http://github.com/gabrielfalcao/lettuce/tree/master/tests/integration/django/alfaces/
 .. _Django: http://djangoproject.com
 .. _twill: http://twill.idyll.org/python-api.html
