@@ -699,13 +699,23 @@ class Feature(object):
 
         return scenarios, description
 
-    def run(self, ignore_case=True):
+    def run(self, scenarios=None, ignore_case=True):
         for callback in CALLBACK_REGISTRY['feature']['before_each']:
             callback(self)
 
         scenarios_ran = []
 
-        [scenarios_ran.extend(scenario.run(ignore_case)) for scenario in self.scenarios]
+        if isinstance(scenarios, (tuple, list)):
+            if all(map(lambda x: isinstance(x, int), scenarios)):
+                scenarios_to_run = scenarios
+        else:
+            scenarios_to_run = range(1, len(self.scenarios) + 1)
+
+        for index, scenario in enumerate(self.scenarios):
+            if scenarios_to_run and (index + 1) not in scenarios_to_run:
+                continue
+
+            scenarios_ran.extend(scenario.run(ignore_case))
 
         for callback in CALLBACK_REGISTRY['feature']['after_each']:
             callback(self)

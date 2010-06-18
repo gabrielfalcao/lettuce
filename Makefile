@@ -2,7 +2,7 @@ all: check_dependencies unit functional integration doctest
 
 filename=lettuce-`python -c 'import lettuce;print lettuce.version'`.tar.gz
 
-export PYTHONPATH:=  ${PWD}
+export PYTHONPATH:= ${PWD}
 export LETTUCE_DEPENDENCIES:= nose mox sphinx lxml django
 
 check_dependencies:

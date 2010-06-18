@@ -15,7 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from lettuce import step
+from lettuce import after
 from lettuce import core
+from lettuce import registry
 from lettuce.core import Step
 from lettuce.core import Feature
 from nose.tools import assert_equals
@@ -62,6 +64,25 @@ Feature: My steps are rocking!
     Scenario: Step definition receive regex matched named groups as parameters
         Then he gets a caipirinha
 '''
+
+FEATURE7 = """
+Feature: Many scenarios
+  Scenario: 1st one
+    Given I have a defined step
+
+  Scenario: 2nd one
+    Given I have a defined step
+
+  Scenario: 3rd one
+    Given I have a defined step
+
+  Scenario: 4th one
+    Given I have a defined step
+
+  Scenario: 5th one
+    Given I have a defined step
+
+"""
 
 @step('I have a defined step')
 def have_a_defined_step(*args, **kw):
@@ -161,7 +182,7 @@ def test_steps_are_aware_of_its_definitions():
 
     step1 = scenario_result.steps_passed[0]
 
-    assert_equals(step1.defined_at.line, 67)
+    assert_equals(step1.defined_at.line, 88)
     assert_equals(step1.defined_at.file, core.fs.relpath(__file__.rstrip("c")))
 
 def test_steps_that_match_groups_takes_them_as_parameters():
@@ -220,4 +241,21 @@ def test_step_definitions_takes_the_step_object_as_first_argument():
     scenario_result = feature_result.scenario_results[0]
     assert_equals(len(scenario_result.steps_passed), 1)
     assert_equals(scenario_result.total_steps, 1)
+
+def test_feature_can_run_only_specified_scenarios():
+    "Features can run only specified scenarios, by index + 1"
+
+    feature = Feature.from_string(FEATURE7)
+
+    scenarios_ran = []
+    @after.each_scenario
+    def just_register(scenario):
+        scenarios_ran.append(scenario.name)
+
+    try:
+        feature.run(scenarios=(2, 5))
+        assert_equals(scenarios_ran, ['2nd one', '5th one'])
+
+    finally:
+        registry.clear()
 
