@@ -14,6 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import re
 import sys
 from StringIO import StringIO
 from nose.tools import assert_equals
@@ -42,6 +43,25 @@ def assert_lines(one, other):
 
     assert_equals(len(lines_one), len(lines_other))
 
+def assert_lines_with_traceback(one, other):
+    lines_one = one.splitlines()
+    lines_other = other.splitlines()
+    regex = re.compile('File "([^"]+)", line \d+, in.*')
+
+    error = '%r should be in %r'
+    for line1, line2 in zip(lines_one, lines_other):
+        if regex.search(line1) and regex.search(line2):
+            found = regex.search(line2)
+
+            filename = found.group(1)
+            params = filename, line1
+            assert filename in line1, error % params
+
+        else:
+            assert_equals(line1, line2)
+
+    assert_equals(len(lines_one), len(lines_other))
+
 def assert_stderr(expected):
     string = sys.stderr.getvalue()
     assert_equals(string.decode('utf-8'), expected)
@@ -55,3 +75,5 @@ def assert_stdout_lines(other):
 def assert_stderr_lines(other):
     assert_lines(sys.stderr.getvalue().decode('utf-8'), other)
 
+def assert_stdout_lines_with_traceback(other):
+    assert_lines_with_traceback(sys.stdout.getvalue().decode('utf-8'), other)
