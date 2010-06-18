@@ -31,3 +31,4 @@ def test_django_agains_couves():
     assert "Couves before all" in out
     assert "Couves after all" in out
     FileSystem.popd()
+

@@ -249,6 +249,23 @@ example:
    python manage.py harvest --no-server
    python manage.py harvest -S
 
+
+running only the specified scenarios
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+you can also specify the index of the scenarios you want to run
+through the command line, to do so, run with `--scenarios` or `-s`
+options followed by the scenario numbers separated by commas.
+
+for example, let's say you want to run the scenarios 4, 7, 8 and 10:
+
+.. highlight:: bash
+
+::
+
+   python manage.py harvest --scenarios=4,7,8,10
+   python manage.py harvest -s 4,7,8,10
+
 to run or not to run ? That is the question !
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

@@ -33,6 +33,11 @@ def main(args=sys.argv[1:]):
                       default=4,
                       help='The verbosity level')
 
+    parser.add_option("-s", "--scenarios",
+                      dest="scenarios",
+                      default=None,
+                      help='Comma separated list of scenarios to run')
+
 
     options, args = parser.parse_args()
     if args:
@@ -43,7 +48,7 @@ def main(args=sys.argv[1:]):
     except ValueError:
         pass
 
-    runner = lettuce.Runner(base_path, options.verbosity)
+    runner = lettuce.Runner(base_path, scenarios=options.scenarios, verbosity=options.verbosity)
 
     result = runner.run()
     if not result or result.steps != result.steps_passed:

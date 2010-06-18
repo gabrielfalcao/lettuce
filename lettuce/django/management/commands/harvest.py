@@ -39,7 +39,8 @@ class Command(NoArgsCommand):
             help='AVOID running the django apps that are listed here. Comma separated'),
         make_option('-S', '--no-server', action='store_true', dest='no_server', default=False,
             help="will not run django's builtin HTTP server"),
-
+        make_option('-s', '--scenarios', action='store', dest='scenarios', default=None,
+            help='Comma separated list of scenarios to run'),
     )
     def stopserver(self, failed=False):
         raise SystemExit(int(failed))
@@ -61,7 +62,7 @@ class Command(NoArgsCommand):
         try:
             for path in harvest_lettuces(apps_to_run, apps_to_avoid):
                 registry.clear()
-                result = Runner(path, verbosity).run()
+                result = Runner(path, options.get('scenarios'), verbosity).run()
 
                 if not result or result.steps != result.steps_passed:
                     failed = True

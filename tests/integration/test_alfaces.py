@@ -128,3 +128,23 @@ def test_no_server():
 
     assert_equals(status, 0)
     assert "Django's builtin server is running at" not in out
+
+
+def test_django_specifying_scenarios_to_run():
+    'django harvest can run only specified scenarios with --scenarios or -s options'
+
+    FileSystem.pushd(current_directory, "django", "alfaces")
+
+    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --scenarios=2,5 -a foobar")
+    assert_equals(status, 0)
+
+    assert "2nd scenario" in out
+    assert "5th scenario" in out
+
+    assert "1st scenario" not in out
+    assert "3rd scenario" not in out
+    assert "4th scenario" not in out
+    assert "6th scenario" not in out
+
+    FileSystem.popd()
+
