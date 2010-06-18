@@ -103,8 +103,8 @@ lettuce will look for a ``features`` folder inside every installed app:
         header = world.dom.cssselect('h1')[0]
         assert header.text == text
 
-4. run th tests
-^^^^^^^^^^^^^^^
+4. run the tests
+^^^^^^^^^^^^^^^^
 
 once you install the ``lettuce.django`` app, the command ``harvest`` will be available:
 
@@ -114,16 +114,22 @@ once you install the ``lettuce.django`` app, the command ``harvest`` will be ava
 
    user@machine:~projects/djangoproject $ python manage.py harvest
 
+5. specifying feature files
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-5. that is all folks!
-^^^^^^^^^^^^^^^^^^^^^
+the `harvest` command accepts a path to feature files, in order to run
+only the features you want.
 
-write views to make tests pass, write more feature files, and rock out
-loud with lettuce :)
+example:
 
+.. highlight:: bash
 
-actual example code
-~~~~~~~~~~~~~~~~~~~
+::
+
+   user@machine:~projects/djangoproject $ python manage.py harvest path/to/my-test.feature
+
+6. grab actual example code
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 In order to assure that lettuce integrate well with django, it have a
 set of integration tests, there are a actual django project running

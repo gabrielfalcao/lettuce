@@ -148,3 +148,14 @@ def test_django_specifying_scenarios_to_run():
 
     FileSystem.popd()
 
+def test_running_only_specified_features():
+    'it can run only the specified features, passing the file path'
+
+    FileSystem.pushd(current_directory, "django", "alfaces")
+
+    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 foobar/features/foobar.feature")
+    assert_equals(status, 0)
+
+    assert "Test the django app FOO BAR" in out
+    assert "Test the django app DO NOTHING" not in out
+    FileSystem.popd()
