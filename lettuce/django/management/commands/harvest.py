@@ -28,7 +28,8 @@ from lettuce.django import server
 from lettuce.django import harvest_lettuces
 
 class Command(BaseCommand):
-    help = u'Run lettuce tests within each django app'
+    help = u'Run lettuce tests all along installed apps'
+    requires_model_validation = False
 
     option_list = BaseCommand.option_list[1:] + (
         make_option('-v', '--verbosity', action='store', dest='verbosity', default='4',

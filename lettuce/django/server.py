@@ -77,7 +77,7 @@ class LettuceServerHandler(ServerHandler):
             ServerHandler.finish_response(self)
 
         # avoiding broken pipes
-        # http://code.djangoproject.com/attachment/ticket/4444
+        # http://code.djangoproject.com/ticket/4444
         except Exception:
             exc_type, exc_value = sys.exc_info()[:2]
             if not issubclass(exc_type, socket.error) or exc_value.args[0] is 32:
@@ -182,7 +182,12 @@ class Server(object):
             return sys.exit(code)
 
     def url(self, url):
-        return urlparse.urljoin("http://%s:%d" % (self.address, self.port), url)
+        base_url = "http://%s" % self.address
+
+        if self.port is not 80:
+            base_url += ':%d' % self.port
+
+        return urlparse.urljoin(base_url, url)
 
 server = Server()
 django_url = server.url
