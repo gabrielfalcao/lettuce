@@ -1,5 +1,5 @@
 # lettuce
-> Version 0.1.5 - barium
+> Version 0.1.6 - barium
 
 ## On release names
 
