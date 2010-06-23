@@ -383,9 +383,10 @@ def test_output_with_failed_colorless_with_table():
         "\n"
         "You can implement step definitions for undefined steps with these snippets:\n"
         "\n"
+        "# -*- coding: utf-8 -*-\n"
         "from lettuce import step\n"
         "\n"
-        "@step(r'And this one does not even has definition')\n"
+        "@step(u'And this one does not even has definition')\n"
         "def and_this_one_does_not_even_has_definition(step):\n"
         "    pass\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
@@ -428,9 +429,10 @@ def test_output_with_failed_colorful_with_table():
         "\n"
         "\033[0;33mYou can implement step definitions for undefined steps with these snippets:\n"
         "\n"
+        "# -*- coding: utf-8 -*-\n"
         "from lettuce import step\n"
         "\n"
-        "@step(r'And this one does not even has definition')\n"
+        "@step(u'And this one does not even has definition')\n"
         "def and_this_one_does_not_even_has_definition(step):\n"
         "    pass\033[0m"
         "\n" % {
@@ -648,9 +650,10 @@ def test_output_snippets_with_groups_within_double_quotes_colorless():
         u'\n'
         u'You can implement step definitions for undefined steps with these snippets:\n'
         u'\n'
+        u"# -*- coding: utf-8 -*-\n"
         u'from lettuce import step\n'
         u'\n'
-        u'@step(r\'Given I have "(.*)" and "(.*)"\')\n'
+        u'@step(u\'Given I have "(.*)" and "(.*)"\')\n'
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    pass\n'
     )
@@ -675,9 +678,10 @@ def test_output_snippets_with_groups_within_double_quotes_colorful():
         u'\n'
         u'\033[0;33mYou can implement step definitions for undefined steps with these snippets:\n'
         u'\n'
+        u"# -*- coding: utf-8 -*-\n"
         u'from lettuce import step\n'
         u'\n'
-        u'@step(r\'Given I have "(.*)" and "(.*)"\')\n'
+        u'@step(u\'Given I have "(.*)" and "(.*)"\')\n'
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    pass\033[0m\n'
     )
@@ -703,9 +707,10 @@ def test_output_snippets_with_groups_within_single_quotes_colorless():
         u'\n'
         u'You can implement step definitions for undefined steps with these snippets:\n'
         u'\n'
+        u"# -*- coding: utf-8 -*-\n"
         u'from lettuce import step\n'
         u'\n'
-        u'@step(r\'Given I have \\\'(.*)\\\' and \\\'(.*)\\\'\')\n'
+        u'@step(u\'Given I have \\\'(.*)\\\' and \\\'(.*)\\\'\')\n'
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    pass\n'
     )
@@ -730,9 +735,10 @@ def test_output_snippets_with_groups_within_single_quotes_colorful():
         u'\n'
         u'\033[0;33mYou can implement step definitions for undefined steps with these snippets:\n'
         u'\n'
+        u"# -*- coding: utf-8 -*-\n"
         u'from lettuce import step\n'
         u'\n'
-        u'@step(r\'Given I have \\\'(.*)\\\' and \\\'(.*)\\\'\')\n'
+        u'@step(u\'Given I have \\\'(.*)\\\' and \\\'(.*)\\\'\')\n'
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    pass\033[0m\n'
     )
@@ -758,9 +764,49 @@ def test_output_snippets_with_groups_within_redundant_quotes():
         u'\n'
         u'You can implement step definitions for undefined steps with these snippets:\n'
         u'\n'
+        u"# -*- coding: utf-8 -*-\n"
         u'from lettuce import step\n'
         u'\n'
-        u'@step(r\'Given I have "(.*)" and "(.*)"\')\n'
+        u'@step(u\'Given I have "(.*)" and "(.*)"\')\n'
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    pass\n'
+    )
+
+@with_setup(prepare_stdout)
+def test_output_snippets_with_normalized_unicode_names():
+    "Testing that the proposed snippet is clever enough normalize method names even with latin accents"
+
+    runner = Runner(feature_name('latin-accents'), verbosity=3)
+    runner.run()
+
+    assert_stdout_lines(
+        u"\n"
+        u"Funcionalidade: melhorar o output de snippets do lettuce                                      # tests/functional/output_features/latin-accents/latin-accents.feature:2\n"
+        u"  Como autor do lettuce                                                                       # tests/functional/output_features/latin-accents/latin-accents.feature:3\n"
+        u"  Eu quero ter um output refinado de snippets                                                 # tests/functional/output_features/latin-accents/latin-accents.feature:4\n"
+        u"  Para melhorar, de uma forma geral, a vida do programador                                    # tests/functional/output_features/latin-accents/latin-accents.feature:5\n"
+        u"\n"
+        u"  Cenário: normalizar snippets com unicode                                                    # tests/functional/output_features/latin-accents/latin-accents.feature:7\n"
+        u"    Dado que eu tenho palavrões e outras situações                                            # tests/functional/output_features/latin-accents/latin-accents.feature:8 (undefined)\n"
+        u"    E várias palavras acentuadas são úteis, tais como: \"(é,não,léo,chororó,chácara,epígrafo)\" # tests/functional/output_features/latin-accents/latin-accents.feature:9 (undefined)\n"
+        u"    Então eu fico felizão                                                                     # tests/functional/output_features/latin-accents/latin-accents.feature:10 (undefined)\n"
+        u"\n"
+        u"1 feature (0 passed)\n"
+        u"1 scenario (0 passed)\n"
+        u"3 steps (3 undefined, 0 passed)\n"
+        u"\n"
+        u"You can implement step definitions for undefined steps with these snippets:\n"
+        u"\n"
+        u"# -*- coding: utf-8 -*-\n"
+        u"from lettuce import step\n"
+        u"\n"
+        u"@step(u'Dado que eu tenho palavrões e outras situações')\n"
+        u"def dado_que_eu_tenho_palavroes_e_outras_situacoes(step):\n"
+        u"    pass\n"
+        u"@step(u'E várias palavras acentuadas são úteis, tais como: \"(.*)\"')\n"
+        u"def e_varias_palavras_acentuadas_sao_uteis_tais_como_group1(step, group1):\n"
+        u"    pass\n"
+        u"@step(u'Então eu fico felizão')\n"
+        u"def entao_eu_fico_felizao(step):\n"
+        u"    pass\n"
     )

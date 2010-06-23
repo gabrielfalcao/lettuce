@@ -123,10 +123,11 @@ def print_end(total):
 
     if total.proposed_definitions:
         wrt("\nYou can implement step definitions for undefined steps with these snippets:\n\n")
+        wrt("# -*- coding: utf-8 -*-\n")
         wrt("from lettuce import step\n\n")
         for step in total.proposed_definitions:
             method_name = step.proposed_method_name
-            wrt("@step(r'%s')\n" % step.proposed_sentence)
+            wrt("@step(u'%s')\n" % step.proposed_sentence)
             wrt("def %s:\n" % method_name)
             wrt("    pass\n")
 

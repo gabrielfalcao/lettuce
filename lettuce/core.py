@@ -17,6 +17,7 @@
 
 import re
 import codecs
+import unicodedata
 from copy import deepcopy
 from lettuce import strings
 from lettuce import languages
@@ -180,13 +181,12 @@ class Step(object):
             ("'", re.compile(r"('[^']+')")), # single quotes
         ]
 
-        matched = False
         attribute_names = []
         for char, group in groups:
             match_groups = group.search(self.original_sentence)
 
             if match_groups:
-                matched = True
+
                 for index, match in enumerate(group.findall(sentence)):
                     if char == "'":
                         char = re.escape(char)
@@ -196,9 +196,10 @@ class Step(object):
                     method_name = method_name.replace(match, group_name)
                     attribute_names.append(group_name)
 
-        if not matched:
-            sentence = re.escape(sentence).replace(r'\ ', ' ')
 
+
+        method_name = unicodedata.normalize('NFKD', method_name) \
+                      .encode('ascii', 'ignore')
         method_name = '%s(step%s)' % (
             "_".join(re.findall("\w+", method_name)).lower(),
             attribute_names and (", %s" % ", ".join(attribute_names)) or ""

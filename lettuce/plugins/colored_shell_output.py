@@ -215,12 +215,13 @@ def print_end(total):
 
     if total.proposed_definitions:
         wrt("\n\033[0;33mYou can implement step definitions for undefined steps with these snippets:\n\n")
+        wrt("# -*- coding: utf-8 -*-\n")
         wrt("from lettuce import step\n\n")
 
         last = len(total.proposed_definitions) - 1
         for current, step in enumerate(total.proposed_definitions):
             method_name = step.proposed_method_name
-            wrt("@step(r'%s')\n" % step.proposed_sentence)
+            wrt("@step(u'%s')\n" % step.proposed_sentence)
             wrt("def %s:\n" % method_name)
             wrt("    pass")
             if current is last:
