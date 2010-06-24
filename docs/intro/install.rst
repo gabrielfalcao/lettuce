@@ -42,16 +42,16 @@ If it is your case, I strongly recommend a sandbox:
 
 **GNU/Linux:**
 
-#. Fetch the code
+1. Fetch the code
 
 ::
 
     user@machine:~/Projects$ git clone git://github.com/gabrielfalcao/lettuce.git
 
-#. Add to your PYTHONPATH
+2. Add to your PYTHONPATH
 
 ::
 
-    user@machine:~/Projects$ echo "PYTHONPATH=$HOME/Projects/lettuce:$PYTHONPATH >> $HOME/.bashrc
+    user@machine:~/Projects$ echo "export PYTHONPATH=$HOME/Projects/lettuce:$PYTHONPATH" >> $HOME/.bashrc
 
-#. Open a new terminal and enjoy!
+3. Open a new terminal and enjoy!
