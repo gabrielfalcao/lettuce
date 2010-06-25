@@ -24,11 +24,13 @@ import tempfile
 import threading
 from StringIO import StringIO
 
+from django.conf import settings
 from django.core.handlers.wsgi import WSGIHandler
 from django.core.servers.basehttp import WSGIServer
 from django.core.servers.basehttp import ServerHandler
 from django.core.servers.basehttp import WSGIRequestHandler
 from django.core.servers.basehttp import WSGIServerException
+from django.core.servers.basehttp import AdminMediaHandler
 
 class LettuceServerException(WSGIServerException):
     pass
@@ -94,10 +96,15 @@ class ThreadedServer(threading.Thread):
         self.address = address
         self.port = port
 
-    def wait(self):
-        address = self.address
-        if self.address == '0.0.0.0':
+    @staticmethod
+    def get_real_address(address):
+        if address == '0.0.0.0':
             address = 'localhost'
+
+        return address
+
+    def wait(self):
+        address = ThreadedServer.get_real_address(self.address)
 
         while True:
             time.sleep(0.1)
@@ -129,13 +136,24 @@ class ThreadedServer(threading.Thread):
 
         bound = False
         max_port = 65535
-        while not bound or self.port > max_port:
+
+        connector = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        while not bound or self.port < max_port:
+            try:
+                connector.connect((self.address, self.port))
+                self.port += 1
+
+            except socket.error:
+                bound = True
+                break
+
+        if bound:
             try:
                 server_address = (self.address, self.port)
                 httpd = WSGIServer(server_address, MutedRequestHandler)
                 bound = True
             except WSGIServerException:
-                self.port += 1
+                bound = False
 
         if not bound:
             raise LettuceServerException(
@@ -143,7 +161,14 @@ class ThreadedServer(threading.Thread):
                 "django's builtin server on it" % self.port
             )
 
-        httpd.set_app(StopabbleHandler(WSGIHandler()))
+
+        handler = StopabbleHandler(WSGIHandler())
+        if 'django.contrib.admin' in settings.INSTALLED_APPS:
+            admin_media_path = ''
+            handler = AdminMediaHandler(handler, admin_media_path)
+            print "Preparing to server django's admin site static files..."
+
+        httpd.set_app(handler)
 
         global keep_running
         while keep_running:
@@ -156,7 +181,7 @@ class Server(object):
     that lettuce can be used with selenium, webdriver, windmill or any
     browser tool"""
 
-    def __init__(self, address='0.0.0.0', port=8000):
+    def __init__(self, address='0.0.0.0', port=8888):
         self.address = unicode(address)
         self.port = int(port)
         self._actual_server = ThreadedServer(self.address, self.port)
@@ -167,7 +192,8 @@ class Server(object):
         self._actual_server.start()
         self._actual_server.wait()
 
-        print "Django's builtin server is running at %s:%d" % (self.address, self.port)
+        addrport = self.address, self._actual_server.port
+        print "Django's builtin server is running at %s:%d" % addrport
 
     def stop(self, fail=False):
         http = httplib.HTTPConnection(self.address, self.port)
@@ -182,7 +208,7 @@ class Server(object):
             return sys.exit(code)
 
     def url(self, url):
-        base_url = "http://%s" % self.address
+        base_url = "http://%s" % ThreadedServer.get_real_address(self.address)
 
         if self.port is not 80:
             base_url += ':%d' % self.port

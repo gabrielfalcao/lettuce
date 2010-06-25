@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
+import sys
 from optparse import make_option
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -29,6 +30,7 @@ from lettuce.django import harvest_lettuces
 
 class Command(BaseCommand):
     help = u'Run lettuce tests all along installed apps'
+    args = '[PATH to feature file or folder]'
     requires_model_validation = False
 
     option_list = BaseCommand.option_list[1:] + (
@@ -51,6 +53,19 @@ class Command(BaseCommand):
     def stopserver(self, failed=False):
         raise SystemExit(int(failed))
 
+    def get_paths(self, args, apps_to_run, apps_to_avoid):
+        if args:
+            for path, exists in zip(args, map(os.path.exists, args)):
+                if not exists:
+                    sys.stderr.write("You passed the path '%s', but it does not exist.\n" % path)
+                    sys.exit(1)
+            else:
+                paths = args
+        else:
+            paths = harvest_lettuces(apps_to_run, apps_to_avoid)
+
+        return paths
+
     def handle(self, *args, **options):
         settings.DEBUG = False
         setup_test_environment()
@@ -58,20 +73,14 @@ class Command(BaseCommand):
         verbosity = int(options.get('verbosity', 4))
         apps_to_run = tuple(options.get('apps', '').split(","))
         apps_to_avoid = tuple(options.get('avoid_apps', '').split(","))
-
         run_server = not options.get('no_server', False)
 
+        paths = self.get_paths(args, apps_to_run, apps_to_avoid)
         if run_server:
             server.start()
 
         failed = False
         try:
-            if args and all(map(os.path.exists, args)):
-                paths = args
-
-            else:
-                paths = harvest_lettuces(apps_to_run, apps_to_avoid)
-
             for path in paths:
                 registry.clear()
                 result = Runner(path, options.get('scenarios'), verbosity).run()
