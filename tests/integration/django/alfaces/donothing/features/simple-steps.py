@@ -28,7 +28,7 @@ def set_client():
 @step(r'I navigate to "(.*)"')
 def given_i_navigate_to_group1(step, url):
     url = django_url(url)
-    assert_equals(url, 'http://localhost:8888/')
+    assert_equals(url, 'http://localhost:8000/')
 
     raw = urllib2.urlopen(url).read()
     world.dom = html.fromstring(raw)

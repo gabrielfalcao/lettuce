@@ -13,7 +13,11 @@ def prepare_the_world(scenario):
 def given_i_fetch_the_urls(step):
     urls = map(lambda i: django_url(i['url']), step.hashes)
     for url in urls:
-        http = urllib2.urlopen(url)
+        try:
+            http = urllib2.urlopen(url)
+        except Exception, http:
+            pass
+
         world.statuses.append((url, http.code))
         world.content_types.append((url, http.headers.dict['content-type']))
         http.close()
@@ -21,7 +25,7 @@ def given_i_fetch_the_urls(step):
 @step(u'When all the responses have status code 200')
 def when_all_the_responses_have_status_code_200(step):
     for url, status in world.statuses:
-        assert status is 200
+        assert status is 200, 'for %s the status code should be 200 but is %d' % (url, status)
 
 @step(u'Then all the responses have mime type "(.*)"')
 def then_all_the_responses_have_mime_type_group1(step, group1):

@@ -181,7 +181,7 @@ class Server(object):
     that lettuce can be used with selenium, webdriver, windmill or any
     browser tool"""
 
-    def __init__(self, address='0.0.0.0', port=8888):
+    def __init__(self, address='0.0.0.0', port=8000):
         self.address = unicode(address)
         self.port = int(port)
         self._actual_server = ThreadedServer(self.address, self.port)
@@ -207,7 +207,7 @@ class Server(object):
             code = int(fail)
             return sys.exit(code)
 
-    def url(self, url):
+    def url(self, url=""):
         base_url = "http://%s" % ThreadedServer.get_real_address(self.address)
 
         if self.port is not 80:
