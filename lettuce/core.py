@@ -23,7 +23,7 @@ from lettuce import strings
 from lettuce import languages
 from lettuce.fs import FileSystem
 from lettuce.registry import STEP_REGISTRY
-from lettuce.registry import CALLBACK_REGISTRY
+from lettuce.registry import call_hook
 from lettuce.exceptions import ReasonToFail
 from lettuce.exceptions import NoDefinitionFound
 from lettuce.exceptions import LettuceSyntaxError
@@ -411,8 +411,7 @@ class Scenario(object):
         before_each and after_each callbacks for steps and scenario"""
 
         results = []
-        for callback in CALLBACK_REGISTRY['scenario']['before_each']:
-            callback(self)
+        call_hook('before_each', 'scenario', self)
 
         def run_scenario(almost_self, order=-1, outline=None, run_callbacks=False):
             all_steps = []
@@ -429,8 +428,7 @@ class Scenario(object):
                     step.pre_run(ignore_case, with_outline=outline)
 
                     if run_callbacks:
-                        for callback in CALLBACK_REGISTRY['step']['before_each']:
-                            callback(step)
+                        call_hook('before_each', 'step', step)
 
                     if not steps_failed and not steps_undefined:
                         step.run(ignore_case)
@@ -446,16 +444,15 @@ class Scenario(object):
                 finally:
                     all_steps.append(step)
                     if run_callbacks:
-                        for callback in CALLBACK_REGISTRY['step']['after_each']:
-                            callback(step)
-
+                        call_hook('after_each', 'step', step)
 
             skip = lambda x: x not in steps_passed and x not in steps_undefined and x not in steps_failed
 
             steps_skipped = filter(skip, all_steps)
             if outline:
-                for callback in CALLBACK_REGISTRY['scenario']['outline']:
-                    callback(self, order, outline, reasons_to_fail)
+                call_hook(
+                    'outline', 'scenario', self, order, outline, reasons_to_fail
+                )
 
             return ScenarioResult(
                 self,
@@ -473,9 +470,7 @@ class Scenario(object):
         else:
             results.append(run_scenario(self, run_callbacks=True))
 
-        for callback in CALLBACK_REGISTRY['scenario']['after_each']:
-            callback(self)
-
+        call_hook('after_each', 'scenario', self)
         return results
 
     def _add_myself_to_steps(self):
@@ -701,9 +696,7 @@ class Feature(object):
         return scenarios, description
 
     def run(self, scenarios=None, ignore_case=True):
-        for callback in CALLBACK_REGISTRY['feature']['before_each']:
-            callback(self)
-
+        call_hook('before_each', 'feature', self)
         scenarios_ran = []
 
         if isinstance(scenarios, (tuple, list)):
@@ -718,9 +711,7 @@ class Feature(object):
 
             scenarios_ran.extend(scenario.run(ignore_case))
 
-        for callback in CALLBACK_REGISTRY['feature']['after_each']:
-            callback(self)
-
+        call_hook('after_each', 'feature', self)
         return FeatureResult(self, *scenarios_ran)
 
 class FeatureResult(object):

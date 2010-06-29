@@ -29,12 +29,13 @@ from lettuce.terrain import before
 from lettuce.terrain import world
 
 from lettuce.decorators import step
-from lettuce.registry import CALLBACK_REGISTRY
+from lettuce.registry import call_hook
 from lettuce.registry import STEP_REGISTRY
+from lettuce.registry import CALLBACK_REGISTRY
 
 from lettuce.exceptions import LettuceSyntaxError
 
-__all__ = ['after', 'before', 'step', 'world', 'STEP_REGISTRY', 'CALLBACK_REGISTRY']
+__all__ = ['after', 'before', 'step', 'world', 'STEP_REGISTRY', 'CALLBACK_REGISTRY', 'call_hook']
 
 def _import(name):
     return __import__(name)
@@ -91,8 +92,7 @@ class Runner(object):
 
         self.loader.find_and_load_step_definitions()
 
-        for callback in CALLBACK_REGISTRY['all']['before']:
-            callback()
+        call_hook('before', 'all')
 
         results = []
         if self.single_feature:
@@ -119,7 +119,5 @@ class Runner(object):
 
             total = TotalResult(results)
 
-            for callback in CALLBACK_REGISTRY['all']['after']:
-                callback(total)
-
+            call_hook('after', 'all', total)
             return total

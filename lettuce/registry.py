@@ -14,7 +14,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import sys
 import threading
+import traceback
 
 world = threading.local()
 world._set = False
@@ -75,6 +77,14 @@ CALLBACK_REGISTRY = CallbackDict(
         }
     }
 )
+
+def call_hook(situation, kind, *args, **kw):
+    for callback in CALLBACK_REGISTRY[kind][situation]:
+        try:
+            callback(*args, **kw)
+        except Exception, e:
+            traceback.print_exc(e)
+            sys.exit(2)
 
 def clear():
     STEP_REGISTRY.clear()
