@@ -434,12 +434,12 @@ class Scenario(object):
                         step.run(ignore_case)
                         steps_passed.append(step)
 
-                except AssertionError, e:
-                    steps_failed.append(step)
-                    reasons_to_fail.append(step.why)
-
                 except NoDefinitionFound, e:
                     steps_undefined.append(e.step)
+
+                except Exception, e:
+                    steps_failed.append(step)
+                    reasons_to_fail.append(step.why)
 
                 finally:
                     all_steps.append(step)

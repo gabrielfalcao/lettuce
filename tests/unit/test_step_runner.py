@@ -84,6 +84,14 @@ Feature: Many scenarios
 
 """
 
+FEATURE8 = """
+Feature: Count step definitions with exceptions as failing steps
+  Scenario: Raising exception
+    Given I have a defined step
+    When I have a step that raises an exception
+    Then this step will be skipped
+"""
+
 @step('I have a defined step')
 def have_a_defined_step(*args, **kw):
     assert True
@@ -95,6 +103,10 @@ def and_another(*args, **kw):
 @step("define a step")
 def define_a_step(*args, **kw):
     assert True
+
+@step(u'When I have a step that raises an exception')
+def raises_exception(step):
+    raise Exception()
 
 def test_can_count_steps_and_its_states():
     "The scenario result has the steps passed, failed and skipped steps. " \
@@ -182,7 +194,7 @@ def test_steps_are_aware_of_its_definitions():
 
     step1 = scenario_result.steps_passed[0]
 
-    assert_equals(step1.defined_at.line, 88)
+    assert_equals(step1.defined_at.line, 96)
     assert_equals(step1.defined_at.file, core.fs.relpath(__file__.rstrip("c")))
 
 def test_steps_that_match_groups_takes_them_as_parameters():
@@ -252,10 +264,18 @@ def test_feature_can_run_only_specified_scenarios():
     def just_register(scenario):
         scenarios_ran.append(scenario.name)
 
-    try:
-        feature.run(scenarios=(2, 5))
-        assert_equals(scenarios_ran, ['2nd one', '5th one'])
+    feature.run(scenarios=(2, 5))
+    assert_equals(scenarios_ran, ['2nd one', '5th one'])
 
+
+def test_count_raised_exceptions_as_failing_steps():
+    "When a step definition raises an exception, it is marked as a failed step. "
+
+    try:
+        f = Feature.from_string(FEATURE8)
+        feature_result = f.run()
+        scenario_result = feature_result.scenario_results[0]
+        assert_equals(len(scenario_result.steps_failed), 1)
     finally:
         registry.clear()
 
