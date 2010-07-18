@@ -18,18 +18,17 @@ import re
 import sys
 from StringIO import StringIO
 from nose.tools import assert_equals
-from lettuce import CALLBACK_REGISTRY, STEP_REGISTRY
+from lettuce import registry
 
 def prepare_stdout():
-    CALLBACK_REGISTRY.clear()
-    STEP_REGISTRY.clear()
+    registry.clear()
     if isinstance(sys.stdout, StringIO):
         del sys.stdout
     std = StringIO()
     sys.stdout = std
+
 def prepare_stderr():
-    CALLBACK_REGISTRY.clear()
-    STEP_REGISTRY.clear()
+    registry.clear()
     if isinstance(sys.stderr, StringIO):
         del sys.stderr
     std = StringIO()
