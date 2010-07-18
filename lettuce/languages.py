@@ -43,4 +43,22 @@ LANGUAGES = {
         'scenario_outline': u'Zarys Scenariusza',
         'scenario_separator': u'(Zarys Scenariusza|Scenariusz)',
     },
+    'ca': {
+        'examples': u'Exemples',
+        'feature': u'Funcionalitat',
+        'name': u'Catalan',
+        'native': u'Català',
+        'scenario': u'Escenari',
+        'scenario_outline': u"Esquema d'Escenari",
+        'scenario_separator': u"(Esquema d'Escenari|Escenari)",
+    },
+    'es': {
+        'examples': u'Ejemplos',
+        'feature': u'Funcionalidad',
+        'name': u'Spanish',
+        'native': u'Español',
+        'scenario': u'Escenario',
+        'scenario_outline': u'Esquema de Escenario',
+        'scenario_separator': u'(Esquema de Escenario|Escenario)',
+    },
 }
