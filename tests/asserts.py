@@ -38,7 +38,7 @@ def assert_lines(one, other):
     lines_one = one.splitlines()
     lines_other = other.splitlines()
     for line1, line2 in zip(lines_one, lines_other):
-        assert_equals(line1, line2)
+        assert_unicode_equals(line1, line2)
 
     assert_equals(len(lines_one), len(lines_other))
 
@@ -57,22 +57,29 @@ def assert_lines_with_traceback(one, other):
             assert filename in line1, error % params
 
         else:
-            assert_equals(line1, line2)
+            assert_unicode_equals(line1, line2)
 
-    assert_equals(len(lines_one), len(lines_other))
+    assert_unicode_equals(len(lines_one), len(lines_other))
+
+def assert_unicode_equals(original, expected):
+    if isinstance(original, basestring):
+        original = original.decode('utf-8')
+
+    assert_equals(original, expected)
 
 def assert_stderr(expected):
     string = sys.stderr.getvalue()
-    assert_equals(string.decode('utf-8'), expected)
+    assert_unicode_equals(string, expected)
 
 def assert_stdout(expected):
     string = sys.stdout.getvalue()
-    assert_equals(string.decode('utf-8'), expected)
+    assert_unicode_equals(string, expected)
 
 def assert_stdout_lines(other):
-    assert_lines(sys.stdout.getvalue().decode('utf-8'), other)
+    assert_lines(sys.stdout.getvalue(), other)
+
 def assert_stderr_lines(other):
-    assert_lines(sys.stderr.getvalue().decode('utf-8'), other)
+    assert_lines(sys.stderr.getvalue(), other)
 
 def assert_stdout_lines_with_traceback(other):
-    assert_lines_with_traceback(sys.stdout.getvalue().decode('utf-8'), other)
+    assert_lines_with_traceback(sys.stdout.getvalue(), other)
