@@ -14,7 +14,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import re
+import time
 
 def escape_if_necessary(what):
     what = unicode(what)
@@ -63,6 +65,12 @@ def getlen(string):
     return len(string) + 1
 
 def dicts_to_string(dicts, order):
+    escape = "#{%s}" % str(time.time())
+    def enline(line):
+        return unicode(line).replace("|", escape)
+    def deline(line):
+        return line.replace(escape, '\\|')
+
     keys_and_sizes = dict([(k, getlen(k)) for k in dicts[0].keys()])
     for key in keys_and_sizes:
         for data in dicts:
@@ -76,7 +84,7 @@ def dicts_to_string(dicts, order):
     for key in order:
         size = keys_and_sizes[key]
         name = u" %s" % rfill(key, size)
-        names.append(name)
+        names.append(enline(name))
 
     table = [u"|%s|" % "|".join(names)]
     for data in dicts:
@@ -84,8 +92,31 @@ def dicts_to_string(dicts, order):
         for key in order:
             value = data[key]
             size = keys_and_sizes[key]
-            names.append(u" %s" % rfill(unicode(value), size))
+            names.append(enline(u" %s" % rfill(value, size)))
 
         table.append(u"|%s|" % "|".join(names))
 
-    return u"\n".join(table) + u"\n"
+    return deline(u"\n".join(table) + u"\n")
+
+def parse_hashes(lines):
+    escape = "#{%s}" % str(time.time())
+    def enline(line):
+        return unicode(line.replace("\\|", escape)).strip()
+    def deline(line):
+        return line.replace(escape, '|')
+
+    lines = map(enline, lines)
+
+    keys = []
+    hashes = []
+    if lines:
+        first_line = lines.pop(0)
+        keys = split_wisely(first_line, u"|", True)
+        keys = map(deline, keys)
+
+        for line in lines:
+            values = split_wisely(line, u"|", True)
+            values = map(deline, values)
+            hashes.append(dict(zip(keys, values)))
+
+    return keys, hashes

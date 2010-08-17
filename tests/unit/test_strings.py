@@ -148,7 +148,7 @@ def test_dicts_to_string():
             'age': 22
         },
         {
-            'name': 'Laryssa',
+            'name': 'Miguel',
             'age': 19
         }
 
@@ -158,6 +158,82 @@ def test_dicts_to_string():
         strings.dicts_to_string(dicts, ['name', 'age']),
         u"| name           | age |\n"
         u"| Gabriel Falcão | 22  |\n"
-        u"| Laryssa        | 19  |\n"
+        u"| Miguel         | 19  |\n"
     )
+
+def test_dicts_to_string_escapes_pipe():
+    "strings.dicts_to_string escapes pipe"
+
+    dicts = [
+        {
+            'name': u'Gabriel | Falcão',
+            'age': 22
+        },
+        {
+            'name': 'Miguel | Arcanjo',
+            'age': 19
+        }
+
+    ]
+
+    assert_equals(
+        strings.dicts_to_string(dicts, ['name', 'age']),
+        u"| name             | age |\n"
+        u"| Gabriel \\| Falcão | 22  |\n"
+        u"| Miguel \\| Arcanjo | 19  |\n"
+    )
+
+def test_parse_hashes():
+    "strings.parse_hashes"
+
+    keys = [u'name', u'age']
+    dicts = [
+        {
+            u'name': u'Gabriel Falcão',
+            u'age': u'22'
+        },
+        {
+            u'name': u'Miguel',
+            u'age': u'33'
+        }
+
+    ]
+
+    table = [
+        u"| name           | age |\n",
+        u"| Gabriel Falcão | 22  |\n",
+        u"| Miguel         | 33  |\n",
+    ]
+
+    got_keys, got_dicts = strings.parse_hashes(table)
+
+    assert_equals(keys, got_keys)
+    assert_equals(dicts, got_dicts)
+
+def test_parse_hashes_escapes_pipes():
+    "strings.parse_hashes escapes pipe"
+
+    keys = [u'name', u'age']
+    dicts = [
+        {
+            u'name': u'Gabriel | Falcão',
+            u'age': u'22'
+        },
+        {
+            u'name': u'Miguel | Silva',
+            u'age': u'33'
+        }
+
+    ]
+
+    table = [
+        u"| name              | age |\n",
+        u"| Gabriel \| Falcão | 22  |\n",
+        u"| Miguel \| Silva   | 33  |\n",
+    ]
+
+    got_keys, got_dicts = strings.parse_hashes(table)
+
+    assert_equals(keys, got_keys)
+    assert_equals(dicts, got_dicts)
 

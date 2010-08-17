@@ -30,20 +30,6 @@ from lettuce.exceptions import LettuceSyntaxError
 
 fs = FileSystem()
 
-def parse_hashes(lines):
-    lines = map(unicode, lines)
-    keys = []
-    hashes = []
-    if lines:
-        first_line = lines.pop(0)
-        keys = strings.split_wisely(first_line, u"|", True)
-
-        for line in lines:
-            values = strings.split_wisely(line, u"|", True)
-            hashes.append(dict(zip(keys, values)))
-
-    return keys, hashes
-
 class Language(object):
     code = 'en'
     name = 'English'
@@ -264,7 +250,7 @@ class Step(object):
         return u'<Step: "%s">' % self.sentence
 
     def _parse_remaining_lines(self, lines):
-        return parse_hashes(lines)
+        return strings.parse_hashes(lines)
 
     def _get_match(self, ignore_case):
         matched, func = None, lambda: None
@@ -531,7 +517,7 @@ class Scenario(object):
         outlines = []
         if len(splitted) > 1:
             part = splitted[-1]
-            keys, outlines = parse_hashes(strings.get_stripped_lines(part))
+            keys, outlines = strings.parse_hashes(strings.get_stripped_lines(part))
 
         lines = strings.get_stripped_lines(string)
         scenario_line = lines.pop(0)

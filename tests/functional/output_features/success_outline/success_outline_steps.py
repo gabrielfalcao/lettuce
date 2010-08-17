@@ -33,6 +33,13 @@ def when_i_fill_the_field_x_with_y(step, field, value):
 def and_i_click_done(step):
     pass
 
-@step(r'Then I see the message "(.*)"')
-def then_i_see_the_message_message(step, message):
-    pass
+@step(r'I see the title of the page is "(.*)"')
+def then_i_see_the_message_message(step, title):
+    possible_titles = [
+        u'John | My Website',
+        u'Mary | My Website',
+        u'Foo | My Website',
+    ]
+
+    assert title in possible_titles, \
+           '"%s" should be between the options [%s]' % (title, ", ".join(possible_titles))

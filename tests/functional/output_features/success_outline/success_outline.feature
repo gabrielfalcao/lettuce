@@ -11,10 +11,10 @@ Feature: Successful Scenario Outline
     And I fill the field "password-confirm" with "<password>"
     And I fill the field "email" with "<email>"
     And I click "done"
-    Then I see the message "<message>"
+    Then I see the title of the page is "<title>"
 
   Examples:
-    | username | password | email          | message       |
-    | john     | doe-1234 | john@gmail.org | Welcome, John |
-    | mary     | wee-9876 | mary@email.com | Welcome, Mary |
-    | foo      | foo-bar  | foo@bar.com    | Welcome, Foo  |
+    | username | password | email          | title              |
+    | john     | doe-1234 | john@gmail.org | John \| My Website |
+    | mary     | wee-9876 | mary@email.com | Mary \| My Website |
+    | foo      | foo-bar  | foo@bar.com    | Foo \| My Website  |
