@@ -20,7 +20,7 @@ release = 'barium'
 
 import os
 import sys
-
+from datetime import datetime
 from lettuce import fs
 from lettuce.core import Feature, TotalResult
 
@@ -89,7 +89,7 @@ class Runner(object):
         """ Find and load step definitions, and them find and load
         features under `base_path` specified on constructor
         """
-
+        started_at = datetime.now()
         self.loader.find_and_load_step_definitions()
 
         call_hook('before', 'all')
@@ -120,4 +120,18 @@ class Runner(object):
             total = TotalResult(results)
 
             call_hook('after', 'all', total)
+
+            finished_at = datetime.now()
+            time_took = finished_at - started_at
+
+            hours = time_took.seconds / 60 / 60
+            minutes = time_took.seconds / 60
+            seconds = time_took.seconds
+            if hours:
+                print  "(finished within %d hours)" % hours
+            elif minutes:
+                print  "(finished within %d minutes)" % minutes
+            elif seconds:
+                print  "(finished within %d seconds)" % seconds
+
             return total
