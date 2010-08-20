@@ -476,6 +476,14 @@ class Scenario(object):
                 yield Step(sentence, step._remaining_lines)
 
     def _parse_remaining_lines(self, lines, with_file, original_string):
+        invalid_first_line_error = '\nInvalid step on scenario "%s".\n' \
+            'Maybe you killed the first step text of that scenario\n'
+
+        if lines and strings.wise_startswith(lines[0], u'|'):
+            raise LettuceSyntaxError(
+                with_file,
+                invalid_first_line_error % self.name)
+
         step_strings = []
         for line in lines:
             if strings.wise_startswith(line, u"|"):

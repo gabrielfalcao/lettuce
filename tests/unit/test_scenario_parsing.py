@@ -91,10 +91,23 @@ OUTLINED_FEATURE_WITH_MANY = """
 
 """
 
+SCENARIO_FAILED = """
+Scenario: Adding some students to my university database
+       | Name               | Duration |
+       | Computer Science   | 5 years  |
+       | Nutrition          | 4 years  |
+    When I consolidate the database into 'courses.txt'
+    Then I see the 1st line of 'courses.txt' has 'Computer Science:5'
+    And I see the 2nd line of 'courses.txt' has 'Nutrition:4'
+"""
+
 from lettuce.core import Step
 from lettuce.core import Scenario
 from lettuce.core import Feature
+from lettuce.exceptions import LettuceSyntaxError
+
 from nose.tools import assert_equals
+from nose.tools import assert_raises
 
 def test_scenario_has_name():
     "It should extract the name of the scenario"
@@ -279,3 +292,8 @@ def test_full_featured_feature():
         sentences_of = lambda x: x.sentence
         assert_equals(got_examples, expected_examples)
         assert_equals(map(sentences_of, got_steps), expected_steps)
+
+def test_scenario_with_table_and_no_step_fails():
+    "A step table imediately after the scenario line, without step line fails"
+
+    assert_raises(LettuceSyntaxError, Scenario.from_string, SCENARIO_FAILED)
