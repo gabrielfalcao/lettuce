@@ -129,7 +129,7 @@ def print_end(total):
             method_name = step.proposed_method_name
             wrt("@step(u'%s')\n" % step.proposed_sentence)
             wrt("def %s:\n" % method_name)
-            wrt("    pass\n")
+            wrt("    assert False, 'This step must be implemented'\n")
 
 def print_no_features_found(where):
     where = core.fs.relpath(where)

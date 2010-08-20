@@ -223,7 +223,7 @@ def print_end(total):
             method_name = step.proposed_method_name
             wrt("@step(u'%s')\n" % step.proposed_sentence)
             wrt("def %s:\n" % method_name)
-            wrt("    pass")
+            wrt("    assert False, 'This step must be implemented'")
             if current is last:
                 wrt("\033[0m")
 

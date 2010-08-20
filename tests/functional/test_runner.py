@@ -388,7 +388,7 @@ def test_output_with_failed_colorless_with_table():
         "\n"
         "@step(u'And this one does not even has definition')\n"
         "def and_this_one_does_not_even_has_definition(step):\n"
-        "    pass\n" % {
+        "    assert False, 'This step must be implemented'\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')),
             'call_line':call_line,
@@ -434,7 +434,7 @@ def test_output_with_failed_colorful_with_table():
         "\n"
         "@step(u'And this one does not even has definition')\n"
         "def and_this_one_does_not_even_has_definition(step):\n"
-        "    pass\033[0m"
+        "    assert False, 'This step must be implemented'\033[0m"
         "\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')),
@@ -655,7 +655,7 @@ def test_output_snippets_with_groups_within_double_quotes_colorless():
         u'\n'
         u'@step(u\'Given I have "(.*)" and "(.*)"\')\n'
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
-        u'    pass\n'
+        u'    assert False, \'This step must be implemented\'\n'
     )
 
 @with_setup(prepare_stdout)
@@ -683,7 +683,7 @@ def test_output_snippets_with_groups_within_double_quotes_colorful():
         u'\n'
         u'@step(u\'Given I have "(.*)" and "(.*)"\')\n'
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
-        u'    pass\033[0m\n'
+        u'    assert False, \'This step must be implemented\'\033[0m\n'
     )
 
 
@@ -712,7 +712,7 @@ def test_output_snippets_with_groups_within_single_quotes_colorless():
         u'\n'
         u'@step(u\'Given I have \\\'(.*)\\\' and \\\'(.*)\\\'\')\n'
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
-        u'    pass\n'
+        u'    assert False, \'This step must be implemented\'\n'
     )
 
 @with_setup(prepare_stdout)
@@ -740,7 +740,7 @@ def test_output_snippets_with_groups_within_single_quotes_colorful():
         u'\n'
         u'@step(u\'Given I have \\\'(.*)\\\' and \\\'(.*)\\\'\')\n'
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
-        u'    pass\033[0m\n'
+        u'    assert False, \'This step must be implemented\'\033[0m\n'
     )
 
 @with_setup(prepare_stdout)
@@ -769,7 +769,7 @@ def test_output_snippets_with_groups_within_redundant_quotes():
         u'\n'
         u'@step(u\'Given I have "(.*)" and "(.*)"\')\n'
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
-        u'    pass\n'
+        u'    assert False, \'This step must be implemented\'\n'
     )
 
 @with_setup(prepare_stdout)
@@ -802,11 +802,11 @@ def test_output_snippets_with_normalized_unicode_names():
         u"\n"
         u"@step(u'Dado que eu tenho palavrões e outras situações')\n"
         u"def dado_que_eu_tenho_palavroes_e_outras_situacoes(step):\n"
-        u"    pass\n"
+        u"    assert False, 'This step must be implemented'\n"
         u"@step(u'E várias palavras acentuadas são úteis, tais como: \"(.*)\"')\n"
         u"def e_varias_palavras_acentuadas_sao_uteis_tais_como_group1(step, group1):\n"
-        u"    pass\n"
+        u"    assert False, 'This step must be implemented'\n"
         u"@step(u'Então eu fico felizão')\n"
         u"def entao_eu_fico_felizao(step):\n"
-        u"    pass\n"
+        u"    assert False, 'This step must be implemented'\n"
     )
