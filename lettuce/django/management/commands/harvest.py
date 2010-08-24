@@ -47,6 +47,9 @@ class Command(BaseCommand):
         make_option('-S', '--no-server', action='store_true', dest='no_server', default=False,
             help="will not run django's builtin HTTP server"),
 
+        make_option('-d', '--debug-mode', action='store_true', dest='debug', default=False,
+            help="when put together with builtin HTTP server, forces django to run with settings.DEBUG=True"),
+
         make_option('-s', '--scenarios', action='store', dest='scenarios', default=None,
             help='Comma separated list of scenarios to run'),
     )
@@ -67,8 +70,9 @@ class Command(BaseCommand):
         return paths
 
     def handle(self, *args, **options):
-        settings.DEBUG = False
         setup_test_environment()
+
+        settings.DEBUG = options.get('debug', False)
 
         verbosity = int(options.get('verbosity', 4))
         apps_to_run = tuple(options.get('apps', '').split(","))
@@ -78,6 +82,9 @@ class Command(BaseCommand):
         paths = self.get_paths(args, apps_to_run, apps_to_avoid)
         if run_server:
             server.start()
+
+        os.environ['SERVER_NAME'] = server.address
+        os.environ['SERVER_PORT'] = str(server.port)
 
         failed = False
         try:

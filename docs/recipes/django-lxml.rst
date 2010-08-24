@@ -154,6 +154,12 @@ and so on until it reaches the max port number 65535
 So that you can use browser-based tools such as those listed above to
 access Django.
 
+.. warning::
+
+   when running the http server, lettuce sets the environment
+   variables SERVER_NAME and SERVER_PORT. It was brought for a GAE_
+   issue. If it can possibly bring any errors, be warned.
+
 figure out django urls
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -255,6 +261,21 @@ example:
    python manage.py harvest --no-server
    python manage.py harvest -S
 
+running the HTTP server with settings.DEBUG=True
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In order to run tests against the nearest configuration of production,
+lettuce sets up settings.DEBUG=False
+
+However, for debug purposes one can face a misleading HTTP 500 error without traceback in Django.
+For those cases lettuce provides the `--debug-mode` or `-d` option.
+
+.. highlight:: bash
+
+::
+
+   python manage.py harvest --debug-mode
+   python manage.py harvest -d
 
 running only the specified scenarios
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -349,3 +370,4 @@ you can also specify it at `settings.py` so that you won't need to type the same
 .. _selenium: http://seleniumhq.org/docs/appendix_installing_python_driver_client.html
 .. _windmill: http://www.getwindmill.com/
 .. _webdriver: http://code.google.com/p/selenium/wiki/PythonBindings?redir=1
+.. _GAE: http://code.google.com/appengine
