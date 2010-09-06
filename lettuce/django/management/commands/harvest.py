@@ -65,7 +65,7 @@ class Command(BaseCommand):
             else:
                 paths = args
         else:
-            paths = harvest_lettuces(apps_to_run, apps_to_avoid)
+            paths = harvest_lettuces(apps_to_run, apps_to_avoid) # list of tuples with (path, app_module)
 
         return paths
 
@@ -87,11 +87,24 @@ class Command(BaseCommand):
         os.environ['SERVER_PORT'] = str(server.port)
 
         failed = False
+
+        registry.call_hook('before', 'harvest', locals())
+        results = []
         try:
             for path in paths:
-                registry.clear()
-                result = Runner(path, options.get('scenarios'), verbosity).run()
+                app_module = None
+                if isinstance(path, tuple) and len(path) is 2:
+                    path, app_module = path
 
+                if app_module is not None:
+                    registry.call_hook('before_each', 'app', app_module)
+
+                runner = Runner(path, options.get('scenarios'), verbosity)
+                result = runner.run()
+                if app_module is not None:
+                    registry.call_hook('after_each', 'app', app_module, result)
+
+                results.append(result)
                 if not result or result.steps != result.steps_passed:
                     failed = True
 
@@ -100,5 +113,6 @@ class Command(BaseCommand):
             traceback.print_exc(e)
 
         finally:
+            registry.call_hook('after', 'harvest', results)
             server.stop(failed)
             teardown_test_environment()

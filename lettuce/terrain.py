@@ -18,7 +18,7 @@ from lettuce.registry import world
 from lettuce.registry import CALLBACK_REGISTRY
 world._set = True
 
-class before:
+class main(object):
     @classmethod
     def all(cls, function):
         CALLBACK_REGISTRY.append_to('all', cls.__name__, function)
@@ -39,20 +39,24 @@ class before:
         CALLBACK_REGISTRY.append_to('feature', "%s_each" % cls.__name__, function)
         return function
 
-class after:
     @classmethod
-    def all(cls, function):
-        CALLBACK_REGISTRY.append_to('all', cls.__name__, function)
+    def harvest(cls, function):
+        CALLBACK_REGISTRY.append_to('harvest', cls.__name__, function)
         return function
 
     @classmethod
-    def each_step(cls, function):
-        CALLBACK_REGISTRY.append_to('step', "%s_each" % cls.__name__, function)
+    def each_app(cls, function):
+        CALLBACK_REGISTRY.append_to('app', "%s_each" % cls.__name__, function)
         return function
 
     @classmethod
-    def each_scenario(cls, function):
-        CALLBACK_REGISTRY.append_to('scenario', "%s_each" % cls.__name__, function)
+    def runserver(cls, function):
+        CALLBACK_REGISTRY.append_to('runserver', cls.__name__, function)
+        return function
+
+    @classmethod
+    def handle_request(cls, function):
+        CALLBACK_REGISTRY.append_to('handle_request', cls.__name__, function)
         return function
 
     @classmethod
@@ -60,7 +64,8 @@ class after:
         CALLBACK_REGISTRY.append_to('scenario', "outline", function)
         return function
 
-    @classmethod
-    def each_feature(cls, function):
-        CALLBACK_REGISTRY.append_to('feature', "%s_each" % cls.__name__, function)
-        return function
+class before(main):
+    pass
+
+class after(main):
+    pass

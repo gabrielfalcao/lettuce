@@ -29,7 +29,7 @@ class CleanableDict(dict):
 class CallbackDict(CleanableDict):
     def _function_matches(self, one, other):
         params = 'co_filename', 'co_firstlineno'
-        matches = []
+        matches = list()
 
         for param in params:
             one_got = getattr(one.func_code, param)
@@ -49,7 +49,7 @@ class CallbackDict(CleanableDict):
             self[where][when].append(function)
 
     def clear(self):
-        for action_dict in self.values():
+        for name, action_dict in self.items():
             for callback_list in action_dict.values():
                 while callback_list:
                     callback_list.pop()
@@ -59,22 +59,38 @@ STEP_REGISTRY = CleanableDict()
 CALLBACK_REGISTRY = CallbackDict(
     {
         'all': {
-            'before': [],
-            'after': []
+            'before': list(),
+            'after': list()
         },
         'step': {
-            'before_each': [],
-            'after_each': []
+            'before_each': list(),
+            'after_each': list()
         },
         'scenario': {
-            'before_each': [],
-            'after_each': [],
-            'outline': []
+            'before_each': list(),
+            'after_each': list(),
+            'outline': list()
         },
         'feature': {
-            'before_each': [],
-            'after_each': []
-        }
+            'before_each': list(),
+            'after_each': list()
+        },
+        'app': {
+            'before_each': list(),
+            'after_each': list()
+        },
+        'harvest': {
+            'before': list(),
+            'after': list()
+        },
+        'handle_request': {
+            'before': list(),
+            'after': list()
+        },
+        'runserver': {
+            'before': list(),
+            'after': list()
+        },
     }
 )
 

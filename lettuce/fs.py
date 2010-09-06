@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import re
 import os
+import imp
 import sys
 import codecs
 import fnmatch
@@ -52,6 +53,20 @@ class FileSystem(object):
 
     def __init__(self):
         self.stack = []
+
+    @classmethod
+    def _import(cls, name):
+        sys.path.insert(0, cls.current_dir())
+        fp, pathname, description = imp.find_module(name)
+
+        try:
+            module = imp.load_module(name, fp, pathname, description)
+            sys.path.remove(cls.current_dir())
+            return module
+        finally:
+            # Since we may exit via an exception, close fp explicitly.
+            if fp:
+                fp.close()
 
     @classmethod
     def pushd(cls, *path):

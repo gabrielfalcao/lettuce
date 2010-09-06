@@ -263,4 +263,140 @@ by the fact that its ran *after* lettuce run the step.
        if not step.hashes:
           print "no tables in the step"
 
+django-specific hooks
+~~~~~~~~~~~~~~~~~~~~~
+
+since lettuce officially suports Django_, there are a few specific hooks that help on setting up your test suite on it.
+
+@before.harvest
+^^^^^^^^^^^^^^^
+
+this hook is ran before lettuce start harvesting your Django tests. It
+can be very useful for setting up browser drivers (such as selenium),
+before all tests start to run on Django.
+
+the decorated function takes a dict with the local variables within
+the `harvest` management command.
+
+.. doctest::
+
+   from lettuce import *
+   from lettuce.django import django_url
+   from selenium import selenium
+
+   @before.harvest
+   def prepare_browser_driver(variables):
+       if variables.get('run_server', False) is True:
+           world.browser = selenium('localhost', 4444, '*firefox', django_url('/'))
+           world.browser.start()
+
+@after.harvest
+^^^^^^^^^^^^^^
+
+this hook is ran right after lettuce finish harvesting your Django
+tests. It can be very useful for shutting down previously started
+browser drivers (see the example above).
+
+the decorated function takes a list of :ref:`total-result` objects.
+
+.. doctest::
+
+   from lettuce import *
+
+   @after.harvest
+   def shutdown_browser_driver(results):
+       world.browser.stop()
+
+@before.each_app
+^^^^^^^^^^^^^^^^
+
+this hook is ran before lettuce run each Django_ app.
+
+the decorated function takes the python module that corresponds to the current app.
+
+.. doctest::
+
+   from lettuce import *
+
+   @before.each_app
+   def populate_blog_database(app):
+       if app.__name__ == 'blog':
+           from blog.models import Post
+           Post.objects.create(title='Nice example', body='I like writting!')
+
+@after.each_app
+^^^^^^^^^^^^^^^
+
+this hook is ran after lettuce run each Django_ app.
+
+the decorated function takes two arguments:
+
+* the python module that corresponds to the current app.
+* a :ref:`total-result` as parameter, so that you can use the result
+statistics somehow
+
+.. doctest::
+
+   from lettuce import *
+
+   @after.each_app
+   def clear_blog_database_if_successful(app, result):
+       if app.__name__ == 'blog':
+           if result.scenarios_ran is result.scenarios_passed:
+               from blog.models import Post, Comment
+               Comment.objects.all()
+               Post.objects.all()
+
+@before.runserver and @after.runserver
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+these hooks are ran right before, and after lettuce starts up the builtin http server.
+
+the decorated function takes a `lettuce.django.server.ThreadedServer` object.
+
+.. doctest::
+
+   from lettuce import *
+   from django.core.servers.basehttp import WSGIServer
+
+   @before.runserver
+   def prepare_database(server):
+       assert isinstance(server, WSGIServer)
+       import mydatabase
+       mydatabase.prepare()
+
+   @after.runserver
+   def say_goodbye(server):
+       assert isinstance(server, WSGIServer)
+       print "goodbye, see you soon"
+
+@before.handle_request and @after.handle_request
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+these hooks are ran right before, and after lettuce's builtin HTTP server responds to a request.
+
+both decorated functions takes these two arguments:
+
+* a `django.core.servers.basehttp.WSGIServer` object.
+* a `lettuce.django.server.ThreadedServer` object.
+
+.. doctest::
+
+   from lettuce import *
+   from django.core.servers.basehttp import WSGIServer
+
+   @before.handle_request
+   def print_request(httpd, server):
+       socket_object, (client_address, size) = httpd.get_request()
+       print socket_object.dup().recv(size)
+
+   @after.handle_request
+   def say_goodbye(httpd, server):
+       socket_object, (client_address, size) = httpd.get_request()
+       print "I've just finished to respond to the client %s" % client_address
+
+.. warning:: all the `handle_request` hooks are run within a python
+   thread. If something went wrong within a calback, lettuce can get
+   stuck.
+
 .. _Django: http://djangoproject.com/

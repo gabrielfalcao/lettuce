@@ -49,7 +49,9 @@ def get_apps():
     return map(import_module, settings.INSTALLED_APPS)
 
 def harvest_lettuces(only_the_apps=None, avoid_apps=None, path="features"):
-    "gets all installed apps that are not from django.contrib"
+    """gets all installed apps that are not from django.contrib
+    returns a list of tuples with (path_to_app, app_module)
+    """
 
     apps = get_apps()
 
@@ -68,5 +70,5 @@ def harvest_lettuces(only_the_apps=None, avoid_apps=None, path="features"):
 
         apps = filter(_filter_avoid, apps)
 
-    joinpath = lambda app: join(dirname(app.__file__), path)
+    joinpath = lambda app: (join(dirname(app.__file__), path), app)
     return map(joinpath, apps)

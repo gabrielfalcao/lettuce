@@ -14,25 +14,34 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from os.path import dirname, abspath, join
-from nose.tools import assert_equals
+import os
+import commands
+from os.path import dirname, abspath, join, curdir
+from nose.tools import assert_equals, with_setup
 
-from lettuce import step
-from lettuce import Runner
-from lettuce.terrain import world
-from lettuce.terrain import before, after
+from tests.asserts import prepare_stdout
 
 def test_imports_terrain_under_path_that_is_run():
+    old_path = abspath(curdir)
 
-    assert not hasattr(world, 'works_fine')
+    os.chdir(join(abspath(dirname(__file__)), 'simple_features', '1st_feature_dir'))
 
-    runner = Runner(join(abspath(dirname(__file__)), 'simple_features', '1st_feature_dir'))
-    assert runner.terrain
-    assert hasattr(world, 'works_fine')
-    assert world.works_fine
+    status, output = commands.getstatusoutput('python -c "from lettuce import world;assert hasattr(world, \'works_fine\'); print \'it passed!\'"')
 
+    assert_equals(status, 0)
+    assert_equals(output, "it passed!")
+
+    os.chdir(old_path)
+
+@with_setup(prepare_stdout)
 def test_after_each_all_is_executed_before_each_all():
     "terrain.before.each_all and terrain.after.each_all decorators"
+
+    from lettuce import step
+    from lettuce import Runner
+
+    from lettuce.terrain import before, after, world
+
     world.all_steps = []
 
     @before.all

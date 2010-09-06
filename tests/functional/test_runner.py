@@ -55,7 +55,8 @@ def test_try_to_import_terrain():
     os.chdir(sandbox_path)
 
     try:
-        Runner(".")
+        import lettuce
+        reload(lettuce)
         raise AssertionError('The runner should raise ImportError !')
     except SystemExit:
         assert_stderr(

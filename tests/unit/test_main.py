@@ -14,19 +14,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import lettuce
+import lettuce.fs
 from nose.tools import assert_equals
 from mox import Mox
 
 def test_has_version():
     "A nice python module is supposed to have a version"
-    assert_equals(lettuce.version, '0.1.13')
+    assert_equals(lettuce.version, '0.1.14')
 
 def test_import():
     "lettuce importer does import"
     import os
-    module = lettuce._import('os')
+    module = lettuce.fs.FileSystem._import('os')
     assert_equals(os, module)
 
 def test_terrain_import_exception():
@@ -37,21 +37,19 @@ def test_terrain_import_exception():
 
     mox = Mox()
 
-    mox.StubOutWithMock(lettuce, '_import')
-    mox.StubOutWithMock(lettuce, 'fs')
     mox.StubOutWithMock(lettuce.fs, 'FileSystem')
     mox.StubOutWithMock(lettuce.sys, 'stderr')
-    mox.StubOutWithMock(lettuce.sys, 'path')
 
-    lettuce._import('terrain').AndRaise(Exception('foo bar'))
+    lettuce.fs.FileSystem._import('terrain').AndRaise(Exception('foo bar'))
 
-    lettuce.fs.FeatureLoader("[some path]")
     lettuce.sys.stderr.write(string)
-    lettuce.sys.path.insert(0, '[some path]')
 
     mox.ReplayAll()
 
     try:
-        lettuce.Runner("[some path]")
+        reload(lettuce)
     except SystemExit:
         mox.VerifyAll()
+
+    finally:
+        mox.UnsetStubs()

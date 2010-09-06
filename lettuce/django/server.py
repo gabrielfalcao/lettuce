@@ -22,6 +22,7 @@ import httplib
 import urlparse
 import tempfile
 import threading
+
 from StringIO import StringIO
 
 from django.conf import settings
@@ -31,6 +32,8 @@ from django.core.servers.basehttp import ServerHandler
 from django.core.servers.basehttp import WSGIRequestHandler
 from django.core.servers.basehttp import WSGIServerException
 from django.core.servers.basehttp import AdminMediaHandler
+
+from lettuce.registry import call_hook
 
 class LettuceServerException(WSGIServerException):
     pass
@@ -172,7 +175,9 @@ class ThreadedServer(threading.Thread):
 
         global keep_running
         while keep_running:
+            call_hook('before', 'handle_request', httpd, self)
             httpd.handle_request()
+            call_hook('after', 'handle_request', httpd, self)
             if self.lock.locked():
                 self.lock.release()
 
@@ -188,6 +193,7 @@ class Server(object):
 
     def start(self):
         """Starts the webserver thread, and waits it to be available"""
+        call_hook('before', 'runserver', self._actual_server)
         self._actual_server.setDaemon(True)
         self._actual_server.start()
         self._actual_server.wait()
@@ -205,6 +211,7 @@ class Server(object):
         finally:
             http.close()
             code = int(fail)
+            call_hook('after', 'runserver', self._actual_server)
             return sys.exit(code)
 
     def url(self, url=""):

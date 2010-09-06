@@ -15,13 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-version = '0.1.13'
+version = '0.1.14'
 release = 'barium'
 
 import os
 import sys
 from datetime import datetime
+
 from lettuce import fs
+
 from lettuce.core import Feature, TotalResult
 
 from lettuce.terrain import after
@@ -37,8 +39,17 @@ from lettuce.exceptions import LettuceSyntaxError
 
 __all__ = ['after', 'before', 'step', 'world', 'STEP_REGISTRY', 'CALLBACK_REGISTRY', 'call_hook']
 
-def _import(name):
-    return __import__(name)
+try:
+    terrain = fs.FileSystem._import("terrain")
+    reload(terrain)
+except Exception, e:
+    if not "No module named terrain" in str(e):
+        string = 'Lettuce has tried to load the conventional environment ' \
+            'module "terrain"\nbut it has errors, check its contents and ' \
+            'try to run lettuce again.\n'
+        sys.stderr.write(string)
+        raise SystemExit(1)
+
 
 class Runner(object):
     """ Main lettuce's test runner
@@ -51,7 +62,6 @@ class Runner(object):
         import it from within `base_path`
         """
 
-        self.terrain = None
         self.single_feature = None
         if os.path.isfile(base_path) and os.path.exists(base_path):
             self.single_feature = base_path
@@ -61,16 +71,6 @@ class Runner(object):
         self.loader = fs.FeatureLoader(base_path)
         self.verbosity = verbosity
         self.scenarios = scenarios and map(int, scenarios.split(",")) or None
-        try:
-            self.terrain = _import("terrain")
-        except Exception, e:
-            if not "No module named terrain" in str(e):
-                string = 'Lettuce has tried to load the conventional environment ' \
-                    'module "terrain"\nbut it has errors, check its contents and ' \
-                    'try to run lettuce again.\n'
-
-                sys.stderr.write(string)
-                raise SystemExit(1)
 
         sys.path.remove(base_path)
 
