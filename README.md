@@ -48,6 +48,11 @@ all them are used within lettuce tests
 5. commit, push etc
 6. send a pull request
 
+## keep in mind
+
+that lettuce is a testing software, patches and pull requests must
+come with automated tests, and if suitable, with proper documentation.
+
 # mailing list
 
 ## for users
