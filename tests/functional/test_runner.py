@@ -499,7 +499,7 @@ def test_output_with_failed_colorful_with_table():
 
 @with_setup(prepare_stdout)
 def test_output_with_successful_outline_colorless():
-    "Testing the colorless output of a scenario outline"
+    "With colorless output, a successful outline scenario should print beautifully."
 
     runner = Runner(feature_name('success_outline'), verbosity=3)
     runner.run()
@@ -534,7 +534,7 @@ def test_output_with_successful_outline_colorless():
 
 @with_setup(prepare_stdout)
 def test_output_with_successful_outline_colorful():
-    "Testing the colorful output of a scenario outline"
+    "With colored output, a successful outline scenario should print beautifully."
 
     runner = Runner(feature_name('success_outline'), verbosity=4)
     runner.run()
@@ -569,7 +569,7 @@ def test_output_with_successful_outline_colorful():
 
 @with_setup(prepare_stdout)
 def test_output_with_failful_outline_colorless():
-    "Testing the colorless output of a scenario outline"
+    "With colorless output, an unsuccessful outline scenario should print beautifully."
 
     runner = Runner(feature_name('fail_outline'), verbosity=3)
     runner.run()
@@ -614,7 +614,7 @@ def test_output_with_failful_outline_colorless():
 
 @with_setup(prepare_stdout)
 def test_output_with_failful_outline_colorful():
-    "Testing the colorful output of a scenario outline"
+    "With colored output, an unsuccessful outline scenario should print beautifully."
 
     runner = Runner(feature_name('fail_outline'), verbosity=4)
     runner.run()

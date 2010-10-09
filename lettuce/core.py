@@ -290,6 +290,77 @@ class Step(object):
 
         self.passed = True
         return True
+        
+    @staticmethod
+    def run_all(steps, outline = None, run_callbacks = False, ignore_case = True):
+        """Runs each step in the given list of steps.
+        
+        Returns a tuple of five lists:
+            - The full set of steps executed
+            - The steps that passed
+            - The steps that failed
+            - The steps that were undefined
+            - The reason for each failing step (indices matching per above)
+        
+        """
+        all_steps = []
+        steps_passed = []
+        steps_failed = []
+        steps_undefined = []
+        reasons_to_fail = []
+        
+        for step in steps:
+            if outline:
+                step = step.solve_and_clone(outline)
+
+            try:
+                step.pre_run(ignore_case, with_outline=outline)
+
+                if run_callbacks:
+                    call_hook('before_each', 'step', step)
+
+                if not steps_failed and not steps_undefined:
+                    step.run(ignore_case)
+                    steps_passed.append(step)
+
+            except NoDefinitionFound, e:
+                steps_undefined.append(e.step)
+
+            except Exception, e:
+                steps_failed.append(step)
+                reasons_to_fail.append(step.why)
+
+            finally:
+                all_steps.append(step)
+                if run_callbacks:
+                    call_hook('after_each', 'step', step)
+        
+        return (all_steps, steps_passed, steps_failed, steps_undefined, reasons_to_fail)
+        
+    @classmethod
+    def many_from_lines(klass, lines, filename = None, original_string = None):
+        """Parses a set of steps from lines of input.
+        
+        This will correctly parse and produce a list of steps from lines without
+        any Scenario: heading at the top. Examples in table form are correctly
+        parsed, but must be well-formed under a regular step sentence.
+        
+        """
+        invalid_first_line_error = '\nFirst line of step "%(line)s" is in table form.'
+        if lines and strings.wise_startswith(lines[0], u'|'):
+            raise LettuceSyntaxError(
+                None,
+                invalid_first_line_error % lines[0])
+        
+        step_strings = []
+        for line in lines:
+            if strings.wise_startswith(line, u"|"):
+                step_strings[-1] += "\n%s" % line
+            else:
+                step_strings.append(line)
+
+        mkargs = lambda s: [s, filename, original_string]
+        return [klass.from_string(*mkargs(s)) for s in step_strings]
 
     @classmethod
     def from_string(cls, string, with_file=None, original_string=None):
@@ -400,38 +471,7 @@ class Scenario(object):
         call_hook('before_each', 'scenario', self)
 
         def run_scenario(almost_self, order=-1, outline=None, run_callbacks=False):
-            all_steps = []
-            steps_passed = []
-            steps_failed = []
-            steps_undefined = []
-
-            reasons_to_fail = []
-            for step in self.steps:
-                if outline:
-                    step = step.solve_and_clone(outline)
-
-                try:
-                    step.pre_run(ignore_case, with_outline=outline)
-
-                    if run_callbacks:
-                        call_hook('before_each', 'step', step)
-
-                    if not steps_failed and not steps_undefined:
-                        step.run(ignore_case)
-                        steps_passed.append(step)
-
-                except NoDefinitionFound, e:
-                    steps_undefined.append(e.step)
-
-                except Exception, e:
-                    steps_failed.append(step)
-                    reasons_to_fail.append(step.why)
-
-                finally:
-                    all_steps.append(step)
-                    if run_callbacks:
-                        call_hook('after_each', 'step', step)
-
+            all_steps, steps_passed, steps_failed, steps_undefined, reasons_to_fail = Step.run_all(self.steps, outline, run_callbacks, ignore_case)
             skip = lambda x: x not in steps_passed and x not in steps_undefined and x not in steps_failed
 
             steps_skipped = filter(skip, all_steps)
@@ -484,15 +524,7 @@ class Scenario(object):
                 with_file,
                 invalid_first_line_error % self.name)
 
-        step_strings = []
-        for line in lines:
-            if strings.wise_startswith(line, u"|"):
-                step_strings[-1] += "\n%s" % line
-            else:
-                step_strings.append(line)
-
-        mkargs = lambda s: [s, with_file, original_string]
-        return [Step.from_string(*mkargs(s)) for s in step_strings]
+        return Step.many_from_lines(lines, with_file, original_string)
 
     def _set_definition(self, definition):
         self.described_at = definition
