@@ -51,7 +51,7 @@ def assert_lines_with_traceback(one, other):
     lines_other = other.splitlines()
     regex = re.compile('File "([^"]+)", line \d+, in.*')
 
-    error = '%r should be in %r'
+    error = '%r should be in traceback line %r.\nFull output was:\n' + one
     for line1, line2 in zip(lines_one, lines_other):
         if regex.search(line1) and regex.search(line2):
             found = regex.search(line2)
