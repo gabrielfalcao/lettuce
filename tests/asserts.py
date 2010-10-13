@@ -19,6 +19,7 @@ import sys
 from StringIO import StringIO
 from nose.tools import assert_equals
 from lettuce import registry
+from difflib import Differ
 
 def prepare_stdout():
     registry.clear()
@@ -34,13 +35,16 @@ def prepare_stderr():
     std = StringIO()
     sys.stderr = std
 
-def assert_lines(one, other):
-    lines_one = one.splitlines()
-    lines_other = other.splitlines()
-    for line1, line2 in zip(lines_one, lines_other):
-        assert_unicode_equals(line1, line2)
-
-    assert_equals(len(lines_one), len(lines_other))
+def assert_lines(original, expected):
+    original = original.decode('utf-8') if isinstance(original, basestring) else original
+    assert_lines_unicode(original, expected)
+    
+def assert_lines_unicode(original, expected):
+    if original != expected:
+        diff = ''.join(list(Differ().compare(expected.splitlines(1), original.splitlines(1))))
+        raise AssertionError, 'Output differed as follows:\n' + diff + "\nOutput was:\n" + original
+    
+    assert_equals(len(expected), len(original), 'Output appears equal, but of different lengths.')
 
 def assert_lines_with_traceback(one, other):
     lines_one = one.splitlines()

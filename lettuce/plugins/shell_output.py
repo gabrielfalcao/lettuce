@@ -56,6 +56,7 @@ def print_step_ran(step):
 
 @before.each_scenario
 def print_scenario_running(scenario):
+    wrt('\n')
     wrt(scenario.represented())
 
 @after.outline
@@ -82,7 +83,6 @@ def print_outline(scenario, order, outline, reasons_to_fail):
 def print_feature_running(feature):
     wrt("\n")
     wrt(feature.represented())
-    wrt("\n")
 
 @after.all
 def print_end(total):

@@ -114,7 +114,7 @@ def print_step_ran(step):
 def print_scenario_running(scenario):
     string = scenario.represented()
     string = wrap_file_and_line(string, '\033[1;30m', '\033[0m')
-    write_out("\033[1;37m%s" % string)
+    write_out("\n\033[1;37m%s" % string)
 
 @after.outline
 def print_outline(scenario, order, outline, reasons_to_fail):
@@ -151,8 +151,6 @@ def print_feature_running(feature):
     for line in lines:
         line = wrap_file_and_line(line, '\033[1;30m', '\033[0m')
         write_out("\033[1;37m%s\n" % line)
-
-    write_out("\n")
 
 @after.all
 def print_end(total):

@@ -159,6 +159,33 @@ def test_output_with_success_colorless():
     )
 
 @with_setup(prepare_stdout)
+def test_output_with_success_colorless():
+    "A feature with two scenarios should separate the two scenarios with a new line (in colorless mode)."
+
+    runner = Runner(join(abspath(dirname(__file__)), 'output_features', 'many_successful_scenarios'), verbosity=3)
+    runner.run()
+
+    assert_stdout_lines(
+        "\n"
+        "Feature: Dumb feature                    # tests/functional/output_features/many_successful_scenarios/first.feature:1\n"
+        "  In order to test success               # tests/functional/output_features/many_successful_scenarios/first.feature:2\n"
+        "  As a programmer                        # tests/functional/output_features/many_successful_scenarios/first.feature:3\n"
+        "  I want to see that the output is green # tests/functional/output_features/many_successful_scenarios/first.feature:4\n"
+        "\n"
+        "  Scenario: Do nothing                   # tests/functional/output_features/many_successful_scenarios/first.feature:6\n"
+        "    Given I do nothing                   # tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\n"
+        "\033[A    Given I do nothing                   # tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\n"
+        "\n"
+        "  Scenario: Do nothing (again)           # tests/functional/output_features/many_successful_scenarios/first.feature:9\n"
+        "    Given I do nothing (again)           # tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\n"
+        "\033[A    Given I do nothing (again)           # tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\n"
+        "\n"
+        "1 feature (1 passed)\n"
+        "2 scenarios (2 passed)\n"
+        "2 steps (2 passed)\n"
+    )
+
+@with_setup(prepare_stdout)
 def test_output_with_success_colorful():
     "Testing the output of a successful feature"
 
@@ -179,6 +206,33 @@ def test_output_with_success_colorful():
         "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
         "\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
         "\033[1;37m1 step (\033[1;32m1 passed\033[1;37m)\033[0m\n"
+    )
+
+@with_setup(prepare_stdout)
+def test_output_with_success_colorful():
+    "A feature with two scenarios should separate the two scenarios with a new line (in color mode)."
+
+    runner = Runner(join(abspath(dirname(__file__)), 'output_features', 'many_successful_scenarios'), verbosity=4)
+    runner.run()
+
+    assert_stdout_lines(
+        "\n" \
+        "\033[1;37mFeature: Dumb feature                    \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:1\033[0m\n" \
+        "\033[1;37m  In order to test success               \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:2\033[0m\n" \
+        "\033[1;37m  As a programmer                        \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:3\033[0m\n" \
+        "\033[1;37m  I want to see that the output is green \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:4\033[0m\n" \
+        "\n" \
+        "\033[1;37m  Scenario: Do nothing                   \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:6\033[0m\n" \
+        "\033[1;30m    Given I do nothing                   \033[1;30m# tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\033[0m\n" \
+        "\033[A\033[1;32m    Given I do nothing                   \033[1;30m# tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\033[0m\n" \
+        "\n" \
+        "\033[1;37m  Scenario: Do nothing (again)           \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:9\033[0m\n" \
+        "\033[1;30m    Given I do nothing (again)           \033[1;30m# tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\033[0m\n" \
+        "\033[A\033[1;32m    Given I do nothing (again)           \033[1;30m# tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\033[0m\n" \
+		"\n" \
+        "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m2 scenarios (\033[1;32m2 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m2 steps (\033[1;32m2 passed\033[1;37m)\033[0m\n"
     )
 
 @with_setup(prepare_stdout)
