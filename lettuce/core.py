@@ -274,6 +274,36 @@ class Step(object):
             self.defined_at = step_definition
 
         return matched, step_definition
+    
+    def behave_as(self, string):
+        """ Parses and runs steps given in string form.
+
+        In your step definitions, you can use this to run one step from another.
+
+        e.g.
+            @step('something ordinary')
+            def something(step):
+                step.behave_as('Given something defined elsewhere')
+
+            @step('something defined elsewhere')
+            def elsewhere(step):
+                # actual step behavior, maybe.
+        
+        This will raise error (thus halting execution of the step) if a subordinate step fails.
+
+        """
+        lines = string.split('\n')
+        steps = self.many_from_lines(lines)
+        
+        (_, _, steps_failed, _, _) = self.run_all(steps)
+        if not steps_failed:
+            self.passed = True
+            self.failed = False
+            return self.passed
+        else:
+            self.passed = False
+            self.failed = True
+            assert not steps_failed, "Subordinate steps failed for this step."
 
     def run(self, ignore_case):
         """Runs a step, trying to resolve it on available step

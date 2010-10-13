@@ -20,7 +20,7 @@ from lettuce import core
 from lettuce import registry
 from lettuce.core import Step
 from lettuce.core import Feature
-from nose.tools import assert_equals, with_setup
+from nose.tools import *
 
 FEATURE1 = """
 Feature: Count steps ran
@@ -113,6 +113,10 @@ def step_runner_environ():
     @step(u'When I have a step that raises an exception')
     def raises_exception(step):
         raise Exception()
+    
+    @step('I have a step which calls the "(.*)" step with behave_as')
+    def runs_some_other_step_with_behave_as(step, something_else):
+        step.behave_as("When %(i_do_something_else)s" % {'i_do_something_else': something_else})
 
 @with_setup(step_runner_environ)
 def test_can_count_steps_and_its_states():
@@ -298,3 +302,74 @@ def test_count_raised_exceptions_as_failing_steps():
     finally:
         registry.clear()
 
+def test_multiple_subordinate_steps_are_run():
+    'When a step definition calls two subordinate step definitions (that do not fail), both should run.'
+    
+    @step('I run two subordinate steps')
+    def two_subordinate_steps(step):
+        step.behave_as("""When I run the first sub-step
+                          And I run the second sub-step""")
+    
+    global first_ran
+    global second_ran
+    first_ran = False
+    second_ran = False
+    
+    @step('I run the first sub-step$')
+    def increment(step):
+        global first_ran
+        first_ran = True
+    
+    @step('I run the second sub-step')
+    def increment_twice(step):
+        global second_ran
+        second_ran = True
+    
+    runnable_step = Step.from_string('Given I run two subordinate steps')
+    runnable_step.run(True)
+    assert_equals((first_ran, second_ran), (True, True))
+    
+    del first_ran
+    del second_ran
+    
+@with_setup(step_runner_environ)
+def test_successful_behave_as_step_passes():
+    'When a step definition calls another (successful) step definition with behave_as, that step should be a success.'
+    runnable_step = Step.from_string('Given I have a step which calls the "define a step" step with behave_as')
+    runnable_step.run(True)
+    assert runnable_step.passed
+
+@with_setup(step_runner_environ)
+def test_successful_behave_as_step_doesnt_fail():
+    'When a step definition calls another (successful) step definition with behave_as, that step should not be marked a failure.'
+    runnable_step = Step.from_string('Given I have a step which calls the "define a step" step with behave_as')
+    runnable_step.run(True)
+    assert_false(runnable_step.failed)
+
+@with_setup(step_runner_environ)
+def test_failing_behave_as_step_doesnt_pass():
+    'When a step definition calls another (failing) step definition with behave_as, that step should not be marked as success.'
+    runnable_step = Step.from_string('Given I have a step which calls the "other step fails" step with behave_as')
+    try:
+        runnable_step.run(True)
+    except:
+        pass
+    
+    assert_false(runnable_step.passed)
+
+@with_setup(step_runner_environ)
+def test_failing_behave_as_step_fails():
+    'When a step definition calls another (failing) step definition with behave_as, that step should be marked a failure.'
+    runnable_step = Step.from_string('Given I have a step which calls the "other step fails" step with behave_as')
+    try:
+        runnable_step.run(True)
+    except:
+        pass
+    
+    assert runnable_step.failed
+
+@with_setup(step_runner_environ)
+def test_failing_behave_as_step_raises_assertion():
+    'When a step definition calls another (failing) step definition with behave_as, that step should be marked a failure.'
+    runnable_step = Step.from_string('Given I have a step which calls the "other step fails" step with behave_as')
+    assert_raises(AssertionError, runnable_step.run, True)
