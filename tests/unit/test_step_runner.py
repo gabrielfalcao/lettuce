@@ -307,8 +307,10 @@ def test_multiple_subordinate_steps_are_run():
     
     @step('I run two subordinate steps')
     def two_subordinate_steps(step):
-        step.behave_as("""When I run the first sub-step
-                          And I run the second sub-step""")
+        step.behave_as("""
+            When I run the first sub-step
+            And I run the second sub-step
+        """)
     
     global first_ran
     global second_ran

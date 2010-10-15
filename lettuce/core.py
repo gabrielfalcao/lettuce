@@ -382,6 +382,10 @@ class Step(object):
                 None,
                 invalid_first_line_error % lines[0])
         
+        # Select only lines that aren't end-to-end whitespace
+        only_whitspace = re.compile('^\s*$')
+        lines = filter(lambda x: not only_whitspace.match(x), lines)
+        
         step_strings = []
         for line in lines:
             if strings.wise_startswith(line, u"|"):
