@@ -275,6 +275,15 @@ class Step(object):
 
         return matched, step_definition
     
+    def given(self, string):
+        return self.behave_as(string)
+    
+    def when(self, string):
+        return self.behave_as(string)
+    
+    def then(self, string):
+        return self.behave_as(string)
+    
     def behave_as(self, string):
         """ Parses and runs steps given in string form.
 

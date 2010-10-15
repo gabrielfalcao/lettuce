@@ -301,6 +301,60 @@ def test_count_raised_exceptions_as_failing_steps():
         assert_equals(len(scenario_result.steps_failed), 1)
     finally:
         registry.clear()
+        
+def test_step_runs_subordinate_step_with_given():
+    global simple_thing_ran
+    simple_thing_ran = False
+    @step('I do something simple')
+    def simple_thing(step):
+        global simple_thing_ran
+        simple_thing_ran = True
+    
+    @step('I do many complex things')
+    def complex_things(step):
+        step.given('I do something simple')
+    
+    runnable_step = Step.from_string('Given I do many complex things')
+    runnable_step.run(True)
+    assert(simple_thing_ran)
+    
+    del simple_thing_ran
+
+def test_step_runs_subordinate_step_with_then():
+    global simple_thing_ran
+    simple_thing_ran = False
+    @step('I do something simple')
+    def simple_thing(step):
+        global simple_thing_ran
+        simple_thing_ran = True
+
+    @step('I do many complex things')
+    def complex_things(step):
+        step.then('I do something simple')
+
+    runnable_step = Step.from_string('Then I do many complex things')
+    runnable_step.run(True)
+    assert(simple_thing_ran)
+
+    del simple_thing_ran
+
+def test_step_runs_subordinate_step_with_when():
+    global simple_thing_ran
+    simple_thing_ran = False
+    @step('I do something simple')
+    def simple_thing(step):
+        global simple_thing_ran
+        simple_thing_ran = True
+
+    @step('I do many complex things')
+    def complex_things(step):
+        step.when('I do something simple')
+
+    runnable_step = Step.from_string('When I do many complex things')
+    runnable_step.run(True)
+    assert(simple_thing_ran)
+
+    del simple_thing_ran
 
 def test_multiple_subordinate_steps_are_run():
     'When a step definition calls two subordinate step definitions (that do not fail), both should run.'
