@@ -14,6 +14,7 @@ Lettuce documentation contents
    tutorial/simple
    tutorial/tables
    tutorial/scenario-outlines
+   tutorial/steps-from-step-definitions
    reference/features
    reference/terrain
    reference/languages
