@@ -1,5 +1,5 @@
 # lettuce
-> Version 0.1.14 - barium
+> Version 0.1.15 - barium
 
 ## On release names
 
@@ -68,6 +68,7 @@ come with automated tests, and if suitable, with proper documentation.
 1. [Cucumber](http://cukes.info/) crew, for creating such a AWESOME project, and for inspiring [Lettuce](http://lettuce.it/).
 2. [Tatiana](http://github.com/tatiana) for helping a lot with documentation.
 3. [Django](http://djangoproject.com) which documentation structure was borrowed.
+2. [Andres Jaan Tack](http://github.com/ajtack) for his awesome contributions
 
 # License
 
