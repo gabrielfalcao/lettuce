@@ -101,6 +101,21 @@ Scenario: Adding some students to my university database
     And I see the 2nd line of 'courses.txt' has 'Nutrition:4'
 """
 
+OUTLINED_SCENARIO_WITH_COMMENTS_ON_EXAMPLES = """
+Scenario Outline: Add two numbers
+    Given I have entered <input_1> into the calculator
+    And I have entered <input_2> into the calculator
+    When I press <button>
+    Then the result should be <output> on the screen
+
+    Examples:
+      | input_1 | input_2 | button | output |
+      | 20      | 30      | add    | 50     |
+      #| 2       | 5       | add    | 7      |
+      | 0       | 40      | add    | 40     |
+    # end of the scenario
+"""
+
 from lettuce.core import Step
 from lettuce.core import Scenario
 from lettuce.core import Feature
@@ -297,3 +312,15 @@ def test_scenario_with_table_and_no_step_fails():
     "A step table imediately after the scenario line, without step line fails"
 
     assert_raises(LettuceSyntaxError, Scenario.from_string, SCENARIO_FAILED)
+
+def test_scenario_ignore_commented_lines_from_examples():
+    "Comments on scenario example should be ignored"
+    scenario = Scenario.from_string(OUTLINED_SCENARIO_WITH_COMMENTS_ON_EXAMPLES)
+
+    assert_equals(
+        scenario.outlines,
+        [
+            {'input_1': '20', 'input_2': '30', 'button': 'add', 'output': '50'},
+            {'input_1': '0', 'input_2': '40', 'button': 'add', 'output': '40'},
+        ]
+    )

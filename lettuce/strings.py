@@ -104,7 +104,10 @@ def parse_hashes(lines):
         return unicode(line.replace("\\|", escape)).strip()
     def deline(line):
         return line.replace(escape, '|')
+    def discard_comments(lines):
+        return [line for line in lines if not line.startswith('#')]
 
+    lines = discard_comments(lines)
     lines = map(enline, lines)
 
     keys = []
