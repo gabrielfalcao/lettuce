@@ -599,7 +599,8 @@ class Scenario(object):
         keys = []
         outlines = []
         if len(splitted) > 1:
-            part = splitted[-1]
+            parts = [l for l in splitted[1:] if l not in language.examples]
+            part = "".join(parts)
             keys, outlines = strings.parse_hashes(strings.get_stripped_lines(part))
 
         lines = strings.get_stripped_lines(string)
