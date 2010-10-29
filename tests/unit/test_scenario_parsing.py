@@ -89,6 +89,10 @@ OUTLINED_FEATURE_WITH_MANY = """
             | 2       | 5       | add    | 7      |
             | 0       | 40      | add    | 40     |
 
+        Examples:
+            | input_1 | input_2 | button | output |
+            | 5       | 7       | add    | 12     |
+
 """
 
 SCENARIO_FAILED = """
@@ -114,6 +118,25 @@ Scenario Outline: Add two numbers
       #| 2       | 5       | add    | 7      |
       | 0       | 40      | add    | 40     |
     # end of the scenario
+"""
+
+OUTLINED_SCENARIO_WITH_MORE_THAN_ONE_EXAMPLES_BLOCK = """
+Scenario Outline: Add two numbers
+    Given I have entered <input_1> into the calculator
+    And I have entered <input_2> into the calculator
+    When I press <button>
+    Then the result should be <output> on the screen
+
+    Examples:
+      | input_1 | input_2 | button | output |
+      | 20      | 30      | add    | 50     |
+      | 2       | 5       | add    | 7      |
+      | 0       | 40      | add    | 40     |
+
+    Examples:
+      | input_1 | input_2 | button | output |
+      | 20      | 33      | add    | 53     |
+      | 12      | 40      | add    | 52     |
 """
 
 from lettuce.core import Step
@@ -301,6 +324,14 @@ def test_full_featured_feature():
                 'When I press add',
                 'Then the result should be 40 on the screen',
             ],
+        ),
+        (
+            {'button': 'add', 'input_1': '5', 'input_2': '7', 'output': '12'}, [
+                'Given I have entered 5 into the calculator',
+                'And I have entered 7 into the calculator',
+                'When I press add',
+                'Then the result should be 12 on the screen',
+            ],
         )
     )
     for ((got_examples, got_steps), (expected_examples, expected_steps)) in zip(scenario4.evaluated, expected_evaluated):
@@ -322,5 +353,20 @@ def test_scenario_ignore_commented_lines_from_examples():
         [
             {'input_1': '20', 'input_2': '30', 'button': 'add', 'output': '50'},
             {'input_1': '0', 'input_2': '40', 'button': 'add', 'output': '40'},
+        ]
+    )
+
+def test_scenario_aggregate_all_examples_blocks():
+    "All scenario's examples block should be translated to outlines"
+    scenario = Scenario.from_string(OUTLINED_SCENARIO_WITH_MORE_THAN_ONE_EXAMPLES_BLOCK)
+
+    assert_equals(
+        scenario.outlines,
+        [
+            {'input_1': '20', 'input_2': '30', 'button': 'add', 'output': '50'},
+            {'input_1': '2', 'input_2': '5', 'button': 'add', 'output': '7'},
+            {'input_1': '0', 'input_2': '40', 'button': 'add', 'output': '40'},
+            {'input_1': '20', 'input_2': '33', 'button': 'add', 'output': '53'},
+            {'input_1': '12', 'input_2': '40', 'button': 'add', 'output': '52'},
         ]
     )
