@@ -34,11 +34,9 @@ setup(name='lettuce',
     author=u'Gabriel Falcao',
     author_email='gabriel@nacaolivre.org',
     url='http://github.com/gabrielfalcao/lettuce',
-    scripts = ['lettuce/lettuce'],
     packages=get_packages(),
     entry_points = {
     	'console_scripts' : [
 	    'lettuce = lettuce.lettuce:main',
-	]
-    }
+	]}
 )
