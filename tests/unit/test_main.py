@@ -21,7 +21,7 @@ from mox import Mox
 
 def test_has_version():
     "A nice python module is supposed to have a version"
-    assert_equals(lettuce.version, '0.1.15')
+    assert_equals(lettuce.version, '0.1.16')
 
 def test_import():
     "lettuce importer does import"
@@ -31,18 +31,23 @@ def test_import():
 
 def test_terrain_import_exception():
     "lettuce error tries to import "
+
     string = 'Lettuce has tried to load the conventional environment ' \
         'module "terrain"\nbut it has errors, check its contents and ' \
-        'try to run lettuce again.\n'
+        'try to run lettuce again.\n\nOriginal traceback below:\n\n'
 
     mox = Mox()
 
     mox.StubOutWithMock(lettuce.fs, 'FileSystem')
+    mox.StubOutWithMock(lettuce.exceptions, 'traceback')
     mox.StubOutWithMock(lettuce.sys, 'stderr')
 
-    lettuce.fs.FileSystem._import('terrain').AndRaise(Exception('foo bar'))
+    exc = Exception('foo bar')
+    lettuce.fs.FileSystem._import('terrain').AndRaise(exc)
+    lettuce.exceptions.traceback.format_exc(exc).AndReturn('I AM THE TRACEBACK FOR IMPORT ERROR')
 
     lettuce.sys.stderr.write(string)
+    lettuce.sys.stderr.write('I AM THE TRACEBACK FOR IMPORT ERROR')
 
     mox.ReplayAll()
 

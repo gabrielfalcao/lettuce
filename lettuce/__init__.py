@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-version = '0.1.15'
+version = '0.1.16'
 release = 'barium'
 
 import os
@@ -35,7 +35,7 @@ from lettuce.registry import call_hook
 from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
 
-from lettuce.exceptions import LettuceSyntaxError
+from lettuce import exceptions
 
 __all__ = ['after', 'before', 'step', 'world', 'STEP_REGISTRY', 'CALLBACK_REGISTRY', 'call_hook']
 
@@ -46,10 +46,11 @@ except Exception, e:
     if not "No module named terrain" in str(e):
         string = 'Lettuce has tried to load the conventional environment ' \
             'module "terrain"\nbut it has errors, check its contents and ' \
-            'try to run lettuce again.\n'
-        sys.stderr.write(string)
-        raise SystemExit(1)
+            'try to run lettuce again.\n\nOriginal traceback below:\n\n'
 
+        sys.stderr.write(string)
+        sys.stderr.write(exceptions.traceback.format_exc(e))
+        raise SystemExit(1)
 
 class Runner(object):
     """ Main lettuce's test runner
@@ -109,7 +110,7 @@ class Runner(object):
             for filename in features_files:
                 feature = Feature.from_file(filename)
                 results.append(feature.run(self.scenarios))
-        except LettuceSyntaxError, e:
+        except exceptions.LettuceSyntaxError, e:
             sys.stderr.write(e.msg)
             failed = True
 

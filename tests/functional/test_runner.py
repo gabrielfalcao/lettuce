@@ -18,7 +18,7 @@ import os
 import lettuce
 
 from StringIO import StringIO
-from os.path import dirname, abspath, join
+from os.path import dirname, join, abspath
 from nose.tools import assert_equals, with_setup, assert_raises
 from lettuce.fs import FeatureLoader
 from lettuce.core import Feature, fs, StepDefinition
@@ -59,10 +59,23 @@ def test_try_to_import_terrain():
         reload(lettuce)
         raise AssertionError('The runner should raise ImportError !')
     except SystemExit:
-        assert_stderr(
+        assert_stderr_lines(
             'Lettuce has tried to load the conventional environment module ' \
-            '"terrain"\n'
-            'but it has errors, check its contents and try to run lettuce again.\n'
+            '"terrain"\nbut it has errors, check its contents and ' \
+            'try to run lettuce again.\n\nOriginal traceback below:\n\n' \
+            "Traceback (most recent call last):\n"
+            '  File "%(lettuce_core_file)s", line 43, in <module>\n'
+            '    terrain = fs.FileSystem._import("terrain")\n' \
+            '  File "%(lettuce_fs_file)s", line 63, in _import\n' \
+            '    module = imp.load_module(name, fp, pathname, description)\n' \
+            '  File "%(terrain_file)s", line 18\n' \
+            '    it is here just to cause a syntax error\n' \
+            "                  ^\n" \
+            'SyntaxError: invalid syntax\n' % {
+                'lettuce_core_file': abspath(join(lettuce_dir, '__init__.py')),
+                'lettuce_fs_file': abspath(join(lettuce_dir, 'fs.py')),
+                'terrain_file': abspath(lettuce_path('..', 'tests', 'functional', 'sandbox', 'terrain.py')),
+            }
         )
 
     finally:
