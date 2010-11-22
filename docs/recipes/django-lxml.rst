@@ -311,6 +311,10 @@ For example, the command below would run ONLY the tests within the apps `myapp` 
 
    python manage.py harvest --apps=myapp,foobar
 
+   # or
+
+   python manage.py harvest --a  myapp,foobar
+
 you can also specify it at `settings.py` so that you won't need to type the same command-line parameters all the time:
 
 .. highlight:: python
