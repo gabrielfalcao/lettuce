@@ -514,6 +514,10 @@ class Scenario(object):
     def passed(self):
         return self.ran and all([step.passed for step in self.steps])
 
+    @property
+    def failed(self):
+        return any([step.failed for step in self.steps])
+
     def run(self, ignore_case):
         """Runs a scenario, running each of its steps. Also call
         before_each and after_each callbacks for steps and scenario"""
