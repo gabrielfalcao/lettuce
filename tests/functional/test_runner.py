@@ -222,7 +222,7 @@ def test_output_with_success_colorful():
     )
 
 @with_setup(prepare_stdout)
-def test_output_with_success_colorful():
+def test_output_with_success_colorful_newline():
     "A feature with two scenarios should separate the two scenarios with a new line (in color mode)."
 
     runner = Runner(join(abspath(dirname(__file__)), 'output_features', 'many_successful_scenarios'), verbosity=4)
@@ -334,6 +334,19 @@ def test_output_when_could_not_find_features_colorless():
 
     path = fs.relpath(join(abspath(dirname(__file__)), 'unexistent-folder'))
     runner = Runner(path, verbosity=3)
+    runner.run()
+
+    assert_stdout_lines(
+        'Oops!\n'
+        'could not find features at ./%s\n' % path
+    )
+
+@with_setup(prepare_stdout)
+def test_output_when_could_not_find_features_verbosity_level_2():
+    "Testing the colorful output of many successful features colorless"
+
+    path = fs.relpath(join(abspath(dirname(__file__)), 'unexistent-folder'))
+    runner = Runner(path, verbosity=2)
     runner.run()
 
     assert_stdout_lines(
