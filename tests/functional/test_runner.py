@@ -878,3 +878,19 @@ def test_output_snippets_with_normalized_unicode_names():
         u"def entao_eu_fico_felizao(step):\n"
         u"    assert False, 'This step must be implemented'\n"
     )
+
+@with_setup(prepare_stdout)
+def test_output_level_2():
+    'Output with verbosity 2 must show only the scenario names, followed by "... OK" or "... FAIL" or "... ERROR"'
+
+    runner = Runner(join(abspath(dirname(__file__)), 'output_features', 'many_successful_scenarios'), verbosity=2)
+    runner.run()
+
+    assert_stdout_lines(
+        "Do nothing ... OK\n"
+        "Do nothing (again) ... OK\n"
+        "\n"
+        "1 feature (1 passed)\n"
+        "2 scenarios (2 passed)\n"
+        "2 steps (2 passed)\n"
+    )

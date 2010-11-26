@@ -274,16 +274,16 @@ class Step(object):
             self.defined_at = step_definition
 
         return matched, step_definition
-    
+
     def given(self, string):
         return self.behave_as(string)
-    
+
     def when(self, string):
         return self.behave_as(string)
-    
+
     def then(self, string):
         return self.behave_as(string)
-    
+
     def behave_as(self, string):
         """ Parses and runs steps given in string form.
 
@@ -297,13 +297,13 @@ class Step(object):
             @step('something defined elsewhere')
             def elsewhere(step):
                 # actual step behavior, maybe.
-        
+
         This will raise error (thus halting execution of the step) if a subordinate step fails.
 
         """
         lines = string.split('\n')
         steps = self.many_from_lines(lines)
-        
+
         (_, _, steps_failed, _, _) = self.run_all(steps)
         if not steps_failed:
             self.passed = True
@@ -329,25 +329,25 @@ class Step(object):
 
         self.passed = True
         return True
-        
+
     @staticmethod
     def run_all(steps, outline = None, run_callbacks = False, ignore_case = True):
         """Runs each step in the given list of steps.
-        
+
         Returns a tuple of five lists:
             - The full set of steps executed
             - The steps that passed
             - The steps that failed
             - The steps that were undefined
             - The reason for each failing step (indices matching per above)
-        
+
         """
         all_steps = []
         steps_passed = []
         steps_failed = []
         steps_undefined = []
         reasons_to_fail = []
-        
+
         for step in steps:
             if outline:
                 step = step.solve_and_clone(outline)
@@ -373,28 +373,28 @@ class Step(object):
                 all_steps.append(step)
                 if run_callbacks:
                     call_hook('after_each', 'step', step)
-        
+
         return (all_steps, steps_passed, steps_failed, steps_undefined, reasons_to_fail)
-        
+
     @classmethod
     def many_from_lines(klass, lines, filename = None, original_string = None):
         """Parses a set of steps from lines of input.
-        
+
         This will correctly parse and produce a list of steps from lines without
         any Scenario: heading at the top. Examples in table form are correctly
         parsed, but must be well-formed under a regular step sentence.
-        
+
         """
         invalid_first_line_error = '\nFirst line of step "%(line)s" is in table form.'
         if lines and strings.wise_startswith(lines[0], u'|'):
             raise LettuceSyntaxError(
                 None,
                 invalid_first_line_error % lines[0])
-        
+
         # Select only lines that aren't end-to-end whitespace
         only_whitspace = re.compile('^\s*$')
         lines = filter(lambda x: not only_whitspace.match(x), lines)
-        
+
         step_strings = []
         for line in lines:
             if strings.wise_startswith(line, u"|"):
@@ -505,6 +505,14 @@ class Scenario(object):
                 steps.append(new_step)
 
             yield (outline, steps)
+
+    @property
+    def ran(self):
+        return all([step.ran for step in self.steps])
+
+    @property
+    def passed(self):
+        return self.ran and all([step.passed for step in self.steps])
 
     def run(self, ignore_case):
         """Runs a scenario, running each of its steps. Also call
