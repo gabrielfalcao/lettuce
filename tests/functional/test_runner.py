@@ -934,3 +934,30 @@ def test_output_level_2_fail():
         }
     )
 
+@with_setup(prepare_stdout)
+def test_output_level_2_error():
+    'Output with verbosity 2 must show only the scenario names, followed by "... ERROR" in case of fail'
+
+    runner = Runner(feature_name('error_traceback'), verbosity=2)
+    runner.run()
+
+    assert_stdout_lines_with_traceback(
+        "It should pass ... OK\n"
+        "It should raise an exception different of AssertionError ... ERROR\n"
+        "\n"
+        "Traceback (most recent call last):\n"
+        '  File "%(lettuce_core_file)s", line %(call_line)d, in __call__\n'
+        "    ret = self.function(self.step, *args, **kw)\n"
+        '  File "%(step_file)s", line 10, in given_my_step_that_blows_a_exception\n'
+        "    raise RuntimeError\n"
+        "RuntimeError\n"
+        "\n"
+        "1 feature (0 passed)\n"
+        "2 scenarios (1 passed)\n"
+        "2 steps (1 failed, 1 passed)\n" % {
+            'lettuce_core_file': lettuce_path('core.py'),
+            'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'error_traceback', 'error_traceback_steps.py')),
+            'call_line':call_line,
+        }
+    )
+
