@@ -961,3 +961,70 @@ def test_output_level_2_error():
         }
     )
 
+@with_setup(prepare_stdout)
+def test_output_level_1_success():
+    'Output with verbosity 2 must show only the scenario names, followed by "... OK" in case of success'
+
+    runner = Runner(join(abspath(dirname(__file__)), 'output_features', 'many_successful_scenarios'), verbosity=1)
+    runner.run()
+
+    assert_stdout_lines(
+        ".."
+        "\n"
+        "1 feature (1 passed)\n"
+        "2 scenarios (2 passed)\n"
+        "2 steps (2 passed)\n"
+    )
+
+@with_setup(prepare_stdout)
+def test_output_level_1_fail():
+    'Output with verbosity 2 must show only the scenario names, followed by "... FAILED" in case of fail'
+
+    runner = Runner(feature_name('failed_table'), verbosity=1)
+    runner.run()
+
+    assert_stdout_lines_with_traceback(
+        ".F...\n"
+        "\n"
+        "Traceback (most recent call last):\n"
+        '  File "%(lettuce_core_file)s", line %(call_line)d, in __call__\n'
+        "    ret = self.function(self.step, *args, **kw)\n"
+        '  File "%(step_file)s", line 25, in tof\n'
+        "    assert False\n"
+        "AssertionError\n"
+        "\n"
+        "1 feature (0 passed)\n"
+        "1 scenario (0 passed)\n"
+        "5 steps (1 failed, 2 skipped, 1 undefined, 1 passed)\n" % {
+            'lettuce_core_file': lettuce_path('core.py'),
+            'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')),
+            'call_line':call_line,
+        }
+    )
+
+@with_setup(prepare_stdout)
+def test_output_level_1_error():
+    'Output with verbosity 2 must show only the scenario names, followed by "... ERROR" in case of fail'
+
+    runner = Runner(feature_name('error_traceback'), verbosity=1)
+    runner.run()
+
+    assert_stdout_lines_with_traceback(
+        ".E\n"
+        "\n"
+        "Traceback (most recent call last):\n"
+        '  File "%(lettuce_core_file)s", line %(call_line)d, in __call__\n'
+        "    ret = self.function(self.step, *args, **kw)\n"
+        '  File "%(step_file)s", line 10, in given_my_step_that_blows_a_exception\n'
+        "    raise RuntimeError\n"
+        "RuntimeError\n"
+        "\n"
+        "1 feature (0 passed)\n"
+        "2 scenarios (1 passed)\n"
+        "2 steps (1 failed, 1 passed)\n" % {
+            'lettuce_core_file': lettuce_path('core.py'),
+            'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'error_traceback', 'error_traceback_steps.py')),
+            'call_line':call_line,
+        }
+    )
+

@@ -77,6 +77,8 @@ class Runner(object):
 
         if verbosity is 0:
             from lettuce.plugins import non_verbose as output
+        elif verbosity is 1:
+            from lettuce.plugins import dots as output
         elif verbosity is 2:
             from lettuce.plugins import scenario_names as output
         elif verbosity is 3:

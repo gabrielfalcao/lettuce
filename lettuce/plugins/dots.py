@@ -19,7 +19,6 @@ import os
 import sys
 from lettuce import core
 from lettuce.terrain import after
-from lettuce.terrain import before
 
 failed_scenarios = []
 scenarios_and_its_fails = {}
@@ -27,31 +26,25 @@ scenarios_and_its_fails = {}
 def wrt(string):
     sys.stdout.write(string)
 
-@before.each_scenario
-def print_scenario_running(scenario):
-    wrt('%s ... ' % scenario.name)
-
-@after.each_scenario
-def print_scenario_ran(scenario):
-    if scenario.passed:
-        print "OK"
-    elif scenario.failed:
-        reason = scenarios_and_its_fails[scenario]
-        if isinstance(reason.exception, AssertionError):
-            print "FAILED"
-        else:
-            print "ERROR"
-
 @after.each_step
-def save_step_failed(step):
-    if step.failed and step.scenario not in failed_scenarios:
-        scenarios_and_its_fails[step.scenario] = step.why
-        failed_scenarios.append(step.scenario)
+def print_scenario_ran(step):
+    if not step.failed:
+        wrt(".")
+    elif step.failed:
+        if step.scenario not in failed_scenarios:
+            scenarios_and_its_fails[step.scenario] = step.why
+            failed_scenarios.append(step.scenario)
+
+        if isinstance(step.why.exception, AssertionError):
+            wrt("F")
+        else:
+            wrt("E")
 
 @after.all
 def print_end(total):
     if total.scenarios_passed < total.scenarios_ran:
-        print # just a line to separate things here
+        wrt("\n")
+        wrt("\n")
         for scenario in failed_scenarios:
             reason = scenarios_and_its_fails[scenario]
             wrt(reason.traceback)
