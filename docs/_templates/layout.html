@@ -4,11 +4,6 @@
     &laquo; <a href="{{ prev.link|e }}" title="{{ prev.title|e }}">previous</a>
     {{ reldelim2 }}
   {%- endif %}
-  {%- if parents %}
-    <a href="{{ parents.0.link|e }}" title="{{ parents.0.title|e }}" accesskey="U">up</a>
-  {%- else %}
-    <a title="{{ docstitle }}" href="{{ pathto('index') }}" accesskey="U">up</a>
-  {%- endif %}
   {%- if next %}
   {{ reldelim2 }}
     <a href="{{ next.link|e }}" title="{{ next.title|e }}">next</a> &raquo;
@@ -23,7 +18,6 @@
         <a title="Home page" href="{{ pathto('index') }}">Home</a> {{ reldelim2 }}
         <a title="Table of contents" href="{{ pathto('contents') }}">Table of contents</a> {{ reldelim2 }}
         <a title="Global index" href="{{ pathto('genindex') }}">Index</a> {{ reldelim2 }}
-        <a title="Module index" href="{{ pathto('modindex') }}">Modules</a>
       </div>
       <div class="nav">{{ secondnav() }}</div>
     </div>
