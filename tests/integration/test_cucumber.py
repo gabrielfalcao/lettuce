@@ -24,7 +24,7 @@ def test_django_against_cucumber_django_project():
 
     FileSystem.pushd(current_directory, "django", "cucumber")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3")
+    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=1")
 
     assert "before harvest" in out
     assert "after harvest" in out
