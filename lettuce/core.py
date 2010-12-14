@@ -602,6 +602,8 @@ class Scenario(object):
     @classmethod
     def from_string(new_scenario, string, with_file=None, original_string=None, language=None):
         """ Creates a new scenario from string"""
+        # ignoring comments
+        string = "\n".join(strings.get_stripped_lines(string, ignore_lines_starting_with='#'))
 
         if not language:
             language = Language()
@@ -700,11 +702,11 @@ class Feature(object):
     @classmethod
     def from_string(new_feature, string, with_file=None, language=None):
         """Creates a new feature from string"""
-        lines = strings.get_stripped_lines(string)
+        lines = strings.get_stripped_lines(string, ignore_lines_starting_with='#')
         if not language:
             language = Language()
 
-        found = len(re.findall(r'%s:[ ]*\w+' % language.feature, string))
+        found = len(re.findall(r'%s:[ ]*\w+' % language.feature, "\n".join(lines)))
 
         if found > 1:
             raise LettuceSyntaxError(

@@ -1028,3 +1028,18 @@ def test_output_level_1_error():
         }
     )
 
+@with_setup(prepare_stdout)
+def test_commented_scenario():
+    'Test one commented scenario'
+
+    runner = Runner(feature_name('commented_feature'), verbosity=1)
+    runner.run()
+
+    assert_stdout_lines(
+        "."
+        "\n"
+        "1 feature (1 passed)\n"
+        "1 scenario (1 passed)\n"
+        "1 step (1 passed)\n"
+    )
+

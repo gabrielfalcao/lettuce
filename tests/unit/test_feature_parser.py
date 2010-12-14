@@ -130,6 +130,24 @@ Feature: Big scenario outline
     | 3                                                            |
 """
 
+FEATURE10 = """
+Feature: Big sentence
+  As a clever guy
+  I want to describe this Feature
+  So that I can take care of my Scenario
+  Scenario: Regular numbers
+    Given a huge sentence, that have so many characters
+    And another one, very tiny
+
+    # Feature: Big sentence
+    #   As a clever guy
+    #   I want to describe this Feature
+    #   So that I can take care of my Scenario
+    #   Scenario: Regular numbers
+    #     Given a huge sentence, that have so many characters
+    #     And another one, very tiny
+"""
+
 
 def test_feature_has_repr():
     "Feature implements __repr__ nicely"
@@ -283,3 +301,8 @@ def test_description_on_big_sentenced_steps():
         "So that I can take care of my Scenario"
     )
 
+def test_comments():
+    "It should ignore lines that start with #, despite white spaces"
+    feature = Feature.from_string(FEATURE10)
+
+    assert_equals(feature.max_length, 55)

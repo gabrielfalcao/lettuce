@@ -139,6 +139,27 @@ Scenario Outline: Add two numbers
       | 12      | 40      | add    | 52     |
 """
 
+COMMENTED_SCENARIO = """
+Scenario: Adding some students to my university database
+    Given I have the following courses in my university:
+       | Name               | Duration |
+       | Computer Science   | 5 years  |
+       | Nutrition          | 4 years  |
+    When I consolidate the database into 'courses.txt'
+    Then I see the 1st line of 'courses.txt' has 'Computer Science:5'
+    And I see the 2nd line of 'courses.txt' has 'Nutrition:4'
+
+# Scenario: Adding some students to my university database
+#     Given I have the following courses in my university:
+#        | Name               | Duration |
+#        | Computer Science   | 5 years  |
+#        | Nutrition          | 4 years  |
+#     When I consolidate the database into 'courses.txt'
+#     Then I see the 1st line of 'courses.txt' has 'Computer Science:5'
+#     And I see the 2nd line of 'courses.txt' has 'Nutrition:4'
+
+"""
+
 from lettuce.core import Step
 from lettuce.core import Scenario
 from lettuce.core import Feature
@@ -370,3 +391,9 @@ def test_scenario_aggregate_all_examples_blocks():
             {'input_1': '12', 'input_2': '40', 'button': 'add', 'output': '52'},
         ]
     )
+
+def test_commented_scenarios():
+    "A scenario string that contains lines starting with '#' will be commented"
+    scenario = Scenario.from_string(COMMENTED_SCENARIO)
+    assert_equals(scenario.name, u'Adding some students to my university database')
+    assert_equals(len(scenario.steps), 4)

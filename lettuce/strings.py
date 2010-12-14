@@ -25,10 +25,17 @@ def escape_if_necessary(what):
 
     return what
 
-def get_stripped_lines(string):
+def get_stripped_lines(string, ignore_lines_starting_with=''):
     string = unicode(string)
     lines = [unicode(l.strip()) for l in string.splitlines()]
-    return filter(lambda x:x, lines)
+    if ignore_lines_starting_with:
+        filter_func = lambda x: x and not x.startswith(ignore_lines_starting_with)
+    else:
+        filter_func = lambda x: x
+
+    lines = filter(filter_func, lines)
+
+    return lines
 
 def split_wisely(string, sep, strip=False):
     string = unicode(string)

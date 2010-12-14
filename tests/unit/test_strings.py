@@ -49,6 +49,22 @@ def test_get_stripped_lines():
         ]
     )
 
+def test_get_stripped_lines_ignore_comments():
+    "strings.get_stripped_lines ignore lines that start with some char"
+    my_string = '''
+
+             first line
+
+        # second line
+
+    '''
+    assert_equals(
+        strings.get_stripped_lines(my_string, ignore_lines_starting_with="#"),
+        [
+            'first line',
+        ]
+    )
+
 def test_split_wisely_splits_ignoring_case():
     "strings.split_wisely splits ignoring case"
     my_string = 'first line\n' \
