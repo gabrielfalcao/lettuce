@@ -34,10 +34,10 @@ Let's choose a problem to lettuce:
 **Given a number, what is its factorial?**
 
 .. Note::
-
+   
    The factorial of a positive integer n, denoted by n!, is the
    product of all positive integers less than or equal to n. The
-   factorial of 0 is
+   factorial of 0 is 1
 
 project structure
 =================
@@ -90,8 +90,10 @@ Start describing the expected behaviour of factorial in `zero.feature` using Eng
 [b] define steps in python
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Now, let's define the steps of the scenario, so Lettuce acan
-understand the behaviour description. Write `steps.py` file using
+Now let's define the steps of the scenario, so Lettuce can
+understand the behaviour description. Create the `steps.py` file which will contain 
+python code describing the steps.
+
 Python:
 
 .. highlight:: python
@@ -120,7 +122,7 @@ Python:
 .. Note::
 
    `steps.py` must be inside features directory, but the names doesn't
-   need to be `steps.py`, it can be any `.py` terminated file,
+   need to be `steps.py` it can be any python file with a `.py` extension.
    Lettuce_ will look for python files recursively within features
    dir.
 
@@ -250,7 +252,7 @@ step.
 
    user@machine:~/projects/mymath/tests$ lettuce
 
-When running Letucce we realize that our previous implementation of
+When running Lettuce we realize that our previous implementation of
 factorial works fine both for 0 and for 1, but not for 2 - it
 fails. :(
 
@@ -260,7 +262,7 @@ fails. :(
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Let's provide a solution so we get the right factorial for all
-scenarions, specially for number 2:
+scenarios, specially for number 2:
 
 .. highlight:: python
 

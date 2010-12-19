@@ -13,18 +13,17 @@ very basic keywords that cover Lettuce.
 Features
 ========
 
-Since Lettuce is based on the behaviour of the project that is being
-designed, first you need to think about features - the characteristics
-of the system.
+Since Lettuce is used to test the behavior of a project, the behavior is broken 
+up in to features of the system.
 
 After enumerating features, you need to create scenarios which will
-describe that feature. Thus, scenarios are components of a feature.
+describe those feature. Thus, scenarios are components of a feature.
 
 Let's learn by example: suppose we want to create a system to manage a
-contact book.
+address book.
 
-OK, one of the very basic feature of a contact book is adding names
-and phones of a contact.
+OK, one of the very basic features of a address book is adding contacts, which will
+include their name and phone numbers.
 
 This is how Lettuce allows you to describe such feature:
 
@@ -32,12 +31,12 @@ This is how Lettuce allows you to describe such feature:
 
 ::
 
-    Feature: Add people to contact book
-      In order to organize phones of friends
+    Feature: Add people to address book
+      In order to organize phone numbers of friends
       As a wise person
-      I want to add a people to my contact book
+      I want to add a people to my address book
 
-      Scenario: Add a person with name and phone
+      Scenario: Add a person with name and phone number
         Given I fill the field "name" with "John"
         And fill the field "phone" with "2233-4455"
         When I save the data
@@ -63,9 +62,9 @@ In the feature above we can notice a few elements, for instance:
 
  ::
 
-     In order to organize phones of friends
-     As a wise person
-     I want to add a people to my contact book
+    In order to organize phone numbers of friends
+    As a wise person
+    I want to add a people to my address book
 
  * Scenarios:
 
@@ -105,7 +104,7 @@ Outlined
 Outlined scenarios are very handy because they help you to avoid
 repetition.
 
-Suppose that we need to fill the same formulary many times, each time
+Suppose that we need to fill the same form many times, each time
 with a different data set. This is how it could be done using scenario
 outlines:
 
