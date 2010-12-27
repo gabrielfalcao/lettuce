@@ -17,10 +17,38 @@
 import os
 import re
 import sys
+import fcntl
+import struct
+import termios
+
 from lettuce import strings
 from lettuce import core
 from lettuce.terrain import after
 from lettuce.terrain import before
+
+def get_terminal_size():
+    def ioctl_GWINSZ(fd):
+        try:
+            cr = struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ,
+        '1234'))
+        except:
+            return None
+        return cr
+    cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
+    if not cr:
+        try:
+            fd = os.open(os.ctermid(), os.O_RDONLY)
+            cr = ioctl_GWINSZ(fd)
+            os.close(fd)
+        except:
+            pass
+    if not cr:
+        try:
+            cr = (os.getenv('LINES'), os.getenv('COLUMNS'))
+        except:
+            cr = (25, 80)
+
+    return int(cr[1]), int(cr[0])
 
 def wrt(what):
     sys.stdout.write(what.encode('utf-8'))
@@ -77,6 +105,14 @@ def print_step_ran(step):
 
 
     prefix = '\033[A'
+    width, height = get_terminal_size()
+    lines_up = len(string) / float(width)
+    if lines_up < 1:
+        lines_up = 1
+    else:
+        lines_up = int(lines_up) + 1
+
+    prefix = prefix * lines_up
 
     if step.failed:
         color = "\033[0;31m"
