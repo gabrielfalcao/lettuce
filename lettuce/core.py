@@ -298,7 +298,8 @@ class Step(object):
             def elsewhere(step):
                 # actual step behavior, maybe.
 
-        This will raise error (thus halting execution of the step) if a subordinate step fails.
+        This will raise the error of the first failing step (thus halting 
+        execution of the step) if a subordinate step fails.
 
         """
         lines = string.split('\n')
@@ -312,7 +313,7 @@ class Step(object):
         else:
             self.passed = False
             self.failed = True
-            assert not steps_failed, "Subordinate steps failed for this step."
+            assert not steps_failed, steps_failed[0].why.exception
 
     def run(self, ignore_case):
         """Runs a step, trying to resolve it on available step
