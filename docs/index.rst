@@ -104,6 +104,7 @@ walkthrough
 
     * :ref:`write your first feature <tutorial-simple>`
     * :ref:`handling data with tables <tutorial-tables>`
+    * :ref:`multi-line strings <tutorial-multiline>`
     * :ref:`don't repeat yourself, meet scenario outlines <tutorial-scenario-outlines>`
     * :ref:`clean up your spec definitions, calling one step from another <tutorial-steps-from-step-definitions>`
 

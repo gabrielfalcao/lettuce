@@ -149,7 +149,7 @@ class Step(object):
         self.sentence = sentence
         self.original_sentence = sentence
         self._remaining_lines = remaining_lines
-        keys, hashes = self._parse_remaining_lines(remaining_lines)
+        keys, hashes, self.multiline = self._parse_remaining_lines(remaining_lines)
 
         self.keys = tuple(keys)
         self.hashes = list(hashes)
@@ -250,7 +250,9 @@ class Step(object):
         return u'<Step: "%s">' % self.sentence
 
     def _parse_remaining_lines(self, lines):
-        return strings.parse_hashes(lines)
+        multiline = strings.parse_multiline(lines)
+        keys, hashes = strings.parse_hashes(lines)
+        return keys, hashes, multiline
 
     def _get_match(self, ignore_case):
         matched, func = None, lambda: None
@@ -386,19 +388,28 @@ class Step(object):
         parsed, but must be well-formed under a regular step sentence.
 
         """
-        invalid_first_line_error = '\nFirst line of step "%(line)s" is in table form.'
+        invalid_first_line_error = '\nFirst line of step "%s" is in %s form.'
         if lines and strings.wise_startswith(lines[0], u'|'):
             raise LettuceSyntaxError(
                 None,
-                invalid_first_line_error % lines[0])
+                invalid_first_line_error % (lines[0], 'table'))
+
+        if lines and strings.wise_startswith(lines[0], u'"""'):
+            raise LettuceSyntaxError(
+                None,
+                invalid_first_line_error % (lines[0], 'multiline'))
 
         # Select only lines that aren't end-to-end whitespace
         only_whitspace = re.compile('^\s*$')
         lines = filter(lambda x: not only_whitspace.match(x), lines)
 
         step_strings = []
+        in_multiline = False
         for line in lines:
-            if strings.wise_startswith(line, u"|"):
+            if strings.wise_startswith(line, u'"""'):
+                in_multiline = not in_multiline
+                step_strings[-1] += "\n%s" % line
+            elif strings.wise_startswith(line, u"|") or in_multiline:
                 step_strings[-1] += "\n%s" % line
             else:
                 step_strings.append(line)

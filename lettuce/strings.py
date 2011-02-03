@@ -130,3 +130,17 @@ def parse_hashes(lines):
             hashes.append(dict(zip(keys, values)))
 
     return keys, hashes
+
+def parse_multiline(lines):
+    multilines = []
+    in_multiline = False
+    for line in lines:
+        if line == '"""':
+            in_multiline = not in_multiline
+        elif in_multiline:
+            if line.startswith('"'):
+                line = line[1:]
+            if line.endswith('"'):
+                line = line[:-1]
+            multilines.append(line)
+    return u'\n'.join(multilines)

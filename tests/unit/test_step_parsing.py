@@ -23,7 +23,44 @@ I_HAVE_TASTY_BEVERAGES = """I have the following tasty beverages in my freezer:
 """
 I_DIE_HAPPY = "I shall die with love in my heart"
 
+MULTI_LINE = '''
+I have a string like so:
+  """
+  This is line one
+  and this is line two
+  and this is line three
+    and this is line four,
+
+    with spaces at the beginning
+  """
+'''
+
+MULTI_LINE_WHITESPACE = '''
+I have a string like so:
+  """
+  This is line one
+  and this is line two
+  and this is line three
+ "  and this is line four,
+ "
+ "  with spaces at the beginning
+  and spaces at the end   "
+  """
+'''
+
+
+INVALID_MULTI_LINE = '''
+  """
+  invalid one...
+  """
+'''
+
+
+
+
 from lettuce.core import Step
+from lettuce.exceptions import LettuceSyntaxError
+from lettuce import strings
 from nose.tools import assert_equals
 from tests.asserts import *
 import string
@@ -118,3 +155,42 @@ def test_can_parse_two_ordinary_steps():
     assert isinstance(steps[1], Step)
     assert_equals(steps[0].sentence, I_DIE_HAPPY)
     assert_equals(steps[1].sentence, I_LIKE_VEGETABLES)
+
+def test_cannot_start_with_multiline():
+    "It should raise an error when a step starts with a multiline string"
+    lines = strings.get_stripped_lines(INVALID_MULTI_LINE)
+    try:
+        step = Step.many_from_lines(lines)
+    except LettuceSyntaxError:
+        return
+    assert False, "LettuceSyntaxError not raised"
+
+def test_multiline_is_part_of_previous_step():
+    "It should correctly parse a multi-line string as part of the preceding step"
+    lines = strings.get_stripped_lines(MULTI_LINE)
+    steps = Step.many_from_lines(lines)
+    print steps
+    assert_equals(len(steps), 1)
+    assert isinstance(steps[0], Step)
+    assert_equals(steps[0].sentence, 'I have a string like so:')
+
+def test_multiline_is_parsed():
+    step = Step.from_string(MULTI_LINE)
+    assert_equals(step.sentence, 'I have a string like so:')
+    assert_equals(step.multiline, u"""This is line one
+and this is line two
+and this is line three
+and this is line four,
+with spaces at the beginning""")
+
+
+def test_multiline_with_whitespace():
+    step = Step.from_string(MULTI_LINE_WHITESPACE)
+    assert_equals(step.sentence, 'I have a string like so:')
+    assert_equals(step.multiline, u"""This is line one
+and this is line two
+and this is line three
+  and this is line four,
+
+  with spaces at the beginning
+and spaces at the end   """)

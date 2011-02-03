@@ -13,6 +13,7 @@ Lettuce documentation contents
    intro/wtf
    tutorial/simple
    tutorial/tables
+   tutorial/multiline
    tutorial/scenario-outlines
    tutorial/steps-from-step-definitions
    reference/features
