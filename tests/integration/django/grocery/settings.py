@@ -83,3 +83,4 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'lettuce.django',
 )
+LETTUCE_SERVER_PORT = 7000

@@ -3,11 +3,26 @@ import urllib2
 from lettuce import step, before, world
 from lettuce.django import django_url
 from nose.tools import assert_equals
+from django.conf import settings
 
 @before.each_scenario
 def prepare_the_world(scenario):
     world.statuses = []
     world.content_types = []
+
+@step(u'my settings.py has "(.*)" set to "(.*)"')
+def given_my_settings_py_has_group1_set_to_group2(step, key, value):
+    assert hasattr(settings, key), 'settings.%s is not set' % key
+    assert_equals(getattr(settings, key), int(value))
+
+@step(u'I see that requesting "(.*)" gets "(.*)"')
+def then_i_see_that_requesting_group1_gets_group2(step, url, status):
+    try:
+        http = urllib2.urlopen(url)
+    except Exception, http:
+        pass
+
+    assert_equals(str(http.code), status)
 
 @step(u'Given I fetch the urls:')
 def given_i_fetch_the_urls(step):

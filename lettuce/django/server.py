@@ -186,9 +186,9 @@ class Server(object):
     that lettuce can be used with selenium, webdriver, windmill or any
     browser tool"""
 
-    def __init__(self, address='0.0.0.0', port=8000):
+    def __init__(self, address='0.0.0.0', port=None):
+        self.port = int(port or getattr(settings, 'LETTUCE_SERVER_PORT', 8000))
         self.address = unicode(address)
-        self.port = int(port)
         self._actual_server = ThreadedServer(self.address, self.port)
 
     def start(self):
