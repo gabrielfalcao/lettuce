@@ -63,6 +63,10 @@ class MutedRequestHandler(WSGIRequestHandler):
 
     def handle(self):
         """Handle a single HTTP request"""
+        global keep_running
+        if not keep_running:
+            return
+
         self.raw_requestline = self.rfile.readline()
         if not self.parse_request(): # An error code has been sent, just exit
             return
@@ -73,11 +77,18 @@ class MutedRequestHandler(WSGIRequestHandler):
             self.dev_null,
             self.get_environ()
         )
+        if not keep_running:
+            return
+
         handler.request_handler = self      # backpointer for logging
         handler.run(self.server.get_app())
 
 class LettuceServerHandler(ServerHandler):
     def finish_response(self):
+        global keep_running
+        if not keep_running:
+            return
+
         try:
             ServerHandler.finish_response(self)
 
@@ -109,11 +120,13 @@ class ThreadedServer(threading.Thread):
     def wait(self):
         address = ThreadedServer.get_real_address(self.address)
 
-        while True:
-            time.sleep(0.1)
+        while keep_running:
+            time.sleep(1)
             http = httplib.HTTPConnection(address, self.port)
             try:
                 http.request("GET", "/")
+                self.lock.release()
+
             except socket.error:
                 http.close()
                 continue
@@ -122,6 +135,8 @@ class ThreadedServer(threading.Thread):
         self.lock.acquire()
 
     def run(self):
+        global keep_running
+
         self.lock.acquire()
         pidfile = os.path.join(tempfile.gettempdir(), 'lettuce-django.pid')
         if os.path.exists(pidfile):
@@ -141,9 +156,11 @@ class ThreadedServer(threading.Thread):
         max_port = 65535
 
         connector = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        while not bound or self.port < max_port:
+        while keep_running and (not bound or self.port < max_port):
+            time.sleep(1)
             try:
                 connector.connect((self.address, self.port))
+
                 self.port += 1
 
             except socket.error:
@@ -169,16 +186,28 @@ class ThreadedServer(threading.Thread):
         if 'django.contrib.admin' in settings.INSTALLED_APPS:
             admin_media_path = ''
             handler = AdminMediaHandler(handler, admin_media_path)
-            print "Preparing to server django's admin site static files..."
+            print "Preparing to serve django's admin site static files..."
 
         httpd.set_app(handler)
 
-        global keep_running
         while keep_running:
+            time.sleep(1)
+
             call_hook('before', 'handle_request', httpd, self)
+
+
+            # timeout http://bugs.python.org/issue1167930 between big
+            # amounts of CPU usage
+
+            time.sleep(1) # part 1
+
             httpd.handle_request()
+
+            time.sleep(1) # part 2
+
             call_hook('after', 'handle_request', httpd, self)
             if self.lock.locked():
+                time.sleep(1)
                 self.lock.release()
 
 class Server(object):
@@ -202,6 +231,9 @@ class Server(object):
         print "Django's builtin server is running at %s:%d" % addrport
 
     def stop(self, fail=False):
+        global keep_running
+        keep_running = False
+
         http = httplib.HTTPConnection(self.address, self.port)
         try:
             http.request("DELETE", "/")

@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import sys
+import signal
 from optparse import make_option
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -54,6 +55,7 @@ class Command(BaseCommand):
             help='Comma separated list of scenarios to run'),
     )
     def stopserver(self, failed=False):
+        server.stop(fail=failed)
         raise SystemExit(int(failed))
 
     def get_paths(self, args, apps_to_run, apps_to_avoid):
@@ -69,7 +71,17 @@ class Command(BaseCommand):
 
         return paths
 
+    def handle_control_c(self, signum, frame):
+        print "oops, aborting..."
+        server.stop(fail=True)
+        print 'harvest aborted, no crops for this spring :('
+        sys.exit(2)
+
     def handle(self, *args, **options):
+        signal.signal(signal.SIGABRT, self.handle_control_c)
+        signal.signal(signal.SIGTERM, self.handle_control_c)
+        signal.signal(signal.SIGINT, self.handle_control_c)
+
         setup_test_environment()
 
         settings.DEBUG = options.get('debug', False)
