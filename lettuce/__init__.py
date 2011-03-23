@@ -83,6 +83,10 @@ class Runner(object):
             from lettuce.plugins import scenario_names as output
         elif verbosity is 3:
             from lettuce.plugins import shell_output as output
+        elif verbosity is 4:
+            from lettuce.plugins import colored_shell_output as output
+        elif verbosity is 5:
+            from lettuce.plugins import junit_output as output
         else:
             from lettuce.plugins import colored_shell_output as output
 
