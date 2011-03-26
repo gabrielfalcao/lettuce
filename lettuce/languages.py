@@ -61,4 +61,13 @@ LANGUAGES = {
         'scenario_outline': u'Esquema de Escenario',
         'scenario_separator': u'(Esquema de Escenario|Escenario)',
     },
+    'hu': {
+        'examples': u'Példák',
+        'feature': u'Jellemző',
+        'name': u'Hungarian',
+        'native': u'Magyar',
+        'scenario': u'Forgatókönyv',
+        'scenario_outline': u'Forgatókönyv vázlat',
+        'scenario_separator': u'(Forgatókönyv|Forgatókönyv vázlat)',
+    },
 }
