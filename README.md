@@ -9,7 +9,7 @@ Barium: In form of "barium nitrate" is commonly used to make green fireworks. Su
 
 # What
 
-Lettuce is a BDD tool for python, 100% inspired on [cucumber](http://cukes.info/ "BDD with elegance and joy").
+Lettuce is a [BDD](http://en.wikipedia.org/wiki/Behavior_Driven_Development) tool for python, 100% inspired on [cucumber](http://cukes.info/ "BDD with elegance and joy").
 
 # Motivation
 
@@ -26,6 +26,18 @@ Lettuce is a BDD tool for python, 100% inspired on [cucumber](http://cukes.info/
 
 **you will need to install these dependencies in order to** *hack* **lettuce** :)
 all them are used within lettuce tests
+
+## you could use a virtualenv:
+
+    > mkvirtualenv lettuce
+    > workon lettuce
+    > pip install -r requirements.txt
+
+## or just install manually:
+
+    > sudo pip install -r requirements.txt
+
+## or do it really from scratch:
 
 * [nose](http://code.google.com/p/python-nose/)
     > [sudo] pip install nose
