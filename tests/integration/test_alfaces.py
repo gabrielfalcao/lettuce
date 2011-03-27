@@ -26,7 +26,7 @@ def test_django_agains_alfaces():
     FileSystem.pushd(current_directory, "django", "alfaces")
 
     status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3")
-    assert_equals(status, 0)
+    assert_equals(status, 0, out)
 
     assert "Test the django app DO NOTHING" in out
     assert "Test the django app FOO BAR" in out
@@ -38,7 +38,7 @@ def test_limit_by_app_getting_all_apps_by_comma():
     FileSystem.pushd(current_directory, "django", "alfaces")
 
     status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --apps=foobar,donothing")
-    assert_equals(status, 0)
+    assert_equals(status, 0, out)
 
     assert "Test the django app DO NOTHING" in out
     assert "Test the django app FOO BAR" in out
@@ -50,7 +50,7 @@ def test_limit_by_app_getting_one_app():
     FileSystem.pushd(current_directory, "django", "alfaces")
 
     status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --apps=foobar")
-    assert_equals(status, 0)
+    assert_equals(status, 0, out)
 
     assert "Test the django app DO NOTHING" not in out
     assert "Test the django app FOO BAR" in out
@@ -62,7 +62,7 @@ def test_excluding_apps_separated_by_comma():
     FileSystem.pushd(current_directory, "django", "alfaces")
 
     status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --avoid-apps=donothing,foobar")
-    assert_equals(status, 0)
+    assert_equals(status, 0, out)
 
     assert "Test the django app DO NOTHING" not in out
     assert "Test the django app FOO BAR" not in out
@@ -75,7 +75,7 @@ def test_excluding_app():
     FileSystem.pushd(current_directory, "django", "alfaces")
 
     status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --avoid-apps=donothing")
-    assert_equals(status, 0)
+    assert_equals(status, 0, out)
 
     assert "Test the django app DO NOTHING" not in out
     assert "Test the django app FOO BAR" in out
@@ -87,7 +87,7 @@ def test_running_only_apps_within_lettuce_apps_setting():
     FileSystem.pushd(current_directory, "django", "alfaces")
 
     status, out = commands.getstatusoutput("python manage.py harvest --settings=onlyfoobarsettings --verbosity=3")
-    assert_equals(status, 0)
+    assert_equals(status, 0, out)
 
     assert "Test the django app FOO BAR" in out
     assert "Test the django app DO NOTHING" not in out
@@ -99,7 +99,7 @@ def test_running_all_apps_but_lettuce_avoid_apps():
     FileSystem.pushd(current_directory, "django", "alfaces")
 
     status, out = commands.getstatusoutput("python manage.py harvest --settings=allbutfoobarsettings --verbosity=3")
-    assert_equals(status, 0)
+    assert_equals(status, 0, out)
 
     assert "Test the django app FOO BAR" not in out
     assert "Test the django app DO NOTHING" in out
@@ -112,7 +112,7 @@ def test_ignores_settings_avoid_apps_if_apps_argument_is_passed():
     FileSystem.pushd(current_directory, "django", "alfaces")
 
     status, out = commands.getstatusoutput("python manage.py harvest --settings=avoidallappssettings --verbosity=3 --apps=foobar,donothing")
-    assert_equals(status, 0)
+    assert_equals(status, 0, out)
 
     assert "Test the django app FOO BAR" in out
     assert "Test the django app DO NOTHING" in out
@@ -126,7 +126,7 @@ def test_no_server():
 
     status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --apps=foobar --no-server")
 
-    assert_equals(status, 0)
+    assert_equals(status, 0, out)
     assert "Django's builtin server is running at" not in out
 
 
@@ -136,7 +136,7 @@ def test_django_specifying_scenarios_to_run():
     FileSystem.pushd(current_directory, "django", "alfaces")
 
     status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --scenarios=2,5 -a foobar")
-    assert_equals(status, 0)
+    assert_equals(status, 0, out)
 
     assert "2nd scenario" in out
     assert "5th scenario" in out
@@ -154,7 +154,7 @@ def test_running_only_specified_features():
     FileSystem.pushd(current_directory, "django", "alfaces")
 
     status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 foobar/features/foobar.feature")
-    assert_equals(status, 0)
+    assert_equals(status, 0, out)
 
     assert "Test the django app FOO BAR" in out
     assert "Test the django app DO NOTHING" not in out

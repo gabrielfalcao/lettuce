@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import commands
+from nose.tools import assert_equals
 from lettuce.fs import FileSystem
 
 current_directory = FileSystem.dirname(__file__)
@@ -25,9 +26,9 @@ def test_harvest_with_debug_mode_enabled():
     FileSystem.pushd(current_directory, "django", "brocolis")
 
     status, out = commands.getstatusoutput("python manage.py harvest -d leaves/features/enabled.feature")
-    assert status is 0
+    assert_equals(status, 0, out)
     status, out = commands.getstatusoutput("python manage.py harvest --debug-mode leaves/features/enabled.feature")
-    assert status is 0
+    assert_equals(status, 0, out)
 
     FileSystem.popd()
 
@@ -37,7 +38,7 @@ def test_harvest_with_debug_mode_disabled():
     FileSystem.pushd(current_directory, "django", "brocolis")
 
     status, out = commands.getstatusoutput("python manage.py harvest leaves/features/disabled.feature")
-    assert status is 0
+    assert_equals(status, 0, out)
 
     FileSystem.popd()
 
@@ -47,7 +48,7 @@ def test_harvest_sets_environment_variabled_for_gae():
     FileSystem.pushd(current_directory, "django", "brocolis")
 
     status, out = commands.getstatusoutput("python manage.py harvest leaves/features/appengine.feature")
-    assert status is 0
+    assert_equals(status, 0, out)
 
     FileSystem.popd()
 

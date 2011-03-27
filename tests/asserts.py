@@ -38,12 +38,12 @@ def prepare_stderr():
 def assert_lines(original, expected):
     original = original.decode('utf-8') if isinstance(original, basestring) else original
     assert_lines_unicode(original, expected)
-    
+
 def assert_lines_unicode(original, expected):
     if original != expected:
         diff = ''.join(list(Differ().compare(expected.splitlines(1), original.splitlines(1))))
         raise AssertionError, 'Output differed as follows:\n' + diff + "\nOutput was:\n" + original
-    
+
     assert_equals(len(expected), len(original), 'Output appears equal, but of different lengths.')
 
 def assert_lines_with_traceback(one, other):
@@ -87,3 +87,7 @@ def assert_stderr_lines(other):
 
 def assert_stdout_lines_with_traceback(other):
     assert_lines_with_traceback(sys.stdout.getvalue(), other)
+
+def assert_stderr_lines_with_traceback(other):
+    assert_lines_with_traceback(sys.stderr.getvalue(), other)
+

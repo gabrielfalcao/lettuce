@@ -31,6 +31,7 @@ from tests.asserts import prepare_stderr
 from tests.asserts import prepare_stdout
 from tests.asserts import assert_stderr_lines
 from tests.asserts import assert_stdout_lines
+from tests.asserts import assert_stderr_lines_with_traceback
 from tests.asserts import assert_stdout_lines_with_traceback
 
 current_dir = abspath(dirname(__file__))
@@ -59,7 +60,7 @@ def test_try_to_import_terrain():
         reload(lettuce)
         raise AssertionError('The runner should raise ImportError !')
     except SystemExit:
-        assert_stderr_lines(
+        assert_stderr_lines_with_traceback(
             'Lettuce has tried to load the conventional environment module ' \
             '"terrain"\nbut it has errors, check its contents and ' \
             'try to run lettuce again.\n\nOriginal traceback below:\n\n' \
