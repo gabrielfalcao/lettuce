@@ -253,3 +253,36 @@ def test_parse_hashes_escapes_pipes():
     assert_equals(keys, got_keys)
     assert_equals(dicts, got_dicts)
 
+
+def test_parse_hashes_allow_empty():
+    "strings.parse_hashes allow empty"
+
+    keys = [u'name', u'age']
+    dicts = [
+        {
+            u'name': u'Gabriel',
+            u'age': u'22'
+        },
+        {
+            u'name': u'',
+            u'age': u'33'
+        },
+        {
+            u'name': u'Dave',
+            u'age': u''
+        }
+
+    ]
+
+    table = [
+        u"| name    | age |\n",
+        u"| Gabriel | 22  |\n",
+        u"|         | 33  |\n",
+        u"| Dave    |     |\n",
+    ]
+
+    got_keys, got_dicts = strings.parse_hashes(table)
+
+    assert_equals(keys, got_keys)
+    assert_equals(dicts, got_dicts)
+

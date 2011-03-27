@@ -39,6 +39,10 @@ def get_stripped_lines(string, ignore_lines_starting_with=''):
 
 def split_wisely(string, sep, strip=False):
     string = unicode(string)
+    if strip:
+        string=string.strip()
+    else:
+        string=string.strip("\n")
     sep = unicode(sep)
 
     regex = re.compile(escape_if_necessary(sep),  re.UNICODE | re.M | re.I)
@@ -49,7 +53,7 @@ def split_wisely(string, sep, strip=False):
     else:
         items = [i.strip("\n") for i in items]
 
-    return [unicode(i) for i in items if i]
+    return [unicode(i) for i in items]
 
 def wise_startswith(string, seed):
     string = unicode(string)
