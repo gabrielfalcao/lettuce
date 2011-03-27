@@ -107,7 +107,7 @@ Python:
        world.number = int(number)
 
    @step('I compute its factorial')
-   def compute_its_fatorial(step):
+   def compute_its_factorial(step):
        world.number = factorial(world.number)
 
    @step('I see the number (\d+)')
@@ -168,7 +168,7 @@ feature is this... we could force factorial to return 1.
         world.number = int(number)
 
     @step('I compute its factorial')
-    def compute_its_fatorial(step):
+    def compute_its_factorial(step):
         world.number = factorial(world.number)
 
     @step('I see the number (\d+)')
@@ -275,7 +275,7 @@ scenarios, specially for number 2:
         world.number = int(number)
 
     @step('I compute its factorial')
-    def compute_its_fatorial(step):
+    def compute_its_factorial(step):
         world.number = factorial(world.number)
 
     @step('I see the number (\d+)')
@@ -378,7 +378,7 @@ step.
         world.number = int(number)
 
     @step('I compute its factorial')
-    def compute_its_fatorial(step):
+    def compute_its_factorial(step):
         world.number = factorial(world.number)
 
     @step('I see the number (\d+)')
