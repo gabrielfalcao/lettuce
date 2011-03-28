@@ -24,7 +24,7 @@ from xml.dom import minidom
 
 def wrt_output(filename, content):
     f = open(filename, "w")
-    f.write(content)
+    f.write(content.encode('utf-8'))
     f.close()
 
 def total_seconds(td):
