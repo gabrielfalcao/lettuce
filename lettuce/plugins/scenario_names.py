@@ -25,7 +25,7 @@ failed_scenarios = []
 scenarios_and_its_fails = {}
 
 def wrt(string):
-    sys.stdout.write(string)
+    sys.stdout.write(string.encode('utf-8'))
 
 @before.each_scenario
 def print_scenario_running(scenario):
