@@ -34,6 +34,7 @@ from lettuce.decorators import step
 from lettuce.registry import call_hook
 from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
+from lettuce.plugins import xunit_output
 
 from lettuce import exceptions
 
@@ -58,7 +59,8 @@ class Runner(object):
     Takes a base path as parameter (string), so that it can look for
     features and step definitions on there.
     """
-    def __init__(self, base_path, scenarios=None, verbosity=0):
+    def __init__(self, base_path, scenarios=None, verbosity=0,
+                 enable_xunit=False, xunit_filename=None):
         """ lettuce.Runner will try to find a terrain.py file and
         import it from within `base_path`
         """
@@ -83,12 +85,11 @@ class Runner(object):
             from lettuce.plugins import scenario_names as output
         elif verbosity is 3:
             from lettuce.plugins import shell_output as output
-        elif verbosity is 4:
-            from lettuce.plugins import colored_shell_output as output
-        elif verbosity is 5:
-            from lettuce.plugins import junit_output as output
         else:
             from lettuce.plugins import colored_shell_output as output
+
+        if enable_xunit:
+            xunit_output.enable(filename=xunit_filename)
 
         reload(output)
 

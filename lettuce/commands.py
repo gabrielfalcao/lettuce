@@ -38,6 +38,18 @@ def main(args=sys.argv[1:]):
                       default=None,
                       help='Comma separated list of scenarios to run')
 
+    parser.add_option("--with-xunit",
+                      dest="enable_xunit",
+                      action="store_true",
+                      default=False,
+                      help='Output JUnit XML test results to a file')
+
+    parser.add_option("--xunit-file",
+                      dest="xunit_file",
+                      default=None,
+                      type="string",
+                      help='Write JUnit XML to this file. Defaults to '
+                      'lettucetests.xml')
 
     options, args = parser.parse_args()
     if args:
@@ -48,7 +60,11 @@ def main(args=sys.argv[1:]):
     except ValueError:
         pass
 
-    runner = lettuce.Runner(base_path, scenarios=options.scenarios, verbosity=options.verbosity)
+
+    runner = lettuce.Runner(base_path, scenarios=options.scenarios,
+                            verbosity=options.verbosity,
+                            enable_xunit=options.enable_xunit,
+                            xunit_filename=options.xunit_file)
 
     result = runner.run()
     if not result or result.steps != result.steps_passed:

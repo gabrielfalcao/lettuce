@@ -64,7 +64,7 @@ def test_try_to_import_terrain():
             '"terrain"\nbut it has errors, check its contents and ' \
             'try to run lettuce again.\n\nOriginal traceback below:\n\n' \
             "Traceback (most recent call last):\n"
-            '  File "%(lettuce_core_file)s", line 43, in <module>\n'
+            '  File "%(lettuce_core_file)s", line 44, in <module>\n'
             '    terrain = fs.FileSystem._import("terrain")\n' \
             '  File "%(lettuce_fs_file)s", line 63, in _import\n' \
             '    module = imp.load_module(name, fp, pathname, description)\n' \
@@ -242,7 +242,7 @@ def test_output_with_success_colorful_newline():
         "\033[1;37m  Scenario: Do nothing (again)           \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:9\033[0m\n" \
         "\033[1;30m    Given I do nothing (again)           \033[1;30m# tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\033[0m\n" \
         "\033[A\033[1;32m    Given I do nothing (again)           \033[1;30m# tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\033[0m\n" \
-		"\n" \
+        "\n" \
         "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
         "\033[1;37m2 scenarios (\033[1;32m2 passed\033[1;37m)\033[0m\n" \
         "\033[1;37m2 steps (\033[1;32m2 passed\033[1;37m)\033[0m\n"
