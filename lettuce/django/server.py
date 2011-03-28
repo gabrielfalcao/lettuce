@@ -169,7 +169,7 @@ class ThreadedServer(threading.Thread):
         if 'django.contrib.admin' in settings.INSTALLED_APPS:
             admin_media_path = ''
             handler = AdminMediaHandler(handler, admin_media_path)
-            print "Preparing to server django's admin site static files..."
+            print "Preparing to serve django's admin site static files..."
 
         httpd.set_app(handler)
 
