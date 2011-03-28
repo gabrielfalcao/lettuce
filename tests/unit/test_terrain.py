@@ -182,3 +182,53 @@ def test_after_each_all_is_executed_before_each_all():
     )
 
     mox.UnsetStubs()
+
+def test_world_should_be_able_to_absorb_functions():
+    u"world should be able to absorb functions"
+    assert not hasattr(world, 'function1')
+
+    @world.absorb
+    def function1():
+        return 'absorbed'
+
+    assert hasattr(world, 'function1')
+    assert callable(world.function1)
+
+    assert_equals(world.function1(), 'absorbed')
+
+    world.spew('function1')
+
+    assert not hasattr(world, 'function1')
+
+def test_world_should_be_able_to_absorb_lambdas():
+    u"world should be able to absorb lambdas"
+    assert not hasattr(world, 'named_func')
+
+    world.absorb(lambda: 'absorbed', 'named_func')
+
+    assert hasattr(world, 'named_func')
+    assert callable(world.named_func)
+
+    assert_equals(world.named_func(), 'absorbed')
+
+    world.spew('named_func')
+
+    assert not hasattr(world, 'named_func')
+
+def test_world_should_be_able_to_absorb_classs():
+    u"world should be able to absorb classs"
+    assert not hasattr(world, 'MyClass')
+
+    @world.absorb
+    class MyClass:
+        pass
+
+    assert hasattr(world, 'MyClass')
+    assert_equals(world.MyClass, MyClass)
+
+    assert isinstance(world.MyClass(), MyClass)
+
+    world.spew('MyClass')
+
+    assert not hasattr(world, 'MyClass')
+

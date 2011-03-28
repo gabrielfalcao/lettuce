@@ -96,6 +96,96 @@ and the feature could have something like:
       Scenario: check variable
         When I exemplify "world" by seeing that some variable contains "yay!"
 
+world.absorb
+^^^^^^^^^^^^
+
+it can be really useful to put functions and/or classes in **lettuce.world**
+
+for example:
+
+.. highlight:: python
+
+.. doctest::
+
+   from lettuce import world
+
+   def my_project_wide_function():
+       # do something
+
+   world.my_project_wide_function = my_project_wide_function
+
+   world.my_project_wide_function()
+
+but as you can notice, as your project grows, there can be a lot of
+repetitive lines, not DRY at all :(
+
+in order to avoid that, lettuce provides a "absorb" decorator that lives within "world"
+
+let's see it in action:
+
+.. highlight:: python
+
+.. doctest::
+
+   from lettuce import world
+
+   @world.absorb
+   def my_project_wide_function():
+       # do something
+
+   world.my_project_wide_function()
+
+You can also use it with classes:
+
+.. highlight:: python
+
+.. doctest::
+
+   from lettuce import world
+
+   @world.absorb
+   class MyClass:
+       pass
+
+   assert isinstance(world.MyClass(), MyClass)
+
+And even with lambdas, **but in this case you need to name it**
+
+.. highlight:: python
+
+.. doctest::
+
+   from lettuce import world
+
+   world.absorb(lambda: "yeah", "optimist_function")
+
+   assert world.optimist_function() == 'yeah'
+
+world.spew
+^^^^^^^^^^
+
+Well, if you read the topic above, you may be guessing: "if I keep
+stashing things in lettuce.world, it may bloat it sometime, or confuse
+member names along my steps, or hooks.
+
+For those cases after **"absorbing"** something, world can also **"spew"** it.
+
+.. highlight:: python
+
+.. doctest::
+
+   from lettuce import world
+
+   @world.absorb
+   def generic_function():
+       # do something
+
+   assert hasattr(world, 'generic_function')
+
+   world.spew('generic_function')
+
+   assert not hasattr(world, 'generic_function')
+
 hooks
 ~~~~~
 

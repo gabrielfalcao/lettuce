@@ -18,6 +18,22 @@ from lettuce.registry import world
 from lettuce.registry import CALLBACK_REGISTRY
 world._set = True
 
+def absorb(thing, name=None):
+    if not isinstance(name, basestring):
+        name = thing.__name__
+
+    setattr(world, name, thing)
+    return thing
+
+world.absorb = absorb
+
+@world.absorb
+def spew(name):
+    if hasattr(world, name):
+        item = getattr(world, name)
+        delattr(world, name)
+        return item
+
 class main(object):
     @classmethod
     def all(cls, function):
