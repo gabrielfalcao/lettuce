@@ -31,5 +31,5 @@ def test_django_admin_media_serving():
 
     lines = out.splitlines()
 
-    assert u"Preparing to server django's admin site static files..." in lines
+    assert u"Preparing to serve django's admin site static files..." in lines
     assert u"Django's builtin server is running at 0.0.0.0:7000" in lines
