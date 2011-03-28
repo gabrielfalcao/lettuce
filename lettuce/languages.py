@@ -70,4 +70,13 @@ LANGUAGES = {
         'scenario_outline': u'Forgatókönyv vázlat',
         'scenario_separator': u'(Forgatókönyv|Forgatókönyv vázlat)',
     },
+    'fr': {
+        'examples': u'Exemples|Scénarios',
+        'feature': u'Fonctionnalité|Fonction',
+        'name': u'French',
+        'native': u'Français',
+        'scenario': u'Scénario',
+        'scenario_outline': u'Plan de Scénario|Plan du Scénario',
+        'scenario_separator': u'(Plan de Scénario|Plan du Scénario|Scénario)',
+   },
 }
