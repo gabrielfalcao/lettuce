@@ -33,7 +33,7 @@ def total_seconds(td):
 def enable(filename=None):
 
     doc = minidom.Document()
-    root = doc.createElement("testsuites")
+    root = doc.createElement("testsuite")
     output_filename = filename or "lettucetests.xml"
 
     @before.each_step
