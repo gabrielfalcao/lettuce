@@ -79,4 +79,13 @@ LANGUAGES = {
         'scenario_outline': u'Plan de Scénario|Plan du Scénario',
         'scenario_separator': u'(Plan de Scénario|Plan du Scénario|Scénario)',
    },
+    'de': {
+        'examples': u'Beispiele|Szenarios',
+        'feature': u'Funktionalität|Funktion',
+        'name': u'German',
+        'native': u'Deutsch',
+        'scenario': u'Szenario',
+        'scenario_outline': u'Szenario-Zusammenfassung|Zusammenfassung',
+        'scenario_separator': u'(Szenario-Zusammenfassung|Zusammenfassung)',
+   },
 }
