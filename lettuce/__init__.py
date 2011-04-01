@@ -34,6 +34,7 @@ from lettuce.decorators import step
 from lettuce.registry import call_hook
 from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
+from lettuce.exceptions import StepLoadingError
 from lettuce.plugins import xunit_output
 
 from lettuce import exceptions
@@ -100,7 +101,11 @@ class Runner(object):
         features under `base_path` specified on constructor
         """
         started_at = datetime.now()
-        self.loader.find_and_load_step_definitions()
+        try:
+            self.loader.find_and_load_step_definitions()
+        except StepLoadingError, e:
+            print "Error loading step definitions:\n", e
+            return
 
         call_hook('before', 'all')
 

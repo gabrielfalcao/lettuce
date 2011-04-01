@@ -44,3 +44,7 @@ class LettuceSyntaxError(SyntaxError):
         self.filename = filename
         self.msg = "Syntax error at: %s\n%s\n" % (filename, string)
 
+
+class StepLoadingError(Exception):
+    """Raised when a step cannot be loaded."""
+    pass

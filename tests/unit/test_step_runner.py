@@ -20,6 +20,7 @@ from lettuce import core
 from lettuce import registry
 from lettuce.core import Step
 from lettuce.core import Feature
+from lettuce.exceptions import StepLoadingError
 from nose.tools import *
 
 FEATURE1 = """
@@ -92,6 +93,7 @@ Feature: Count step definitions with exceptions as failing steps
     Then this step will be skipped
 """
 
+
 def step_runner_environ():
     "Make sure the test environment is what is expected"
 
@@ -117,6 +119,11 @@ def step_runner_environ():
     @step('I have a step which calls the "(.*)" step with behave_as')
     def runs_some_other_step_with_behave_as(step, something_else):
         step.behave_as("When %(i_do_something_else)s" % {'i_do_something_else': something_else})
+
+
+def step_runner_cleanup():
+    from lettuce import registry
+    registry.clear()
 
 @with_setup(step_runner_environ)
 def test_can_count_steps_and_its_states():
@@ -211,7 +218,9 @@ def test_steps_are_aware_of_its_definitions():
 
     step1 = scenario_result.steps_passed[0]
 
-    assert_equals(step1.defined_at.line, 102)
+    # Is there someway to make this not so dependent on the
+    # line numbers in this file?
+    assert_equals(step1.defined_at.line, 104)
     assert_equals(step1.defined_at.file, core.fs.relpath(__file__.rstrip("c")))
 
 @with_setup(step_runner_environ)
@@ -429,3 +438,11 @@ def test_failing_behave_as_step_raises_assertion():
     'When a step definition calls another (failing) step definition with behave_as, that step should be marked a failure.'
     runnable_step = Step.from_string('Given I have a step which calls the "other step fails" step with behave_as')
     assert_raises(AssertionError, runnable_step.run, True)
+
+@with_setup(step_runner_environ, step_runner_cleanup)
+def test_invalid_regex_raise_an_error():
+    def load_step():
+        @step('invalid step regex(.*')
+        def step_with_bad_regex(step):
+            pass
+    assert_raises(StepLoadingError, load_step)
