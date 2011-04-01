@@ -200,14 +200,14 @@ class Step(object):
             def evaluate(stuff):
                 return stuff.replace(u'<%s>' % unicode(k), unicode(v))
 
-            def evaluate_hash(hash_row):
+            def evaluate_hash_value(hash_row):
                 new_row = {}
                 for rkey, rvalue in hash_row.items():
-                    new_row[evaluate(rkey)] = evaluate(rvalue)
+                    new_row[rkey] = evaluate(rvalue)
                 return new_row
 
             sentence = evaluate(sentence)
-            hashes = map(evaluate_hash, hashes)
+            hashes = map(evaluate_hash_value, hashes)
 
         new = deepcopy(self)
         new.sentence = sentence
