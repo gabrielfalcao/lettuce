@@ -25,7 +25,7 @@ def test_django_admin_media_serving():
 
     FileSystem.pushd(current_directory, "django", "grocery")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=2 ./features/")
+    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 ./features/")
     assert_equals(status, 0, out)
     FileSystem.popd()
 
