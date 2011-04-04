@@ -307,6 +307,10 @@ class Step(object):
         lines = string.split('\n')
         steps = self.many_from_lines(lines)
 
+        if hasattr(self, 'scenario'):
+            for step in steps:
+                step.scenario = self.scenario
+
         (_, _, steps_failed, _, _) = self.run_all(steps)
         if not steps_failed:
             self.passed = True

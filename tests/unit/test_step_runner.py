@@ -92,6 +92,12 @@ Feature: Count step definitions with exceptions as failing steps
     Then this step will be skipped
 """
 
+FEATURE9 = """
+Feature: When using behave_as, the new steps have the same scenario
+  Scenario: The Original Scenario
+    Given I have a step which calls the "access the scenario" step with behave_as
+"""
+
 def step_runner_environ():
     "Make sure the test environment is what is expected"
 
@@ -113,7 +119,7 @@ def step_runner_environ():
     @step(u'When I have a step that raises an exception')
     def raises_exception(step):
         raise Exception()
-    
+
     @step('I have a step which calls the "(.*)" step with behave_as')
     def runs_some_other_step_with_behave_as(step, something_else):
         step.behave_as("When %(i_do_something_else)s" % {'i_do_something_else': something_else})
@@ -211,7 +217,7 @@ def test_steps_are_aware_of_its_definitions():
 
     step1 = scenario_result.steps_passed[0]
 
-    assert_equals(step1.defined_at.line, 102)
+    assert_equals(step1.defined_at.line, 108)
     assert_equals(step1.defined_at.file, core.fs.relpath(__file__.rstrip("c")))
 
 @with_setup(step_runner_environ)
@@ -429,3 +435,17 @@ def test_failing_behave_as_step_raises_assertion():
     'When a step definition calls another (failing) step definition with behave_as, that step should be marked a failure.'
     runnable_step = Step.from_string('Given I have a step which calls the "other step fails" step with behave_as')
     assert_raises(AssertionError, runnable_step.run, True)
+
+@with_setup(step_runner_environ)
+def test_behave_as_step_can_access_the_scenario():
+    'When a step definition calls another step definition with behave_as, the step called using behave_as should have access to the current scenario'
+    @step('[^"]access the scenario')
+    def access_the_scenario(step):
+        assert_equal(step.scenario.name, 'The Original Scenario')
+
+    try:
+        f = Feature.from_string(FEATURE9)
+        feature_result = f.run()
+        assert feature_result.passed, 'The scenario passed to the behave_as step did not match'
+    finally:
+        registry.clear()
