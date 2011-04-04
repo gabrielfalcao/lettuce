@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # <Lettuce - Behaviour Driven Development for python>
-# Copyright (C) <2010>  Gabriel Falcão <gabriel@nacaolivre.org>
+# Copyright (C) <2010-2011>  Gabriel Falcão <gabriel@nacaolivre.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,66 +20,12 @@ import sys
 import platform
 import struct
 
-from lettuce import strings
 from lettuce import core
+from lettuce import strings
+from lettuce import terminal
+
 from lettuce.terrain import after
 from lettuce.terrain import before
-
-def get_terminal_size():
-    if platform.system() == "Windows":
-        return get_terminal_size_win()
-    else:    
-        return get_terminal_size_unix()
-
-def get_terminal_size_win():
-    #Windows specific imports
-    from ctypes import windll, create_string_buffer
-    # stdin handle is -10
-    # stdout handle is -11
-    # stderr handle is -12
-    
-    h = windll.kernel32.GetStdHandle(-12)
-    csbi = create_string_buffer(22)
-    res = windll.kernel32.GetConsoleScreenBufferInfo(h, csbi)
-    
-    if res:
-        import struct
-        (bufx, bufy, curx, cury, wattr,
-         left, top, right, bottom, maxx, maxy) = struct.unpack("hhhhHhhhhhh", csbi.raw)
-        sizex = right - left + 1
-        sizey = bottom - top + 1
-    else:
-        sizex, sizey = 80, 25 # can't determine actual size - return default values
-    
-    return sizex, sizey
-
-
-def get_terminal_size_unix():
-    # Unix/Posix specific imports 
-    import fcntl, termios
-    def ioctl_GWINSZ(fd):
-        try:
-            cr = struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ,
-        '1234'))
-        except:
-            return None
-        return cr
-    cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
-    if not cr:
-        try:
-            fd = os.open(os.ctermid(), os.O_RDONLY)
-            cr = ioctl_GWINSZ(fd)
-            os.close(fd)
-        except:
-            pass
-    if not cr:
-        try:
-            cr = (os.getenv('LINES'), os.getenv('COLUMNS'))
-        except:
-            cr = (25, 80)
-
-    return int(cr[1]), int(cr[0])
-
 
 def wrt(what):
     sys.stdout.write(what.encode('utf-8'))
@@ -136,7 +82,7 @@ def print_step_ran(step):
 
 
     prefix = '\033[A'
-    width, height = get_terminal_size()
+    width, height = terminal.get_size()
     lines_up = len(string) / float(width)
     if lines_up < 1:
         lines_up = 1

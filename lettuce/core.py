@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # <Lettuce - Behaviour Driven Development for python>
-# Copyright (C) <2010>  Gabriel Falcão <gabriel@nacaolivre.org>
+# Copyright (C) <2010-2011>  Gabriel Falcão <gabriel@nacaolivre.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -195,11 +195,23 @@ class Step(object):
 
     def solve_and_clone(self, data):
         sentence = self.sentence
+        hashes = self.hashes[:]  # deep copy
         for k, v in data.items():
-            sentence = sentence.replace(u'<%s>' % unicode(k), unicode(v))
+            def evaluate(stuff):
+                return stuff.replace(u'<%s>' % unicode(k), unicode(v))
+
+            def evaluate_hash_value(hash_row):
+                new_row = {}
+                for rkey, rvalue in hash_row.items():
+                    new_row[rkey] = evaluate(rvalue)
+                return new_row
+
+            sentence = evaluate(sentence)
+            hashes = map(evaluate_hash_value, hashes)
 
         new = deepcopy(self)
         new.sentence = sentence
+        new.hashes = hashes
         return new
 
     def _calc_list_length(self, lst):
@@ -580,11 +592,7 @@ class Scenario(object):
     def _resolve_steps(self, steps, outlines, with_file, original_string):
         for outline in outlines:
             for step in steps:
-                sentence = step.sentence
-                for k, v in outline.items():
-                    sentence = sentence.replace(u'<%s>' % k, v)
-
-                yield Step(sentence, step._remaining_lines)
+                yield step.solve_and_clone(outline)
 
     def _parse_remaining_lines(self, lines, with_file, original_string):
         invalid_first_line_error = '\nInvalid step on scenario "%s".\n' \

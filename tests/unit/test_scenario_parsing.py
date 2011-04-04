@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # <Lettuce - Behaviour Driven Development for python>
-# Copyright (C) <2010>  Gabriel Falcão <gabriel@nacaolivre.org>
+# Copyright (C) <2010-2011>  Gabriel Falcão <gabriel@nacaolivre.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,6 +38,21 @@ Scenario Outline: Add two numbers
       | 20      | 30      | add    | 50     |
       | 2       | 5       | add    | 7      |
       | 0       | 40      | add    | 40     |
+"""
+
+OUTLINED_SCENARIO_WITH_SUBSTITUTIONS_IN_TABLE = """
+Scenario Outline: Bad configuration should fail
+    Given I provide the following configuration:
+       | Parameter | Value |
+       |     a     |  <a>  |
+       |     b     |  <b>  |
+    When I run the program
+    Then it should fail hard-core
+
+Examples:
+    | a | b |
+    | 1 | 2 |
+    | 2 | 4 |
 """
 
 OUTLINED_FEATURE = """
@@ -271,6 +286,25 @@ def test_scenario_sentences_can_be_solved():
     for step, expected_sentence in zip(scenario.solved_steps, expected_sentences):
         assert_equals(type(step), Step)
         assert_equals(step.sentence, expected_sentence)
+
+def test_scenario_tables_are_solved_against_outlines():
+    "Outline substitution should apply to tables within a scenario"
+    expected_hashes_per_step = [
+            # a = 1, b = 2
+            [{'Parameter': 'a', 'Value': '1'}, {'Parameter': 'b', 'Value': '2'}], # Given ...
+            [], # When I run the program
+            [], # Then I crash hard-core
+
+            # a = 2, b = 4
+            [{'Parameter': 'a', 'Value': '2'}, {'Parameter': 'b', 'Value': '4'}],
+            [],
+            []
+        ]
+    
+    scenario = Scenario.from_string(OUTLINED_SCENARIO_WITH_SUBSTITUTIONS_IN_TABLE)
+    for step, expected_hashes in zip(scenario.solved_steps, expected_hashes_per_step):
+        assert_equals(type(step), Step)
+        assert_equals(step.hashes, expected_hashes)
 
 def test_solved_steps_also_have_scenario_as_attribute():
     "Steps solved in scenario outlines also have scenario as attribute"
