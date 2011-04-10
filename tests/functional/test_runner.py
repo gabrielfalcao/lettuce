@@ -1044,3 +1044,32 @@ def test_commented_scenario():
         "1 step (1 passed)\n"
     )
 
+
+#with_setup(prepare_stderr)
+@with_setup(prepare_stdout)
+def test_blank_step_hash_value():
+    "syntax checking: Blank in step hash column = empty string"
+
+    from lettuce import step
+
+    @step('ignore step')
+    def append_2_more(step):
+        pass
+
+    @step('string length calc')
+    def append_2_more(step):
+        for hash in step.hashes:
+            if len(hash["string"])+len(hash["string2"]) != int(hash["length"]):
+                raise AssertionError("fail")
+
+    filename = syntax_feature_name('blank_values_in_hash')
+    runner = Runner(filename, verbosity=1)
+    runner.run()
+
+    assert_stdout_lines(
+        "...."
+        "\n"
+        "1 feature (1 passed)\n"
+        "1 scenario (1 passed)\n"
+        "4 steps (4 passed)\n"
+    )

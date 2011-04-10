@@ -42,8 +42,7 @@ def assert_lines(original, expected):
 def assert_lines_unicode(original, expected):
     if original != expected:
         diff = ''.join(list(Differ().compare(expected.splitlines(1), original.splitlines(1))))
-        raise AssertionError, 'Output differed as follows:\n' + diff + "\nOutput was:\n" + original
-
+        raise AssertionError, 'Output differed as follows:\n' + diff + "\nOutput was:\n" + original +"\nExpected was:\n"+expected
     assert_equals(len(expected), len(original), 'Output appears equal, but of different lengths.')
 
 def assert_lines_with_traceback(one, other):

@@ -89,7 +89,7 @@ def print_step_ran(step):
     else:
         lines_up = int(lines_up) + 1
 
-    prefix = prefix * lines_up
+    #prefix = prefix * lines_up
 
     if step.failed:
         color = "\033[0;31m"
