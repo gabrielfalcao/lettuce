@@ -215,20 +215,19 @@ def test_world_should_be_able_to_absorb_lambdas():
 
     assert not hasattr(world, 'named_func')
 
-#def test_world_should_be_able_to_absorb_classs():
-#    u"world should be able to absorb classs"
-#    assert not hasattr(world, 'MyClass')
-#
-#    @world.absorb
-#    class MyClass:
-#        pass
-#
-#    assert hasattr(world, 'MyClass')
-#    assert_equals(world.MyClass, MyClass)
-#
-#    assert isinstance(world.MyClass(), MyClass)
-#
-#    world.spew('MyClass')
-#
-#    assert not hasattr(world, 'MyClass')
+def test_world_should_be_able_to_absorb_classs():
+   u"world should be able to absorb classs"
+   assert not hasattr(world, 'MyClass')
 
+   @world.absorb
+   class MyClass:
+       pass
+
+   assert hasattr(world, 'MyClass')
+   assert_equals(world.MyClass, MyClass)
+
+   assert isinstance(world.MyClass(), MyClass)
+
+   world.spew('MyClass')
+
+   assert not hasattr(world, 'MyClass')
