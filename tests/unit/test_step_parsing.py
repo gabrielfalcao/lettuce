@@ -196,7 +196,7 @@ and this is line three
 and spaces at the end   """)
 
 def test_handy_attribute_for_first_occurrence_of_hashes():
-    'Step objects should have a ".first" attribute that gives the first row (dict) of the "hashes" list'
+    'Step.hashes objects should have a ".first" attribute that gives the first row (dict) of the "hashes" list'
 
     step = Step.from_string(I_HAVE_TASTY_BEVERAGES)
     assert_equals(
@@ -205,7 +205,7 @@ def test_handy_attribute_for_first_occurrence_of_hashes():
     )
 
 def test_hashes__first_attr_raises_assertion_error_if_empty():
-    'Step().first should raise a assertion error if the list is empty'
+    'Step().hashes.first should raise a assertion error if the list is empty'
 
     step = Step.from_string(I_DIE_HAPPY)
 
@@ -223,7 +223,7 @@ def test_hashes__first_attr_raises_assertion_error_if_empty():
     assert failed, 'it should fail'
 
 def test_handy_attribute_for_last_occurrence_of_hashes():
-    'Step objects should have a ".last" attribute that gives the last row (dict) of the "hashes" list'
+    'Step.hashes objects should have a ".last" attribute that gives the last row (dict) of the "hashes" list'
 
     step = Step.from_string(I_HAVE_TASTY_BEVERAGES)
     assert_equals(
@@ -232,7 +232,7 @@ def test_handy_attribute_for_last_occurrence_of_hashes():
     )
 
 def test_hashes__last_attr_raises_assertion_error_if_empty():
-    'Step().last should raise a assertion error if the list is empty'
+    'Step().hashes.last should raise a assertion error if the list is empty'
 
     step = Step.from_string(I_DIE_HAPPY)
 
@@ -248,4 +248,32 @@ def test_hashes__last_attr_raises_assertion_error_if_empty():
 
 
     assert failed, 'it should fail'
+
+def test_handy_function_for_table_members():
+    'Step.hashes.values_under should be a method that gives a list of members'
+
+    step = Step.from_string(I_HAVE_TASTY_BEVERAGES)
+    assert_equals(step.hashes.values_under('Name'), ['Skol', 'Nestea'])
+
+def test_handy_function_for_table_members_fail_giving_assertionerror():
+    'Step.hashes.values_under raises AssertionError if the key does not exist'
+
+    step = Step.from_string(I_HAVE_TASTY_BEVERAGES)
+    try:
+        step.hashes.values_under('Foobar')
+        failed = False
+    except AssertionError, e:
+        failed = True
+        assert_equals(
+            unicode(e),
+            'The step "I have the following tasty beverages in my freezer:" ' \
+            'have no table column with the key "Foobar". ' \
+            'Could you check your step definition for that ? ' \
+            'Maybe there is a typo :)'
+        )
+
+
+    assert failed, 'it should fail'
+
+
 

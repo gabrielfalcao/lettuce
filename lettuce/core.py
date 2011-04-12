@@ -38,6 +38,16 @@ class HashList(list):
         self.step = step
         super(HashList, self).__init__(*args, **kw)
 
+    def values_under(self, key):
+        msg = 'The step "%s" have no table column with the key "%s". ' \
+            'Could you check your step definition for that ? ' \
+            'Maybe there is a typo :)'
+
+        try:
+            return [h[key] for h in self]
+        except KeyError:
+            raise AssertionError(msg % (self.step.sentence, key))
+
     @property
     def first(self):
         if len(self) > 0:
