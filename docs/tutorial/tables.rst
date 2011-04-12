@@ -59,6 +59,24 @@ that uses the table.
               person = Student(**student_dict)
               person.save()
 
+What about handy functions for getting the first or the last row of
+the tables ?!
+
+.. highlight:: python
+
+::
+
+      from lettuce import step
+      from school.models import Student
+
+      @step('I have the following students in my database:')
+      def students_in_database(step):
+          person1 = Student(**step.hashes.first)
+          person2 = Student(**step.hashes.last)
+
+          person1.save()
+          person2.save()
+
 
 Easy, huh?!
 

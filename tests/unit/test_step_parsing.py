@@ -57,13 +57,13 @@ INVALID_MULTI_LINE = '''
 
 
 
-
+import string
 from lettuce.core import Step
 from lettuce.exceptions import LettuceSyntaxError
 from lettuce import strings
 from nose.tools import assert_equals
 from tests.asserts import *
-import string
+
 
 def test_step_has_repr():
     "Step implements __repr__ nicely"
@@ -121,7 +121,7 @@ def test_can_parse_a_unary_array_from_single_step():
     assert_equals(len(steps), 1)
     assert isinstance(steps[0], Step)
     assert_equals(steps[0].sentence, string.split(I_HAVE_TASTY_BEVERAGES, '\n')[0])
-    
+
 def test_can_parse_a_unary_array_from_complicated_step():
     "It should extract a single tabular step correctly into an array of steps"
     steps = Step.many_from_lines([I_LIKE_VEGETABLES])
@@ -137,7 +137,7 @@ def test_can_parse_regular_step_followed_by_tabular_step():
     assert isinstance(steps[1], Step)
     assert_equals(steps[0].sentence, I_LIKE_VEGETABLES)
     assert_equals(steps[1].sentence, string.split(I_HAVE_TASTY_BEVERAGES, '\n')[0])
-    
+
 def test_can_parse_tabular_step_followed_by_regular_step():
     "It should correctly extract two steps (one tabular, one regular) into an array."
     steps = Step.many_from_lines([I_HAVE_TASTY_BEVERAGES, I_LIKE_VEGETABLES])
@@ -146,7 +146,7 @@ def test_can_parse_tabular_step_followed_by_regular_step():
     assert isinstance(steps[1], Step)
     assert_equals(steps[0].sentence, string.split(I_HAVE_TASTY_BEVERAGES, '\n')[0])
     assert_equals(steps[1].sentence, I_LIKE_VEGETABLES)
-    
+
 def test_can_parse_two_ordinary_steps():
     "It should correctly extract two ordinary steps into an array."
     steps = Step.many_from_lines([I_DIE_HAPPY, I_LIKE_VEGETABLES])
@@ -194,3 +194,58 @@ and this is line three
 
   with spaces at the beginning
 and spaces at the end   """)
+
+def test_handy_attribute_for_first_occurrence_of_hashes():
+    'Step objects should have a ".first" attribute that gives the first row (dict) of the "hashes" list'
+
+    step = Step.from_string(I_HAVE_TASTY_BEVERAGES)
+    assert_equals(
+        step.hashes.first,
+        {'Name': 'Skol', 'Type': 'Beer', 'Price': '3.80'}
+    )
+
+def test_hashes__first_attr_raises_assertion_error_if_empty():
+    'Step().first should raise a assertion error if the list is empty'
+
+    step = Step.from_string(I_DIE_HAPPY)
+
+    try:
+        step.hashes.first
+        failed = False
+    except AssertionError, e:
+        failed = True
+        assert_equals(
+            unicode(e),
+            'The step "%s" have no table defined, so that you can\'t use step.hashes.first' % I_DIE_HAPPY
+        )
+
+
+    assert failed, 'it should fail'
+
+def test_handy_attribute_for_last_occurrence_of_hashes():
+    'Step objects should have a ".last" attribute that gives the last row (dict) of the "hashes" list'
+
+    step = Step.from_string(I_HAVE_TASTY_BEVERAGES)
+    assert_equals(
+        step.hashes.last,
+        {'Name': 'Nestea', 'Type': 'Ice-tea', 'Price': '2.10'}
+    )
+
+def test_hashes__last_attr_raises_assertion_error_if_empty():
+    'Step().last should raise a assertion error if the list is empty'
+
+    step = Step.from_string(I_DIE_HAPPY)
+
+    try:
+        step.hashes.last
+        failed = False
+    except AssertionError, e:
+        failed = True
+        assert_equals(
+            unicode(e),
+            'The step "%s" have no table defined, so that you can\'t use step.hashes.last' % I_DIE_HAPPY
+        )
+
+
+    assert failed, 'it should fail'
+

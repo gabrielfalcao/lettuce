@@ -30,6 +30,28 @@ from lettuce.exceptions import LettuceSyntaxError
 
 fs = FileSystem()
 
+class HashList(list):
+    __base_msg = 'The step "%s" have no table defined, so ' \
+        'that you can\'t use step.hashes.%s'
+
+    def __init__(self, step, *args, **kw):
+        self.step = step
+        super(HashList, self).__init__(*args, **kw)
+
+    @property
+    def first(self):
+        if len(self) > 0:
+            return self[0]
+
+        raise AssertionError(self.__base_msg % (self.step.sentence, 'first'))
+
+    @property
+    def last(self):
+        if len(self) > 0:
+            return self[-1]
+
+        raise AssertionError(self.__base_msg % (self.step.sentence, 'last'))
+
 class Language(object):
     code = 'en'
     name = 'English'
@@ -152,7 +174,7 @@ class Step(object):
         keys, hashes, self.multiline = self._parse_remaining_lines(remaining_lines)
 
         self.keys = tuple(keys)
-        self.hashes = list(hashes)
+        self.hashes = HashList(self, hashes)
         self.described_at = StepDescription(line, filename)
 
         self.proposed_method_name, self.proposed_sentence = self.propose_definition()
@@ -312,7 +334,7 @@ class Step(object):
             def elsewhere(step):
                 # actual step behavior, maybe.
 
-        This will raise the error of the first failing step (thus halting 
+        This will raise the error of the first failing step (thus halting
         execution of the step) if a subordinate step fails.
 
         """
