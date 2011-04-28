@@ -29,14 +29,5 @@ def multiply_X_and_Y_into_the_calculator(step, x, y):
 
 @step(u'I multiply th[eo]se numbers')
 def given_i_multiply_those_numbers(step):
-    import sys
-    old_out = sys.stdout
-    old_err = sys.stderr
-    sys.stdout = sys.__stdout__
-    sys.stderr = sys.__stderr__
-    try:
-        import ipdb; ipdb.set_trace()
-    finally:
-        sys.stdout = old_out
-        sys.stderr = old_err
-
+    world.stack.extend(map(int, step.hashes.values_under('number')))
+    world.result = reduce(lambda x, y: x*y, world.stack)
