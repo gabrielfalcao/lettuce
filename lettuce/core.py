@@ -454,10 +454,10 @@ class Step(object):
         step_strings = []
         in_multiline = False
         for line in lines:
-            if strings.wise_startswith(line, u'"""'):
+            if strings.wise_startswith(line.strip(), u'"""'):
                 in_multiline = not in_multiline
                 step_strings[-1] += "\n%s" % line
-            elif strings.wise_startswith(line, u"|") or in_multiline:
+            elif strings.wise_startswith(line.strip(), u"|") or in_multiline:
                 step_strings[-1] += "\n%s" % line
             else:
                 step_strings.append(line)

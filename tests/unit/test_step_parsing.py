@@ -20,7 +20,7 @@ I_HAVE_TASTY_BEVERAGES = """I have the following tasty beverages in my freezer:
    | Name   | Type     | Price |
    | Skol   | Beer     |  3.80 |
    | Nestea | Ice-tea  |  2.10 |
-"""
+""".strip()
 I_DIE_HAPPY = "I shall die with love in my heart"
 
 MULTI_LINE = '''
@@ -33,7 +33,7 @@ I have a string like so:
 
     with spaces at the beginning
   """
-'''
+'''.strip()
 
 MULTI_LINE_WHITESPACE = '''
 I have a string like so:
@@ -46,16 +46,14 @@ I have a string like so:
  "  with spaces at the beginning
   and spaces at the end   "
   """
-'''
+'''.strip()
 
 
 INVALID_MULTI_LINE = '''
   """
   invalid one...
   """
-'''
-
-
+'''.strip()
 
 import string
 from lettuce.core import Step
@@ -117,21 +115,22 @@ def test_can_parse_tables():
 
 def test_can_parse_a_unary_array_from_single_step():
     "It should extract a single ordinary step correctly into an array of steps"
-    steps = Step.many_from_lines([I_HAVE_TASTY_BEVERAGES])
+
+    steps = Step.many_from_lines(I_HAVE_TASTY_BEVERAGES.splitlines())
     assert_equals(len(steps), 1)
     assert isinstance(steps[0], Step)
     assert_equals(steps[0].sentence, string.split(I_HAVE_TASTY_BEVERAGES, '\n')[0])
 
 def test_can_parse_a_unary_array_from_complicated_step():
     "It should extract a single tabular step correctly into an array of steps"
-    steps = Step.many_from_lines([I_LIKE_VEGETABLES])
+    steps = Step.many_from_lines(I_LIKE_VEGETABLES.splitlines())
     assert_equals(len(steps), 1)
     assert isinstance(steps[0], Step)
     assert_equals(steps[0].sentence, I_LIKE_VEGETABLES)
 
 def test_can_parse_regular_step_followed_by_tabular_step():
     "It should correctly extract two steps (one regular, one tabular) into an array."
-    steps = Step.many_from_lines([I_LIKE_VEGETABLES, I_HAVE_TASTY_BEVERAGES])
+    steps = Step.many_from_lines(I_LIKE_VEGETABLES.splitlines() +  I_HAVE_TASTY_BEVERAGES.splitlines())
     assert_equals(len(steps), 2)
     assert isinstance(steps[0], Step)
     assert isinstance(steps[1], Step)
@@ -140,7 +139,7 @@ def test_can_parse_regular_step_followed_by_tabular_step():
 
 def test_can_parse_tabular_step_followed_by_regular_step():
     "It should correctly extract two steps (one tabular, one regular) into an array."
-    steps = Step.many_from_lines([I_HAVE_TASTY_BEVERAGES, I_LIKE_VEGETABLES])
+    steps = Step.many_from_lines(I_HAVE_TASTY_BEVERAGES.splitlines() + I_LIKE_VEGETABLES.splitlines())
     assert_equals(len(steps), 2)
     assert isinstance(steps[0], Step)
     assert isinstance(steps[1], Step)
@@ -149,7 +148,7 @@ def test_can_parse_tabular_step_followed_by_regular_step():
 
 def test_can_parse_two_ordinary_steps():
     "It should correctly extract two ordinary steps into an array."
-    steps = Step.many_from_lines([I_DIE_HAPPY, I_LIKE_VEGETABLES])
+    steps = Step.many_from_lines(I_DIE_HAPPY.splitlines() + I_LIKE_VEGETABLES.splitlines())
     assert_equals(len(steps), 2)
     assert isinstance(steps[0], Step)
     assert isinstance(steps[1], Step)

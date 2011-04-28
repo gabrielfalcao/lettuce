@@ -22,11 +22,11 @@ def the_result_should_be_NUM_on_the_screen(step, num):
 @step(u'I multiply (\d+) and (\d+) into the calculator')
 def multiply_X_and_Y_into_the_calculator(step, x, y):
     step.behave_as('''
-    I have entered {0} into the calculator
-    And I have entered {1} into the calculator
-    And I press multiply
+    Given I multiply these numbers:
+      | number |
+      | 55     |
+      | 2      |
     '''.format(x, y))
-
 @step(u'I multiply th[eo]se numbers')
 def given_i_multiply_those_numbers(step):
     world.stack.extend(map(int, step.hashes.values_under('number')))
