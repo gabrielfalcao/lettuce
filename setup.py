@@ -37,6 +37,6 @@ setup(name='lettuce',
     packages=get_packages(),
     entry_points = {
     	'console_scripts' : [
-	    'lettuce = lettuce.commands:main',
+	    'lettuce = lettuce.lettuce_cli:main',
 	]}
 )

@@ -4,11 +4,12 @@ Feature: Multiplication
   Cashiers must be able to multiplicate numbers :)
 
   Scenario: Regular numbers
-    Given I have entered 10 into the calculator
-    And I have entered 4 into the calculator
-    When I press multiply
-    Then the result should be 40 on the screen
+    Given I multiply these numbers:
+      | number |
+      | 55     |
+      | 2      |
+    Then the result should be 110 on the screen
 
   Scenario: Shorter version of the scenario above
-    Given I multiply 10 and 4 into the calculator
-    Then the result should be 40 on the screen
+    Given I multiply 55 and 2 into the calculator
+    Then the result should be 110 on the screen
