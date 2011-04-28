@@ -113,6 +113,15 @@ def test_wise_startswith_ignores_case():
     assert strings.wise_startswith("$Gabriel", "$")
     assert strings.wise_startswith("^Gabriel", "^")
 
+def test_wise_startswith_also_strips_the_string():
+    "strings.wise_startswith ignores case"
+    assert strings.wise_startswith("  Gabriel", "g")
+    assert strings.wise_startswith("  Gabriel", "G")
+    assert strings.wise_startswith("  'Gabriel", "'")
+    assert strings.wise_startswith("  #Gabriel", "#")
+    assert strings.wise_startswith("  $Gabriel", "$")
+    assert strings.wise_startswith("  ^Gabriel", "^")
+
 def test_remove_it_accepts_regex_to_remove_all_from_string():
     "strings.remove_it accepts regex and remove all matches from string"
     assert_equals(

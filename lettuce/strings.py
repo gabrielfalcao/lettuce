@@ -56,7 +56,7 @@ def split_wisely(string, sep, strip=False):
     return [unicode(i) for i in items]
 
 def wise_startswith(string, seed):
-    string = unicode(string)
+    string = unicode(string).strip()
     seed = unicode(seed)
     regex = u"^%s" % re.escape(seed)
     return bool(re.search(regex, string, re.I))
