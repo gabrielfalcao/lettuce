@@ -25,26 +25,13 @@ from lettuce.terrain import before
 def wrt(what):
     sys.stdout.write(what.encode('utf-8'))
 
-@before.each_step
-def print_step_running(step):
-    wrt(step.represent_string(step.original_sentence))
-    if step.hashes:
-        wrt(step.represent_hashes())
-
 @after.each_step
-def print_step_ran(step):
-    if step.scenario.outlines:
-        return
+def print_step_running(step):
+    wrt(step.represent_string(step.original_sentence).rstrip())
+    if not step.defined_at:
+        wrt(" (undefined)")
 
-    if step.hashes:
-        wrt("\033[A" * (len(step.hashes) + 1))
-
-    if step.defined_at:
-        wrt("\033[A" + step.represent_string(step.original_sentence))
-
-    else:
-        wrt(step.represent_string(step.original_sentence).rstrip() + " (undefined)\n")
-
+    wrt('\n')
     if step.hashes:
         wrt(step.represent_hashes())
 

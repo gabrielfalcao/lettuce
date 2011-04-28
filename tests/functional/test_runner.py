@@ -165,7 +165,6 @@ def test_output_with_success_colorless():
         "\n"
         "  Scenario: Do nothing                   # tests/functional/output_features/runner_features/first.feature:6\n"
         "    Given I do nothing                   # tests/functional/output_features/runner_features/dumb_steps.py:6\n"
-        "\033[A    Given I do nothing                   # tests/functional/output_features/runner_features/dumb_steps.py:6\n"
         "\n"
         "1 feature (1 passed)\n"
         "1 scenario (1 passed)\n"
@@ -188,11 +187,9 @@ def test_output_with_success_colorless():
         "\n"
         "  Scenario: Do nothing                   # tests/functional/output_features/many_successful_scenarios/first.feature:6\n"
         "    Given I do nothing                   # tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\n"
-        "\033[A    Given I do nothing                   # tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\n"
         "\n"
         "  Scenario: Do nothing (again)           # tests/functional/output_features/many_successful_scenarios/first.feature:9\n"
         "    Given I do nothing (again)           # tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\n"
-        "\033[A    Given I do nothing (again)           # tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\n"
         "\n"
         "1 feature (1 passed)\n"
         "2 scenarios (2 passed)\n"
@@ -264,18 +261,14 @@ def test_output_with_success_colorless_many_features():
         "\n"
         "  Scenario: Do nothing                       # tests/functional/output_features/many_successful_features/one.feature:6\n"
         "    Given I do nothing                       # tests/functional/output_features/many_successful_features/dumb_steps.py:6\n"
-        "\033[A    Given I do nothing                       # tests/functional/output_features/many_successful_features/dumb_steps.py:6\n"
         "    Then I see that the test passes          # tests/functional/output_features/many_successful_features/dumb_steps.py:8\n"
-        "\033[A    Then I see that the test passes          # tests/functional/output_features/many_successful_features/dumb_steps.py:8\n"
         "\n"
         "Feature: Second feature, of many    # tests/functional/output_features/many_successful_features/two.feature:1\n"
         "  I just want to see it green :)    # tests/functional/output_features/many_successful_features/two.feature:2\n"
         "\n"
         "  Scenario: Do nothing              # tests/functional/output_features/many_successful_features/two.feature:4\n"
         "    Given I do nothing              # tests/functional/output_features/many_successful_features/dumb_steps.py:6\n"
-        "\033[A    Given I do nothing              # tests/functional/output_features/many_successful_features/dumb_steps.py:6\n"
         "    Then I see that the test passes # tests/functional/output_features/many_successful_features/dumb_steps.py:8\n"
-        "\033[A    Then I see that the test passes # tests/functional/output_features/many_successful_features/dumb_steps.py:8\n"
         "\n"
         "2 features (2 passed)\n"
         "2 scenarios (2 passed)\n"
@@ -368,23 +361,13 @@ def test_output_with_success_colorless_with_table():
         '\n'
         '  Scenario: Add two numbers      # tests/functional/output_features/success_table/success_table.feature:2\n'
         '    Given I have 0 bucks         # tests/functional/output_features/success_table/success_table_steps.py:28\n'
-        '\033[A    Given I have 0 bucks         # tests/functional/output_features/success_table/success_table_steps.py:28\n'
         '    And that I have these items: # tests/functional/output_features/success_table/success_table_steps.py:32\n'
         '      | name    | price  |\n'
         '      | Porsche | 200000 |\n'
         '      | Ferrari | 400000 |\n'
-        '\033[A\033[A\033[A\033[A    And that I have these items: # tests/functional/output_features/success_table/success_table_steps.py:32\n'
-        '      | name    | price  |\n'
-        '      | Porsche | 200000 |\n'
-        '      | Ferrari | 400000 |\n'
         '    When I sell the "Ferrari"    # tests/functional/output_features/success_table/success_table_steps.py:42\n'
-        '\033[A    When I sell the "Ferrari"    # tests/functional/output_features/success_table/success_table_steps.py:42\n'
         '    Then I have 400000 bucks     # tests/functional/output_features/success_table/success_table_steps.py:28\n'
-        '\033[A    Then I have 400000 bucks     # tests/functional/output_features/success_table/success_table_steps.py:28\n'
         '    And my garage contains:      # tests/functional/output_features/success_table/success_table_steps.py:47\n'
-        '      | name    | price  |\n'
-        '      | Porsche | 200000 |\n'
-        '\033[A\033[A\033[A    And my garage contains:      # tests/functional/output_features/success_table/success_table_steps.py:47\n'
         '      | name    | price  |\n'
         '      | Porsche | 200000 |\n'
         '\n'
@@ -444,9 +427,7 @@ def test_output_with_failed_colorless_with_table():
         "\n"
         "  Scenario: See it fail                       # tests/functional/output_features/failed_table/failed_table.feature:2\n"
         "    Given I have a dumb step that passes      # tests/functional/output_features/failed_table/failed_table_steps.py:20\n"
-        "\033[A    Given I have a dumb step that passes      # tests/functional/output_features/failed_table/failed_table_steps.py:20\n"
         "    And this one fails                        # tests/functional/output_features/failed_table/failed_table_steps.py:24\n"
-        "\033[A    And this one fails                        # tests/functional/output_features/failed_table/failed_table_steps.py:24\n"
         "    Traceback (most recent call last):\n"
         '      File "%(lettuce_core_file)s", line %(call_line)d, in __call__\n'
         "        ret = self.function(self.step, *args, **kw)\n"
@@ -454,9 +435,7 @@ def test_output_with_failed_colorless_with_table():
         "        assert False\n"
         "    AssertionError\n"
         "    Then this one will be skipped             # tests/functional/output_features/failed_table/failed_table_steps.py:28\n"
-        "\033[A    Then this one will be skipped             # tests/functional/output_features/failed_table/failed_table_steps.py:28\n"
         "    And this one will be skipped              # tests/functional/output_features/failed_table/failed_table_steps.py:28\n"
-        "\033[A    And this one will be skipped              # tests/functional/output_features/failed_table/failed_table_steps.py:28\n"
         "    And this one does not even has definition # tests/functional/output_features/failed_table/failed_table.feature:12 (undefined)\n"
         "\n"
         "1 feature (0 passed)\n"
