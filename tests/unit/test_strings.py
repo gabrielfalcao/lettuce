@@ -220,7 +220,6 @@ def test_dicts_to_string_allows_empty():
             'name': 'Miguel | Arcanjo'
         }
     ]
-    import ipdb; ipdb.set_trace()
     assert_equals(
         strings.dicts_to_string(dicts, ['name', 'age']),
         u"| name             | age |\n"
