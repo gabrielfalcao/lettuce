@@ -86,7 +86,7 @@ def dicts_to_string(dicts, order):
     for key in keys_and_sizes:
         for data in dicts:
             current_size = keys_and_sizes[key]
-            value = unicode(data[key])
+            value = unicode(data.get(key, ''))
             size = getlen(value)
             if size > current_size:
                 keys_and_sizes[key] = size
@@ -101,7 +101,7 @@ def dicts_to_string(dicts, order):
     for data in dicts:
         names = []
         for key in order:
-            value = data[key]
+            value = data.get(key, '')
             size = keys_and_sizes[key]
             names.append(enline(u" %s" % rfill(value, size)))
 

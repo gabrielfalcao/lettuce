@@ -208,6 +208,25 @@ def test_dicts_to_string_escapes_pipe():
         u"| Miguel \\| Arcanjo | 19  |\n"
     )
 
+def test_dicts_to_string_allows_empty():
+    "strings.dicts_to_string allows empty"
+
+    dicts = [
+        {
+            'name': u'Gabriel | Falcão',
+            'age': 22
+        },
+        {
+            'name': 'Miguel | Arcanjo'
+        }
+    ]
+    assert_equals(
+        strings.dicts_to_string(dicts, ['name', 'age']),
+        u"| name             | age |\n"
+        u"| Gabriel \\| Falcão | 22  |\n"
+        u"| Miguel \\| Arcanjo |     |\n"
+    )
+
 def test_parse_hashes():
     "strings.parse_hashes"
 
