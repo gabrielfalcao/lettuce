@@ -44,5 +44,6 @@ def step(regex):
                                    "  for function: %s\n"
                                    "  error: %s" % (regex, func, e))
         STEP_REGISTRY[regex] = func
+        return func
 
     return wrap
