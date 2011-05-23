@@ -52,6 +52,12 @@ class Command(BaseCommand):
 
         make_option('-s', '--scenarios', action='store', dest='scenarios', default=None,
             help='Comma separated list of scenarios to run'),
+
+        make_option('--with-xunit', action='store_true', dest='enable_xunit', default=False,
+            help='Output JUnit XML test results to a file'),
+
+        make_option('--xunit-file', action='store', dest='xunit_file', default=None,
+            help='Write JUnit XML to this file. Defaults to lettucetests.xml'),
     )
     def stopserver(self, failed=False):
         raise SystemExit(int(failed))
@@ -99,7 +105,9 @@ class Command(BaseCommand):
                 if app_module is not None:
                     registry.call_hook('before_each', 'app', app_module)
 
-                runner = Runner(path, options.get('scenarios'), verbosity)
+                runner = Runner(path, options.get('scenarios'), verbosity,
+                                enable_xunit=options.get('enable_xunit'),
+                                xunit_filename=options.get('xunit_file'))
                 result = runner.run()
                 if app_module is not None:
                     registry.call_hook('after_each', 'app', app_module, result)
