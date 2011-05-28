@@ -17,6 +17,7 @@
 
 import re
 import time
+import string
 
 def escape_if_necessary(what):
     what = unicode(what)
@@ -148,3 +149,28 @@ def parse_multiline(lines):
                 line = line[:-1]
             multilines.append(line)
     return u'\n'.join(multilines)
+
+
+def extract_tags_from_line(given_line):
+    """returns tags_array if given_line contains tags, else None"""
+    line = string.rstrip(given_line)
+    tags = []
+    if re.match("\s*?\@", line):
+        tags = [tag for tag in re.split("\s*\@", line) if len(tag) > 0]
+    if len(tags) == 0 or [tag for tag in tags if string.find(tag, " ") != -1]:
+        return None
+    return tags
+
+
+def consume_tags_lines(lines, tags):
+    """consumes lines from start of given set of lines and
+       populates tags array,
+       stops when run out of lines that are tag lines"""
+    while True:
+        line = lines[0]
+        tags_on_lines = extract_tags_from_line(line)
+        if tags_on_lines:
+            tags.extend(tags_on_lines)
+            lines.pop(0)
+        else:
+            break

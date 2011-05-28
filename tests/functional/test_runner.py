@@ -21,9 +21,9 @@ from StringIO import StringIO
 from os.path import dirname, join, abspath
 from nose.tools import assert_equals, with_setup, assert_raises
 from lettuce.fs import FeatureLoader
-from lettuce.core import Feature, fs, StepDefinition
+from lettuce.core import Feature, fs, StepDefinition, TagChecker
 from lettuce.terrain import world
-from lettuce import Runner
+from lettuce import Runner, step, RunController
 
 from tests.asserts import assert_lines
 from tests.asserts import assert_stderr
@@ -38,6 +38,7 @@ current_dir = abspath(dirname(__file__))
 lettuce_dir = abspath(dirname(lettuce.__file__))
 ojoin = lambda *x: join(current_dir, 'output_features', *x)
 sjoin = lambda *x: join(current_dir, 'syntax_features', *x)
+tjoin = lambda *x: join(current_dir, 'tag_features', *x)
 lettuce_path = lambda *x: fs.relpath(join(lettuce_dir, *x))
 
 call_line = StepDefinition.__call__.im_func.func_code.co_firstlineno + 5
@@ -47,6 +48,9 @@ def feature_name(name):
 
 def syntax_feature_name(name):
     return sjoin(name, "%s.feature" % name)
+
+def tag_feature_name(name):
+    return tjoin(name, "%s.feature" % name)
 
 @with_setup(prepare_stderr)
 def test_try_to_import_terrain():
@@ -1052,3 +1056,33 @@ def test_blank_step_hash_value():
         "1 scenario (1 passed)\n"
         "4 steps (4 passed)\n"
     )
+
+def test_run_only_features_tagged():
+    "Test that only features (and their scenarios) are run if tags match"
+
+    world.colours = []
+    
+    @step('Running "(.*)" scenario')
+    def keep_colours(step, colour):
+        world.colours.append(colour)
+
+    filename = tag_feature_name('red_feature')
+    # Should run cos we did not specify any tags
+    run_controller = RunController()
+    runner = Runner(filename, verbosity=0, run_controller=run_controller)
+    runner.run()
+    assert_equals(world.colours, ["red"])
+    world.colours = []
+    # Should run cos tag matches
+    run_controller = RunController()
+    run_controller.add(TagChecker(["red"]))
+    runner = Runner(filename, verbosity=0, run_controller=run_controller)
+    runner.run()
+    assert_equals(world.colours, ["red"])
+    world.colours = []
+    # Should not run cos tag doesn't match
+    run_controller = RunController()
+    run_controller.add(TagChecker(["blue"]))
+    runner = Runner(filename, verbosity=0, run_controller=run_controller)
+    runner.run()
+    assert_equals(world.colours, [])

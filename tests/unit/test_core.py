@@ -164,3 +164,85 @@ def test_scenario_outline_represent_examples():
         '    | first     | primeiro  |\n'
         '    | second    | segundo   |\n'
     )
+
+
+def test_tags():
+    "TagChecker.tags_match"
+    # Check anything matches if no tags specified
+    checker = core.TagChecker()
+    assert_equals(checker.tags_match([]), True)
+    assert_equals(checker.tags_match(["one"]), True)
+    assert_equals(checker.tags_match(["one", "two"]), True)
+    # Check single required tag
+    checker = core.TagChecker(["red"])
+    assert_equals(checker.tags_match([]), False)
+    assert_equals(checker.tags_match(["one"]), False)
+    assert_equals(checker.tags_match(["one", "two"]), False)
+    assert_equals(checker.tags_match(["one", "red"]), True)
+    # Check multiple required tags (AND)
+    checker = core.TagChecker(["red,green"])
+    assert_equals(checker.tags_match([]), False)
+    assert_equals(checker.tags_match(["one"]), False)
+    assert_equals(checker.tags_match(["one", "red"]), False)
+    assert_equals(checker.tags_match(["one", "green"]), False)
+    assert_equals(checker.tags_match(["one", "red", "green"]), True)
+    assert_equals(checker.tags_match(["red", "green"]), True)
+    # Check multiple tags (OR)
+    checker = core.TagChecker(["red", "green"])
+    assert_equals(checker.tags_match([]), False)
+    assert_equals(checker.tags_match(["one"]), False)
+    assert_equals(checker.tags_match(["one", "red"]), True)
+    assert_equals(checker.tags_match(["one", "green"]), True)
+    assert_equals(checker.tags_match(["one", "red", "green"]), True)
+    assert_equals(checker.tags_match(["red", "green"]), True)
+    # Check un-tags (NOT)
+    checker = core.TagChecker(["~red"])
+    assert_equals(checker.tags_match([]), True)
+    assert_equals(checker.tags_match(["one"]), True)
+    assert_equals(checker.tags_match(["one", "red"]), False)
+    # Check combination un-tags (NOT in AND)
+    checker = core.TagChecker(["~red,green"])
+    assert_equals(checker.tags_match([]), False)
+    assert_equals(checker.tags_match(["one"]), False)
+    assert_equals(checker.tags_match(["one", "red"]), False)
+    assert_equals(checker.tags_match(["one", "red", "green"]), False)
+    assert_equals(checker.tags_match(["one", "green"]), True)
+    # Check at-signs are removed if supplied (e.g. command line)
+    checker = core.TagChecker(["@red"])
+    assert_equals(checker.tags_to_run, ["red"])
+    checker = core.TagChecker(["@red,~@blue"])
+    assert_equals(checker.tags_to_run, ["red,~blue"])
+
+
+def test_run_controller():
+    rc = core.RunController()
+    s = "fake scenario"
+    assert_equals(rc.want_run_scenario(s), True)
+    # Try with some positive delegates
+
+    class PositiveDelegate():
+        def want_run_scenario(self, scenario):
+            return True
+
+    class NegativeDelegate():
+        def want_run_scenario(self, scenario):
+            return False
+
+    rc.add(PositiveDelegate())
+    assert_equals(rc.want_run_scenario(s), True)
+    # Two delegates
+    rc.add(PositiveDelegate())
+    assert_equals(rc.want_run_scenario(s), True)
+    # Negative delegate on end
+    rc.add(NegativeDelegate())
+    assert_equals(rc.want_run_scenario(s), False)
+    # Negative delegate on front
+    rc = core.RunController()
+    rc.add(NegativeDelegate())
+    assert_equals(rc.want_run_scenario(s), False)
+    # Negative delegate in middle
+    rc = core.RunController()
+    rc.add(PositiveDelegate())
+    rc.add(NegativeDelegate())
+    rc.add(PositiveDelegate())
+    assert_equals(rc.want_run_scenario(s), False)
