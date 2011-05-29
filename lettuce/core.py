@@ -720,8 +720,14 @@ class Scenario(object):
     @classmethod
     def from_string(new_scenario, string, tags=None, with_file=None, original_string=None, language=None):
         """ Creates a new scenario from string"""
+        tags = tags or []
+        tags = tags[:]
+        
         # ignoring comments
-        string = "\n".join(strings.get_stripped_lines(string, ignore_lines_starting_with='#'))
+        no_comments = strings.get_stripped_lines(string, ignore_lines_starting_with='#')
+        # extract tags
+        strings.consume_tags_lines(no_comments, tags)
+        string = "\n".join(no_comments)
 
         if not language:
             language = Language()
@@ -879,21 +885,19 @@ class Feature(object):
         joined = u"\n".join(lines[1:])
 
         # replacing occurrences of Scenario Outline, with just "Scenario"
-        scenario_prefix = u'%s:' % self.language.first_of_scenario
+        scenario_prefix = u'%s: ' % self.language.first_of_scenario
         regex = re.compile(u"%s:\s" % self.language.scenario_separator, re.U | re.I)
         joined = regex.sub(scenario_prefix, joined)
 
-        # TODO: Change parsing to cope with optional tags on scenarios
-        parts = strings.split_wisely(joined, scenario_prefix)
+        lines = string.split(joined, "\n")
 
-        description = u""
+        description_lines = strings.get_lines_till_next_scenario(lines, scenario_prefix)
+        description = "\n".join(s for s in description_lines if s.strip())
 
-        if not re.search("^" + scenario_prefix, joined):
-            description = parts[0]
-            parts.pop(0)
+        parts = strings.split_scenarios(lines, scenario_prefix)
 
         scenario_strings = [
-            u"%s: %s" % (self.language.first_of_scenario, s) for s in parts if s.strip()
+            u"%s" % (s) for s in parts if s.strip()
         ]
         kw = dict(
             original_string=original_string,

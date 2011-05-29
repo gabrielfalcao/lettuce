@@ -175,6 +175,53 @@ Scenario: Adding some students to my university database
 
 """
 
+TAGGED_FEATURE_WITH_MANY = """
+    @outer-tag @outer2
+    Feature: Full-featured feature
+             feature description line 1
+             line 2
+        @something-tag
+        Scenario Outline: Do something
+            Given I have entered <input_1> into the <input_2>
+
+        Examples:
+            | input_1 | input_2 |
+            | ok      | fail    |
+            | fail    | ok      |
+
+        @something-else-tag
+        Scenario: Do something else
+          Given I am fine
+
+        Scenario: Worked!
+          Given it works
+          When I look for something
+          Then I find a multi-line string:
+          \"\"\"
+          what if I put a tag
+          @on-one
+          of these lines? 
+          \"\"\"
+
+        Scenario Outline: Add two numbers wisely
+            Given I have entered <input_1> into the calculator
+            And I have entered <input_2> into the calculator
+            When I press <button>
+            Then the result should be <output> on the screen
+
+        Examples:
+            | input_1 | input_2 | button | output |
+            | 20      | 30      | add    | 50     |
+            | 2       | 5       | add    | 7      |
+            | 0       | 40      | add    | 40     |
+
+        Examples:
+            | input_1 | input_2 | button | output |
+            | 5       | 7       | add    | 12     |
+
+"""
+
+
 from lettuce.core import Step
 from lettuce.core import Scenario
 from lettuce.core import Feature
@@ -431,3 +478,20 @@ def test_commented_scenarios():
     scenario = Scenario.from_string(COMMENTED_SCENARIO)
     assert_equals(scenario.name, u'Adding some students to my university database')
     assert_equals(len(scenario.steps), 4)
+
+def test_fully_tagged_feature():
+    "Check that tags are parsed correctly"
+    feature = Feature.from_string(TAGGED_FEATURE_WITH_MANY)
+    assert_equals(feature.description, u'feature description line 1\nline 2')
+    assert_equals(len(feature.scenarios), 4)
+    scenario1, scenario2, scenario3, scenario4 = feature.scenarios
+
+    assert_equals(scenario1.name, 'Do something')
+    assert_equals(scenario2.name, 'Do something else')
+    assert_equals(scenario3.name, 'Worked!')
+    assert_equals(scenario4.name, 'Add two numbers wisely')
+    # Check tags 
+    assert_equals(scenario1.tags, ["outer-tag", "outer2", "something-tag"])
+    assert_equals(scenario2.tags, ["outer-tag", "outer2", "something-else-tag"])
+    assert_equals(scenario3.tags, ["outer-tag", "outer2"])
+    assert_equals(scenario4.tags, ["outer-tag", "outer2"])
