@@ -177,20 +177,25 @@ def test_scenario_outline_represent_examples():
     )
 
 
-def test_tags():
-    "TagChecker.tags_match"
-    # Check anything matches if no tags specified
+def test_tagchecker_maches_all_if_not_specified():
+    "Check anything matches if no tags specified"
     checker = core.TagChecker()
     assert_equals(checker.tags_match([]), True)
     assert_equals(checker.tags_match(["one"]), True)
     assert_equals(checker.tags_match(["one", "two"]), True)
-    # Check single required tag
+
+
+def test_tagchecker_matching_aingle_tag():
+    u"Check single required tag"
     checker = core.TagChecker(["red"])
     assert_equals(checker.tags_match([]), False)
     assert_equals(checker.tags_match(["one"]), False)
     assert_equals(checker.tags_match(["one", "two"]), False)
     assert_equals(checker.tags_match(["one", "red"]), True)
-    # Check multiple required tags (AND)
+
+
+def test_multiple_required_tags():
+    u"Check multiple required tags (AND)"
     checker = core.TagChecker(["red,green"])
     assert_equals(checker.tags_match([]), False)
     assert_equals(checker.tags_match(["one"]), False)
@@ -198,7 +203,10 @@ def test_tags():
     assert_equals(checker.tags_match(["one", "green"]), False)
     assert_equals(checker.tags_match(["one", "red", "green"]), True)
     assert_equals(checker.tags_match(["red", "green"]), True)
-    # Check multiple tags (OR)
+
+
+def test_multiple_tags():
+    u"Check multiple tags (OR)"
     checker = core.TagChecker(["red", "green"])
     assert_equals(checker.tags_match([]), False)
     assert_equals(checker.tags_match(["one"]), False)
@@ -206,19 +214,28 @@ def test_tags():
     assert_equals(checker.tags_match(["one", "green"]), True)
     assert_equals(checker.tags_match(["one", "red", "green"]), True)
     assert_equals(checker.tags_match(["red", "green"]), True)
-    # Check un-tags (NOT)
+
+
+def test_negative_tags():
+    u"Check negative tags"
     checker = core.TagChecker(["~red"])
     assert_equals(checker.tags_match([]), True)
     assert_equals(checker.tags_match(["one"]), True)
     assert_equals(checker.tags_match(["one", "red"]), False)
-    # Check combination un-tags (NOT in AND)
+
+
+def test_combining_negative_using_and():
+    u"Check combination negative tags (NOT in AND)"
     checker = core.TagChecker(["~red,green"])
     assert_equals(checker.tags_match([]), False)
     assert_equals(checker.tags_match(["one"]), False)
     assert_equals(checker.tags_match(["one", "red"]), False)
     assert_equals(checker.tags_match(["one", "red", "green"]), False)
     assert_equals(checker.tags_match(["one", "green"]), True)
-    # Check at-signs are removed if supplied (e.g. command line)
+
+
+def test_remove_trailing_at_sign():
+    u"Check at-signs are removed if supplied (e.g. command line)"
     checker = core.TagChecker(["@red"])
     assert_equals(checker.tags_to_run, ["red"])
     checker = core.TagChecker(["@red,~@blue"])
