@@ -317,7 +317,7 @@ def test_parse_hashes_allow_empty():
 
 
 def test_identifies_tag_lines():
-    "strings.extract_tags_from_line simple case"
+    "strings.extract_tags_from_line not matching anything"
     # No tags tests
     tags = strings.extract_tags_from_line("")
     assert_equals(tags, None)
@@ -327,9 +327,14 @@ def test_identifies_tag_lines():
     assert_equals(tags, None)
     tags = strings.extract_tags_from_line(" | example step hash | line |")
     assert_equals(tags, None)
-    tags = strings.extract_tags_from_line(" | example step hash | line @with | @tag like |")
+    tags = strings.extract_tags_from_line(
+        " | example step hash | line @with | @tag like |")
     assert_equals(tags, None)
-    # Now for positive tests
+
+
+def test_finding_tags():
+    "strings.extract_tags_from_line matching simple cases"
+
     tags = strings.extract_tags_from_line("@one")
     assert_equals(tags, ["one"])
     tags = strings.extract_tags_from_line("  @one  ")
@@ -340,9 +345,13 @@ def test_identifies_tag_lines():
     assert_equals(tags, ["one", "two", "three"])
     tags = strings.extract_tags_from_line("  @one.two @three_four  ")
     assert_equals(tags, ["one.two", "three_four"])
-    # Odd tests
+
+
+def test_dont_find_tags_in_weird_cases():
+    "don't find tags in weird cases"
     tags = strings.extract_tags_from_line("  @one two @three @four ")
     assert_equals(tags, None)
+
 
 
 def test_consume_tag_lines():
