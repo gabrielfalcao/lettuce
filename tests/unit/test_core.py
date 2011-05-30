@@ -26,6 +26,7 @@ Given I have the following items in my shelf:
       | Pasta | a pasta to cook and eat with grape juice in the glass |
 '''
 
+
 def test_step_definition():
     "Step definition takes a function and a step, keeps its definition " \
     "relative path, and line + 1 (to consider the decorator)"
@@ -38,18 +39,20 @@ def test_step_definition():
     assert_equals(definition.file, core.fs.relpath(__file__).rstrip("c"))
     assert_equals(definition.line, 34)
 
+
 def test_step_description():
-    "Step description takes a line and filename, and keeps the relative path for " \
-    "filename"
+    "Step description takes a line and filename, " \
+          "and keeps the relative path for filename"
 
     description = core.StepDescription(10, __file__)
     assert_equals(description.file, core.fs.relpath(__file__))
     assert_not_equals(description.file, __file__)
     assert_equals(description.line, 10)
 
+
 def test_scenario_description():
-    "Scenario description takes a scenario, filename and a string, and keeps " \
-    "the relative path for filename and line"
+    "Scenario description takes a scenario, filename and " \
+        "a string, and keeps the relative path for filename and line"
 
     string = '''
     asdasdasdasd
@@ -63,15 +66,18 @@ Fsdad
     class ScenarioFake:
         name = 'NAMEOFSCENARIO'
 
+    description = core.ScenarioDescription(
+        ScenarioFake, __file__, string, core.Language())
 
-    description = core.ScenarioDescription(ScenarioFake, __file__, string, core.Language())
     assert_equals(description.file, core.fs.relpath(__file__))
     assert_not_equals(description.file, __file__)
     assert_equals(description.line, 6)
 
+
 def test_feature_description():
-    "Feature description takes a feature, filename and original string, and keeps " \
-    "the relative path for filename, line and description lines"
+    "Feature description takes a feature, filename and original " \
+        "string, and keeps the relative path for filename, line " \
+        "and description lines"
 
     string = u'''
     # lang: en-us
@@ -85,11 +91,14 @@ def test_feature_description():
     class FakeFeature:
         description = 'the description\nof the scenario\n'
 
-    description = core.FeatureDescription(FakeFeature, __file__, string, core.Language())
+    description = core.FeatureDescription(
+        FakeFeature, __file__, string, core.Language())
+
     assert_equals(description.file, core.fs.relpath(__file__))
     assert_not_equals(description.file, __file__)
     assert_equals(description.line, 3)
     assert_equals(description.description_at, (5, 6))
+
 
 def test_step_represent_string_when_not_defined():
     "Step.represent_string behaviour when not defined"
@@ -106,7 +115,7 @@ def test_step_represent_string_when_not_defined():
 
     assert_equals(
         step.represent_string('test'),
-        "    test   # %s:239\n" % relative_path
+        "    test   # %s:239\n" % relative_path,
     )
 
 
@@ -128,8 +137,9 @@ def test_step_represent_string_when_defined():
     step.defined_at = FakeScenarioDefinition
     assert_equals(
         step.represent_string('foobar'),
-        "    foobar # should/be/filename:421\n"
+        "    foobar # should/be/filename:421\n",
     )
+
 
 def test_step_represent_table():
     "Step.represent_hashes"
@@ -152,6 +162,7 @@ Examples:
          | first| primeiro |
          |second |segundo|
 '''
+
 
 def test_scenario_outline_represent_examples():
     "Step.represent_hashes"
