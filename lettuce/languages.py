@@ -88,4 +88,13 @@ LANGUAGES = {
         'scenario_outline': u'Szenario-Zusammenfassung|Zusammenfassung',
         'scenario_separator': u'(Szenario-Zusammenfassung|Zusammenfassung)',
    },
+    'ja': {
+        'examples': u'例',
+        'feature': u'フィーチャ',
+        'name': u'Japanese',
+        'native': u'日本語',
+        'scenario': u'シナリオ',
+        'scenario_outline': u'シナリオアウトライン|シナリオテンプレート|テンプレ|シナリオテンプレ',
+        'scenario_separator': u'(シナリオ|シナリオアウトライン|シナリオテンプレート|テンプレ|シナリオテンプレ)',
+    },
 }
