@@ -130,6 +130,13 @@ def test_remove_it_accepts_regex_to_remove_all_from_string():
         "Gbriel Flco"
     )
 
+def test_column_width():
+    "strings.column_width"
+    assert_equals(
+        strings.column_width(u"あいうえお"),
+        10
+    )
+
 def test_rfill_simple():
     "strings.rfill simple case"
     assert_equals(

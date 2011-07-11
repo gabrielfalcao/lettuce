@@ -252,7 +252,7 @@ class Step(object):
     def _calc_list_length(self, lst):
         length = self.table_indentation + 2
         for item in lst:
-            length += len(item) + 2
+            length += strings.column_width(item) + 2
 
         if len(lst) > 1:
             length += 1
@@ -267,8 +267,10 @@ class Step(object):
 
     @property
     def max_length(self):
-        max_length_sentence = len(self.sentence) + self.indentation
-        max_length_original = len(self.original_sentence) + self.indentation
+        max_length_sentence = strings.column_width(self.sentence) + \
+            self.indentation
+        max_length_original = strings.column_width(self.original_sentence) + \
+            self.indentation
 
         max_length = max([max_length_original, max_length_sentence])
         for data in self.hashes:
@@ -488,10 +490,10 @@ class Step(object):
 class RunController(object):
     def __init__(self):
         self.delegates = []
-        
+
     def add(self, delegate):
         self.delegates.append(delegate)
-        
+
     def want_run_scenario(self, scenario):
         for delegate in self.delegates:
             if not delegate.want_run_scenario(scenario):
@@ -531,7 +533,7 @@ class Scenario(object):
     described_at = None
     indentation = 2
     table_indentation = indentation + 2
-    
+
     def __init__(self, name, remaining_lines, keys, outlines, with_file=None,
                  original_string=None, language=None, tags=None):
 
@@ -566,7 +568,7 @@ class Scenario(object):
         else:
             prefix = self.language.first_of_scenario + ":"
 
-        max_length = len(u"%s %s" % (prefix, self.name)) + self.indentation
+        max_length = strings.column_width(u"%s %s" % (prefix, self.name)) + self.indentation
 
         for step in self.steps:
             if step.max_length > max_length:
@@ -722,7 +724,7 @@ class Scenario(object):
         """ Creates a new scenario from string"""
         tags = tags or []
         tags = tags[:]
-        
+
         # ignoring comments
         no_comments = strings.get_stripped_lines(string, ignore_lines_starting_with='#')
         # extract tags
@@ -792,9 +794,9 @@ class Feature(object):
 
     @property
     def max_length(self):
-        max_length = len(u"%s: %s" % (self.language.first_of_feature, self.name))
+        max_length = strings.column_width(u"%s: %s" % (self.language.first_of_feature, self.name))
         for line in self.description.splitlines():
-            length = len(line.strip()) + Scenario.indentation
+            length = strings.column_width(line.strip()) + Scenario.indentation
             if length > max_length:
                 max_length = length
 
@@ -1011,7 +1013,7 @@ class TotalResult(object):
     @property
     def scenarios_ran(self):
         return len([res for res in self.scenario_results if res.was_run])
-    
+
     @property
     def scenarios_not_run(self):
         return len([result for result in self.scenario_results if not result.was_run])

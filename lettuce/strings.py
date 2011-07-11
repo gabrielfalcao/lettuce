@@ -18,6 +18,7 @@
 import re
 import time
 import string
+import unicodedata
 
 def escape_if_necessary(what):
     what = unicode(what)
@@ -65,16 +66,25 @@ def wise_startswith(string, seed):
 def remove_it(string, what):
     return unicode(re.sub(unicode(what), "", unicode(string)).strip())
 
+def column_width(string):
+    l = 0
+    for c in string:
+        if unicodedata.east_asian_width(c) in "WF":
+            l += 2
+        else:
+            l += 1
+    return l
+
 def rfill(string, times, char=u" ", append=u""):
     string = unicode(string)
-    missing = times - len(string)
+    missing = times - column_width(string)
     for x in range(missing):
         string += char
 
     return unicode(string) + unicode(append)
 
 def getlen(string):
-    return len(string) + 1
+    return column_width(unicode(string)) + 1
 
 def dicts_to_string(dicts, order):
     escape = "#{%s}" % str(time.time())
@@ -191,7 +201,7 @@ def consume_scenario(lines, scenario_prefix):
         scenario_lines.append(lines.pop(0))
     else:
         raise AssertionError("expecting scenario, at line [" + str(lines[0]) + "]")
-    
+
     scenario_lines.extend(get_lines_till_next_scenario(lines, scenario_prefix))
     return unicode("\n".join(scenario_lines))
 
