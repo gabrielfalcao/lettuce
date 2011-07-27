@@ -3,6 +3,16 @@ Feature: fetch admin media from lettuce + django builtin server
     Given my settings.py has "LETTUCE_SERVER_PORT" set to "7000"
     Then I see that requesting "http://localhost:7000/media/css/base.css" gets "200"
 
+  Scenario: Fetching admin media
+    Given I navigate to "/admin/"
+    When I try to resolve the assets provided by given HTML
+    When all the responses have status code 200
+    Then all the responses have are between one of those mime types:
+      | mime-type              |
+      | text/css               |
+      | text/javascript        |
+      | application/javascript |
+
   Scenario: Fetching CSS files:
     Given I fetch the urls:
       | url                        |
