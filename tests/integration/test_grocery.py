@@ -14,18 +14,48 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import sys
 import commands
+
 from tests.asserts import assert_equals
 from lettuce.fs import FileSystem
 
 current_directory = FileSystem.dirname(__file__)
+lib_directory = FileSystem.join(current_directory,  'lib')
 
-def test_django_admin_media_serving():
-    'serving admin media in django projects that have "admin" in INSTALLED_APPS'
 
+def teardown():
+    while sys.path[0].startswith(lib_directory):
+        sys.path.pop(0)
+
+
+def test_django_admin_media_serving_on_django_13():
+    'lettuce should serve admin static files properly on Django 1.3'
+
+    sys.path.insert(0, FileSystem.join(lib_directory, 'Django-1.3'))
     FileSystem.pushd(current_directory, "django", "grocery")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 ./features/")
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --verbosity=3 ./features/")
+
+    assert_equals(status, 0, out)
+    FileSystem.popd()
+
+    lines = out.splitlines()
+
+    assert u"Preparing to serve django's admin site static files..." in lines
+    assert u"Django's builtin server is running at 0.0.0.0:7000" in lines
+
+
+def test_django_admin_media_serving_on_django_125():
+    'lettuce should serve admin static files properly on Django 1.2.5'
+
+    sys.path.insert(0, FileSystem.join(lib_directory, 'Django-1.2.5'))
+    FileSystem.pushd(current_directory, "django", "grocery")
+
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --verbosity=3 ./features/")
+
     assert_equals(status, 0, out)
     FileSystem.popd()
 
