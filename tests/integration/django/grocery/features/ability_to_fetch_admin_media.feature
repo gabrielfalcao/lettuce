@@ -13,6 +13,10 @@ Feature: fetch admin media from lettuce + django builtin server
       | text/javascript        |
       | application/javascript |
 
+  Scenario: Fetching static files
+    Given I navigate to "/static/lettuce.jpg"
+    Then it should be an image
+
   Scenario: Fetching CSS files:
     Given I fetch the urls:
       | url                        |

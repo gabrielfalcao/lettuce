@@ -36,7 +36,7 @@ def test_django_admin_media_serving_on_django_13():
     FileSystem.pushd(current_directory, "django", "grocery")
 
     status, out = commands.getstatusoutput(
-        "python manage.py harvest --verbosity=3 ./features/")
+        "python manage.py harvest --verbosity=2 ./features/")
 
     assert_equals(status, 0, out)
     FileSystem.popd()
@@ -44,6 +44,11 @@ def test_django_admin_media_serving_on_django_13():
     lines = out.splitlines()
 
     assert u"Preparing to serve django's admin site static files..." in lines
+    assert u'Running on port 7000 ... OK' in lines
+    assert u'Fetching admin media ... OK' in lines
+    assert u'Fetching static files ... OK' in lines
+    assert u'Fetching CSS files: ... OK' in lines
+    assert u'Fetching javascript files: ... OK' in lines
     assert u"Django's builtin server is running at 0.0.0.0:7000" in lines
 
 
@@ -54,7 +59,7 @@ def test_django_admin_media_serving_on_django_125():
     FileSystem.pushd(current_directory, "django", "grocery")
 
     status, out = commands.getstatusoutput(
-        "python manage.py harvest --verbosity=3 ./features/")
+        "python manage.py harvest --verbosity=2 ./features/")
 
     assert_equals(status, 0, out)
     FileSystem.popd()
@@ -63,3 +68,8 @@ def test_django_admin_media_serving_on_django_125():
 
     assert u"Preparing to serve django's admin site static files..." in lines
     assert u"Django's builtin server is running at 0.0.0.0:7000" in lines
+    assert u'Running on port 7000 ... OK' in lines
+    assert u'Fetching admin media ... OK' in lines
+    assert u'Fetching static files ... OK' in lines
+    assert u'Fetching CSS files: ... OK' in lines
+    assert u'Fetching javascript files: ... OK' in lines
