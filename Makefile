@@ -33,7 +33,6 @@ clean:
 	@printf "Cleaning up files that are already in .gitignore... "
 	@for pattern in `cat .gitignore`; do find . -name "$$pattern" -delete; done
 	@echo "OK!"
-	@git checkout HEAD tests/integration/django/grocery/grocery-db.sqlite
 
 withdraw-documentation:
 	@printf 'Removing current documentation ...'
