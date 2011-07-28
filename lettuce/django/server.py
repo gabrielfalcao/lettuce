@@ -37,6 +37,12 @@ try:
 except ImportError:
     StaticFilesHandler = None
 
+try:
+    import SocketServer
+    SocketServer.BaseServer.handle_error = lambda *args, **kw: None
+except ImportError:
+    pass
+
 from lettuce.registry import call_hook
 
 
@@ -88,6 +94,9 @@ class MutedRequestHandler(WSGIRequestHandler):
 
 
 class LettuceServerHandler(ServerHandler):
+    def handle_error(self, request, client_address):
+        pass
+
     def finish_response(self):
         try:
             ServerHandler.finish_response(self)
