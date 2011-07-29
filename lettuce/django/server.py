@@ -218,8 +218,12 @@ class Server(object):
     def start(self):
         """Starts the webserver thread, and waits it to be available"""
         call_hook('before', 'runserver', self._actual_server)
-        if 'django.contrib.admin' in settings.INSTALLED_APPS:
-            print "Preparing to serve django's admin site static files..."
+        if self._actual_server.should_serve_admin_media():
+            msg = "Preparing to serve django's admin site static files"
+            if getattr(settings, 'LETTUCE_SERVE_ADMIN_MEDIA', False):
+                msg += ' (as per settings.LETTUCE_SERVE_ADMIN_MEDIA=True)'
+
+            print "%s..." % msg
 
         self._actual_server.start()
         self._actual_server.wait()
