@@ -74,6 +74,7 @@ def given_i_navigate_to_group1(step, url):
 def when_i_try_to_resolve_the_assets_provided_by_given_html(step):
     dom = lhtml.fromstring(world.last_response.read())
     elements = dom.cssselect('link[href],script[src]')
+
     for e in elements:
         url = django_url(e.attrib.get('href', e.attrib.get('src')))
         http = world.get_url(url)

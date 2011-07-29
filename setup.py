@@ -19,6 +19,7 @@ import os
 from lettuce import version
 from setuptools import setup
 
+
 def get_packages():
     # setuptools can't do the job :(
     packages = []
@@ -35,8 +36,8 @@ setup(name='lettuce',
     author_email='gabriel@nacaolivre.org',
     url='http://github.com/gabrielfalcao/lettuce',
     packages=get_packages(),
-    entry_points = {
-    	'console_scripts' : [
-	    'lettuce = lettuce.lettuce_cli:main',
-	]}
+    install_requires=['multiprocessing'],
+    entry_points={
+        'console_scripts': ['lettuce = lettuce.lettuce_cli:main'],
+    },
 )

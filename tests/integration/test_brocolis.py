@@ -20,35 +20,41 @@ from lettuce.fs import FileSystem
 
 current_directory = FileSystem.dirname(__file__)
 
+
 def test_harvest_with_debug_mode_enabled():
     'python manage.py harvest -d turns settings.DEBUG=True'
 
     FileSystem.pushd(current_directory, "django", "brocolis")
 
-    status, out = commands.getstatusoutput("python manage.py harvest -d leaves/features/enabled.feature")
-    assert_equals(status, 0, out)
-    status, out = commands.getstatusoutput("python manage.py harvest --debug-mode leaves/features/enabled.feature")
-    assert_equals(status, 0, out)
+    for option in ['-d', '--debug-mode']:
+        status, out = commands.getstatusoutput(
+            "python manage.py harvest %s " \
+            "leaves/features/enabled.feature" % option,
+        )
+        assert_equals(status, 0, out)
 
     FileSystem.popd()
+
 
 def test_harvest_with_debug_mode_disabled():
     'python manage.py harvest without turns settings.DEBUG=False'
 
     FileSystem.pushd(current_directory, "django", "brocolis")
 
-    status, out = commands.getstatusoutput("python manage.py harvest leaves/features/disabled.feature")
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest leaves/features/disabled.feature")
     assert_equals(status, 0, out)
 
     FileSystem.popd()
+
 
 def test_harvest_sets_environment_variabled_for_gae():
     'harvest sets environment variables SERVER_NAME and SERVER_PORT in order to work with google app engine'
 
     FileSystem.pushd(current_directory, "django", "brocolis")
 
-    status, out = commands.getstatusoutput("python manage.py harvest leaves/features/appengine.feature")
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest leaves/features/appengine.feature")
     assert_equals(status, 0, out)
 
     FileSystem.popd()
-

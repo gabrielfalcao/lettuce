@@ -14,6 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import os
 import sys
 import commands
 
@@ -24,15 +25,21 @@ current_directory = FileSystem.dirname(__file__)
 lib_directory = FileSystem.join(current_directory,  'lib')
 
 
+OLD_PYTHONPATH = os.getenv('PYTHONPATH', ':'.join(sys.path))
+
+
 def teardown():
-    while sys.path[0].startswith(lib_directory):
-        sys.path.pop(0)
+    os.environ['PYTHONPATH'] = OLD_PYTHONPATH
 
 
 def test_django_admin_media_serving_on_django_13():
     'lettuce should serve admin static files properly on Django 1.3'
 
-    sys.path.insert(0, FileSystem.join(lib_directory, 'Django-1.3'))
+    os.environ['PYTHONPATH'] = "%s:%s" % (
+        FileSystem.join(lib_directory, 'Django-1.3'),
+        OLD_PYTHONPATH,
+    )
+
     FileSystem.pushd(current_directory, "django", "grocery")
 
     status, out = commands.getstatusoutput(
@@ -55,7 +62,10 @@ def test_django_admin_media_serving_on_django_13():
 def test_django_admin_media_serving_on_django_125():
     'lettuce should serve admin static files properly on Django 1.2.5'
 
-    sys.path.insert(0, FileSystem.join(lib_directory, 'Django-1.2.5'))
+    os.environ['PYTHONPATH'] = "%s:%s" % (
+        FileSystem.join(lib_directory, 'Django-1.2.5'),
+        OLD_PYTHONPATH,
+    )
     FileSystem.pushd(current_directory, "django", "grocery")
 
     status, out = commands.getstatusoutput(

@@ -21,7 +21,7 @@ import socket
 import httplib
 import urlparse
 import tempfile
-import threading
+import multiprocessing
 
 from StringIO import StringIO
 
@@ -50,22 +50,6 @@ class LettuceServerException(WSGIServerException):
     pass
 
 keep_running = True
-
-
-class StopabbleHandler(object):
-    """WSGI middleware that intercepts HTTP method DELETE at / and
-    kills through StopIteration exception server"""
-
-    def __init__(self, application):
-        self.application = application
-
-    def __call__(self, environ, start_response):
-        if environ['PATH_INFO'] == '/' and \
-               environ['REQUEST_METHOD'] == 'DELETE':
-            global keep_running
-            keep_running = False
-
-        return self.application(environ, start_response)
 
 
 class MutedRequestHandler(WSGIRequestHandler):
@@ -110,14 +94,14 @@ class LettuceServerHandler(ServerHandler):
                 raise
 
 
-class ThreadedServer(threading.Thread):
+class ThreadedServer(multiprocessing.Process):
     """
     Runs django's builtin in background
     """
-    lock = threading.Lock()
+    lock = multiprocessing.Lock()
 
     def __init__(self, address, port, *args, **kw):
-        threading.Thread.__init__(self)
+        multiprocessing.Process.__init__(self)
         self.address = address
         self.port = port
 
@@ -193,7 +177,7 @@ class ThreadedServer(threading.Thread):
                 "django's builtin server on it" % self.port,
             )
 
-        handler = StopabbleHandler(WSGIHandler())
+        handler = WSGIHandler()
         if 'django.contrib.admin' in settings.INSTALLED_APPS:
             admin_media_path = ''
             handler = AdminMediaHandler(handler, admin_media_path)
@@ -209,8 +193,10 @@ class ThreadedServer(threading.Thread):
             call_hook('before', 'handle_request', httpd, self)
             httpd.handle_request()
             call_hook('after', 'handle_request', httpd, self)
-            if self.lock.locked():
+            try:
                 self.lock.release()
+            except ValueError:
+                pass
 
 
 class Server(object):
@@ -226,7 +212,6 @@ class Server(object):
     def start(self):
         """Starts the webserver thread, and waits it to be available"""
         call_hook('before', 'runserver', self._actual_server)
-        self._actual_server.setDaemon(True)
         self._actual_server.start()
         self._actual_server.wait()
 
@@ -234,17 +219,13 @@ class Server(object):
         print "Django's builtin server is running at %s:%d" % addrport
 
     def stop(self, fail=False):
-        http = httplib.HTTPConnection(self.address, self.port)
-        try:
-            http.request("DELETE", "/")
-            http.getresponse().read()
-        except socket.error:
-            pass
-        finally:
-            http.close()
-            code = int(fail)
-            call_hook('after', 'runserver', self._actual_server)
-            return sys.exit(code)
+        pid = self._actual_server.pid
+        if pid:
+            os.kill(pid, 9)
+
+        code = int(fail)
+        call_hook('after', 'runserver', self._actual_server)
+        return sys.exit(code)
 
     def url(self, url=""):
         base_url = "http://%s" % ThreadedServer.get_real_address(self.address)

@@ -21,10 +21,12 @@ import traceback
 world = threading.local()
 world._set = False
 
+
 class CleanableDict(dict):
     def clear(self):
         for k in self.keys():
             del self[k]
+
 
 class CallbackDict(CleanableDict):
     def _function_matches(self, one, other):
@@ -42,7 +44,7 @@ class CallbackDict(CleanableDict):
         found = False
 
         for other_function in self[where][when]:
-            if self._function_matches(other_function,function):
+            if self._function_matches(other_function, function):
                 found = True
 
         if not found:
@@ -60,39 +62,40 @@ CALLBACK_REGISTRY = CallbackDict(
     {
         'all': {
             'before': list(),
-            'after': list()
+            'after': list(),
         },
         'step': {
             'before_each': list(),
-            'after_each': list()
+            'after_each': list(),
         },
         'scenario': {
             'before_each': list(),
             'after_each': list(),
-            'outline': list()
+            'outline': list(),
         },
         'feature': {
             'before_each': list(),
-            'after_each': list()
+            'after_each': list(),
         },
         'app': {
             'before_each': list(),
-            'after_each': list()
+            'after_each': list(),
         },
         'harvest': {
             'before': list(),
-            'after': list()
+            'after': list(),
         },
         'handle_request': {
             'before': list(),
-            'after': list()
+            'after': list(),
         },
         'runserver': {
             'before': list(),
-            'after': list()
+            'after': list(),
         },
-    }
+    },
 )
+
 
 def call_hook(situation, kind, *args, **kw):
     for callback in CALLBACK_REGISTRY[kind][situation]:
@@ -102,6 +105,7 @@ def call_hook(situation, kind, *args, **kw):
             traceback.print_exc()
             print
             sys.exit(2)
+
 
 def clear():
     STEP_REGISTRY.clear()
