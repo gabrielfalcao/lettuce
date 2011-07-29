@@ -3,10 +3,10 @@
 Lettuce recipe: Using nose for pretty assertions
 ================================================
 
-lettuce uses python's builtin exception :exc:`AssertionError` to mark
+Lettuce uses python's builtin exception :exc:`AssertionError` to mark
 tests as failed.
 
-although in order to describe the assertion with a custom string you
+Although in order to describe the assertion with a custom string you
 would need to do something like:
 
 .. highlight:: python
@@ -25,7 +25,7 @@ already have a nice description, and fortunately it still uses
 :exc:`AssertionError`, which makes nose_ totally compliant with
 lettuce.
 
-the example below shows how the step above could be written taking advantage of nose_:
+The example below shows how the step above could be written taking advantage of nose_:
 
 .. highlight:: python
 
@@ -38,6 +38,6 @@ the example below shows how the step above could be written taking advantage of 
     def some_step(step, from):
         assert_equals(from, 'expectation')
 
-it rocks, huh?!
+It rocks, huh?!
 
 .. _nose: http://code.google.com/p/python-nose/

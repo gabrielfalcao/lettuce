@@ -31,6 +31,17 @@ source_suffix = '.rst'
 master_doc = 'contents'
 project = 'Lettuce'
 
+rst_epilog = '''
+.. _Lettuce: http://lettuce.it
+.. _Python: http://python.org
+.. _Ruby: http://ruby-lang.org/
+.. _Agile: http://agilemanifesto.org
+.. _Cucumber: http://cukes.info
+.. _Pyccuracy: http://github.com/heynemann/pyccuracy
+.. _TDD: http://en.wikipedia.org/wiki/Test_Driven_Development
+.. _BDD: http://en.wikipedia.org/wiki/Behavior_Driven_Development
+'''
+
 release = "%s (%s release)" % (version, release)
 today_fmt = '%B %d, %Y'
 

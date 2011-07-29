@@ -10,7 +10,7 @@ similar. This made us repeat most of the text again and again.
 
 Yes, there is! :) You just need to use scenarios outlines.
 
-An example is shown bellow:
+An example is shown below:
 
 .. highlight:: ruby
 
@@ -41,12 +41,6 @@ reducing "copy & paste" work and making your tests more clear.
 
    If you overwrite zero.feature using the example above, and goto
    step [e], you'll see your description expanding to the five
-   previous scenarious:
+   previous scenarios:
 
 .. image:: ./screenshot7.png
-
-.. _Lettuce: http://lettuce.it
-.. _Python: http://python.org
-.. _Cucumber: http://cukes.info
-.. _Ruby: http://ruby-lang.org/
-.. _BDD: http://en.wikipedia.org/wiki/Behavior_Driven_Development
