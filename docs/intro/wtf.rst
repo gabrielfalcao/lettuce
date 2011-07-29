@@ -205,9 +205,3 @@ Example::
       | name  | phone      |
       | John  | 2233-4455  |
       | Smith | 9988-7766  |
-
-.. _Agile: http://agilemanifesto.org
-.. _Cucumber: http://cukes.info
-.. _Pyccuracy: http://github.com/heynemann/pyccuracy
-.. _TDD: http://en.wikipedia.org/wiki/Test_Driven_Development
-.. _BDD: http://en.wikipedia.org/wiki/Behavior_Driven_Development

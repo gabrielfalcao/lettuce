@@ -44,9 +44,3 @@ reducing "copy & paste" work and making your tests more clear.
    previous scenarios:
 
 .. image:: ./screenshot7.png
-
-.. _Lettuce: http://lettuce.it
-.. _Python: http://python.org
-.. _Cucumber: http://cukes.info
-.. _Ruby: http://ruby-lang.org/
-.. _BDD: http://en.wikipedia.org/wiki/Behavior_Driven_Development

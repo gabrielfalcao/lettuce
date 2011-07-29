@@ -53,8 +53,3 @@ Hands on!
 
 This documentation will drive you through all the Lettuce features.
 When you feel a bit comfortable, go to the :ref:`first part of the tutorial <tutorial-simple>`, or go further on the :ref:`reference <reference-features>`.
-
-.. _Agile: http://agilemanifesto.org
-.. _Cucumber: http://cukes.info
-.. _TDD: http://en.wikipedia.org/wiki/Test_Driven_Development
-.. _BDD: http://en.wikipedia.org/wiki/Behavior_Driven_Development
