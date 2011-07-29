@@ -51,6 +51,7 @@ Then add some setup at `terrain.py` and run lettuce
 And notice `terrain.py` will be loaded before anything
 
 .. _lettuce-world:
+
 world
 ~~~~~
 
@@ -423,7 +424,7 @@ The decorated function takes two arguments:
 
 * the python module that corresponds to the current app.
 * a :ref:`total-result` as parameter, so that you can use the result
-statistics somehow
+  statistics somehow
 
 .. doctest::
 

@@ -32,11 +32,12 @@ consider that there is a feature in a file called `some.feature`
         Then I should be happy
 
 .. _feature-class:
+
 Feature
 ~~~~~~~
 
 Feature.name
-^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^
 
 A string containing the name of the feature
 
@@ -131,6 +132,7 @@ Then, `Feature.get_head()` would give:
     feature.get_head() == 'Funcionalidade: alguma funcionalidade'
 
 .. _total-result:
+
 TotalResult
 ~~~~~~~~~~~
 
@@ -165,6 +167,7 @@ TotalResult.proposed_definitions
 A list of :ref:`step-class` that have no :ref:`step-definition`
 
 .. _scenario-class:
+
 Scenario
 ~~~~~~~~
 
@@ -182,6 +185,7 @@ The attribute `scenarios` could be used as follows
     scenario.steps[0].sentence == 'try out something'
 
 .. _step-class:
+
 Step
 ~~~~
 
@@ -197,6 +201,7 @@ The string that represents the step
     step.sentence == 'Given I show lettuce running'
 
 .. _step-definition:
+
 step definition
 ~~~~~~~~~~~~~~~
 
