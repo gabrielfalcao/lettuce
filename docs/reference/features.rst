@@ -38,7 +38,7 @@ Feature
 Feature.name
 ^^^^^^^^^^^^^^^^^
 
-a string containing the name of the feature
+A string containing the name of the feature
 
 .. highlight:: python
 
@@ -49,9 +49,9 @@ a string containing the name of the feature
 Feature.scenarios
 ^^^^^^^^^^^^^^^^^
 
-a list of scenario objects
+A list of scenario objects
 
-the attribute `scenarios` could be used as follows
+The attribute `scenarios` could be used as follows
 
 .. highlight:: python
 
@@ -62,11 +62,11 @@ the attribute `scenarios` could be used as follows
 Feature.described_at
 ^^^^^^^^^^^^^^^^^^^^
 
-a FeatureDescription object, has the file and line which the feature
+A FeatureDescription object, has the file and line which the feature
 was described. Lettuce uses it to output those metadata.
 
 
-the attribute `described_at` could be used as follows
+The attribute `described_at` could be used as follows
 
 ::
 
@@ -82,13 +82,13 @@ the attribute `described_at` could be used as follows
 Feature.max_length
 ^^^^^^^^^^^^^^^^^^
 
-A property that calculates the max length of all lines that built the
-feature.
+A property that calculates the maximum length of all lines that built
+the feature.
 
 Mostly used by shell output to find out where to print the feature
 description.
 
-example:
+Example:
 
 ::
 
@@ -97,16 +97,16 @@ example:
 Feature.get_head
 ^^^^^^^^^^^^^^^^
 
-does represent the feature with its first representation in current
+Does represent the feature with its first representation in current
 language followed by a colon and the feature name.
 
-example:
+Example:
 
 ::
 
     feature.get_head() == 'Feature: some feature'
 
-but if the same feature would written in brazillian portuguese, for example:
+But if the same feature would written in Brazilian Portuguese, for example:
 
 .. highlight:: ruby
 
@@ -124,7 +124,7 @@ but if the same feature would written in brazillian portuguese, for example:
           Cenário: ...
             ...
 
-then, `Feature.get_head()` would give:
+Then, `Feature.get_head()` would give:
 
 ::
 
@@ -137,32 +137,32 @@ TotalResult
 TotalResult.features_ran
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-integer, the total of features ran
+Integer, the total of features ran
 
 TotalResult.features_passed
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-integer, the total of features passed
+Integer, the total of features passed
 
 TotalResult.scenarios_ran
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-integer, the total of scenarios ran
+Integer, the total of scenarios ran
 
 TotalResult.scenarios_passed
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-integer, the total of scenarios passed
+Integer, the total of scenarios passed
 
 TotalResult.steps
 ^^^^^^^^^^^^^^^^^
 
-integer, the number of steps that were supposed to run
+Integer, the number of steps that were supposed to run
 
 TotalResult.proposed_definitions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-a list of :ref:`step-class` that have no :ref:`step-definition`
+A list of :ref:`step-class` that have no :ref:`step-definition`
 
 .. _scenario-class:
 Scenario
@@ -171,9 +171,9 @@ Scenario
 Scenario.steps
 ^^^^^^^^^^^^^^
 
-a list of scenario objects
+A list of scenario objects
 
-the attribute `scenarios` could be used as follows
+The attribute `scenarios` could be used as follows
 
 .. highlight:: python
 
@@ -188,7 +188,7 @@ Step
 Step.sentence
 ^^^^^^^^^^^^^
 
-the string that represents the step
+The string that represents the step
 
 .. highlight:: python
 
@@ -200,7 +200,7 @@ the string that represents the step
 step definition
 ~~~~~~~~~~~~~~~
 
-a decorator that can be used on any python function, takes a regex string as parameter, so that the function can me matched against steps.
+A decorator that can be used on any python function, takes a regex string as parameter, so that the function can me matched against steps.
 
 
 .. highlight:: python

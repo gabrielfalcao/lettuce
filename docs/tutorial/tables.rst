@@ -3,7 +3,7 @@
 handling data with tables
 =========================
 
-Lets imagine writing a MVC application. While writing the tests
+Let's imagine writing a MVC application. While writing the tests
 you will stumble in to a situation where there is a few models
 that must be added to the database, maybe you will also need to check
 the new state of those models.

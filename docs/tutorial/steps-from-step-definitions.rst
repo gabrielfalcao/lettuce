@@ -17,7 +17,7 @@ Our tests should be as expressive as possible. However, we also want to re-use s
       When I finally do something interesting
       Then I'm already too bored to care.
       
-In this case, we probably had a test case (maybe several) for which it was actually valuable to express how the user interacted with the login form. That's where we got the step definitions for our login sequence. When the login form isn't especially interesting anymore, however, these steps are just noise. We'd really like to be able to define something like this without duplicating our step definitions.
+In this case, we probably had a test case (maybe several) for which it was actually valuable to express how the user interacted with the login form. That's where we got the step definitions for our login sequence. When the login form isn't especially interesting any more, however, these steps are just noise. We'd really like to be able to define something like this without duplicating our step definitions.
 
 .. highlight:: ruby
 
