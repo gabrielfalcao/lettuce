@@ -75,11 +75,14 @@ def test_django_admin_media_serving_on_django_125():
     FileSystem.popd()
 
     lines = out.splitlines()
+    failure = '\n\n'
+    failure += '*' * 100
+    failure += '\n' + '\n'.join(lines)
 
-    assert u"Preparing to serve django's admin site static files..." in lines
-    assert u"Django's builtin server is running at 0.0.0.0:7000" in lines
-    assert u'Running on port 7000 ... OK' in lines
-    assert u'Fetching admin media ... OK' in lines
-    assert u'Fetching static files ... OK' in lines
-    assert u'Fetching CSS files: ... OK' in lines
-    assert u'Fetching javascript files: ... OK' in lines
+    assert u"Preparing to serve django's admin site static files..." in lines, failure
+    assert u"Django's builtin server is running at 0.0.0.0:7000" in lines, failure
+    assert u'Running on port 7000 ... OK' in lines, failure
+    assert u'Fetching admin media ... OK' in lines, failure
+    assert u'Fetching static files ... OK' in lines, failure
+    assert u'Fetching CSS files: ... OK' in lines, failure
+    assert u'Fetching javascript files: ... OK' in lines, failure

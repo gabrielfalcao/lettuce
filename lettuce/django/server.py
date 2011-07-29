@@ -181,7 +181,6 @@ class ThreadedServer(multiprocessing.Process):
         if 'django.contrib.admin' in settings.INSTALLED_APPS:
             admin_media_path = ''
             handler = AdminMediaHandler(handler, admin_media_path)
-            print "Preparing to serve django's admin site static files..."
 
         if self.should_serve_static_files():
             handler = StaticFilesHandler(handler)
@@ -212,6 +211,9 @@ class Server(object):
     def start(self):
         """Starts the webserver thread, and waits it to be available"""
         call_hook('before', 'runserver', self._actual_server)
+        if 'django.contrib.admin' in settings.INSTALLED_APPS:
+            print "Preparing to serve django's admin site static files..."
+
         self._actual_server.start()
         self._actual_server.wait()
 

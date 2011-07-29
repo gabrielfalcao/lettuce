@@ -40,7 +40,15 @@ from lettuce.plugins import xunit_output
 
 from lettuce import exceptions
 
-__all__ = ['after', 'before', 'step', 'world', 'STEP_REGISTRY', 'CALLBACK_REGISTRY', 'call_hook']
+__all__ = [
+    'after',
+    'before',
+    'step',
+    'world',
+    'STEP_REGISTRY',
+    'CALLBACK_REGISTRY',
+    'call_hook',
+]
 
 try:
     terrain = fs.FileSystem._import("terrain")
@@ -54,6 +62,7 @@ except Exception, e:
         sys.stderr.write(string)
         sys.stderr.write(exceptions.traceback.format_exc(e))
         raise SystemExit(1)
+
 
 class Runner(object):
     """ Main lettuce's test runner
@@ -126,13 +135,15 @@ class Runner(object):
         try:
             for filename in features_files:
                 feature = Feature.from_file(filename)
-                results.append(feature.run(self.scenarios, self.run_controller))
+                results.append(
+                    feature.run(self.scenarios, self.run_controller))
+
         except exceptions.LettuceSyntaxError, e:
             sys.stderr.write(e.msg)
             failed = True
         except:
             e = sys.exc_info()[1]
-            print "Died with "+str(e)
+            print "Died with %s" % str(e)
             traceback.print_exc()
             failed = True
 

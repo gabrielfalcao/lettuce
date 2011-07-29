@@ -19,15 +19,18 @@ import lettuce.fs
 from nose.tools import assert_equals
 from mox import Mox
 
+
 def test_has_version():
     "A nice python module is supposed to have a version"
     assert_equals(lettuce.version, '0.1.29')
+
 
 def test_import():
     "lettuce importer does import"
     import os
     module = lettuce.fs.FileSystem._import('os')
     assert_equals(os, module)
+
 
 def test_terrain_import_exception():
     "lettuce error tries to import "
@@ -44,7 +47,8 @@ def test_terrain_import_exception():
 
     exc = Exception('foo bar')
     lettuce.fs.FileSystem._import('terrain').AndRaise(exc)
-    lettuce.exceptions.traceback.format_exc(exc).AndReturn('I AM THE TRACEBACK FOR IMPORT ERROR')
+    lettuce.exceptions.traceback.format_exc(exc). \
+        AndReturn('I AM THE TRACEBACK FOR IMPORT ERROR')
 
     lettuce.sys.stderr.write(string)
     lettuce.sys.stderr.write('I AM THE TRACEBACK FOR IMPORT ERROR')
