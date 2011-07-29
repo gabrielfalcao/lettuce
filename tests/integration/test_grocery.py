@@ -86,3 +86,34 @@ def test_django_admin_media_serving_on_django_125():
     assert u'Fetching static files ... OK' in lines, failure
     assert u'Fetching CSS files: ... OK' in lines, failure
     assert u'Fetching javascript files: ... OK' in lines, failure
+
+
+def test_django_admin_media_serving_forced_by_setting():
+    'settings.LETTUCE_SERVE_ADMIN_MEDIA forces lettuce to serve admin assets'
+
+    os.environ['PYTHONPATH'] = "%s:%s" % (
+        FileSystem.join(lib_directory, 'Django-1.3'),
+        OLD_PYTHONPATH,
+    )
+
+    FileSystem.pushd(current_directory, "django", "grocery")
+
+    extra_args = " --scenarios=1,3,4,5 --settings=settings_without_admin"
+
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --verbosity=2 ./features/ %s" % extra_args)
+
+    assert_equals(status, 0, out)
+    FileSystem.popd()
+
+    lines = out.splitlines()
+
+    assert u"Preparing to serve django's admin site static files..." in lines
+    assert u'Running on port 7000 ... OK' in lines
+    assert u'Fetching static files ... OK' in lines
+    assert u'Fetching CSS files: ... OK' in lines
+    assert u'Fetching javascript files: ... OK' in lines
+    assert u"Django's builtin server is running at 0.0.0.0:7000" in lines
+
+    # the scenario 2 is not suppose to run
+    assert u'Fetching admin media ... OK' not in lines

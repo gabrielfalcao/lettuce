@@ -134,6 +134,13 @@ class ThreadedServer(multiprocessing.Process):
         ]
         return all(conditions)
 
+    def should_serve_admin_media(self):
+        conditions = [
+            'django.contrib.admin' in settings.INSTALLED_APPS,
+            getattr(settings, 'LETTUCE_SERVE_ADMIN_MEDIA', False),
+        ]
+        return any(conditions)
+
     def run(self):
         self.lock.acquire()
         pidfile = os.path.join(tempfile.gettempdir(), 'lettuce-django.pid')
@@ -178,7 +185,7 @@ class ThreadedServer(multiprocessing.Process):
             )
 
         handler = WSGIHandler()
-        if 'django.contrib.admin' in settings.INSTALLED_APPS:
+        if self.should_serve_admin_media():
             admin_media_path = ''
             handler = AdminMediaHandler(handler, admin_media_path)
 
