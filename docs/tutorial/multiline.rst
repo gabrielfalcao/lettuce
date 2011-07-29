@@ -95,7 +95,7 @@ Which we can verify like so:
 
       @step('I should see the following:')
       def i_should_see_the_following(step):
-          assert step.multiline == '\n'.append([
+          assert step.multiline == '\n'.join([
           ' one',
           '  two  ',
           '   three   ',
