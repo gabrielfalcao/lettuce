@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 from datetime import datetime
 from lettuce.terrain import after
 from lettuce.terrain import before
@@ -27,8 +26,10 @@ def wrt_output(filename, content):
     f.write(content.encode('utf-8'))
     f.close()
 
+
 def total_seconds(td):
     return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 1e6) / 1e6
+
 
 def enable(filename=None):
 
@@ -51,7 +52,7 @@ def enable(filename=None):
         if step.failed:
             cdata = doc.createCDATASection(step.why.traceback)
             failure = doc.createElement("failure")
-            failure.setAttribute("message",step.why.cause)
+            failure.setAttribute("message", step.why.cause)
             failure.appendChild(cdata)
             tc.appendChild(failure)
 
@@ -63,4 +64,3 @@ def enable(filename=None):
         root.setAttribute("failed", str(total.steps_failed))
         doc.appendChild(root)
         wrt_output(output_filename, doc.toxml())
-

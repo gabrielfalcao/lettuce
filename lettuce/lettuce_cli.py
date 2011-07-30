@@ -21,12 +21,12 @@ import optparse
 
 import lettuce
 
+
 def main(args=sys.argv[1:]):
     base_path = os.path.join(os.path.dirname(os.curdir), 'features')
     parser = optparse.OptionParser(
         usage="%prog or type %prog -h (--help) for help",
-        version=lettuce.version
-    )
+        version=lettuce.version)
 
     parser.add_option("-v", "--verbosity",
                       dest="verbosity",
@@ -74,7 +74,7 @@ def main(args=sys.argv[1:]):
                             verbosity=options.verbosity,
                             enable_xunit=options.enable_xunit,
                             xunit_filename=options.xunit_file,
-                            run_controller = run_controller)
+                            run_controller=run_controller)
 
     result = runner.run()
     if not result or result.steps != result.steps_passed:

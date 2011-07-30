@@ -23,8 +23,10 @@ from lettuce.terrain import after
 failed_scenarios = []
 scenarios_and_its_fails = {}
 
+
 def wrt(string):
     sys.stdout.write(string)
+
 
 @after.each_step
 def print_scenario_ran(step):
@@ -40,6 +42,7 @@ def print_scenario_ran(step):
         else:
             wrt("E")
 
+
 @after.all
 def print_end(total):
     if total.scenarios_passed < total.scenarios_ran:
@@ -54,35 +57,28 @@ def print_end(total):
     wrt("%d %s (%d passed)\n" % (
         total.features_ran,
         word,
-        total.features_passed
-        )
-    )
+        total.features_passed))
 
     word = total.scenarios_ran > 1 and "scenarios" or "scenario"
     wrt("%d %s (%d passed)\n" % (
         total.scenarios_ran,
         word,
-        total.scenarios_passed
-        )
-    )
+        total.scenarios_passed))
 
     steps_details = []
-    for kind in ("failed","skipped",  "undefined"):
+    for kind in "failed", "skipped", "undefined":
         attr = 'steps_%s' % kind
         stotal = getattr(total, attr)
         if stotal:
-            steps_details.append(
-                "%d %s" % (stotal, kind)
-            )
+            steps_details.append("%d %s" % (stotal, kind))
 
     steps_details.append("%d passed" % total.steps_passed)
     word = total.steps > 1 and "steps" or "step"
     wrt("%d %s (%s)\n" % (
         total.steps,
         word,
-        ", ".join(steps_details)
-        )
-    )
+        ", ".join(steps_details)))
+
 
 def print_no_features_found(where):
     where = core.fs.relpath(where)
@@ -90,7 +86,4 @@ def print_no_features_found(where):
         where = '.%s%s' % (os.sep, where)
 
     wrt('Oops!\n')
-    wrt(
-        'could not find features at '
-        '%s\n' % where
-    )
+    wrt('could not find features at %s\n' % where)

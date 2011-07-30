@@ -17,8 +17,8 @@
 
 import re
 import time
-import string
 import unicodedata
+
 
 def escape_if_necessary(what):
     what = unicode(what)
@@ -26,6 +26,7 @@ def escape_if_necessary(what):
         what = u"[%s]" % what
 
     return what
+
 
 def get_stripped_lines(string, ignore_lines_starting_with=''):
     string = unicode(string)
@@ -39,12 +40,13 @@ def get_stripped_lines(string, ignore_lines_starting_with=''):
 
     return lines
 
+
 def split_wisely(string, sep, strip=False):
     string = unicode(string)
     if strip:
-        string=string.strip()
+        string = string.strip()
     else:
-        string=string.strip("\n")
+        string = string.strip("\n")
     sep = unicode(sep)
 
     regex = re.compile(escape_if_necessary(sep),  re.UNICODE | re.M | re.I)
@@ -57,14 +59,17 @@ def split_wisely(string, sep, strip=False):
 
     return [unicode(i) for i in items]
 
+
 def wise_startswith(string, seed):
     string = unicode(string).strip()
     seed = unicode(seed)
     regex = u"^%s" % re.escape(seed)
     return bool(re.search(regex, string, re.I))
 
+
 def remove_it(string, what):
     return unicode(re.sub(unicode(what), "", unicode(string)).strip())
+
 
 def column_width(string):
     l = 0
@@ -75,6 +80,7 @@ def column_width(string):
             l += 1
     return l
 
+
 def rfill(string, times, char=u" ", append=u""):
     string = unicode(string)
     missing = times - column_width(string)
@@ -83,13 +89,17 @@ def rfill(string, times, char=u" ", append=u""):
 
     return unicode(string) + unicode(append)
 
+
 def getlen(string):
     return column_width(unicode(string)) + 1
 
+
 def dicts_to_string(dicts, order):
     escape = "#{%s}" % str(time.time())
+
     def enline(line):
         return unicode(line).replace("|", escape)
+
     def deline(line):
         return line.replace(escape, '\\|')
 
@@ -120,12 +130,16 @@ def dicts_to_string(dicts, order):
 
     return deline(u"\n".join(table) + u"\n")
 
+
 def parse_hashes(lines):
     escape = "#{%s}" % str(time.time())
+
     def enline(line):
         return unicode(line.replace("\\|", escape)).strip()
+
     def deline(line):
         return line.replace(escape, '|')
+
     def discard_comments(lines):
         return [line for line in lines if not line.startswith('#')]
 
@@ -146,6 +160,7 @@ def parse_hashes(lines):
 
     return keys, hashes
 
+
 def parse_multiline(lines):
     multilines = []
     in_multiline = False
@@ -163,11 +178,11 @@ def parse_multiline(lines):
 
 def extract_tags_from_line(given_line):
     """returns tags_array if given_line contains tags, else None"""
-    line = string.rstrip(given_line)
+    line = given_line.rstrip()
     tags = []
     if re.match("\s*?\@", line):
         tags = [tag for tag in re.split("\s*\@", line) if len(tag) > 0]
-    if len(tags) == 0 or [tag for tag in tags if string.find(tag, " ") != -1]:
+    if len(tags) == 0 or any(' ' in tag for tag in tags):
         return None
     return tags
 
@@ -184,6 +199,7 @@ def consume_tags_lines(lines, tags):
             lines.pop(0)
         else:
             break
+
 
 def consume_scenario(lines, scenario_prefix):
     """return string of scenario text
@@ -205,6 +221,7 @@ def consume_scenario(lines, scenario_prefix):
     scenario_lines.extend(get_lines_till_next_scenario(lines, scenario_prefix))
     return unicode("\n".join(scenario_lines))
 
+
 def get_lines_till_next_scenario(lines, scenario_prefix):
     """returns array of lines up till next scenario block"""
     sep = unicode(scenario_prefix)
@@ -221,6 +238,7 @@ def get_lines_till_next_scenario(lines, scenario_prefix):
                 break
         scenario_lines.append(lines.pop(0))
     return scenario_lines
+
 
 def split_scenarios(lines, scenario_prefix):
     """returns array of strings, one per scenario"""

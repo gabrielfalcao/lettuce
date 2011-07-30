@@ -17,8 +17,6 @@
 import os
 import re
 import sys
-import platform
-import struct
 
 from lettuce import core
 from lettuce import strings
@@ -27,11 +25,14 @@ from lettuce import terminal
 from lettuce.terrain import after
 from lettuce.terrain import before
 
+
 def wrt(what):
     sys.stdout.write(what.encode('utf-8'))
 
+
 def wrap_file_and_line(string, start, end):
     return re.sub(r'([#] [^:]+[:]\d+)', '%s\g<1>%s' % (start, end), string)
+
 
 def wp(l):
     if l.startswith("\033[1;32m"):
@@ -47,8 +48,10 @@ def wp(l):
 
     return l
 
+
 def write_out(what):
     wrt(wp(what))
+
 
 @before.each_step
 def print_step_running(step):
@@ -67,6 +70,7 @@ def print_step_running(step):
         for line in step.represent_hashes().splitlines():
             write_out("\033[1;30m%s\033[0m\n" % line)
 
+
 @after.each_step
 def print_step_ran(step):
     if step.scenario.outlines:
@@ -79,7 +83,6 @@ def print_step_ran(step):
 
     if not step.failed:
         string = wrap_file_and_line(string, '\033[1;30m', '\033[0m')
-
 
     prefix = '\033[A'
     width, height = terminal.get_size()
@@ -123,11 +126,13 @@ def print_step_ran(step):
 
         wrt("\033[0m\n")
 
+
 @before.each_scenario
 def print_scenario_running(scenario):
     string = scenario.represented()
     string = wrap_file_and_line(string, '\033[1;30m', '\033[0m')
     write_out("\n\033[1;37m%s" % string)
+
 
 @after.outline
 def print_outline(scenario, order, outline, reasons_to_fail):
@@ -155,6 +160,7 @@ def print_outline(scenario, order, outline, reasons_to_fail):
 
         wrt("\033[0m\n")
 
+
 @before.each_feature
 def print_feature_running(feature):
     string = feature.represented()
@@ -164,6 +170,7 @@ def print_feature_running(feature):
     for line in lines:
         line = wrap_file_and_line(line, '\033[1;30m', '\033[0m')
         write_out("\033[1;37m%s\n" % line)
+
 
 @after.all
 def print_end(total):
@@ -179,9 +186,7 @@ def print_end(total):
         total.features_ran,
         word,
         color,
-        total.features_passed
-        )
-    )
+        total.features_passed))
 
     color = "\033[1;32m"
     if total.scenarios_passed is 0:
@@ -192,9 +197,7 @@ def print_end(total):
         total.scenarios_ran,
         word,
         color,
-        total.scenarios_passed
-        )
-    )
+        total.scenarios_passed))
 
     steps_details = []
     kinds_and_colors = {
@@ -203,14 +206,11 @@ def print_end(total):
         'undefined': '\033[0;33m'
     }
 
-
     for kind, color in kinds_and_colors.items():
         attr = 'steps_%s' % kind
         stotal = getattr(total, attr)
         if stotal:
-            steps_details.append(
-                "%s%d %s" % (color, stotal, kind)
-            )
+            steps_details.append("%s%d %s" % (color, stotal, kind))
 
     steps_details.append("\033[1;32m%d passed\033[1;37m" % total.steps_passed)
     word = total.steps > 1 and "steps" or "step"
@@ -220,9 +220,7 @@ def print_end(total):
     write_out("\033[1;37m%d %s (%s)\033[0m\n" % (
         total.steps,
         word,
-        content
-        )
-    )
+        content))
 
     if total.proposed_definitions:
         wrt("\n\033[0;33mYou can implement step definitions for undefined steps with these snippets:\n\n")
@@ -240,6 +238,7 @@ def print_end(total):
 
             wrt("\n")
 
+
 def print_no_features_found(where):
     where = core.fs.relpath(where)
     if not where.startswith(os.sep):
@@ -248,5 +247,4 @@ def print_no_features_found(where):
     write_out('\033[1;31mOops!\033[0m\n')
     write_out(
         '\033[1;37mcould not find features at '
-        '\033[1;33m%s\033[0m\n' % where
-    )
+        '\033[1;33m%s\033[0m\n' % where)

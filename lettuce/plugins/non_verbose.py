@@ -20,23 +20,28 @@ from lettuce import core
 from lettuce.terrain import after
 from lettuce.terrain import before
 
+
 @before.each_step
 def print_step_running(step):
     logging.info(step.represent_string(step.sentence))
+
 
 @after.each_step
 def print_step_ran(step):
     logging.info("\033[A" + step.represent_string(step.sentence))
 
+
 @before.each_scenario
 def print_scenario_running(scenario):
     logging.info(scenario.represented())
+
 
 @before.each_feature
 def print_feature_running(feature):
     logging.info("\n")
     logging.info(feature.represented())
     logging.info("\n")
+
 
 @after.all
 def print_end(total):
@@ -45,25 +50,20 @@ def print_end(total):
     logging.info("%d %s (%d passed)\n" % (
         total.features_ran,
         word,
-        total.features_passed
-        )
-    )
+        total.features_passed))
 
     word = total.scenarios_ran > 1 and "scenarios" or "scenario"
     logging.info("%d %s (%d passed)\n" % (
         total.scenarios_ran,
         word,
-        total.scenarios_passed
-        )
-    )
+        total.scenarios_passed))
 
     word = total.steps > 1 and "steps" or "step"
     logging.info("%d %s (%d passed)\n" % (
         total.steps,
         word,
-        total.steps_passed
-        )
-    )
+        total.steps_passed))
+
 
 def print_no_features_found(where):
     where = core.fs.relpath(where)
@@ -73,6 +73,4 @@ def print_no_features_found(where):
     logging.info('\033[1;31mOops!\033[0m\n')
     logging.info(
         '\033[1;37mcould not find features at '
-        '\033[1;33m%s\033[0m\n' % where
-    )
-
+        '\033[1;33m%s\033[0m\n' % where)
