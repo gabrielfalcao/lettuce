@@ -28,7 +28,7 @@ running a specific feature file
    user@machine:~/projects/myproj$ lettuce path/to/some/file.feature
 
 
-With this option, your feature can even be out of the default ***features*** folder.
+With this option, your feature can even be out of the default ``features`` folder.
 
 running only some scenarios of a specific feature file
 ------------------------------------------------------
@@ -40,7 +40,7 @@ running only some scenarios of a specific feature file
    user@machine:~/projects/myproj$ lettuce path/to/some/file.feature -s 3,5,9
 
 
-This will run the scenarios 3, 5 and 9 from file ***path/to/some/file.feature***
+This will run the scenarios 3, 5 and 9 from file ``path/to/some/file.feature``
 
 running only some scenarios all feature files
 ---------------------------------------------
@@ -55,7 +55,7 @@ Maybe you can find it senseless, but it works like that, and does not hurt so fa
 
 Yeah, guess what?
 
-This command will run the scenarios 3, 5 and 9 of all feature files living on ***myproj/features*** folder.
+This command will run the scenarios 3, 5 and 9 of all feature files living on ``myproj/features`` folder.
 
 verbosity levels
 ----------------
@@ -159,7 +159,7 @@ It prints every single feature, with really useful information like:
 * "ready-to-use" snippets for undefined steps
 
 For example, let's say you have the feature below, but only the step
-***Given I have the string "lettuce leaves"*** is defined
+``Given I have the string "lettuce leaves"`` is defined
 
 .. highlight:: ruby
 

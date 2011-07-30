@@ -3,7 +3,7 @@
 scenario outlines
 =================
 
-On our :ref:`first description file<tutorial-simple>`, `zero.feature`, all scenarios were
+On our :ref:`first description file<tutorial-simple>`, ``zero.feature``, all scenarios were
 similar. This made us repeat most of the text again and again.
 
 **Isn't there a better way to deal with this - when several scenarios are almost equal and only some values change?**

@@ -12,7 +12,7 @@ to read :ref:`the feature tutorial <tutorial-simple>` for a
 introduction.
 
 In order to exemplify the usage of attributes and methods below, let's
-consider that there is a feature in a file called `some.feature`
+consider that there is a feature in a file called ``some.feature``
 
 .. highlight:: ruby
 
@@ -52,7 +52,7 @@ Feature.scenarios
 
 A list of scenario objects
 
-The attribute `scenarios` could be used as follows
+The attribute ``scenarios`` could be used as follows
 
 .. highlight:: python
 
@@ -67,7 +67,7 @@ A FeatureDescription object, has the file and line which the feature
 was described. Lettuce uses it to output those metadata.
 
 
-The attribute `described_at` could be used as follows
+The attribute ``described_at`` could be used as follows
 
 ::
 
@@ -125,7 +125,7 @@ But if the same feature would written in Brazilian Portuguese, for example:
           Cenário: ...
             ...
 
-Then, `Feature.get_head()` would give:
+Then, ``Feature.get_head()`` would give:
 
 ::
 
@@ -176,7 +176,7 @@ Scenario.steps
 
 A list of scenario objects
 
-The attribute `scenarios` could be used as follows
+The attribute ``scenarios`` could be used as follows
 
 .. highlight:: python
 
