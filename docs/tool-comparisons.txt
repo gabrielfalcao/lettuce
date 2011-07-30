@@ -1,0 +1,14 @@
+.. _tool-comparisons:
+
+This is not the first time I have written a tool for
+behaviour-driven development. I worked on Pyccuracy_ which is an
+awesome tool for testing websites.
+
+As expected I am a hard user of Pyccuracy_, but since I met
+Cucumber_, I fell in love with Scenario Outlines, global variables and
+tables.  Although Pyccuracy_ does not aim to do the same as Cucumber_
+does, sometimes it sucks, because Cucumber has very handy features that
+avoid code duplication and so on.
+
+Thus, Lettuce does not aim solely at automated website testing. Lettuce
+is a multi-purpose testing tool.
