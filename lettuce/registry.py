@@ -25,7 +25,7 @@ world._set = False
 class CallbackDict(dict):
     def _function_matches(self, one, other):
         params = 'co_filename', 'co_firstlineno'
-        matches = list()
+        matches = []
 
         for param in params:
             one_got = getattr(one.func_code, param)
@@ -55,37 +55,37 @@ STEP_REGISTRY = {}
 CALLBACK_REGISTRY = CallbackDict(
     {
         'all': {
-            'before': list(),
-            'after': list(),
+            'before': [],
+            'after': [],
         },
         'step': {
-            'before_each': list(),
-            'after_each': list(),
+            'before_each': [],
+            'after_each': [],
         },
         'scenario': {
-            'before_each': list(),
-            'after_each': list(),
-            'outline': list(),
+            'before_each': [],
+            'after_each': [],
+            'outline': [],
         },
         'feature': {
-            'before_each': list(),
-            'after_each': list(),
+            'before_each': [],
+            'after_each': [],
         },
         'app': {
-            'before_each': list(),
-            'after_each': list(),
+            'before_each': [],
+            'after_each': [],
         },
         'harvest': {
-            'before': list(),
-            'after': list(),
+            'before': [],
+            'after': [],
         },
         'handle_request': {
-            'before': list(),
-            'after': list(),
+            'before': [],
+            'after': [],
         },
         'runserver': {
-            'before': list(),
-            'after': list(),
+            'before': [],
+            'after': [],
         },
     },
 )
