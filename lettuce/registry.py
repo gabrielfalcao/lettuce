@@ -22,33 +22,20 @@ world = threading.local()
 world._set = False
 
 
+def _function_matches(one, other):
+    return (one.func_code.co_filename == other.func_code.co_filename and
+            one.func_code.co_firstlineno == other.func_code.co_firstlineno)
+
+
 class CallbackDict(dict):
-    def _function_matches(self, one, other):
-        params = 'co_filename', 'co_firstlineno'
-        matches = []
-
-        for param in params:
-            one_got = getattr(one.func_code, param)
-            other_got = getattr(other.func_code, param)
-            matches.append(one_got == other_got)
-
-        return all(matches)
-
     def append_to(self, where, when, function):
-        found = False
-
-        for other_function in self[where][when]:
-            if self._function_matches(other_function, function):
-                found = True
-
-        if not found:
+        if not any(_function_matches(o, function) for o in self[where][when]):
             self[where][when].append(function)
 
     def clear(self):
         for name, action_dict in self.items():
             for callback_list in action_dict.values():
-                while callback_list:
-                    callback_list.pop()
+                callback_list[:] = []
 
 
 STEP_REGISTRY = {}
