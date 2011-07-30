@@ -22,13 +22,7 @@ world = threading.local()
 world._set = False
 
 
-class CleanableDict(dict):
-    def clear(self):
-        for k in self.keys():
-            del self[k]
-
-
-class CallbackDict(CleanableDict):
+class CallbackDict(dict):
     def _function_matches(self, one, other):
         params = 'co_filename', 'co_firstlineno'
         matches = list()
@@ -57,7 +51,7 @@ class CallbackDict(CleanableDict):
                     callback_list.pop()
 
 
-STEP_REGISTRY = CleanableDict()
+STEP_REGISTRY = {}
 CALLBACK_REGISTRY = CallbackDict(
     {
         'all': {
