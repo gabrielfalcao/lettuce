@@ -62,8 +62,9 @@ all them are used within lettuce tests
 
 ## keep in mind
 
-that lettuce is a testing software, patches and pull requests must
-come with automated tests, and if suitable, with proper documentation.
+![your lack of tests if disturbing the force](http://farm3.static.flickr.com/2248/2282734669_a7f431e660_o.jpg)
+
+### that lettuce is a testing software, patches and pull requests must come with automated tests, and if suitable, with proper documentation.
 
 # mailing list
 
