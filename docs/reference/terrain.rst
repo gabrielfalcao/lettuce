@@ -11,7 +11,7 @@ setup and teardown, and general hacking on your lettuce tests.
 terrain.py
 ~~~~~~~~~~
 
-By convention lettuce tries do load a file called `terrain.py` located
+By convention lettuce tries do load a file called ``terrain.py`` located
 at the current directory.
 
 Think at this file as a global setup place, there you can setup global
@@ -19,8 +19,8 @@ hooks, and put things into lettuce "world".
 
 .. Note::
 
-   You can also set a `terrain.py` file within the root of your
-   Django_ project, when running the `python manage.py harvest`
+   You can also set a ``terrain.py`` file within the root of your
+   Django_ project, when running the ``python manage.py harvest``
    command, lettuce will load it. See more at
    :ref:`the-django-command`.
 
@@ -39,7 +39,7 @@ Try out this file layout:
                 - the-file-which-holds-step-definitions.py
                 - terrain.py
 
-Then add some setup at `terrain.py` and run lettuce
+Then add some setup at ``terrain.py`` and run lettuce
 
 .. highlight:: bash
 
@@ -48,7 +48,7 @@ Then add some setup at `terrain.py` and run lettuce
    user@machine:~/projects/some-project$ lettuce
 
 
-And notice `terrain.py` will be loaded before anything
+And notice ``terrain.py`` will be loaded before anything
 
 .. _lettuce-world:
 
@@ -75,7 +75,7 @@ application before lettuce start running tests:
 
    world.some_variable = "yay!"
 
-So that, within some step file you could use things previously set on `world`:
+So that, within some step file you could use things previously set on ``world``:
 
 
 .. doctest::
@@ -367,7 +367,7 @@ can be very useful for setting up browser drivers (such as selenium),
 before all tests start to run on Django.
 
 The decorated function takes a dict with the local variables within
-the `harvest` management command.
+the ``harvest`` management command.
 
 .. doctest::
 
@@ -443,7 +443,7 @@ The decorated function takes two arguments:
 
 These hooks are ran right before, and after lettuce starts up the built-in http server.
 
-The decorated function takes a `lettuce.django.server.ThreadedServer` object.
+The decorated function takes a ``lettuce.django.server.ThreadedServer`` object.
 
 .. doctest::
 
@@ -468,8 +468,8 @@ These hooks are ran right before, and after lettuce's built-in HTTP server respo
 
 Both decorated functions takes these two arguments:
 
-* a `django.core.servers.basehttp.WSGIServer` object.
-* a `lettuce.django.server.ThreadedServer` object.
+* a ``django.core.servers.basehttp.WSGIServer`` object.
+* a ``lettuce.django.server.ThreadedServer`` object.
 
 .. doctest::
 
@@ -486,7 +486,7 @@ Both decorated functions takes these two arguments:
        socket_object, (client_address, size) = httpd.get_request()
        print "I've just finished to respond to the client %s" % client_address
 
-.. warning:: all the `handle_request` hooks are run within a python
+.. warning:: all the ``handle_request`` hooks are run within a python
    thread. If something went wrong within a calback, lettuce can get
    stuck.
 

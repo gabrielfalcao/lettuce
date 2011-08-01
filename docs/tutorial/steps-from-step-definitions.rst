@@ -28,7 +28,7 @@ In this case, we probably had a test case (maybe several) for which it was actua
       When I do something interesting
       Then The world becomes a better place
       
-Lettuce affords you the ability to write such a "step of steps" with a set of helpers matching each of the grammar terms `Given`, `When` and `Then`. You could accomplish the above like so.
+Lettuce affords you the ability to write such a "step of steps" with a set of helpers matching each of the grammar terms ``Given``, ``When`` and ``Then``. You could accomplish the above like so.
 
 .. highlight:: python
 
@@ -43,7 +43,7 @@ Lettuce affords you the ability to write such a "step of steps" with a set of he
 running blocks of steps
 -----------------------
 
-It is sometimes even desirable to run blocks of steps, copy-and-pasted directly from Feature specifications. The `Step.behave_as` method lets you do this, and you can use `string.format` to fill in parameters dynamically. For example, we can write the above step definition like so:
+It is sometimes even desirable to run blocks of steps, copy-and-pasted directly from Feature specifications. The ``Step.behave_as`` method lets you do this, and you can use ``str.format`` to fill in parameters dynamically. For example, we can write the above step definition like so:
 
 .. highlight:: python
 
@@ -54,11 +54,8 @@ It is sometimes even desirable to run blocks of steps, copy-and-pasted directly 
         step.behave_as("""
             Given I go to the home page
               And I click the login button
-              And I fill in username:%(user)s password:%(pass)s
+              And I fill in username:{user} password:{pass}
               And I click "Login"
-        """.format({
-            'user': 'floppy',
-            'pass': 'banana'
-        }))
+        """.format(user='floppy', pass='banana'))
 
 This can be combined with step argument capture for step definitions that are both expressive and DRY.

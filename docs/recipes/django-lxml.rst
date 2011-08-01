@@ -117,7 +117,7 @@ Once you install the ``lettuce.django`` app, the command ``harvest`` will be ava
 5. specifying feature files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The `harvest` command accepts a path to feature files, in order to run
+The ``harvest`` command accepts a path to feature files, in order to run
 only the features you want.
 
 Example:
@@ -258,7 +258,7 @@ Running without HTTP server
 
 Sometimes you may just do not want to run Django's built-in HTTP server
 running in background, in those cases all you need to do is run the
-`harvest` command with the `--no-server` or `-S` option.
+``harvest`` command with the ``--no-server`` or ``-S`` option.
 
 Example:
 
@@ -275,7 +275,7 @@ running the HTTP server in other port than 8000
 If you face the problem of having lettuce running on port 8000, you
 can change that behaviour.
 
-Before running the server, lettuce will try to read the setting `LETTUCE_SERVER_PORT` which **must** be a **integer**
+Before running the server, lettuce will try to read the setting ``LETTUCE_SERVER_PORT`` which **must** be a **integer**
 
 Example:
 
@@ -296,7 +296,7 @@ In order to run tests against the nearest configuration of production,
 lettuce sets up settings.DEBUG=False
 
 However, for debug purposes one can face a misleading HTTP 500 error without traceback in Django.
-For those cases lettuce provides the `--debug-mode` or `-d` option.
+For those cases lettuce provides the ``--debug-mode`` or ``-d`` option.
 
 .. highlight:: bash
 
@@ -309,7 +309,7 @@ running only the specified scenarios
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can also specify the index of the scenarios you want to run
-through the command line, to do so, run with `--scenarios` or `-s`
+through the command line, to do so, run with ``--scenarios`` or ``-s``
 options followed by the scenario numbers separated by commas.
 
 For example, let's say you want to run the scenarios 4, 7, 8 and 10:
@@ -331,7 +331,7 @@ running tests from just certain apps
 
 Lettuce takes a comma-separated list of app names to run tests against.
 
-For example, the command below would run ONLY the tests within the apps `myapp` and `foobar`:
+For example, the command below would run ONLY the tests within the apps ``myapp`` and ``foobar``:
 
 .. highlight:: bash
 
@@ -343,7 +343,7 @@ For example, the command below would run ONLY the tests within the apps `myapp` 
 
    python manage.py harvest --a  myapp,foobar
 
-You can also specify it at `settings.py` so that you won't need to type the same command-line parameters all the time:
+You can also specify it at ``settings.py`` so that you won't need to type the same command-line parameters all the time:
 
 .. highlight:: python
 
@@ -368,7 +368,7 @@ running tests from all apps, except by some
 
 Lettuce takes a comma-separated list of app names which tests must NOT be ran.
 
-For example, the command below would run ALL the tests BUT those within the apps `another_app` and `foobar`:
+For example, the command below would run ALL the tests BUT those within the apps ``another_app`` and ``foobar``:
 
 .. highlight:: bash
 
@@ -376,7 +376,7 @@ For example, the command below would run ALL the tests BUT those within the apps
 
    python manage.py harvest --avoid-apps=another_app,foobar
 
-You can also specify it at `settings.py` so that you won't need to type the same command-line parameters all the time:
+You can also specify it at ``settings.py`` so that you won't need to type the same command-line parameters all the time:
 
 .. highlight:: python
 
