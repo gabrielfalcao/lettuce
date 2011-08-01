@@ -32,7 +32,7 @@ def get_packages():
 
 required_modules = []
 
-if sys.version_info[0:2] < (2, 6):
+if sys.version_info[:2] < (2, 6):
     required_modules.append('multiprocessing')
 
 setup(name='lettuce',
