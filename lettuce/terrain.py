@@ -18,6 +18,7 @@ from lettuce.registry import world
 from lettuce.registry import CALLBACK_REGISTRY
 world._set = True
 
+
 def absorb(thing, name=None):
     if not isinstance(name, basestring):
         name = thing.__name__
@@ -27,6 +28,7 @@ def absorb(thing, name=None):
 
 world.absorb = absorb
 
+
 @world.absorb
 def spew(name):
     if hasattr(world, name):
@@ -34,54 +36,29 @@ def spew(name):
         delattr(world, name)
         return item
 
-class main(object):
-    @classmethod
-    def all(cls, function):
-        CALLBACK_REGISTRY.append_to('all', cls.__name__, function)
-        return function
+
+class Main(object):
+    def __init__(self, callback):
+        self.name = callback
 
     @classmethod
-    def each_step(cls, function):
-        CALLBACK_REGISTRY.append_to('step', "%s_each" % cls.__name__, function)
-        return function
+    def _add_method(cls, name, where, when):
+        def method(self, fn):
+            CALLBACK_REGISTRY.append_to(where, when.format(self.name), fn)
+        method.__name__ = method.fn_name = name
+        setattr(cls, name, method)
 
-    @classmethod
-    def each_scenario(cls, function):
-        CALLBACK_REGISTRY.append_to('scenario', "%s_each" % cls.__name__, function)
-        return function
+for name, where, when in (
+        ('all', 'all', '{0}'),
+        ('each_step', 'step', '{0}_each'),
+        ('each_scenario', 'scenario', '{0}_each'),
+        ('each_feature', 'feature', '{0}_each'),
+        ('harvest', 'harvest', '{0}'),
+        ('each_app', 'app', '{0}_each'),
+        ('runserver', 'runserver', '{0}'),
+        ('handle_request', 'handle_request', '{0}'),
+        ('outline', 'scenario', 'outline')):
+    Main._add_method(name, where, when)
 
-    @classmethod
-    def each_feature(cls, function):
-        CALLBACK_REGISTRY.append_to('feature', "%s_each" % cls.__name__, function)
-        return function
-
-    @classmethod
-    def harvest(cls, function):
-        CALLBACK_REGISTRY.append_to('harvest', cls.__name__, function)
-        return function
-
-    @classmethod
-    def each_app(cls, function):
-        CALLBACK_REGISTRY.append_to('app', "%s_each" % cls.__name__, function)
-        return function
-
-    @classmethod
-    def runserver(cls, function):
-        CALLBACK_REGISTRY.append_to('runserver', cls.__name__, function)
-        return function
-
-    @classmethod
-    def handle_request(cls, function):
-        CALLBACK_REGISTRY.append_to('handle_request', cls.__name__, function)
-        return function
-
-    @classmethod
-    def outline(cls, function):
-        CALLBACK_REGISTRY.append_to('scenario', "outline", function)
-        return function
-
-class before(main):
-    pass
-
-class after(main):
-    pass
+before = Main('before')
+after = Main('after')

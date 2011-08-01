@@ -128,18 +128,12 @@ class ThreadedServer(multiprocessing.Process):
         self.lock.acquire()
 
     def should_serve_static_files(self):
-        conditions = [
-            StaticFilesHandler is not None,
-            getattr(settings, 'STATIC_URL', False),
-        ]
-        return all(conditions)
+        return (StaticFilesHandler is not None and
+                getattr(settings, 'STATIC_URL', False))
 
     def should_serve_admin_media(self):
-        conditions = [
-            'django.contrib.admin' in settings.INSTALLED_APPS,
-            getattr(settings, 'LETTUCE_SERVE_ADMIN_MEDIA', False),
-        ]
-        return any(conditions)
+        return ('django.contrib.admin' in settings.INSTALLED_APPS or
+                getattr(settings, 'LETTUCE_SERVE_ADMIN_MEDIA', False))
 
     def run(self):
         self.lock.acquire()

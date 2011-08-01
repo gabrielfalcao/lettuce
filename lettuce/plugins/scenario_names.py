@@ -24,12 +24,15 @@ from lettuce.terrain import before
 failed_scenarios = []
 scenarios_and_its_fails = {}
 
+
 def wrt(string):
     sys.stdout.write(string.encode('utf-8'))
+
 
 @before.each_scenario
 def print_scenario_running(scenario):
     wrt('%s ... ' % scenario.name)
+
 
 @after.each_scenario
 def print_scenario_ran(scenario):
@@ -42,16 +45,18 @@ def print_scenario_ran(scenario):
         else:
             print "ERROR"
 
+
 @after.each_step
 def save_step_failed(step):
     if step.failed and step.scenario not in failed_scenarios:
         scenarios_and_its_fails[step.scenario] = step.why
         failed_scenarios.append(step.scenario)
 
+
 @after.all
 def print_end(total):
     if total.scenarios_passed < total.scenarios_ran:
-        print # just a line to separate things here
+        print  # just a line to separate things here
         for scenario in failed_scenarios:
             reason = scenarios_and_its_fails[scenario]
             wrt(reason.traceback)
@@ -61,35 +66,25 @@ def print_end(total):
     wrt("%d %s (%d passed)\n" % (
         total.features_ran,
         word,
-        total.features_passed
-        )
-    )
+        total.features_passed))
 
     word = total.scenarios_ran > 1 and "scenarios" or "scenario"
     wrt("%d %s (%d passed)\n" % (
         total.scenarios_ran,
         word,
-        total.scenarios_passed
-        )
-    )
+        total.scenarios_passed))
 
     steps_details = []
-    for kind in ("failed","skipped",  "undefined"):
+    for kind in "failed", "skipped", "undefined":
         attr = 'steps_%s' % kind
         stotal = getattr(total, attr)
         if stotal:
-            steps_details.append(
-                "%d %s" % (stotal, kind)
-            )
+            steps_details.append("%d %s" % (stotal, kind))
 
     steps_details.append("%d passed" % total.steps_passed)
     word = total.steps > 1 and "steps" or "step"
-    wrt("%d %s (%s)\n" % (
-        total.steps,
-        word,
-        ", ".join(steps_details)
-        )
-    )
+    wrt("%d %s (%s)\n" % (total.steps, word, ", ".join(steps_details)))
+
 
 def print_no_features_found(where):
     where = core.fs.relpath(where)
@@ -97,7 +92,4 @@ def print_no_features_found(where):
         where = '.%s%s' % (os.sep, where)
 
     wrt('Oops!\n')
-    wrt(
-        'could not find features at '
-        '%s\n' % where
-    )
+    wrt('could not find features at %s\n' % where)

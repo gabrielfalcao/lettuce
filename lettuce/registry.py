@@ -22,76 +22,57 @@ world = threading.local()
 world._set = False
 
 
-class CleanableDict(dict):
-    def clear(self):
-        for k in self.keys():
-            del self[k]
+def _function_matches(one, other):
+    return (one.func_code.co_filename == other.func_code.co_filename and
+            one.func_code.co_firstlineno == other.func_code.co_firstlineno)
 
 
-class CallbackDict(CleanableDict):
-    def _function_matches(self, one, other):
-        params = 'co_filename', 'co_firstlineno'
-        matches = list()
-
-        for param in params:
-            one_got = getattr(one.func_code, param)
-            other_got = getattr(other.func_code, param)
-            matches.append(one_got == other_got)
-
-        return all(matches)
-
+class CallbackDict(dict):
     def append_to(self, where, when, function):
-        found = False
-
-        for other_function in self[where][when]:
-            if self._function_matches(other_function, function):
-                found = True
-
-        if not found:
+        if not any(_function_matches(o, function) for o in self[where][when]):
             self[where][when].append(function)
 
     def clear(self):
         for name, action_dict in self.items():
             for callback_list in action_dict.values():
-                while callback_list:
-                    callback_list.pop()
+                callback_list[:] = []
 
 
-STEP_REGISTRY = CleanableDict()
+STEP_REGISTRY = {}
 CALLBACK_REGISTRY = CallbackDict(
     {
         'all': {
-            'before': list(),
-            'after': list(),
+            'before': [],
+            'after': [],
         },
         'step': {
-            'before_each': list(),
-            'after_each': list(),
+            'before_each': [],
+            'after_each': [],
         },
         'scenario': {
-            'before_each': list(),
-            'after_each': list(),
-            'outline': list(),
+            'before_each': [],
+            'after_each': [],
+            'outline': [],
         },
         'feature': {
-            'before_each': list(),
-            'after_each': list(),
+            'before_each': [],
+            'after_each': [],
         },
         'app': {
-            'before_each': list(),
-            'after_each': list(),
+            'before_each': [],
+            'after_each': [],
         },
         'harvest': {
-            'before': list(),
-            'after': list(),
+            'before': [],
+            'after': [],
         },
         'handle_request': {
-            'before': list(),
-            'after': list(),
+            'before': [],
+            'after': [],
         },
         'runserver': {
-            'before': list(),
-            'after': list(),
+            'before': [],
+            'after': [],
         },
     },
 )
