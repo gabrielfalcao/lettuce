@@ -48,6 +48,10 @@ def enable(filename=None):
         tc.setAttribute("classname", classname)
         tc.setAttribute("name", step.sentence)
         tc.setAttribute("time", str(total_seconds((datetime.now() - step.started))))
+        
+        if not step.ran:
+            skip=doc.createElement("skipped")
+            tc.appendChild(skip)
 
         if step.failed:
             cdata = doc.createCDATASection(step.why.traceback)
