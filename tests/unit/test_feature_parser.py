@@ -148,19 +148,6 @@ Feature: Big sentence
     #     And another one, very tiny
 """
 
-FEATURE11 = """
-@red @blue
-Feature: Feature with tags at feature level
-  Scenario: big scenario outlines
-    Given I do fill 'description' with '<value_two>'
-
-  Examples:
-    | value_two_thousand_and_three_biiiiiiiiiiiiiiiiiiiiiiiiiiiiig |
-    | 1                                                            |
-    | 2                                                            |
-    | 3                                                            |
-"""
-
 
 def test_feature_has_repr():
     "Feature implements __repr__ nicely"
@@ -319,8 +306,3 @@ def test_comments():
     feature = Feature.from_string(FEATURE10)
 
     assert_equals(feature.max_length, 55)
-
-def test_feature_tags():
-    "It should collect up tag lines into the feature"
-    feature = Feature.from_string(FEATURE11)
-    assert_equals(feature.tags, ["red", "blue"])

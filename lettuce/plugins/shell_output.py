@@ -93,7 +93,7 @@ def print_end(total):
         total.scenarios_passed))
 
     steps_details = []
-    for kind in ("failed", "skipped", "undefined"):
+    for kind in ("failed","skipped",  "undefined"):
         attr = 'steps_%s' % kind
         stotal = getattr(total, attr)
         if stotal:

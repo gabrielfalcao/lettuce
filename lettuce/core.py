@@ -17,8 +17,6 @@
 
 import re
 import codecs
-import string
-import sys
 import unicodedata
 from copy import deepcopy
 from lettuce import strings
@@ -118,8 +116,7 @@ class StepDefinition(object):
         try:
             ret = self.function(self.step, *args, **kw)
             self.step.passed = True
-        except:
-            e = sys.exc_info()[1]
+        except Exception, e:
             self.step.failed = True
             self.step.why = ReasonToFail(e)
             raise e
@@ -427,10 +424,9 @@ class Step(object):
             except NoDefinitionFound, e:
                 steps_undefined.append(e.step)
 
-            except:
-                e = sys.exc_info()[1]
+            except Exception, e:
                 steps_failed.append(step)
-                reasons_to_fail.append(step.why or ReasonToFail(e))
+                reasons_to_fail.append(step.why)
 
             finally:
                 all_steps.append(step)
@@ -490,48 +486,10 @@ class Step(object):
                     line = pline + 1
                     break
 
-        return cls(sentence, remaining_lines=lines, line=line, filename=with_file)
-
-
-class RunController(object):
-    def __init__(self):
-        self.delegates = []
-
-    def add(self, delegate):
-        self.delegates.append(delegate)
-
-    def want_run_scenario(self, scenario):
-        for delegate in self.delegates:
-            if not delegate.want_run_scenario(scenario):
-                return False
-        return True
-
-
-class TagChecker(object):
-    def __init__(self, tags=None):
-        "Note that tags can contain ~tag which means do not run if have tag"
-        self.tags_to_run = tags or []
-        self.tags_to_run = [string.replace(tag, "@", "") for tag in self.tags_to_run]
-
-    def want_run_scenario(self, scenario):
-        return self.tags_match(scenario.tags)
-
-    def tags_match(self, tags):
-        "Check if supplied tags mean that we should run the task"
-        if len(self.tags_to_run) == 0:
-            return True
-
-        for check_tags in self.tags_to_run:
-            full_match = True
-            for check_tag in check_tags.split(","):
-                if check_tag[0] == "~":
-                    if check_tag[1:] in tags:
-                        full_match = False
-                elif not check_tag in tags:
-                    full_match = False
-            if full_match:
-                return True
-        return False
+        return cls(sentence,
+                   remaining_lines=lines,
+                   line=line,
+                   filename=with_file)
 
 
 class Scenario(object):
@@ -541,13 +499,12 @@ class Scenario(object):
     table_indentation = indentation + 2
 
     def __init__(self, name, remaining_lines, keys, outlines, with_file=None,
-                 original_string=None, language=None, tags=None):
+                 original_string=None, language=None):
 
         if not language:
             language = language()
 
         self.name = name
-        self.tags = tags or []
         self.language = language
         self.steps = self._parse_remaining_lines(remaining_lines,
                                                  with_file,
@@ -563,8 +520,8 @@ class Scenario(object):
                                                       language)
             self._set_definition(scenario_definition)
 
-        self.solved_steps = list(self._resolve_steps(self.steps, self.outlines,
-                                                     with_file, original_string))
+        self.solved_steps = list(self._resolve_steps(
+            self.steps, self.outlines, with_file, original_string))
         self._add_myself_to_steps()
 
     @property
@@ -574,7 +531,8 @@ class Scenario(object):
         else:
             prefix = self.language.first_of_scenario + ":"
 
-        max_length = strings.column_width(u"%s %s" % (prefix, self.name)) + self.indentation
+        max_length = strings.column_width(
+            u"%s %s" % (prefix, self.name)) + self.indentation
 
         for step in self.steps:
             if step.max_length > max_length:
@@ -634,22 +592,11 @@ class Scenario(object):
     def failed(self):
         return any([step.failed for step in self.steps])
 
-    def run(self, ignore_case, run_controller=None):
+    def run(self, ignore_case):
         """Runs a scenario, running each of its steps. Also call
         before_each and after_each callbacks for steps and scenario"""
 
         results = []
-        run_controller = run_controller or RunController()
-        # If not going to run the scenario then don't want hooks to run either
-        if not run_controller.want_run_scenario(self):
-            results.append(ScenarioResult(self,
-                                  [],
-                                  [],
-                                  [],
-                                  [],
-                                  False))
-            return results
-
         call_hook('before_each', 'scenario', self)
 
         def run_scenario(almost_self, order=-1, outline=None, run_callbacks=False):
@@ -666,8 +613,8 @@ class Scenario(object):
                 steps_passed,
                 steps_failed,
                 steps_skipped,
-                steps_undefined,
-                True)
+                steps_undefined
+            )
 
         if self.outlines:
             first = True
@@ -714,8 +661,6 @@ class Scenario(object):
             prefix = make_prefix(self.language.first_of_scenario)
 
         head = prefix + self.name
-        if len(self.tags) > 0:
-            head = make_prefix("@" + " @".join(self.tags)) + "\n" + head
 
         return strings.rfill(head, self.feature.max_length + 1, append=u'# %s:%d\n' % (self.described_at.file, self.described_at.line))
 
@@ -724,16 +669,10 @@ class Scenario(object):
         return "\n".join([(u" " * self.table_indentation) + line for line in lines]) + '\n'
 
     @classmethod
-    def from_string(new_scenario, string, tags=None, with_file=None, original_string=None, language=None):
+    def from_string(new_scenario, string, with_file=None, original_string=None, language=None):
         """ Creates a new scenario from string"""
-        tags = tags or []
-        tags = tags[:]
-
         # ignoring comments
-        no_comments = strings.get_stripped_lines(string, ignore_lines_starting_with='#')
-        # extract tags
-        strings.consume_tags_lines(no_comments, tags)
-        string = "\n".join(no_comments)
+        string = "\n".join(strings.get_stripped_lines(string, ignore_lines_starting_with='#'))
 
         if not language:
             language = Language()
@@ -761,7 +700,7 @@ class Scenario(object):
             with_file=with_file,
             original_string=original_string,
             language=language,
-            tags=tags)
+        )
 
         return scenario
 
@@ -771,13 +710,12 @@ class Feature(object):
     described_at = None
 
     def __init__(self, name, remaining_lines, with_file, original_string,
-                 language=None, tags=None):
+                 language=None):
 
         if not language:
             language = language()
 
         self.name = name
-        self.tags = tags or []
         self.language = language
 
         self.scenarios, self.description = self._parse_remaining_lines(
@@ -826,8 +764,6 @@ class Feature(object):
         filename = self.described_at.file
         line = self.described_at.line
         head = strings.rfill(self.get_head(), length, append=u"# %s:%d\n" % (filename, line))
-        if len(self.tags) > 0:
-            head = "@" + " @".join(self.tags) + "\n" + head
         for description, line in zip(self.description.splitlines(), self.described_at.description_at):
             head += strings.rfill(u"  %s" % description, length, append=u"# %s:%d\n" % (filename, line))
 
@@ -837,11 +773,9 @@ class Feature(object):
     def from_string(new_feature, string, with_file=None, language=None):
         """Creates a new feature from string"""
         lines = strings.get_stripped_lines(string, ignore_lines_starting_with='#')
-        tags = []
         if not language:
             language = Language()
 
-        strings.consume_tags_lines(lines, tags)
         found = len(re.findall(r'%s:[ ]*\w+' % language.feature, "\n".join(lines), re.U))
 
         if found > 1:
@@ -864,8 +798,7 @@ class Feature(object):
                               remaining_lines=lines,
                               with_file=with_file,
                               original_string=string,
-                              language=language,
-                              tags=tags)
+                              language=language)
         return feature
 
     @classmethod
@@ -882,36 +815,37 @@ class Feature(object):
         self.described_at = definition
 
     def _parse_remaining_lines(self, lines, original_string, with_file=None):
-
-        joined = u"\n".join(lines[1:])
-
         # replacing occurrences of Scenario Outline, with just "Scenario"
-        scenario_prefix = u'%s: ' % self.language.first_of_scenario
-        regex = re.compile(u"%s:\s" % self.language.scenario_separator, re.U | re.I)
+        joined = u"\n".join(lines[1:])
+        scenario_prefix = u'%s:' % self.language.first_of_scenario
+        regex = re.compile(
+            u"%s:\s" % self.language.scenario_separator, re.U | re.I)
         joined = regex.sub(scenario_prefix, joined)
 
-        lines = string.split(joined, "\n")
+        parts = strings.split_wisely(joined, scenario_prefix)
 
-        description_lines = strings.get_lines_till_next_scenario(lines, scenario_prefix)
-        description = "\n".join(s for s in description_lines if s.strip())
+        description = u""
 
-        parts = strings.split_scenarios(lines, scenario_prefix)
+        if not re.search("^" + scenario_prefix, joined):
+            description = parts[0]
+            parts.pop(0)
 
-        scenario_strings = [u"%s" % (s) for s in parts if s.strip()]
+        scenario_strings = [u"%s: %s" % (self.language.first_of_scenario, s) \
+                            for s in parts if s.strip()]
+
         kw = dict(
             original_string=original_string,
             with_file=with_file,
             language=self.language,
-            tags=self.tags)
+        )
 
         scenarios = [Scenario.from_string(s, **kw) for s in scenario_strings]
 
         return scenarios, description
 
-    def run(self, scenarios=None, run_controller=None, ignore_case=True):
+    def run(self, scenarios=None, ignore_case=True):
         call_hook('before_each', 'feature', self)
         scenarios_ran = []
-        run_controller = run_controller or RunController()
 
         if isinstance(scenarios, (tuple, list)):
             if all(map(lambda x: isinstance(x, int), scenarios)):
@@ -923,7 +857,7 @@ class Feature(object):
             if scenarios_to_run and (index + 1) not in scenarios_to_run:
                 continue
 
-            scenarios_ran.extend(scenario.run(ignore_case, run_controller))
+            scenarios_ran.extend(scenario.run(ignore_case))
 
         call_hook('after_each', 'feature', self)
         return FeatureResult(self, *scenarios_ran)
@@ -943,7 +877,7 @@ class FeatureResult(object):
 class ScenarioResult(object):
     """Object that holds results of each step ran from within a scenario"""
     def __init__(self, scenario, steps_passed, steps_failed, steps_skipped,
-                 steps_undefined, was_run):
+                 steps_undefined):
 
         self.scenario = scenario
 
@@ -951,18 +885,13 @@ class ScenarioResult(object):
         self.steps_failed = steps_failed
         self.steps_skipped = steps_skipped
         self.steps_undefined = steps_undefined
-        self.was_run = was_run
 
         all_lists = [steps_passed + steps_skipped + steps_undefined + steps_failed]
         self.total_steps = sum(map(len, all_lists))
 
     @property
     def passed(self):
-        return self.was_run and self.total_steps is len(self.steps_passed)
-
-    @property
-    def failed(self):
-        return len(self.steps_failed) > 0
+        return self.total_steps is len(self.steps_passed)
 
 
 class TotalResult(object):
@@ -1005,21 +934,9 @@ class TotalResult(object):
         return len([result for result in self.feature_results if result.passed])
 
     @property
-    def scenarios_total(self):
-        return len(self.scenario_results)
-
-    @property
     def scenarios_ran(self):
-        return len([res for res in self.scenario_results if res.was_run])
-
-    @property
-    def scenarios_not_run(self):
-        return len([result for result in self.scenario_results if not result.was_run])
+        return len(self.scenario_results)
 
     @property
     def scenarios_passed(self):
         return len([result for result in self.scenario_results if result.passed])
-
-    @property
-    def scenarios_failed(self):
-        return len([result for result in self.scenario_results if result.failed])
