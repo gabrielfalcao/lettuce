@@ -17,7 +17,7 @@
 import re
 import sys
 from StringIO import StringIO
-from nose.tools import assert_equals
+from nose.tools import assert_equals, assert_not_equals
 from lettuce import registry
 from difflib import Differ
 

@@ -14,54 +14,106 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import os
+import time
 import commands
-from tests.asserts import assert_equals
-from lettuce.fs import FileSystem
+import multiprocessing
 
+from tests.asserts import assert_equals, assert_not_equals
+from lettuce.fs import FileSystem
 current_directory = FileSystem.dirname(__file__)
+
 
 def test_django_agains_alfaces():
     'running the "harvest" django command with verbosity 3'
 
     FileSystem.pushd(current_directory, "django", "alfaces")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3")
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --verbosity=3")
     assert_equals(status, 0, out)
 
     assert "Test the django app DO NOTHING" in out
     assert "Test the django app FOO BAR" in out
     FileSystem.popd()
+
+
+def test_django_background_server_running_in_background():
+    'the django builtin server fails if the HTTP port is not available'
+
+    FileSystem.pushd(current_directory, "django", "alfaces")
+
+    import tornado.ioloop
+    import tornado.web
+
+    class MainHandler(tornado.web.RequestHandler):
+        def get(self):
+            self.write("Hello, world")
+            raise SystemExit()
+
+    def runserver():
+        application = tornado.web.Application([
+            (r"/", MainHandler),
+        ])
+        application.listen(8000)
+        tornado.ioloop.IOLoop.instance().start()
+
+    server = multiprocessing.Process(target=runserver)
+    server.start()
+    time.sleep(1)  # the child process take some time to get up
+
+    e = 'Lettuce could not run the builtin Django server at 0.0.0.0:8000"\n' \
+        'maybe you forgot a "runserver" instance running ?\n\n' \
+        'well if you really do not want lettuce to run the server ' \
+        'for you, then just run:\n\n' \
+        'python manage.py --no-server'
+
+    try:
+        status, out = commands.getstatusoutput(
+            "python manage.py harvest --verbosity=3")
+        assert_equals(out, e)
+        assert_not_equals(status, 0)
+
+    finally:
+        os.kill(server.pid, 9)
+        FileSystem.popd()
+
 
 def test_limit_by_app_getting_all_apps_by_comma():
     'running "harvest" with --apps=multiple,apps,separated,by,comma'
 
     FileSystem.pushd(current_directory, "django", "alfaces")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --apps=foobar,donothing")
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --verbosity=3 --apps=foobar,donothing")
     assert_equals(status, 0, out)
 
     assert "Test the django app DO NOTHING" in out
     assert "Test the django app FOO BAR" in out
     FileSystem.popd()
 
+
 def test_limit_by_app_getting_one_app():
     'running "harvest" with --apps=one_app'
 
     FileSystem.pushd(current_directory, "django", "alfaces")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --apps=foobar")
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --verbosity=3 --apps=foobar")
     assert_equals(status, 0, out)
 
     assert "Test the django app DO NOTHING" not in out
     assert "Test the django app FOO BAR" in out
     FileSystem.popd()
 
+
 def test_excluding_apps_separated_by_comma():
     'running "harvest" with --avoid-apps=multiple,apps'
 
     FileSystem.pushd(current_directory, "django", "alfaces")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --avoid-apps=donothing,foobar")
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --verbosity=3 --avoid-apps=donothing,foobar")
     assert_equals(status, 0, out)
 
     assert "Test the django app DO NOTHING" not in out
@@ -74,44 +126,56 @@ def test_excluding_app():
 
     FileSystem.pushd(current_directory, "django", "alfaces")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --avoid-apps=donothing")
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --verbosity=3 --avoid-apps=donothing")
     assert_equals(status, 0, out)
 
     assert "Test the django app DO NOTHING" not in out
     assert "Test the django app FOO BAR" in out
     FileSystem.popd()
+
 
 def test_running_only_apps_within_lettuce_apps_setting():
-    'running the "harvest" will run only on configured apps if the setting LETTUCE_APPS is set'
+    'running the "harvest" will run only on configured apps if the ' \
+             'setting LETTUCE_APPS is set'
 
     FileSystem.pushd(current_directory, "django", "alfaces")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --settings=onlyfoobarsettings --verbosity=3")
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --settings=onlyfoobarsettings --verbosity=3")
     assert_equals(status, 0, out)
 
     assert "Test the django app FOO BAR" in out
     assert "Test the django app DO NOTHING" not in out
     FileSystem.popd()
 
+
 def test_running_all_apps_but_lettuce_avoid_apps():
-    'running the "harvest" will run all apps but those within LETTUCE_AVOID_APPS'
+    'running the "harvest" will run all apps but those within ' \
+             'LETTUCE_AVOID_APPS'
 
     FileSystem.pushd(current_directory, "django", "alfaces")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --settings=allbutfoobarsettings --verbosity=3")
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --settings=allbutfoobarsettings " \
+        "--verbosity=3")
+
     assert_equals(status, 0, out)
 
     assert "Test the django app FOO BAR" not in out
     assert "Test the django app DO NOTHING" in out
     FileSystem.popd()
 
+
 def test_ignores_settings_avoid_apps_if_apps_argument_is_passed():
-    'even if all apps are avoid in settings, it is possible to run a single app ' \
-    'by --apps argument'
+    'even if all apps are avoid in settings, it is possible to run a single ' \
+          'app by --apps argument'
 
     FileSystem.pushd(current_directory, "django", "alfaces")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --settings=avoidallappssettings --verbosity=3 --apps=foobar,donothing")
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --settings=avoidallappssettings "
+        "--verbosity=3 --apps=foobar,donothing")
     assert_equals(status, 0, out)
 
     assert "Test the django app FOO BAR" in out
@@ -124,18 +188,21 @@ def test_no_server():
 
     FileSystem.pushd(current_directory, "django", "alfaces")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --apps=foobar --no-server")
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --verbosity=3 --apps=foobar --no-server")
 
     assert_equals(status, 0, out)
     assert "Django's builtin server is running at" not in out
 
 
 def test_django_specifying_scenarios_to_run():
-    'django harvest can run only specified scenarios with --scenarios or -s options'
+    'django harvest can run only specified scenarios with ' \
+            '--scenarios or -s options'
 
     FileSystem.pushd(current_directory, "django", "alfaces")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --scenarios=2,5 -a foobar")
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --verbosity=3 --scenarios=2,5 -a foobar")
     assert_equals(status, 0, out)
 
     assert "2nd scenario" in out
@@ -148,12 +215,16 @@ def test_django_specifying_scenarios_to_run():
 
     FileSystem.popd()
 
+
 def test_running_only_specified_features():
     'it can run only the specified features, passing the file path'
 
     FileSystem.pushd(current_directory, "django", "alfaces")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 foobar/features/foobar.feature")
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --verbosity=3 " \
+        "foobar/features/foobar.feature")
+
     assert_equals(status, 0, out)
 
     assert "Test the django app FOO BAR" in out

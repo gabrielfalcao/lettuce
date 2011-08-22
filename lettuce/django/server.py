@@ -128,12 +128,18 @@ class ThreadedServer(multiprocessing.Process):
         self.lock.acquire()
 
     def should_serve_static_files(self):
-        return (StaticFilesHandler is not None and
-                getattr(settings, 'STATIC_URL', False))
+        try:
+            return (StaticFilesHandler is not None and
+                    getattr(settings, 'STATIC_URL', False))
+        except ImportError:
+            return False
 
     def should_serve_admin_media(self):
-        return ('django.contrib.admin' in settings.INSTALLED_APPS or
-                getattr(settings, 'LETTUCE_SERVE_ADMIN_MEDIA', False))
+        try:
+            return ('django.contrib.admin' in settings.INSTALLED_APPS or
+                    getattr(settings, 'LETTUCE_SERVE_ADMIN_MEDIA', False))
+        except ImportError:
+            return False
 
     def run(self):
         self.lock.acquire()
@@ -151,28 +157,20 @@ class ThreadedServer(multiprocessing.Process):
 
         open(pidfile, 'w').write(unicode(os.getpid()))
 
-        bound = False
-        max_port = 65535
-
         connector = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        while not bound or self.port < max_port:
-            try:
-                connector.connect((self.address, self.port))
-                self.port += 1
 
-            except socket.error:
-                bound = True
-                break
+        try:
+            s = connector.connect((self.address, self.port))
+            print s
+            self.lock.release()
+            os.kill(os.getpid(), 9)
+        except socket.error:
+            pass
 
-        if bound:
-            try:
-                server_address = (self.address, self.port)
-                httpd = WSGIServer(server_address, MutedRequestHandler)
-                bound = True
-            except WSGIServerException:
-                bound = False
-
-        if not bound:
+        try:
+            server_address = (self.address, self.port)
+            httpd = WSGIServer(server_address, MutedRequestHandler)
+        except WSGIServerException:
             raise LettuceServerException(
                 "the port %d already being used, could not start " \
                 "django's builtin server on it" % self.port,
@@ -223,6 +221,15 @@ class Server(object):
         self._actual_server.wait()
 
         addrport = self.address, self._actual_server.port
+        if not self._actual_server.is_alive():
+            raise LettuceServerException(
+                'Lettuce could not run the builtin Django server at %s:%d"\n'
+                'maybe you forgot a "runserver" instance running ?\n\n'
+                'well if you really do not want lettuce to run the server '
+                'for you, then just run:\n\n'
+                'python manage.py --no-server' % addrport,
+            )
+
         print "Django's builtin server is running at %s:%d" % addrport
 
     def stop(self, fail=False):
@@ -241,6 +248,3 @@ class Server(object):
             base_url += ':%d' % self.port
 
         return urlparse.urljoin(base_url, url)
-
-server = Server()
-django_url = server.url

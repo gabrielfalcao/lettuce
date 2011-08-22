@@ -47,6 +47,8 @@ all them are used within lettuce tests
     > [sudo] pip install sphinx
 * [lxml](http://codespeak.net/lxml/)
     > [sudo] pip install lxml
+* [tornado](http://tornadoweb.org/)
+    > [sudo] pip install tornado
 * [django](http://djangoproject.com/)
     > [sudo] pip install django
 
