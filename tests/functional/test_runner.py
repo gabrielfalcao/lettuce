@@ -714,7 +714,7 @@ def test_output_snippets_with_groups_within_double_quotes_colorless():
         u"# -*- coding: utf-8 -*-\n"
         u'from lettuce import step\n'
         u'\n'
-        u'@step(u\'Given I have "(.*)" and "(.*)"\')\n'
+        u'@step(u\'Given I have "([^\"]*)" and "([^\"]*)"\')\n'
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    assert False, \'This step must be implemented\'\n'
     )
@@ -742,7 +742,7 @@ def test_output_snippets_with_groups_within_double_quotes_colorful():
         u"# -*- coding: utf-8 -*-\n"
         u'from lettuce import step\n'
         u'\n'
-        u'@step(u\'Given I have "(.*)" and "(.*)"\')\n'
+        u'@step(u\'Given I have "([^"]*)" and "([^"]*)"\')\n'
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    assert False, \'This step must be implemented\'\033[0m\n'
     )
@@ -771,7 +771,7 @@ def test_output_snippets_with_groups_within_single_quotes_colorless():
         u"# -*- coding: utf-8 -*-\n"
         u'from lettuce import step\n'
         u'\n'
-        u'@step(u\'Given I have \\\'(.*)\\\' and \\\'(.*)\\\'\')\n'
+        u'@step(u\'Given I have \\\'([^\\\']*)\\\' and \\\'([^\\\']*)\\\'\')\n'
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    assert False, \'This step must be implemented\'\n'
     )
@@ -799,7 +799,7 @@ def test_output_snippets_with_groups_within_single_quotes_colorful():
         u"# -*- coding: utf-8 -*-\n"
         u'from lettuce import step\n'
         u'\n'
-        u'@step(u\'Given I have \\\'(.*)\\\' and \\\'(.*)\\\'\')\n'
+        u'@step(u\'Given I have \\\'([^\\\']*)\\\' and \\\'([^\\\']*)\\\'\')\n'
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    assert False, \'This step must be implemented\'\033[0m\n'
     )
@@ -828,7 +828,7 @@ def test_output_snippets_with_groups_within_redundant_quotes():
         u"# -*- coding: utf-8 -*-\n"
         u'from lettuce import step\n'
         u'\n'
-        u'@step(u\'Given I have "(.*)" and "(.*)"\')\n'
+        u'@step(u\'Given I have "([^"]*)" and "([^"]*)"\')\n'
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    assert False, \'This step must be implemented\'\n'
     )
@@ -864,7 +864,7 @@ def test_output_snippets_with_normalized_unicode_names():
         u"@step(u'Dado que eu tenho palavrões e outras situações')\n"
         u"def dado_que_eu_tenho_palavroes_e_outras_situacoes(step):\n"
         u"    assert False, 'This step must be implemented'\n"
-        u"@step(u'E várias palavras acentuadas são úteis, tais como: \"(.*)\"')\n"
+        u"@step(u'E várias palavras acentuadas são úteis, tais como: \"([^\"]*)\"')\n"
         u"def e_varias_palavras_acentuadas_sao_uteis_tais_como_group1(step, group1):\n"
         u"    assert False, 'This step must be implemented'\n"
         u"@step(u'Então eu fico felizão')\n"

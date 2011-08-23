@@ -194,30 +194,23 @@ class Step(object):
         self.keys = tuple(keys)
         self.hashes = HashList(self, hashes)
         self.described_at = StepDescription(line, filename)
-
         self.proposed_method_name, self.proposed_sentence = self.propose_definition()
 
     def propose_definition(self):
-
         sentence = unicode(self.original_sentence)
         method_name = sentence
 
         groups = [
-            ('"', re.compile(r'("[^"]+")')),  # double quotes
-            ("'", re.compile(r"('[^']+')")),  # single quotes
+            ('"', re.compile(r'("[^"]+")'), r'"([^"]*)"'),
+            ("'", re.compile(r"('[^']+')"), r"\'([^\']*)\'"),
         ]
 
         attribute_names = []
-        for char, group in groups:
+        for char, group, template in groups:
             match_groups = group.search(self.original_sentence)
-
             if match_groups:
-
                 for index, match in enumerate(group.findall(sentence)):
-                    if char == "'":
-                        char = re.escape(char)
-
-                    sentence = sentence.replace(match, u'%s(.*)%s' % (char, char))
+                    sentence = sentence.replace(match, template)
                     group_name = u"group%d" % (index + 1)
                     method_name = method_name.replace(match, group_name)
                     attribute_names.append(group_name)
