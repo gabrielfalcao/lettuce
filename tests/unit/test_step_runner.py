@@ -437,6 +437,30 @@ def test_failing_behave_as_step_fails():
     assert runnable_step.failed
 
 @with_setup(step_runner_environ)
+def test_undefined_behave_as_step_doesnt_pass():
+    'When a step definition calls an undefined step definition with behave_as, that step should not be marked as success.'
+    runnable_step = Step.from_string('Given I have a step which calls the "undefined step" step with behave_as')
+    try:
+        runnable_step.run(True)
+        assert False, "Undefined step should raise exception"
+    except:
+        pass
+
+    assert_false(runnable_step.passed)
+
+@with_setup(step_runner_environ)
+def test_undefined_behave_as_step_fails():
+    'When a step definition calls an undefined step definition with behave_as, that step should be marked a failure.'
+    runnable_step = Step.from_string('Given I have a step which calls the "undefined step" step with behave_as')
+    try:
+        runnable_step.run(True)
+        assert False, "Undefined step should raise exception"
+    except Exception, e:
+        pass
+
+    assert runnable_step.failed
+
+@with_setup(step_runner_environ)
 def test_failing_behave_as_step_raises_assertion():
     'When a step definition calls another (failing) step definition with behave_as, that step should be marked a failure.'
     runnable_step = Step.from_string('Given I have a step which calls the "other step fails" step with behave_as')

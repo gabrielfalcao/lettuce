@@ -356,15 +356,15 @@ class Step(object):
             for step in steps:
                 step.scenario = self.scenario
 
-        (_, _, steps_failed, _, _) = self.run_all(steps)
-        if not steps_failed:
+        (_, _, steps_failed, steps_undefined, _) = self.run_all(steps)
+        if not steps_failed and not steps_undefined:
             self.passed = True
             self.failed = False
             return self.passed
-        else:
-            self.passed = False
-            self.failed = True
-            assert not steps_failed, steps_failed[0].why.exception
+        self.passed = False
+        self.failed = True
+        assert not steps_failed, steps_failed[0].why.exception
+        assert not steps_undefined, "Undefined step: %s" % steps_undefined[0].sentence
 
     def run(self, ignore_case):
         """Runs a step, trying to resolve it on available step
