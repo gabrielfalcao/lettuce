@@ -97,4 +97,15 @@ LANGUAGES = {
         'scenario_outline': u'シナリオアウトライン|シナリオテンプレート|テンプレ|シナリオテンプレ',
         'scenario_separator': u'(シナリオ|シナリオアウトライン|シナリオテンプレート|テンプレ|シナリオテンプレ)',
     },
+    
+    'tr': {
+        'examples': u'Örnekler',
+        'feature': u'Özellik',
+        'name': u'Turkish',
+        'native': u'Türkçe',
+        'scenario': u'Senaryo',
+        'scenario_outline': u'Senaryo taslağı|Senaryo Taslağı',
+        'scenario_separator': u'(Senaryo taslağı|Senaryo Taslağı|Senaryo)',
+     },
+    
 }
