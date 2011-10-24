@@ -97,4 +97,22 @@ LANGUAGES = {
         'scenario_outline': u'シナリオアウトライン|シナリオテンプレート|テンプレ|シナリオテンプレ',
         'scenario_separator': u'(シナリオ|シナリオアウトライン|シナリオテンプレート|テンプレ|シナリオテンプレ)',
     },
+    'ru': {
+        'examples': u'Примеры|Сценарии',
+        'feature': u'Функционал',
+        'name': u'Russian',
+        'native': u'Русский',
+        'scenario': u'Сценарий',
+        'scenario_outline': u'Структура сценария',
+        'scenario_separator': u'(Структура сценария|Сценарий)',
+    },
+    'uk': {
+        'examples': u'Приклади|Сценарії',
+        'feature': u'Функціонал',
+        'name': u'Ukrainian',
+        'native': u'Українська',
+        'scenario': u'Сценарій',
+        'scenario_outline': u'Структура сценарію',
+        'scenario_separator': u'(Структура сценарію|Сценарій)',
+    },
 }
