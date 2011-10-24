@@ -76,7 +76,6 @@ def test_scenario_ru_from_string():
         scenario.name,
         u'Сохранение базы курсов универитета в текстовый файл'
     )
-    print scenario.steps[0].hashes
     assert_equals(
         scenario.steps[0].hashes,
         [
