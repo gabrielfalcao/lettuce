@@ -106,4 +106,13 @@ LANGUAGES = {
         'scenario_outline': u'场景模板',
         'scenario_separator': u'(场景模板|场景)',
     },
+     'zh-TW': { 
+        'examples': u'例如|場景集',
+        'feature': u'特性',
+        'name': u'Traditional Chinese',
+        'native': u'繁體中文',
+        'scenario': u'場景',
+        'scenario_outline': u'場景模板',
+        'scenario_separator': u'(場景模板|場景)',
+    },
 }
