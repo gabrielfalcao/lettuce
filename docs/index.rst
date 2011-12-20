@@ -129,3 +129,24 @@ recipes
 **make your own salad**
 
     * :ref:`nicer assertions with nose <recipes-nose>`
+
+.. warning::
+   Disclaimer on unstable features you should NOT rely on.
+
+   For instance use the features ``step.behave_as`` and the **xunit
+   XML output** are unstable and untested.
+
+   Lettuce is a software for testing other software, but I've been
+   receiving some contributions of new features that are coming
+   without proper tests.
+
+   These contributions have to be rewritten with proper tests, so that
+   they won't break so often, but they are a current source of issues
+   in the bug tracker.
+
+   So until someone contributes with unit and functional tests for
+   those features, or I find some time to do it myself, you should
+   avoid relying on them.
+
+   Sincerely,
+   Gabriel Falcão

@@ -139,6 +139,16 @@ dt .literal, table .literal { background:none}
 div.admonition-philosophy { padding-left:65px; background:url(docicons-philosophy.png) .8em .8em no-repeat}
 div.admonition-behind-the-scenes { padding-left:65px; background:url(docicons-behindscenes.png) .8em .8em no-repeat}
 
+.admonition.warning {
+  width: 520px;
+  background-color: #FFE8E8;
+}
+.admonition.warning .first.admonition-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #933;
+}
+
 /*** versoinadded/changes ***/
 div.versionadded, div.versionchanged {  }
 div.versionadded span.title, div.versionchanged span.title { font-weight: bold}
