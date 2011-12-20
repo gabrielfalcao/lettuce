@@ -231,3 +231,113 @@ def test_world_should_be_able_to_absorb_classs():
    world.spew('MyClass')
 
    assert not hasattr(world, 'MyClass')
+
+
+def test_hooks_should_be_still_manually_callable():
+    "terrain hooks should be still manually callable"
+
+    @before.all
+    def before_all():
+        pass
+
+    @before.harvest
+    def before_harvest():
+        pass
+
+    @before.each_app
+    def before_each_app():
+        pass
+
+    @before.each_step
+    def before_each_step():
+        pass
+
+    @before.each_scenario
+    def before_each_scenario():
+        pass
+
+    @before.each_feature
+    def before_each_feature():
+        pass
+
+    @before.handle_request
+    def before_handle_request():
+        pass
+
+    @before.outline
+    def before_outline():
+        pass
+
+    @after.all
+    def after_all():
+        pass
+
+    @after.harvest
+    def after_harvest():
+        pass
+
+    @after.each_app
+    def after_each_app():
+        pass
+
+    @after.each_step
+    def after_each_step():
+        pass
+
+    @after.each_scenario
+    def after_each_scenario():
+        pass
+
+    @after.each_feature
+    def after_each_feature():
+        pass
+
+    @after.handle_request
+    def after_handle_request():
+        pass
+
+    @after.outline
+    def after_outline():
+        pass
+
+    assert callable(before_all), \
+        '@before.all decorator should return the original function'
+
+    assert callable(before_handle_request), \
+        '@before.handle_request decorator should return the original function'
+
+    assert callable(before_harvest), \
+        '@before.harvest decorator should return the original function'
+
+    assert callable(before_each_feature), \
+        '@before.each_feature decorator should return the original function'
+
+    assert callable(before_outline), \
+        '@before.outline decorator should return the original function'
+
+    assert callable(before_each_scenario), \
+        '@before.each_scenario decorator should return the original function'
+
+    assert callable(before_each_step), \
+        '@before.each_step decorator should return the original function'
+
+    assert callable(after_all), \
+        '@after.all decorator should return the original function'
+
+    assert callable(after_handle_request), \
+        '@after.handle_request decorator should return the original function'
+
+    assert callable(after_harvest), \
+        '@after.harvest decorator should return the original function'
+
+    assert callable(after_each_feature), \
+        '@after.each_feature decorator should return the original function'
+
+    assert callable(after_outline), \
+        '@after.outline decorator should return the original function'
+
+    assert callable(after_each_scenario), \
+        '@after.each_scenario decorator should return the original function'
+
+    assert callable(after_each_step), \
+        '@after.each_step decorator should return the original function'

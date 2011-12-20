@@ -45,6 +45,7 @@ class Main(object):
     def _add_method(cls, name, where, when):
         def method(self, fn):
             CALLBACK_REGISTRY.append_to(where, when % {'0': self.name}, fn)
+            return fn
         method.__name__ = method.fn_name = name
         setattr(cls, name, method)
 
