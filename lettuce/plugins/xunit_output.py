@@ -90,6 +90,6 @@ def enable(filename=None):
     @after.all
     def output_xml(total):
         root.setAttribute("tests", str(total.steps))
-        root.setAttribute("failed", str(total.steps_failed))
+        root.setAttribute("failures", str(total.steps_failed))
         doc.appendChild(root)
         wrt_output(output_filename, doc.toxml())
