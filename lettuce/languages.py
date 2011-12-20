@@ -97,7 +97,6 @@ LANGUAGES = {
         'scenario_outline': u'シナリオアウトライン|シナリオテンプレート|テンプレ|シナリオテンプレ',
         'scenario_separator': u'(シナリオ|シナリオアウトライン|シナリオテンプレート|テンプレ|シナリオテンプレ)',
     },
-    
     'tr': {
         'examples': u'Örnekler',
         'feature': u'Özellik',
@@ -107,5 +106,22 @@ LANGUAGES = {
         'scenario_outline': u'Senaryo taslağı|Senaryo Taslağı',
         'scenario_separator': u'(Senaryo taslağı|Senaryo Taslağı|Senaryo)',
      },
-    
+     'zh-CN': {
+        'examples': u'例如|场景集',
+        'feature': u'特性',
+        'name': u'Simplified Chinese',
+        'native': u'简体中文',
+        'scenario': u'场景',
+        'scenario_outline': u'场景模板',
+        'scenario_separator': u'(场景模板|场景)',
+    },
+     'zh-TW': {
+        'examples': u'例如|場景集',
+        'feature': u'特性',
+        'name': u'Traditional Chinese',
+        'native': u'繁體中文',
+        'scenario': u'場景',
+        'scenario_outline': u'場景模板',
+        'scenario_separator': u'(場景模板|場景)',
+    }
 }
