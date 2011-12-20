@@ -42,7 +42,10 @@ def enable(filename=None):
         step.started = datetime.now()
 
     @after.each_step
-    def create_test_case(step):
+    def create_test_case_step(step):
+        if step.scenario.outlines:
+            return
+        
         classname = "%s : %s" % (step.scenario.feature.name, step.scenario.name)
         tc = doc.createElement("testcase")
         tc.setAttribute("classname", classname)
@@ -57,6 +60,28 @@ def enable(filename=None):
             cdata = doc.createCDATASection(step.why.traceback)
             failure = doc.createElement("failure")
             failure.setAttribute("message", step.why.cause)
+            failure.appendChild(cdata)
+            tc.appendChild(failure)
+
+        root.appendChild(tc)
+    
+    @before.outline
+    def time_outline(scenario, order, outline, reasons_to_fail):
+        scenario.outline_started = datetime.now()
+        pass
+    
+    @after.outline
+    def create_test_case_outline(scenario, order, outline, reasons_to_fail):
+        classname = "%s : %s" % (scenario.feature.name, scenario.name)
+        tc = doc.createElement("testcase")
+        tc.setAttribute("classname", classname)
+        tc.setAttribute("name", u'| %s |' % u' | '.join(outline.values()))
+        tc.setAttribute("time", str(total_seconds((datetime.now() - scenario.outline_started))))
+
+        for reason_to_fail in reasons_to_fail:
+            cdata = doc.createCDATASection(reason_to_fail.traceback)
+            failure = doc.createElement("failure")
+            failure.setAttribute("message", reason_to_fail.cause)
             failure.appendChild(cdata)
             tc.appendChild(failure)
 
