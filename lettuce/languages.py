@@ -141,5 +141,14 @@ LANGUAGES = {
         'scenario': u'Сценарій',
         'scenario_outline': u'Структура сценарію',
         'scenario_separator': u'(Структура сценарію|Сценарій)',
+    },
+    'it': {
+        'examples': u'Esempi|Scenari|Scenarii',
+        'feature': u'Funzionalità|Funzione',
+        'name': u'Italian',
+        'native': u'Italiano',
+        'scenario': u'Scenario',
+        'scenario_outline': u'Schema di Scenario|Piano di Scenario',
+        'scenario_separator': u'(Schema di Scenario|Piano di Scenario|Scenario)',
     }
 }
