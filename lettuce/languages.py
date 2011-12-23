@@ -150,5 +150,14 @@ LANGUAGES = {
         'scenario': u'Scenario',
         'scenario_outline': u'Schema di Scenario|Piano di Scenario',
         'scenario_separator': u'(Schema di Scenario|Piano di Scenario|Scenario)',
+    },
+    'no': {
+        'examples': u'Eksempler',
+        'feature': u'Egenskaper',
+        'name': u'Norwegian',
+        'native': u'Norsk',
+        'scenario': u'Situasjon',
+        'scenario_outline': u'Situasjon Oversikt',
+        'scenario_separator': u'(Situasjon Oversikt|Situasjon)',
     }
 }
