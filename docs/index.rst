@@ -75,6 +75,10 @@ Fork it, propose features, explore the code
 
 * `lettuce development mailing list <http://groups.google.com/group/lettuce-developers>`_.
 
+**hack**
+
+:doc:`/dev/index`
+
 **donate**
 
 `support lettuce development <http://pledgie.com/campaigns/10604>`_

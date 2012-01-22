@@ -22,6 +22,7 @@ Lettuce documentation contents
    reference/languages
    recipes/nose
    recipes/django-lxml
+   dev/index
 
 Indices, glossary and tables
 ============================
