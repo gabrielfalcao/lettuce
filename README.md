@@ -22,52 +22,6 @@ Lettuce is a [BDD](http://en.wikipedia.org/wiki/Behavior_Driven_Development) too
 7. I like [nose](http://code.google.com/p/python-nose/), which is a unittest pythonic framework. However, as the project I work on grows, so do the tests, and it becomes harder to understand them.
 8. [lettuce ladies](http://www.lettuceladies.com/) :)
 
-# Dependencies
-
-**you will need to install these dependencies in order to** *hack* **lettuce** :)
-all them are used within lettuce tests
-
-## you could use a virtualenv:
-
-    > mkvirtualenv lettuce
-    > workon lettuce
-    > pip install -r requirements.txt
-
-## or just install manually:
-
-    > sudo pip install -r requirements.txt
-
-## or do it really from scratch:
-
-* [nose](http://code.google.com/p/python-nose/)
-    > [sudo] pip install nose
-* [mox](http://code.google.com/p/pymox/)
-    > [sudo] pip install mox
-* [sphinx](http://sphinx.pocoo.org/)
-    > [sudo] pip install sphinx
-* [lxml](http://codespeak.net/lxml/)
-    > [sudo] pip install lxml
-* [tornado](http://tornadoweb.org/)
-    > [sudo] pip install tornado
-* [django](http://djangoproject.com/)
-    > [sudo] pip install django
-
-# Contributing
-
-1. fork and clone the project
-2. install the dependencies above
-3. run the tests with make:
-    > make unit functional integration doctest
-4. hack at will
-5. commit, push etc
-6. send a pull request
-
-## keep in mind
-
-![your lack of tests if disturbing the force](http://farm3.static.flickr.com/2248/2282734669_a7f431e660_o.jpg)
-
-### that lettuce is a testing software, patches and pull requests must come with automated tests, and if suitable, with proper documentation.
-
 # mailing list
 
 ## for users
