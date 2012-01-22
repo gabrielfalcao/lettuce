@@ -20,6 +20,7 @@ Table of contents
 
    install
    testing
+   documentation
 
 Keep in mind
 ============
