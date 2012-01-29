@@ -1,8 +1,9 @@
 .. _index:
 .. rubric:: All you need to know, from leaves to root
 
+########
 nutshell
-========
+########
 
 **install it**
 
@@ -56,8 +57,9 @@ nutshell
 
    user@machine:~/Projects/my-project$ lettuce features/
 
+##################
 getting involved !
-==================
+##################
 
 **github project page**
 
@@ -83,15 +85,17 @@ Fork it, propose features, explore the code
 
 `support lettuce development <http://pledgie.com/campaigns/10604>`_
 
+#########
 hands on!
-=========
+#########
 
 Is this your first experience with Lettuce ?!?
 
 So, why don't you go straight to the :ref:`quick start tutorial <tutorial-simple>` ?!
 
+############
 introduction
-============
+############
 
 **what is Lettuce, and what it does**
 
@@ -99,12 +103,13 @@ introduction
     * :ref:`installation <intro-install>`
 
 what the feature ?!
--------------------
+*******************
 
     * :ref:`understand the terms behind Lettuce <intro-wtf>`
 
+###########
 walkthrough
-===========
+###########
 
     * :ref:`write your first feature <tutorial-simple>`
     * :ref:`handling data with tables <tutorial-tables>`
@@ -112,13 +117,15 @@ walkthrough
     * :ref:`don't repeat yourself, meet scenario outlines <tutorial-scenario-outlines>`
     * :ref:`clean up your spec definitions, calling one step from another <tutorial-steps-from-step-definitions>`
 
+##########
 integrate!
-==========
+##########
 
     * :ref:`Lettuce and Django <recipes-django-lxml>`, for the sake of web development fun
 
+###########
 furthermore
-===========
+###########
 
 **reference and concepts**
 
@@ -127,8 +134,9 @@ furthermore
     * :ref:`terrain, world and hooks <reference-terrain>`, stuff about setting up a environment for lettuce
     * :ref:`language support <reference-languages>`
 
+#######
 recipes
-=======
+#######
 
 **make your own salad**
 

@@ -1,7 +1,8 @@
 .. _reference-cli:
 
+################
 the command line
-================
+################
 
 Lettuce is used as a command line utility, it means that currently the
 only way to use it is through a shell.
@@ -18,8 +19,9 @@ somewhere in your project
 The difference between them is that within Django you have more
 options, but both ways have these common options:
 
+*******************************
 running a specific feature file
--------------------------------
+*******************************
 
 .. highlight:: bash
 
@@ -30,8 +32,9 @@ running a specific feature file
 
 With this option, your feature can even be out of the default ``features`` folder.
 
+******************************************************
 running only some scenarios of a specific feature file
-------------------------------------------------------
+******************************************************
 
 .. highlight:: bash
 
@@ -42,8 +45,9 @@ running only some scenarios of a specific feature file
 
 This will run the scenarios 3, 5 and 9 from file ``path/to/some/file.feature``
 
+*********************************************
 running only some scenarios all feature files
----------------------------------------------
+*********************************************
 
 Maybe you can find it senseless, but it works like that, and does not hurt so far :)
 
@@ -58,11 +62,10 @@ Yeah, guess what?
 This command will run the scenarios 3, 5 and 9 of all feature files living on ``myproj/features`` folder.
 
 verbosity levels
-----------------
-
+================
 
 level 1 - dots for each feature
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------
 
 .. highlight:: bash
 
@@ -100,7 +103,7 @@ The output will be:
    3 steps (3 passed)
 
 level 2 - scenario names
-~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------
 
 .. highlight:: bash
 
@@ -142,7 +145,7 @@ The output will be:
    5 steps (4 passed)
 
 level 3 - full feature print, but colorless
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------------------------------------
 
 .. highlight:: bash
 
@@ -203,7 +206,7 @@ Your output will look like:
         assert False, 'This step must be implemented'
 
 level 4 - full feature print, but colorful
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------------
 
 This mode is almost **exactly** the same of level 3, the difference is
 that it's colorful.
@@ -218,7 +221,7 @@ that it's colorful.
    levels 1, 2 or 3, so that the output won't look messy.
 
 getting help from shell
------------------------
+=======================
 
 .. highlight:: bash
 

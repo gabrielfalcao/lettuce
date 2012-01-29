@@ -1,8 +1,8 @@
 .. _intro-wtf:
 
-=====================
+#####################
 What the f** eature ?
-=====================
+#####################
 
 Unless you are used to Cucumber_ nomenclature, you may be wondering
 about the terms that surround Lettuce concepts.
@@ -10,8 +10,9 @@ about the terms that surround Lettuce concepts.
 If this is your case, this introduction will guide you through the
 very basic keywords that cover Lettuce.
 
+********
 Features
-========
+********
 
 Since Lettuce is used to test the behavior of a project, the behavior is broken 
 up in to features of the system.
@@ -84,14 +85,15 @@ In the feature above we can notice a few elements, for instance:
        When I save the data
        Then I get the error: "000 is a invalid phone number"
 
+*********
 Scenarios
-=========
+*********
 
 One or more scenarios compose a feature. There are two kinds of
 scenarios:
 
 Simple
-~~~~~~
+======
 
 The simple scenarios are composed by steps, no matter if they are
 simple or tabulated steps.
@@ -99,7 +101,7 @@ simple or tabulated steps.
 The feature above is composed by two simple scenarios.
 
 Outlined
-~~~~~~~~
+========
 
 Outlined scenarios are very handy because they help you to avoid
 repetition.
@@ -168,13 +170,14 @@ bellow
 As you can notice, scenario outlines are very useful and help you on
 avoiding text and code repetition
 
+*************************
 Steps and its definitions
-=========================
+*************************
 
 Comparable with Scenarios, Steps comes in two kinds:
 
 Simple steps
-~~~~~~~~~~~~
+============
 
 Simple steps are actually simple and they are related to the step
 definitions inside the scenarios.
@@ -188,7 +191,7 @@ For instance, a simple step may look like this::
     Given I go to the conference website
 
 Tabular steps
-~~~~~~~~~~~~~
+=============
 
 Analog to Outlined Scenarios, the tabular steps are very useful, and
 avoid repetition of text.

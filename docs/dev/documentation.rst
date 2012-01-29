@@ -101,29 +101,67 @@ On pages which are quite long, use links and references footnotes with the
 
 This :doc:`documentation` page uses this syntax.
 
-*******
-Recipes
-*******
-
+**************
 Install Sphinx
-==============
+**************
 
 `Python-sphinx`_ installation is covered in :doc:`/dev/install`.
 
 In other cases, please refer to `Python-sphinx`_ documentation.
 
+****************************
 Export documentation to HTML
-============================
+****************************
+
+* Install `Python-sphinx`_.
+* Make sure sphinx-build is in your shell's $PATH. If you are using virtualenv
+  as told in :doc:`/dev/install`, then **activate your virtual environment**.
+* Go to lettuce folder and use the provided Makefile:
+
+  .. highlight:: sh
+
+  ::
+
+    make documentation
+
+* HTML documentation is exported to docs/_build/html/.
+
+*************
+Use doctests!
+*************
+
+This documentation uses the `Sphinx's doctest extension`_.
+
+Write doctests
+==============
+
+Here is a RST code sample to write doctests. You can find some doctests in
+:doc:`/reference/terrain`.
+
+.. highlight:: rst
+
+::
+
+  .. highlight:: python
+
+  .. doctest::
+
+     >>> print "Hello world!"
+     Hello world!
+
+See `Sphinx's doctest extension`_ and `Python's doctest`_ documentations for
+details.
+
+Run doctests
+============
+
+Go to lettuce folder and use the provided Makefile:
 
 .. highlight:: sh
 
 ::
 
-  cd docs/
-  make html
-  cd ..
-
-HTML documentation is exported to docs/_build/html/.
+  make doctests
 
 **********
 References
@@ -133,3 +171,5 @@ References
 
 .. _`Python-sphinx`: http://sphinx.pocoo.org/
 .. _`reStructuredText`: http://docutils.sourceforge.net/rst.html
+.. _`Sphinx's doctest extension`: http://sphinx.pocoo.org/ext/doctest.html#module-sphinx.ext.doctest
+.. _`Python's doctest`: http://docs.python.org/library/doctest.html
