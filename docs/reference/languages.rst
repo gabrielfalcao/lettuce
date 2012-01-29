@@ -1,7 +1,8 @@
 .. _reference-languages:
 
+################
 language support
-================
+################
 
 Lettuce currently supports two languages:
 
@@ -11,8 +12,9 @@ Lettuce currently supports two languages:
 Although it's only about writing tests since the current version
 does output only in English.
 
+***************************************
 writing features in a specific language
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+***************************************
 
 You can tell lettuce the language of a feature file through adding a comment in the first line of the file, using the following syntax:
 
@@ -23,7 +25,7 @@ You can tell lettuce the language of a feature file through adding a comment in 
    # language: <code>
 
 english example
-^^^^^^^^^^^^^^^
+===============
 
 .. highlight:: ruby
 
@@ -36,7 +38,7 @@ english example
           Then it must be parsed with proper english keywords
 
 brazilian portuguese example
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+============================
 
 .. highlight:: ruby
 
@@ -48,14 +50,15 @@ brazilian portuguese example
           Dado que eu crio um arquivo que começa com "# language: pt-br"
           Então ele deve ser interpretado com as devidas palavras-chave brasileiras
 
+*********************************
 adding support to other languages
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*********************************
 
 We love contribution, so if you want to bring lettuce to your native
 language there is a single and simple way.
 
 fetch the code
-^^^^^^^^^^^^^^
+==============
 
 First of all, you must have git_ control version installed in your machine.
 
@@ -117,7 +120,7 @@ Instead of::
        | Mary | 53  |
 
 add your translation
-^^^^^^^^^^^^^^^^^^^^
+====================
 
 Now you can add your own language to lettuce, save the ``languages.py`` file and commit in the source control with.
 

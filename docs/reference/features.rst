@@ -1,7 +1,8 @@
 .. _reference-features:
 
+#######################################
 features, scenarios and steps reference
-=======================================
+#######################################
 
 Features, scenarios and steps are python objects within lettuce's
 feature engine.
@@ -33,11 +34,12 @@ consider that there is a feature in a file called ``some.feature``
 
 .. _feature-class:
 
+*******
 Feature
-~~~~~~~
+*******
 
 Feature.name
-^^^^^^^^^^^^
+============
 
 A string containing the name of the feature
 
@@ -48,7 +50,7 @@ A string containing the name of the feature
     feature.name == 'some feature'
 
 Feature.scenarios
-^^^^^^^^^^^^^^^^^
+=================
 
 A list of scenario objects
 
@@ -61,7 +63,7 @@ The attribute ``scenarios`` could be used as follows
     feature.scenarios[0].name == 'try out something'
 
 Feature.described_at
-^^^^^^^^^^^^^^^^^^^^
+====================
 
 A FeatureDescription object, has the file and line which the feature
 was described. Lettuce uses it to output those metadata.
@@ -81,7 +83,7 @@ The attribute ``described_at`` could be used as follows
     feature.described_at.description_at == (6, 7, 8)
 
 Feature.max_length
-^^^^^^^^^^^^^^^^^^
+==================
 
 A property that calculates the maximum length of all lines that built
 the feature.
@@ -96,7 +98,7 @@ Example:
     feature.max_length == 21
 
 Feature.get_head
-^^^^^^^^^^^^^^^^
+================
 
 Does represent the feature with its first representation in current
 language followed by a colon and the feature name.
@@ -133,46 +135,48 @@ Then, ``Feature.get_head()`` would give:
 
 .. _total-result:
 
+***********
 TotalResult
-~~~~~~~~~~~
+***********
 
 TotalResult.features_ran
-^^^^^^^^^^^^^^^^^^^^^^^^
+========================
 
 Integer, the total of features ran
 
 TotalResult.features_passed
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+===========================
 
 Integer, the total of features passed
 
 TotalResult.scenarios_ran
-^^^^^^^^^^^^^^^^^^^^^^^^^
+=========================
 
 Integer, the total of scenarios ran
 
 TotalResult.scenarios_passed
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+============================
 
 Integer, the total of scenarios passed
 
 TotalResult.steps
-^^^^^^^^^^^^^^^^^
+=================
 
 Integer, the number of steps that were supposed to run
 
 TotalResult.proposed_definitions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+================================
 
 A list of :ref:`step-class` that have no :ref:`step-definition`
 
 .. _scenario-class:
 
+********
 Scenario
-~~~~~~~~
+********
 
 Scenario.steps
-^^^^^^^^^^^^^^
+==============
 
 A list of scenario objects
 
@@ -186,11 +190,12 @@ The attribute ``scenarios`` could be used as follows
 
 .. _step-class:
 
+****
 Step
-~~~~
+****
 
 Step.sentence
-^^^^^^^^^^^^^
+=============
 
 The string that represents the step
 
@@ -203,7 +208,7 @@ The string that represents the step
 .. _step-definition:
 
 step definition
-~~~~~~~~~~~~~~~
+===============
 
 A decorator that can be used on any python function, takes a regex string as parameter, so that the function can me matched against steps.
 

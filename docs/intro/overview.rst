@@ -1,11 +1,12 @@
 .. _intro-overview:
 
-========
+########
 Overview
-========
+########
 
+******
 On BDD
-======
+******
 
 Behaviour-driven development is a very good approach for maintaining
 the workflow plain, so you only spend time with what really matters:
@@ -31,8 +32,9 @@ outside-in testing development. With this approach you can build your
 software starting with the most external layer, and go deeper until
 reach unitary tests.
 
+*******************
 Introducing Lettuce
-===================
+*******************
 
 Lettuce is a very simple BDD tool based on the Cucumber, which
 currently has many more features than Lettuce.
@@ -40,16 +42,18 @@ currently has many more features than Lettuce.
 Lettuce aims the most common tasks on BDD and it focus specially on
 those that make BDD so fun :)
 
+**************
 Lettuce pragma
-==============
+**************
 
 Provide to the developers the ability of describing :ref:`features <intro-wtf>` in a natural language, by creating one or more scenarios
 
 Each scenario has one possible behaviour of the feature you want to implement.
 To make the scenarios run python code, it is necessary to define :ref:`steps <reference-features>`.
 
+*********
 Hands on!
-=========
+*********
 
 This documentation will drive you through all the Lettuce features.
 When you feel a bit comfortable, go to the :ref:`first part of the tutorial <tutorial-simple>`, or go further on the :ref:`reference <reference-features>`.

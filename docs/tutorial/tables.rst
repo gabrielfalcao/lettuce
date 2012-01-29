@@ -1,7 +1,8 @@
 .. _tutorial-tables:
 
+#########################
 handling data with tables
-=========================
+#########################
 
 Let's imagine writing a MVC application. While writing the tests
 you will stumble in to a situation where there is a few models

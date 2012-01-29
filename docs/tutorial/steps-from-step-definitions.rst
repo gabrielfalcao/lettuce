@@ -1,7 +1,8 @@
 .. _tutorial-steps-from-step-definitions:
 
+###################################
 calling steps from step definitions
-===================================
+###################################
 
 Our tests should be as expressive as possible. However, we also want to re-use steps that we've seen before. With the tools we've used so far, you could end up with seriously long step definitions.
 
@@ -39,9 +40,10 @@ Lettuce affords you the ability to write such a "step of steps" with a set of he
         step.given('I go to the home page')
         step.given('I click the login button')
         # ... and so on.
-        
+
+***********************
 running blocks of steps
------------------------
+***********************
 
 It is sometimes even desirable to run blocks of steps, copy-and-pasted directly from Feature specifications. The ``Step.behave_as`` method lets you do this, and you can use ``str.format`` to fill in parameters dynamically. For example, we can write the above step definition like so:
 

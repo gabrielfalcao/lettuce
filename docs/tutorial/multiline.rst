@@ -1,7 +1,8 @@
 .. _tutorial-multiline:
 
+##################
 multi-line strings
-===========================
+##################
 
 Now imagine you are writing an application which manipulates
 strings. When writing the tests, you may find yourself wanting to put
