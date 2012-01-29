@@ -115,15 +115,18 @@ In other cases, please refer to `Python-sphinx`_ documentation.
 Export documentation to HTML
 ============================
 
-.. highlight:: sh
+* Install `Python-sphinx`_.
+* Make sure sphinx-build is in your shell's $PATH. If you are using virtualenv
+  as told in :doc:`/dev/install`, then **activate your virtual environment**.
+* Go to lettuce folder and use the provided Makefile:
 
-::
+  .. highlight:: sh
 
-  cd docs/
-  make html
-  cd ..
+  ::
 
-HTML documentation is exported to docs/_build/html/.
+    make documentation
+
+* HTML documentation is exported to docs/_build/html/.
 
 **********
 References
