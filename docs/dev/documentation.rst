@@ -101,19 +101,17 @@ On pages which are quite long, use links and references footnotes with the
 
 This :doc:`documentation` page uses this syntax.
 
-*******
-Recipes
-*******
-
+**************
 Install Sphinx
-==============
+**************
 
 `Python-sphinx`_ installation is covered in :doc:`/dev/install`.
 
 In other cases, please refer to `Python-sphinx`_ documentation.
 
+****************************
 Export documentation to HTML
-============================
+****************************
 
 * Install `Python-sphinx`_.
 * Make sure sphinx-build is in your shell's $PATH. If you are using virtualenv
