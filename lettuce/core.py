@@ -119,7 +119,7 @@ class StepDefinition(object):
         except Exception, e:
             self.step.failed = True
             self.step.why = ReasonToFail(e)
-            raise e
+            raise
 
         return ret
 
