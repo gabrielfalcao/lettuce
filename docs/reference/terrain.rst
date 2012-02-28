@@ -1,15 +1,17 @@
 .. _reference-terrain:
 
+#############
 the "terrain"
-=============
+#############
 
 Terrain is a "pun" with lettuce and its "living place", its about
 setup and teardown, and general hacking on your lettuce tests.
 
 .. _terrain-py:
 
+**********
 terrain.py
-~~~~~~~~~~
+**********
 
 By convention lettuce tries do load a file called ``terrain.py`` located
 at the current directory.
@@ -25,7 +27,7 @@ hooks, and put things into lettuce "world".
    :ref:`the-django-command`.
 
 in practice
-^^^^^^^^^^^
+===========
 
 Try out this file layout:
 
@@ -52,8 +54,9 @@ And notice ``terrain.py`` will be loaded before anything
 
 .. _lettuce-world:
 
+*****
 world
-~~~~~
+*****
 
 For the sake of turning easier and funnier to write tests, lettuce
 "violates" some principles of good design in python, such as avoiding
@@ -62,7 +65,7 @@ implicity and using global stuff.
 The "world" concept of lettuce is mostly about "global stuff".
 
 in practice
-^^^^^^^^^^^
+===========
 
 Imagine a file located somewhere that will be imported by your
 application before lettuce start running tests:
@@ -98,7 +101,7 @@ And the feature could have something like:
         When I exemplify "world" by seeing that some variable contains "yay!"
 
 world.absorb
-^^^^^^^^^^^^
+============
 
 It can be really useful to put functions and/or classes in **lettuce.world**
 
@@ -163,7 +166,7 @@ And even with lambdas, **but in this case you need to name it**
    assert world.optimist_function() == 'yeah'
 
 world.spew
-^^^^^^^^^^
+==========
 
 Well, if you read the topic above, you may be guessing: "if I keep
 stashing things in lettuce.world, it may bloat it sometime, or confuse
@@ -187,8 +190,9 @@ For those cases after **"absorbing"** something, world can also **"spew"** it.
 
    assert not hasattr(world, 'generic_function')
 
+*****
 hooks
-~~~~~
+*****
 
 Lettuce has hooks that are called sequentially before and after each
 action
@@ -202,7 +206,7 @@ anything you want, for example
 Let's see it from outside in
 
 @before.all
-^^^^^^^^^^^
+===========
 
 This hook is ran before lettuce look for and load feature files
 
@@ -220,7 +224,7 @@ The decorated function takes **NO** parameters
        print "Lettuce will start to run tests right now..."
 
 @after.all
-^^^^^^^^^^
+==========
 
 This hook is ran after lettuce run all features, scenarios and
 steps
@@ -243,7 +247,7 @@ that you can use the result statistics somehow
        print "Goodbye!"
 
 @before.each_feature
-^^^^^^^^^^^^^^^^^^^^
+====================
 
 This hook is ran before lettuce run each feature
 
@@ -265,7 +269,7 @@ that you can use it to fetch scenarios and steps inside.
        )
 
 @after.each_feature
-^^^^^^^^^^^^^^^^^^^
+===================
 
 This hooks behaves in the same way @before.each_feature does, except
 by the fact that its ran *after* lettuce run the feature.
@@ -281,7 +285,7 @@ by the fact that its ran *after* lettuce run the feature.
        print "The feature %r just has just ran" % feature.name
 
 @before.each_scenario
-^^^^^^^^^^^^^^^^^^^^^
+=====================
 
 This hook is ran before lettuce run each scenario
 
@@ -301,7 +305,7 @@ that you can use it to fetch steps inside.
        populate_test_database()
 
 @after.each_scenario
-^^^^^^^^^^^^^^^^^^^^
+====================
 
 This hooks behaves in the same way @before.each_scenario does, except
 by the fact that its ran *after* lettuce run the scenario.
@@ -317,7 +321,7 @@ by the fact that its ran *after* lettuce run the scenario.
        models.reset_all_data()
 
 @before.each_step
-^^^^^^^^^^^^^^^^^
+=================
 
 This hook is ran before lettuce run each step
 
@@ -354,13 +358,14 @@ by the fact that its ran *after* lettuce run the step.
        if not step.hashes:
           print "no tables in the step"
 
+*********************
 django-specific hooks
-~~~~~~~~~~~~~~~~~~~~~
+*********************
 
 Since lettuce officially supports Django_, there are a few specific hooks that help on setting up your test suite on it.
 
 @before.harvest
-^^^^^^^^^^^^^^^
+===============
 
 This hook is ran before lettuce start harvesting your Django tests. It
 can be very useful for setting up browser drivers (such as selenium),
@@ -382,7 +387,7 @@ the ``harvest`` management command.
            world.browser.start()
 
 @after.harvest
-^^^^^^^^^^^^^^
+==============
 
 This hook is ran right after lettuce finish harvesting your Django
 tests. It can be very useful for shutting down previously started
@@ -399,7 +404,7 @@ The decorated function takes a list of :ref:`total-result` objects.
        world.browser.stop()
 
 @before.each_app
-^^^^^^^^^^^^^^^^
+================
 
 This hook is ran before lettuce run each Django_ app.
 
@@ -416,7 +421,7 @@ The decorated function takes the python module that corresponds to the current a
            Post.objects.create(title='Nice example', body='I like writting!')
 
 @after.each_app
-^^^^^^^^^^^^^^^
+===============
 
 This hook is ran after lettuce run each Django_ app.
 
@@ -439,7 +444,7 @@ The decorated function takes two arguments:
                Post.objects.all()
 
 @before.runserver and @after.runserver
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+======================================
 
 These hooks are ran right before, and after lettuce starts up the built-in http server.
 
@@ -462,7 +467,7 @@ The decorated function takes a ``lettuce.django.server.ThreadedServer`` object.
        print "goodbye, see you soon"
 
 @before.handle_request and @after.handle_request
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+================================================
 
 These hooks are ran right before, and after lettuce's built-in HTTP server responds to a request.
 

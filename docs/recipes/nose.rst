@@ -1,7 +1,8 @@
 .. _recipes-nose:
 
+################################################
 Lettuce recipe: Using nose for pretty assertions
-================================================
+################################################
 
 Lettuce uses python's builtin exception :exc:`AssertionError` to mark
 tests as failed.
