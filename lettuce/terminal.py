@@ -74,9 +74,6 @@ def get_terminal_size_unix():
         except:
             pass
     if not cr:
-        try:
-            cr = (os.getenv('LINES'), os.getenv('COLUMNS'))
-        except:
-            cr = (25, 80)
+        cr = (os.getenv('LINES', 25), os.getenv('COLUMNS', 80))
 
     return int(cr[1]), int(cr[0])
