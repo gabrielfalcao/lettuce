@@ -175,6 +175,7 @@ Scenario: Adding some students to my university database
 
 """
 
+from sure import that
 from lettuce.core import Step
 from lettuce.core import Scenario
 from lettuce.core import Feature
@@ -300,7 +301,7 @@ def test_scenario_tables_are_solved_against_outlines():
             [],
             []
         ]
-    
+
     scenario = Scenario.from_string(OUTLINED_SCENARIO_WITH_SUBSTITUTIONS_IN_TABLE)
     for step, expected_hashes in zip(scenario.solved_steps, expected_hashes_per_step):
         assert_equals(type(step), Step)
@@ -431,3 +432,30 @@ def test_commented_scenarios():
     scenario = Scenario.from_string(COMMENTED_SCENARIO)
     assert_equals(scenario.name, u'Adding some students to my university database')
     assert_equals(len(scenario.steps), 4)
+
+
+def test_scenario_has_tag():
+    "A scenario object should be able to find at least one tag " \
+       "on the first line"
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=('@onetag\n' + SCENARIO1.strip()))
+
+    assert that(scenario.tags).deep_equals(['onetag'])
+
+
+def test_scenario_has_tags_singleline():
+    "A scenario object should be able to find many tags " \
+       "on the first line"
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=(
+            '@onetag @another @$%^&even-weird_chars \n' + SCENARIO1.strip()))
+
+    assert that(scenario.tags).deep_equals([
+        'onetag',
+        'another',
+        '$%^&even-weird_chars',
+    ])

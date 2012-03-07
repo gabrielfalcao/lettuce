@@ -5,3 +5,4 @@ sphinx
 lxml
 tornado
 coverage
+sure>=0.10.0

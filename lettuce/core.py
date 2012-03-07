@@ -18,6 +18,7 @@
 import re
 import codecs
 import unicodedata
+from itertools import chain
 from copy import deepcopy
 from lettuce import strings
 from lettuce import languages
@@ -499,6 +500,7 @@ class Scenario(object):
 
         self.name = name
         self.language = language
+        self.remaining_lines = remaining_lines
         self.steps = self._parse_remaining_lines(remaining_lines,
                                                  with_file,
                                                  original_string)
@@ -516,6 +518,11 @@ class Scenario(object):
         self.solved_steps = list(self._resolve_steps(
             self.steps, self.outlines, with_file, original_string))
         self._add_myself_to_steps()
+
+        if original_string and '@' in self.original_string:
+            self.tags = self._find_tags()
+        else:
+            self.tags = []
 
     @property
     def max_length(self):
@@ -626,6 +633,21 @@ class Scenario(object):
 
         for step in self.solved_steps:
             step.scenario = self
+
+    def _find_tags(self):
+        first_line = self.remaining_lines[0]
+        trim = lambda x: x.strip()
+        old_lines = map(trim, self.original_string.splitlines())
+        tag_lines = []
+        if first_line in old_lines:
+            tag_lines = old_lines[:old_lines.index(first_line)-1]
+
+        if tag_lines:
+            return list(chain(*map(self._extract_tag, tag_lines)))
+
+    def _extract_tag(self, item):
+        regex = re.compile(r'[@](\S+)')
+        return regex.findall(item)
 
     def _resolve_steps(self, steps, outlines, with_file, original_string):
         for outline in outlines:

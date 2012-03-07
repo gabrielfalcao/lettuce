@@ -30,7 +30,7 @@ def get_packages():
 
     return packages
 
-required_modules = []
+required_modules = ['sure']
 
 if sys.version_info[:2] < (2, 6):
     required_modules.append('multiprocessing')
@@ -40,10 +40,10 @@ setup(name='lettuce',
     description='Behaviour Driven Development for python',
     author=u'Gabriel Falcao',
     author_email='gabriel@nacaolivre.org',
-    url='http://github.com/gabrielfalcao/lettuce',
+    url='http://lettuce.it',
     packages=get_packages(),
     install_requires=required_modules,
     entry_points={
-        'console_scripts': ['lettuce = lettuce.lettuce_cli:main'],
+        'console_scripts': ['lettuce = lettuce.bin:main'],
     },
 )

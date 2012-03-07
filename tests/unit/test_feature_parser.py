@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+from sure import that
 from lettuce.core import Scenario
 from lettuce.core import Feature
 from nose.tools import assert_equals
@@ -146,6 +146,16 @@ Feature: Big sentence
     #   Scenario: Regular numbers
     #     Given a huge sentence, that have so many characters
     #     And another one, very tiny
+"""
+
+FEATURE11 = """
+Feature: Yay tags
+  @many @other
+  @basic
+  @tags @here @:)
+  Scenario: Holy tag, Batman
+    Given this scenario has tags
+    Then it can be inspected from within the object
 """
 
 
@@ -282,14 +292,16 @@ def test_feature_max_length_on_scenario_outline_keys():
     assert_equals(feature1.max_length, 68)
     assert_equals(feature2.max_length, 68)
 
+
 def test_description_on_long_named_feature():
     "Can parse the description on long named features"
     feature = Feature.from_string(FEATURE3)
     assert_equals(
         feature.description,
         "In order to describe my features\n"
-        "I want to add description on them"
+        "I want to add description on them",
     )
+
 
 def test_description_on_big_sentenced_steps():
     "Can parse the description on long sentenced steps"
@@ -298,11 +310,22 @@ def test_description_on_big_sentenced_steps():
         feature.description,
         "As a clever guy\n"
         "I want to describe this Feature\n"
-        "So that I can take care of my Scenario"
+        "So that I can take care of my Scenario",
     )
+
 
 def test_comments():
     "It should ignore lines that start with #, despite white spaces"
     feature = Feature.from_string(FEATURE10)
 
     assert_equals(feature.max_length, 55)
+
+
+def test_single_scenario_single_tag():
+    "Features should have their scenarios parsed with tags"
+    feature = Feature.from_string(FEATURE11)
+
+    first_scenario = feature.scenarios[0]
+
+    assert that(first_scenario.tags).deep_equals([
+        'many', 'other', 'basic', 'tags', 'here', ':)'])
