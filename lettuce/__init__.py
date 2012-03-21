@@ -20,6 +20,7 @@ release = 'barium'
 
 import os
 import sys
+import traceback
 from datetime import datetime
 
 from lettuce import fs
