@@ -35,6 +35,9 @@ def enable(filename=None):
 
     doc = minidom.Document()
     root = doc.createElement("testsuite")
+    root.setAttribute("name", "lettuce")
+    root.setAttribute("hostname", "localhost")
+    root.setAttribute("timestamp", datetime.now().strftime("%Y-%m-%dT%H:%M:%S"))
     output_filename = filename or "lettucetests.xml"
 
     @before.each_step
@@ -60,6 +63,7 @@ def enable(filename=None):
             cdata = doc.createCDATASection(step.why.traceback)
             failure = doc.createElement("failure")
             failure.setAttribute("message", step.why.cause)
+            failure.setAttribute("type", step.why.exception.__class__.__name__)
             failure.appendChild(cdata)
             tc.appendChild(failure)
 
@@ -90,6 +94,8 @@ def enable(filename=None):
     @after.all
     def output_xml(total):
         root.setAttribute("tests", str(total.steps))
-        root.setAttribute("failed", str(total.steps_failed))
+        root.setAttribute("failures", str(total.steps_failed))
+        root.setAttribute("errors", '0')
+        root.setAttribute("time", '0')
         doc.appendChild(root)
         wrt_output(output_filename, doc.toxml())

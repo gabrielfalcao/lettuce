@@ -68,7 +68,7 @@ def test_xunit_output_with_one_error():
         assert_xsd_valid(filename, content)
         root = etree.fromstring(content)
         assert_equals(root.get("tests"), "2")
-        assert_equals(root.get("failed"), "1")
+        assert_equals(root.get("failures"), "1")
         assert_equals(len(root.getchildren()), 2)
 
         passed, failed = root.findall("testcase")
