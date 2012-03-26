@@ -19,6 +19,7 @@
 import sys
 import os
 import lettuce
+from StringIO import StringIO
 
 from nose.tools import assert_equals, assert_true, with_setup
 from lettuce import registry
@@ -28,12 +29,21 @@ from lxml import etree
 from tests.functional.test_runner import feature_name
 from tests.asserts import prepare_stdout
 
+
+def assert_xsd_valid(filename, content):
+    xmlschema = etree.XMLSchema(etree.parse(
+        open('tests/functional/xunit.xsd')
+    ))
+    xmlschema.assertValid(etree.parse(StringIO(content)))
+
+
 @with_setup(prepare_stdout, registry.clear)
 def test_xunit_output_with_no_errors():
     'Test xunit output with no errors'
     called = []
     def assert_correct_xml(filename, content):
         called.append(True)
+        assert_xsd_valid(filename, content)
         root = etree.fromstring(content)
         assert_equals(root.get("tests"), "1")
         assert_equals(len(root.getchildren()), 1)
@@ -55,6 +65,7 @@ def test_xunit_output_with_one_error():
     called = []
     def assert_correct_xml(filename, content):
         called.append(True)
+        assert_xsd_valid(filename, content)
         root = etree.fromstring(content)
         assert_equals(root.get("tests"), "2")
         assert_equals(root.get("failed"), "1")
@@ -81,6 +92,7 @@ def test_xunit_output_with_different_filename():
     called = []
     def assert_correct_xml(filename, content):
         called.append(True)
+        assert_xsd_valid(filename, content)
         assert_equals(filename, "custom_filename.xml")
 
     old = xunit_output.wrt_output
