@@ -196,6 +196,14 @@ Feature: correct matching
     Then it can be inspected from within the object
 """
 
+FEATURE14 = """
+Feature:    Extra whitespace feature
+  I want to match scenarios with extra whitespace
+  Scenario:    Extra whitespace scenario
+    Given this scenario, which has extra leading whitespace
+    Then the scenario definition should still match
+"""
+
 
 def test_feature_has_repr():
     "Feature implements __repr__ nicely"
@@ -384,3 +392,16 @@ def test_single_scenario_many_scenarios():
 
     last_scenario = feature.scenarios[3]
     assert that(last_scenario.tags).equals([])
+
+
+def test_scenarios_with_extra_whitespace():
+    "Make sure that extra leading whitespace is ignored"
+    feature = Feature.from_string(FEATURE14)
+
+    assert_equals(type(feature.scenarios), list)
+    assert_equals(len(feature.scenarios), 1, "It should have 1 scenario")
+    assert_equals(feature.name, "Extra whitespace feature")
+
+    scenario = feature.scenarios[0]
+    assert_equals(type(scenario), Scenario)
+    assert_equals(scenario.name, "Extra whitespace scenario")
