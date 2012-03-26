@@ -53,6 +53,7 @@ class FeatureLoader(object):
 
     def find_feature_files(self):
         paths = FileSystem.locate(self.base_dir, "*.feature")
+        paths.sort()
         return paths
 
 
