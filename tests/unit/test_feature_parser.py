@@ -158,6 +158,23 @@ Feature: Yay tags
     Then it can be inspected from within the object
 """
 
+FEATURE12 = """
+Feature: Yay tags and many scenarios
+  @many @other
+  @basic
+  @tags @here @:)
+  Scenario: Holy tag, Batman
+    Given this scenario has tags
+    Then it can be inspected from within the object
+
+  @only
+  @a-few @tags
+  Scenario: Holy guacamole
+    Given this scenario has tags
+    Then it can be inspected from within the object
+
+"""
+
 
 def test_feature_has_repr():
     "Feature implements __repr__ nicely"
@@ -321,11 +338,26 @@ def test_comments():
     assert_equals(feature.max_length, 55)
 
 
-def test_single_scenario_single_tag():
-    "Features should have their scenarios parsed with tags"
+def test_single_scenario_single_scenario():
+    "Features should have at least the first scenario parsed with tags"
     feature = Feature.from_string(FEATURE11)
 
     first_scenario = feature.scenarios[0]
 
     assert that(first_scenario.tags).deep_equals([
         'many', 'other', 'basic', 'tags', 'here', ':)'])
+
+
+def test_single_scenario_many_scenarios():
+    "Features should have their scenarios parsed with its respective tags"
+    feature = Feature.from_string(FEATURE12)
+
+    first_scenario = feature.scenarios[0]
+
+    assert that(first_scenario.tags).deep_equals([
+        'many', 'other', 'basic', 'tags', 'here', ':)'])
+
+    last_scenario = feature.scenarios[1]
+
+    assert that(last_scenario.tags).deep_equals([
+        'only', 'a-few', 'tags'])
