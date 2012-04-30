@@ -74,7 +74,7 @@ def remove_it(string, what):
 
 def column_width(string):
     l = 0
-    for c in string:
+    for c in unicode(string):
         if unicodedata.east_asian_width(c) in "WF":
             l += 2
         else:
