@@ -136,6 +136,13 @@ def test_column_width():
         10
     )
 
+def test_column_width_w_number_and_char():
+    "strings.column_width_w_number_and_char"
+    assert_equals(
+        strings.column_width( u"%s%c" % (u"4209", 0x4209)),
+        6
+    )
+    
 def test_rfill_simple():
     "strings.rfill simple case"
     assert_equals(
