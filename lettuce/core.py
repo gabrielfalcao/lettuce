@@ -780,7 +780,7 @@ class Feature(object):
                 'Features must have a name. e.g: "Feature: This is my name"')
 
         while lines:
-            matched = re.search(r'%s:(.*)' % language.feature, lines[0], re.I)
+            matched = re.search(r'(?:%s):(.*)' % language.feature, lines[0], re.I)
             if matched:
                 name = matched.groups()[0].strip()
                 break
