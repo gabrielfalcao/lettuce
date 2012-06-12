@@ -90,6 +90,10 @@ class Language(object):
         name = re.sub(r'^first_of_', u'', attr)
         return unicode(getattr(self, name, u'').split(u"|")[0])
 
+    @property
+    def non_capturable_scenario_separator(self):
+        return re.sub(r'^[(]', '(?:', self.scenario_separator)
+
     @classmethod
     def guess_from_string(cls, string):
         match = re.search(u"language:[ ]*([^\s]+)", string)
@@ -520,7 +524,7 @@ class Scenario(object):
         self._add_myself_to_steps()
 
         if original_string and '@' in self.original_string:
-            self.tags = self._find_tags()
+            self.tags = self._find_tags_in(original_string)
         else:
             self.tags = []
 
@@ -634,16 +638,21 @@ class Scenario(object):
         for step in self.solved_steps:
             step.scenario = self
 
-    def _find_tags(self):
-        first_line = self.remaining_lines[0]
-        trim = lambda x: x.strip()
-        old_lines = map(trim, self.original_string.splitlines())
-        tag_lines = []
-        if first_line in old_lines:
-            tag_lines = old_lines[:old_lines.index(first_line)-1]
+    def _find_tags_in(self, original_string):
+        previous_scenario_re = re.compile(ur"(?:%s.*)([@].*)%s: (%s)" % (
+            self.language.non_capturable_scenario_separator,
+            self.language.scenario_separator,
+            self.name), re.DOTALL)
 
-        if tag_lines:
-            return list(chain(*map(self._extract_tag, tag_lines)))
+        first_of_scenario_re = re.compile(ur"([@].*)%s: (%s)" % (
+            self.language.scenario_separator,
+            self.name), re.DOTALL)
+
+        for regex in (previous_scenario_re, first_of_scenario_re):
+            found = regex.search(original_string)
+            if found:
+                tag_lines = found.group().splitlines()
+                return list(chain(*map(self._extract_tag, tag_lines)))
 
     def _extract_tag(self, item):
         regex = re.compile(r'[@](\S+)')
