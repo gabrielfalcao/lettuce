@@ -216,6 +216,27 @@ def test_django_specifying_scenarios_to_run():
     FileSystem.popd()
 
 
+def test_django_specifying_scenarios_to_run_by_tag():
+    'django harvest can run only specified scenarios with ' \
+            '--tags or -t options'
+
+    FileSystem.pushd(current_directory, "django", "alfaces")
+
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --verbosity=3 --tag=fast -a foobar")
+    assert_equals(status, 0, out)
+
+    assert "3rd scenario" in out
+    assert "6th scenario" in out
+
+    assert "1st scenario" not in out
+    assert "2rd scenario" not in out
+    assert "4th scenario" not in out
+    assert "5th scenario" not in out
+
+    FileSystem.popd()
+
+
 def test_running_only_specified_features():
     'it can run only the specified features, passing the file path'
 

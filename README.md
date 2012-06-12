@@ -1,5 +1,5 @@
 # lettuce
-> Version 0.1.35 - barium
+> Version 0.2.0 - kryptonite
 
 ## On release names
 

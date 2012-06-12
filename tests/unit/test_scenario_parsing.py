@@ -506,3 +506,15 @@ def test_scenario_matches_tags_excluding_fuzzywuzzy():
         original_string=('@anothertag\n@another-tag\n' + SCENARIO1.strip()))
 
     assert not scenario.matches_tags(['-~anothertag'])
+
+
+def test_scenario_show_tags_in_its_representation():
+    ("Scenario#represented should show its tags")
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=('@slow\n@firefox\n@chrome\n' + SCENARIO1.strip()))
+
+    assert that(scenario.represented()).equals(
+        u'  @slow @firefox @chrome\n  '
+        'Scenario: Adding some students to my university database')

@@ -503,6 +503,7 @@ class Scenario(object):
                  language=None,
                  previous_scenario=None):
 
+        self.feature = None
         if not language:
             language = language()
 
@@ -743,9 +744,27 @@ class Scenario(object):
         else:
             prefix = make_prefix(self.language.first_of_scenario)
 
-        head = prefix + self.name
+        head_parts = []
+        if self.tags:
+            tags = ['@%s' % t for t in self.tags]
+            head_parts.append(u' ' * self.indentation)
+            head_parts.append(' '.join(tags) + '\n')
 
-        return strings.rfill(head, self.feature.max_length + 1, append=u'# %s:%d\n' % (self.described_at.file, self.described_at.line))
+        head_parts.append(prefix + self.name)
+
+        head = ''.join(head_parts)
+        appendix = ''
+        if self.described_at:
+            fmt = (self.described_at.file, self.described_at.line)
+            appendix = u'# %s:%d\n' % fmt
+
+        max_length = self.max_length
+        if self.feature:
+            max_length = self.feature.max_length
+
+        return strings.rfill(
+            head, max_length + 1,
+            append=appendix)
 
     def represent_examples(self):
         lines = strings.dicts_to_string(self.outlines, self.keys).splitlines()
@@ -903,12 +922,18 @@ class Feature(object):
     def _set_definition(self, definition):
         self.described_at = definition
 
+    def _strip_next_scenario_tags(self, string):
+        regex = re.compile(ur'(?:\s*[@]\S+\s*)+$', re.DOTALL)
+        stripped = regex.sub('', string)
+        return stripped or string
+
     def _parse_remaining_lines(self, lines, original_string, with_file=None):
         # replacing occurrences of Scenario Outline, with just "Scenario"
         joined = u"\n".join(lines[1:])
         scenario_prefix = u'%s:' % self.language.first_of_scenario
         regex = re.compile(
-            u"%s:\s" % self.language.scenario_separator, re.U | re.I)
+            u"%s:\s" % self.language.scenario_separator, re.U | re.I | re.DOTALL)
+
         joined = regex.sub(scenario_prefix, joined)
 
         parts = strings.split_wisely(joined, scenario_prefix)
@@ -931,7 +956,8 @@ class Feature(object):
 
         scenarios = []
         while upcoming_scenarios:
-            current = upcoming_scenarios.pop(0)
+            current = self._strip_next_scenario_tags(upcoming_scenarios.pop(0))
+
             previous_scenario = None
             has_previous = len(scenarios) > 0
 

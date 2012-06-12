@@ -9,15 +9,16 @@ from nose.tools import assert_equals
 def before_harvest(variables):
     assert_equals(variables.keys(), [
         'paths',
+        'args',
         'failed',
         'run_server',
         'verbosity',
-        'args',
+        'tags',
         'self',
         'apps_to_run',
         'apps_to_avoid',
-        'options'
-        ]
+        'options',
+        ],
     )
     print "before harvest"
 @after.harvest

@@ -55,6 +55,16 @@ class Command(BaseCommand):
         make_option('-s', '--scenarios', action='store', dest='scenarios', default=None,
             help='Comma separated list of scenarios to run'),
 
+        make_option("-t", "--tag",
+                    dest="tags",
+                    type="str",
+                    action='append',
+                    default=None,
+                    help='Tells lettuce to run the specified tags only; '
+                    'can be used multiple times to define more tags'
+                    '(prefixing tags with "-" will exclude them and '
+                    'prefixing with "~" will match approximate words)'),
+
         make_option('--with-xunit', action='store_true', dest='enable_xunit', default=False,
             help='Output JUnit XML test results to a file'),
 
@@ -87,6 +97,9 @@ class Command(BaseCommand):
         apps_to_run = tuple(options.get('apps', '').split(","))
         apps_to_avoid = tuple(options.get('avoid_apps', '').split(","))
         run_server = not options.get('no_server', False)
+        tags = options.get('tags', None)
+        if tags:
+            print "DEBUG", options
 
         paths = self.get_paths(args, apps_to_run, apps_to_avoid)
         if run_server:
@@ -113,7 +126,9 @@ class Command(BaseCommand):
 
                 runner = Runner(path, options.get('scenarios'), verbosity,
                                 enable_xunit=options.get('enable_xunit'),
-                                xunit_filename=options.get('xunit_file'))
+                                xunit_filename=options.get('xunit_file'),
+                                tags=tags)
+
                 result = runner.run()
                 if app_module is not None:
                     registry.call_hook('after_each', 'app', app_module, result)

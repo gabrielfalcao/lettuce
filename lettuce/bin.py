@@ -38,6 +38,15 @@ def main(args=sys.argv[1:]):
                       default=None,
                       help='Comma separated list of scenarios to run')
 
+    parser.add_option("-t", "--tag",
+                      dest="tags",
+                      default=None,
+                      action='append',
+                      help='Tells lettuce to run the specified tags only; '
+                      'can be used multiple times to define more tags'
+                      '(prefixing tags with "-" will exclude them and '
+                      'prefixing with "~" will match approximate words)')
+
     parser.add_option("--with-xunit",
                       dest="enable_xunit",
                       action="store_true",
@@ -66,6 +75,7 @@ def main(args=sys.argv[1:]):
         verbosity=options.verbosity,
         enable_xunit=options.enable_xunit,
         xunit_filename=options.xunit_file,
+        tags=options.tags,
     )
 
     result = runner.run()

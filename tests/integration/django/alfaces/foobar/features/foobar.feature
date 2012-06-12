@@ -6,6 +6,7 @@ Feature: Test the django app FOO BAR
   Scenario: 2nd scenario
     Then it works
 
+  @fast
   Scenario: 3rd scenario
     Then it works
 
@@ -15,5 +16,6 @@ Feature: Test the django app FOO BAR
   Scenario: 5th scenario
     Then it works
 
+  @fast
   Scenario: 6th scenario
     Then it works
