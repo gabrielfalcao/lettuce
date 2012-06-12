@@ -17,6 +17,7 @@
 
 import re
 import codecs
+from fuzzywuzzy import fuzz
 import unicodedata
 from itertools import chain
 from copy import deepcopy
@@ -496,8 +497,11 @@ class Scenario(object):
     indentation = 2
     table_indentation = indentation + 2
 
-    def __init__(self, name, remaining_lines, keys, outlines, with_file=None,
-                 original_string=None, language=None):
+    def __init__(self, name, remaining_lines, keys, outlines,
+                 with_file=None,
+                 original_string=None,
+                 language=None,
+                 previous_scenario=None):
 
         if not language:
             language = language()
@@ -513,6 +517,8 @@ class Scenario(object):
         self.with_file = with_file
         self.original_string = original_string
 
+        self.previous_scenario = previous_scenario
+
         if with_file and original_string:
             scenario_definition = ScenarioDescription(self, with_file,
                                                       original_string,
@@ -526,7 +532,7 @@ class Scenario(object):
         if original_string and '@' in self.original_string:
             self.tags = self._find_tags_in(original_string)
         else:
-            self.tags = []
+            self.tags = None
 
     @property
     def max_length(self):
@@ -571,6 +577,46 @@ class Scenario(object):
 
     def __repr__(self):
         return u'<Scenario: "%s">' % self.name
+
+    def matches_tags(self, tags):
+        if tags is None:
+            return True
+
+        if not self.tags:
+            return False
+
+        matched = []
+
+        for tag in self.tags:
+            if tag in tags:
+                return True
+
+        for tag in tags:
+            exclude = tag.startswith('-')
+            if exclude:
+                tag = tag[1:]
+
+            fuzzable = tag.startswith('~')
+            if fuzzable:
+                tag = tag[1:]
+
+            result = tag in self.tags
+            if fuzzable:
+                fuzzed = []
+                for internal_tag in self.tags:
+                    ratio = fuzz.ratio(tag, internal_tag)
+                    if exclude:
+                        fuzzed.append(ratio <= 80)
+                    else:
+                        fuzzed.append(ratio > 80)
+
+                result = any(fuzzed)
+            elif exclude:
+                result = tag not in self.tags
+
+            matched.append(result)
+
+        return all(matched)
 
     @property
     def evaluated(self):
@@ -639,20 +685,33 @@ class Scenario(object):
             step.scenario = self
 
     def _find_tags_in(self, original_string):
-        previous_scenario_re = re.compile(ur"(?:%s.*)([@].*)%s: (%s)" % (
-            self.language.non_capturable_scenario_separator,
+        broad_regex = re.compile(ur"([@].*)%s: (%s)" % (
             self.language.scenario_separator,
             self.name), re.DOTALL)
 
-        first_of_scenario_re = re.compile(ur"([@].*)%s: (%s)" % (
-            self.language.scenario_separator,
-            self.name), re.DOTALL)
+        regexes = []
+        if not self.previous_scenario:
+            regexes.append(broad_regex)
 
-        for regex in (previous_scenario_re, first_of_scenario_re):
+        else:
+            regexes.append(re.compile(ur"(?:%s: %s.*)([@]?.*)%s: (%s)" % (
+                self.language.non_capturable_scenario_separator,
+                self.previous_scenario.name,
+                self.language.scenario_separator,
+                self.name), re.DOTALL))
+
+        def try_finding_with(regex):
             found = regex.search(original_string)
             if found:
                 tag_lines = found.group().splitlines()
                 return list(chain(*map(self._extract_tag, tag_lines)))
+
+        for regex in regexes:
+            found = try_finding_with(regex)
+            if found:
+                return found
+
+        return []
 
     def _extract_tag(self, item):
         regex = re.compile(r'[@](\S+)')
@@ -693,8 +752,13 @@ class Scenario(object):
         return "\n".join([(u" " * self.table_indentation) + line for line in lines]) + '\n'
 
     @classmethod
-    def from_string(new_scenario, string, with_file=None, original_string=None, language=None):
+    def from_string(new_scenario, string,
+                    with_file=None,
+                    original_string=None,
+                    language=None,
+                    previous_scenario=None):
         """ Creates a new scenario from string"""
+
         # ignoring comments
         string = "\n".join(strings.get_stripped_lines(string, ignore_lines_starting_with='#'))
 
@@ -724,6 +788,7 @@ class Scenario(object):
             with_file=with_file,
             original_string=original_string,
             language=language,
+            previous_scenario=previous_scenario,
         )
 
         return scenario
@@ -854,8 +919,9 @@ class Feature(object):
             description = parts[0]
             parts.pop(0)
 
-        scenario_strings = [u"%s: %s" % (self.language.first_of_scenario, s) \
-                            for s in parts if s.strip()]
+        prefix = self.language.first_of_scenario
+        upcoming_scenarios = [
+            u"%s: %s" % (prefix, s) for s in parts if s.strip()]
 
         kw = dict(
             original_string=original_string,
@@ -863,11 +929,26 @@ class Feature(object):
             language=self.language,
         )
 
-        scenarios = [Scenario.from_string(s, **kw) for s in scenario_strings]
+        scenarios = []
+        while upcoming_scenarios:
+            current = upcoming_scenarios.pop(0)
+            previous_scenario = None
+            has_previous = len(scenarios) > 0
+
+            if has_previous:
+                previous_scenario = scenarios[-1]
+
+            params = dict(
+                previous_scenario=previous_scenario,
+            )
+
+            params.update(kw)
+            current_scenario = Scenario.from_string(current, **params)
+            scenarios.append(current_scenario)
 
         return scenarios, description
 
-    def run(self, scenarios=None, ignore_case=True):
+    def run(self, scenarios=None, ignore_case=True, tags=None):
         call_hook('before_each', 'feature', self)
         scenarios_ran = []
 
@@ -879,6 +960,9 @@ class Feature(object):
 
         for index, scenario in enumerate(self.scenarios):
             if scenarios_to_run and (index + 1) not in scenarios_to_run:
+                continue
+
+            if not scenario.matches_tags(tags):
                 continue
 
             scenarios_ran.extend(scenario.run(ignore_case))

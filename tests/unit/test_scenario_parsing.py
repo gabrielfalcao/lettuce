@@ -459,3 +459,50 @@ def test_scenario_has_tags_singleline():
         'another',
         '$%^&even-weird_chars',
     ])
+
+
+def test_scenario_matches_tags():
+    ("A scenario with tags should respond with True when "
+     ".matches_tags() is called with a valid list of tags")
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=('@onetag\n@another-one\n' + SCENARIO1.strip()))
+
+    assert that(scenario.tags).deep_equals(['onetag','another-one'])
+    assert scenario.matches_tags(['onetag'])
+    assert scenario.matches_tags(['another-one'])
+
+
+def test_scenario_matches_tags_fuzzywuzzy():
+    ("When Scenario#matches_tags is called with a member starting with ~ "
+     "it will consider a fuzzywuzzy match")
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=('@anothertag\n@another-tag\n' + SCENARIO1.strip()))
+
+    assert scenario.matches_tags(['~another'])
+
+
+def test_scenario_matches_tags_excluding():
+    ("When Scenario#matches_tags is called with a member starting with - "
+     "it will exclude that tag from the matching")
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=('@anothertag\n@another-tag\n' + SCENARIO1.strip()))
+
+    assert not scenario.matches_tags(['-anothertag'])
+    assert scenario.matches_tags(['-foobar'])
+
+
+def test_scenario_matches_tags_excluding_fuzzywuzzy():
+    ("When Scenario#matches_tags is called with a member starting with -~ "
+     "it will exclude that tag from that fuzzywuzzy match")
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=('@anothertag\n@another-tag\n' + SCENARIO1.strip()))
+
+    assert not scenario.matches_tags(['-~anothertag'])

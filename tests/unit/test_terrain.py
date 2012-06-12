@@ -39,6 +39,7 @@ Feature: Before and After callbacks all along lettuce
         Given I append "during" to states
 '''
 
+
 def test_world():
     "lettuce.terrain.world can be monkey patched at will"
 
@@ -57,9 +58,11 @@ def test_world():
     set_world()
     test_does_have()
 
+
 def test_after_each_step_is_executed_before_each_step():
     "terrain.before.each_step and terrain.after.each_step decorators"
     world.step_states = []
+
     @before.each_step
     def set_state_to_before(step):
         world.step_states.append('before')
@@ -83,6 +86,7 @@ def test_after_each_step_is_executed_before_each_step():
 
     assert_equals(world.step_states, ['before', 'during', 'after'])
 
+
 def test_after_each_scenario_is_executed_before_each_scenario():
     "terrain.before.each_scenario and terrain.after.each_scenario decorators"
     world.scenario_steps = []
@@ -104,8 +108,9 @@ def test_after_each_scenario_is_executed_before_each_scenario():
 
     assert_equals(
         world.scenario_steps,
-        ['before', 'during', 'after', 'before', 'during', 'after']
+        ['before', 'during', 'after', 'before', 'during', 'after'],
     )
+
 
 def test_after_each_feature_is_executed_before_each_feature():
     "terrain.before.each_feature and terrain.after.each_feature decorators"
@@ -128,8 +133,9 @@ def test_after_each_feature_is_executed_before_each_feature():
 
     assert_equals(
         world.feature_steps,
-        ['before', 'during', 'during', 'after']
+        ['before', 'during', 'during', 'after'],
     )
+
 
 def test_after_each_all_is_executed_before_each_all():
     "terrain.before.each_all and terrain.after.each_all decorators"
@@ -159,6 +165,7 @@ def test_after_each_all_is_executed_before_each_all():
 
     runner = lettuce.Runner('some_basepath')
     CALLBACK_REGISTRY.clear()
+
     @before.all
     def set_state_to_before():
         world.all_steps.append('before')
@@ -178,10 +185,11 @@ def test_after_each_all_is_executed_before_each_all():
 
     assert_equals(
         world.all_steps,
-        ['before', 'during', 'during', 'after']
+        ['before', 'during', 'during', 'after'],
     )
 
     mox.UnsetStubs()
+
 
 def test_world_should_be_able_to_absorb_functions():
     u"world should be able to absorb functions"
@@ -200,6 +208,7 @@ def test_world_should_be_able_to_absorb_functions():
 
     assert not hasattr(world, 'function1')
 
+
 def test_world_should_be_able_to_absorb_lambdas():
     u"world should be able to absorb lambdas"
     assert not hasattr(world, 'named_func')
@@ -215,8 +224,9 @@ def test_world_should_be_able_to_absorb_lambdas():
 
     assert not hasattr(world, 'named_func')
 
+
 def test_world_should_be_able_to_absorb_classs():
-   u"world should be able to absorb classs"
+   u"world should be able to absorb class"
    assert not hasattr(world, 'MyClass')
 
    @world.absorb

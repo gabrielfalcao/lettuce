@@ -175,6 +175,27 @@ Feature: Yay tags and many scenarios
 
 """
 
+FEATURE13 = """
+Feature: correct matching
+  @runme
+  Scenario: Holy tag, Batman
+    Given this scenario has tags
+    Then it can be inspected from within the object
+
+  Scenario: This has no tags
+    Given this scenario has tags
+    Then it can be inspected from within the object
+
+  @slow
+  Scenario: this is slow
+    Given this scenario has tags
+    Then it can be inspected from within the object
+
+  Scenario: Also without tags
+    Given this scenario has tags
+    Then it can be inspected from within the object
+"""
+
 
 def test_feature_has_repr():
     "Feature implements __repr__ nicely"
@@ -349,15 +370,17 @@ def test_single_scenario_single_scenario():
 
 
 def test_single_scenario_many_scenarios():
-    "Features should have their scenarios parsed with its respective tags"
-    feature = Feature.from_string(FEATURE12)
+    "Untagged scenario following a tagged one should have no tags"
+    feature = Feature.from_string(FEATURE13)
 
     first_scenario = feature.scenarios[0]
+    assert that(first_scenario.tags).equals(['runme'])
 
-    assert that(first_scenario.tags).deep_equals([
-        'many', 'other', 'basic', 'tags', 'here', ':)'])
+    second_scenario = feature.scenarios[1]
+    assert that(second_scenario.tags).equals([])
 
-    last_scenario = feature.scenarios[1]
+    third_scenario = feature.scenarios[2]
+    assert that(third_scenario.tags).equals(['slow'])
 
-    assert that(last_scenario.tags).deep_equals([
-        'only', 'a-few', 'tags'])
+    last_scenario = feature.scenarios[3]
+    assert that(last_scenario.tags).equals([])

@@ -23,8 +23,6 @@ import sys
 import traceback
 from datetime import datetime
 
-from lettuce import fs
-
 from lettuce.core import Feature, TotalResult
 
 from lettuce.terrain import after
@@ -37,7 +35,7 @@ from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
 from lettuce.exceptions import StepLoadingError
 from lettuce.plugins import xunit_output
-
+from lettuce import fs
 from lettuce import exceptions
 
 __all__ = [
@@ -71,12 +69,14 @@ class Runner(object):
     features and step definitions on there.
     """
     def __init__(self, base_path, scenarios=None, verbosity=0,
-                 enable_xunit=False, xunit_filename=None):
+                 enable_xunit=False, xunit_filename=None, tags=None):
         """ lettuce.Runner will try to find a terrain.py file and
         import it from within `base_path`
         """
 
+        self.tags = tags
         self.single_feature = None
+
         if os.path.isfile(base_path) and os.path.exists(base_path):
             self.single_feature = base_path
             base_path = os.path.dirname(base_path)
@@ -134,7 +134,7 @@ class Runner(object):
             for filename in features_files:
                 feature = Feature.from_file(filename)
                 results.append(
-                    feature.run(self.scenarios))
+                    feature.run(self.scenarios, tags=self.tags))
 
         except exceptions.LettuceSyntaxError, e:
             sys.stderr.write(e.msg)
