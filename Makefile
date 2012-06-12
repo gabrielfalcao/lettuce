@@ -17,11 +17,11 @@ unit: clean
 
 functional: clean
 	@echo "Running functional tests ..."
-	@nosetests -s --verbosity=2 --with-coverage --cover-erase --cover-inclusive tests/functional --cover-package=lettuce
+	@nosetests --stop -s --verbosity=2 --with-coverage --cover-erase --cover-inclusive tests/functional --cover-package=lettuce
 
 integration: clean
 	@echo "Running integration tests ..."
-	@nosetests -s --verbosity=2 tests/integration
+	@nosetests --stop -s --verbosity=2 tests/integration
 
 doctest: clean
 	@cd docs && make doctest
