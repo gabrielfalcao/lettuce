@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import sys
-from lettuce import version
 from setuptools import setup
 
 
@@ -36,7 +35,7 @@ if sys.version_info[:2] < (2, 6):
     required_modules.append('multiprocessing')
 
 setup(name='lettuce',
-    version=version,
+    version='0.2.0',
     description='Behaviour Driven Development for python',
     author=u'Gabriel Falcao',
     author_email='gabriel@nacaolivre.org',
