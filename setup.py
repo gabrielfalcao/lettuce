@@ -34,7 +34,8 @@ required_modules = ['sure', 'fuzzywuzzy']
 if sys.version_info[:2] < (2, 6):
     required_modules.append('multiprocessing')
 
-setup(name='lettuce',
+setup(
+    name='lettuce',
     version='0.2.0',
     description='Behaviour Driven Development for python',
     author=u'Gabriel Falcao',
@@ -44,5 +45,8 @@ setup(name='lettuce',
     install_requires=required_modules,
     entry_points={
         'console_scripts': ['lettuce = lettuce.bin:main'],
+        },
+    package_data={
+        'lettuce': ['COPYING', '*.md'],
     },
 )
