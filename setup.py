@@ -34,6 +34,9 @@ required_modules = ['sure', 'fuzzywuzzy']
 if sys.version_info[:2] < (2, 6):
     required_modules.append('multiprocessing')
 
+if os.name.lower() == 'nt':
+    required_modules.append('colorama')
+
 setup(
     name='lettuce',
     version='0.2.0',

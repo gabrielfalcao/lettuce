@@ -38,6 +38,13 @@ from lettuce.plugins import xunit_output
 from lettuce import fs
 from lettuce import exceptions
 
+try:
+    from colorama import init as ms_windows_workaround
+    ms_windows_workaround()
+except ImportError:
+    pass
+
+
 __all__ = [
     'after',
     'before',
