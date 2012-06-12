@@ -7,20 +7,8 @@ from nose.tools import assert_equals
 
 @before.harvest
 def before_harvest(variables):
-    assert_equals(variables.keys(), [
-        'paths',
-        'args',
-        'failed',
-        'run_server',
-        'verbosity',
-        'tags',
-        'self',
-        'apps_to_run',
-        'apps_to_avoid',
-        'options',
-        ],
-    )
     print "before harvest"
+
 @after.harvest
 def after_harvest(results):
     assert_equals(len(results), 2)

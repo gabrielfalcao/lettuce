@@ -25,7 +25,7 @@ from django.test.utils import teardown_test_environment
 from lettuce import Runner
 from lettuce import registry
 
-from lettuce.django import server
+from lettuce.django.server import Server
 from lettuce.django import harvest_lettuces
 from lettuce.django.server import LettuceServerException
 
@@ -48,6 +48,9 @@ class Command(BaseCommand):
 
         make_option('-S', '--no-server', action='store_true', dest='no_server', default=False,
             help="will not run django's builtin HTTP server"),
+
+        make_option('-P', '--port', type='int', dest='port',
+            help="the port in which the HTTP server will run at"),
 
         make_option('-d', '--debug-mode', action='store_true', dest='debug', default=False,
             help="when put together with builtin HTTP server, forces django to run with settings.DEBUG=True"),
@@ -98,6 +101,8 @@ class Command(BaseCommand):
         apps_to_avoid = tuple(options.get('avoid_apps', '').split(","))
         run_server = not options.get('no_server', False)
         tags = options.get('tags', None)
+        server = Server(port=options['port'])
+
         if tags:
             print "DEBUG", options
 

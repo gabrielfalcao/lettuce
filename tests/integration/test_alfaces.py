@@ -79,6 +79,47 @@ def test_django_background_server_running_in_background():
         FileSystem.popd()
 
 
+def test_django_background_server_running_in_background_with_custom_port():
+    'the harvest command should take a --port argument'
+
+    FileSystem.pushd(current_directory, "django", "alfaces")
+
+    import tornado.ioloop
+    import tornado.web
+
+    class MainHandler(tornado.web.RequestHandler):
+        def get(self):
+            self.write("Hello, world")
+            raise SystemExit()
+
+    def runserver():
+        application = tornado.web.Application([
+            (r"/", MainHandler),
+        ])
+        application.listen(9889)
+        tornado.ioloop.IOLoop.instance().start()
+
+    server = multiprocessing.Process(target=runserver)
+    server.start()
+    time.sleep(1)  # the child process take some time to get up
+
+    e = 'Lettuce could not run the builtin Django server at 0.0.0.0:9889"\n' \
+        'maybe you forgot a "runserver" instance running ?\n\n' \
+        'well if you really do not want lettuce to run the server ' \
+        'for you, then just run:\n\n' \
+        'python manage.py --no-server'
+
+    try:
+        status, out = commands.getstatusoutput(
+            "python manage.py harvest --verbosity=3 --port=9889")
+        assert_equals(out, e)
+        assert_not_equals(status, 0)
+
+    finally:
+        os.kill(server.pid, 9)
+        FileSystem.popd()
+
+
 def test_limit_by_app_getting_all_apps_by_comma():
     'running "harvest" with --apps=multiple,apps,separated,by,comma'
 
