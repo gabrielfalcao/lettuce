@@ -145,3 +145,4 @@ class Command(BaseCommand):
             registry.call_hook('after', 'harvest', results)
             server.stop(failed)
             teardown_test_environment()
+            raise SystemExit(int(failed))
