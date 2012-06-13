@@ -24,7 +24,7 @@ from copy import deepcopy
 from lettuce import strings
 from lettuce import languages
 from lettuce.fs import FileSystem
-from lettuce.registry import STEP_REGISTRY
+from lettuce.registry import STEP_REGISTRY, CASTER_REGISTRY
 from lettuce.registry import call_hook
 from lettuce.exceptions import ReasonToFail
 from lettuce.exceptions import NoDefinitionFound
@@ -110,16 +110,29 @@ class StepDefinition(object):
     """A step definition is a wrapper for user-defined callbacks. It
     gets a few metadata from file, such as filename and line number"""
     def __init__(self, step, function):
+        self.step = step
         self.function = function
         self.file = fs.relpath(function.func_code.co_filename)
         self.line = function.func_code.co_firstlineno + 1
-        self.step = step
+
+    def _apply_casters(self, step, args):
+        sentence = step.sentence
+        if not args:
+            return ()
+
+        for regex, caster in CASTER_REGISTRY.items():
+            matched = re.search(regex, sentence)
+            if matched:
+                args = (caster(*args), )
+
+        return args
 
     def __call__(self, *args, **kw):
         """Method that actually wrapps the call to step definition
         callback. Sends step object as first argument
         """
         try:
+            args = self._apply_casters(self.step, args)
             ret = self.function(self.step, *args, **kw)
             self.step.passed = True
         except Exception, e:

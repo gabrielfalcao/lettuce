@@ -50,3 +50,8 @@ class LettuceSyntaxError(SyntaxError):
 class StepLoadingError(Exception):
     """Raised when a step cannot be loaded."""
     pass
+
+
+class CasterLoadingError(Exception):
+    """Raised when a caster's regex cannot be compiled."""
+    pass

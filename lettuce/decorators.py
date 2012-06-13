@@ -15,8 +15,43 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import re
-from lettuce.core import STEP_REGISTRY
-from lettuce.exceptions import StepLoadingError
+from lettuce.core import STEP_REGISTRY, CASTER_REGISTRY
+from lettuce.exceptions import CasterLoadingError, StepLoadingError
+
+
+def caster(regex):
+    """Decorates a function that will be responsible for casting
+    matched regex into object, leveraging more flexibility on step
+    definitions and simplifying the test ecosystem.
+
+    Example::
+
+    >>> from lettuce import step
+    >>> from models import Contact
+    >>>
+    >>> @step.caster(r'the person "(.*)"')
+    ... def into_a_contact_object(value):
+    ...     return Contact.objects.get(name=value)
+    ...
+    >>> @step(r'Given the person "(.*)" is erased from my address book')
+    ... def given_i_do_something(step, user):
+    ...     user.delete()
+
+    Notice the name matched in the regex below being cast into a
+    `Contact` object
+    """
+    def wrap(func):
+        try:
+            re.compile(regex)
+        except re.error, e:
+            raise CasterLoadingError("Error when trying to compile:\n"
+                                   "  regex: %r\n"
+                                   "  for function: %s\n"
+                                   "  error: %s" % (regex, func, e))
+        CASTER_REGISTRY[regex] = func
+        return func
+
+    return wrap
 
 
 def step(regex):
@@ -36,6 +71,7 @@ def step(regex):
 
     Notice that all step definitions take a step object as argument.
     """
+
     def wrap(func):
         try:
             re.compile(regex)
@@ -48,3 +84,5 @@ def step(regex):
         return func
 
     return wrap
+
+step.caster = caster

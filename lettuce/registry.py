@@ -38,8 +38,8 @@ class CallbackDict(dict):
             for callback_list in action_dict.values():
                 callback_list[:] = []
 
-
 STEP_REGISTRY = {}
+CASTER_REGISTRY = {}
 CALLBACK_REGISTRY = CallbackDict(
     {
         'all': {
@@ -91,4 +91,5 @@ def call_hook(situation, kind, *args, **kw):
 
 def clear():
     STEP_REGISTRY.clear()
+    CASTER_REGISTRY.clear()
     CALLBACK_REGISTRY.clear()

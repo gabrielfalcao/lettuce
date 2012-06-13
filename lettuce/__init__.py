@@ -31,7 +31,7 @@ from lettuce.terrain import world
 
 from lettuce.decorators import step
 from lettuce.registry import call_hook
-from lettuce.registry import STEP_REGISTRY
+from lettuce.registry import STEP_REGISTRY, CASTER_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
 from lettuce.exceptions import StepLoadingError
 from lettuce.plugins import xunit_output
