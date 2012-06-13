@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-version = '0.2.0'
+version = '0.2.1'
 release = 'kryptonite'
 
 import os
