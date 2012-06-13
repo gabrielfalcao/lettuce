@@ -103,9 +103,6 @@ class Command(BaseCommand):
         tags = options.get('tags', None)
         server = Server(port=options['port'])
 
-        if tags:
-            print "DEBUG", options
-
         paths = self.get_paths(args, apps_to_run, apps_to_avoid)
         if run_server:
             try:
