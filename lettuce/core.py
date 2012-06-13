@@ -583,14 +583,19 @@ class Scenario(object):
         if tags is None:
             return True
 
-        if not self.tags:
+        has_exclusionary_tags = any([t.startswith('-') for t in tags])
+
+        if not self.tags and not has_exclusionary_tags:
             return False
 
         matched = []
 
-        for tag in self.tags:
-            if tag in tags:
-                return True
+        if isinstance(self.tags, list):
+            for tag in self.tags:
+                if tag in tags:
+                    return True
+        else:
+            self.tags = []
 
         for tag in tags:
             exclude = tag.startswith('-')

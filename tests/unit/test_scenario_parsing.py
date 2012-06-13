@@ -497,6 +497,17 @@ def test_scenario_matches_tags_excluding():
     assert scenario.matches_tags(['-foobar'])
 
 
+def test_scenario_matches_tags_excluding_when_scenario_has_no_tags():
+    ("When Scenario#matches_tags is called for a scenario "
+     "that has no tags and the given match is a exclusionary tag")
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=(SCENARIO1.strip()))
+
+    assert scenario.matches_tags(['-nope', '-neither'])
+
+
 def test_scenario_matches_tags_excluding_fuzzywuzzy():
     ("When Scenario#matches_tags is called with a member starting with -~ "
      "it will exclude that tag from that fuzzywuzzy match")
