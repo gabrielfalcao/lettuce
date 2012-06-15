@@ -153,7 +153,7 @@ Feature: Yay tags
   @many @other
   @basic
   @tags @here @:)
-  Scenario: Holy tag, Batman
+  Scenario: Double Yay
     Given this scenario has tags
     Then it can be inspected from within the object
 """
@@ -175,7 +175,7 @@ Feature: Yay tags and many scenarios
 
 """
 
-FEATURE13 = """
+FEATURE13 = '''
 Feature: correct matching
   @runme
   Scenario: Holy tag, Batman
@@ -184,17 +184,20 @@ Feature: correct matching
 
   Scenario: This has no tags
     Given this scenario has tags
+    When I fill my email with gabriel@lettuce.it
     Then it can be inspected from within the object
 
   @slow
   Scenario: this is slow
     Given this scenario has tags
+    When I fill my email with "gabriel@lettuce.it"
     Then it can be inspected from within the object
 
   Scenario: Also without tags
     Given this scenario has tags
+    When I fill my email with 'gabriel@lettuce.it'
     Then it can be inspected from within the object
-"""
+'''
 
 FEATURE14 = """
 Feature:    Extra whitespace feature
