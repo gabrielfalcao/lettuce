@@ -708,9 +708,11 @@ class Scenario(object):
 
         def try_finding_with(regex):
             found = regex.search(original_string)
+
             if found:
                 tag_lines = found.group().splitlines()
-                return list(chain(*map(self._extract_tag, tag_lines)))
+                tags = list(chain(*map(self._extract_tag, tag_lines)))
+                return tags
 
         for regex in regexes:
             found = try_finding_with(regex)
@@ -720,8 +722,9 @@ class Scenario(object):
         return []
 
     def _extract_tag(self, item):
-        regex = re.compile(r'[@](\S+)')
-        return regex.findall(item)
+        regex = re.compile(r'(?:(?:^|\s+)[@]([^@\s]+))')
+        found = regex.findall(item)
+        return found
 
     def _resolve_steps(self, steps, outlines, with_file, original_string):
         for outline in outlines:
