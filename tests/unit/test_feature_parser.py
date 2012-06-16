@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from sure import that
+from lettuce import step
 from lettuce.core import Scenario
 from lettuce.core import Feature
 from nose.tools import assert_equals
@@ -183,9 +184,8 @@ Feature: correct matching
     Then it can be inspected from within the object
 
   Scenario: This has no tags
-    Given this scenario has tags
-    When I fill my email with gabriel@lettuce.it
-    Then it can be inspected from within the object
+    Given this scenario has no tags
+    Then I fill my email with gabriel@lettuce.it
 
   @slow
   Scenario: this is slow
@@ -194,9 +194,8 @@ Feature: correct matching
     Then it can be inspected from within the object
 
   Scenario: Also without tags
-    Given this scenario has tags
-    When I fill my email with 'gabriel@lettuce.it'
-    Then it can be inspected from within the object
+    Given this scenario has no tags
+    Then I fill my email with 'gabriel@lettuce.it'
 '''
 
 FEATURE14 = """
@@ -213,6 +212,7 @@ def test_feature_has_repr():
     feature = Feature.from_string(FEATURE1)
     assert_equals(repr(feature), '<Feature: "Rent movies">')
 
+
 def test_scenario_has_name():
     "It should extract the name string from the scenario"
 
@@ -224,6 +224,7 @@ def test_scenario_has_name():
         feature.name,
         "Rent movies"
     )
+
 
 def test_feature_has_scenarios():
     "A feature object should have a list of scenarios"
@@ -251,6 +252,7 @@ def test_feature_has_scenarios():
             {'Name': 'Matrix Revolutions', 'Rating': '4 stars', 'New': 'no', 'Available': '6'},
         ]
     )
+
 
 def test_can_parse_feature_description():
     "A feature object should have a description"
@@ -382,6 +384,23 @@ def test_single_scenario_single_scenario():
 
 def test_single_scenario_many_scenarios():
     "Untagged scenario following a tagged one should have no tags"
+
+    @step('this scenario has tags')
+    def scenario_has_tags(step):
+        assert step.scenario.tags
+
+    @step('this scenario has no tags')
+    def scenario_has_no_tags(step):
+        assert not step.scenario.tags
+
+    @step('it can be inspected from within the object')
+    def inspected_within_object(step):
+        assert step.scenario.tags
+
+    @step(r'fill my email with [\'"]?([^\'"]+)[\'"]?')
+    def fill_email(step, email):
+        assert that(email).equals('gabriel@lettuce.it')
+
     feature = Feature.from_string(FEATURE13)
 
     first_scenario = feature.scenarios[0]
@@ -395,6 +414,21 @@ def test_single_scenario_many_scenarios():
 
     last_scenario = feature.scenarios[3]
     assert that(last_scenario.tags).equals([])
+
+    result = feature.run()
+    print
+    print
+    for sr in result.scenario_results:
+        for failed in sr.steps_failed:
+            print "+" * 10
+            print
+            print failed.why.cause
+            print
+            print "+" * 10
+
+    print
+    print
+    assert result.passed
 
 
 def test_scenarios_with_extra_whitespace():
