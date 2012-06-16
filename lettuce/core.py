@@ -931,9 +931,10 @@ class Feature(object):
         self.described_at = definition
 
     def _strip_next_scenario_tags(self, string):
-        regex = re.compile(ur'(?:\s*[@]\S+\s*)+$', re.DOTALL)
+        regex = re.compile(ur'(?:(?:^\s*|\s+)[@]\S+\s*)+$', re.DOTALL)
         stripped = regex.sub('', string)
-        return stripped or string
+
+        return stripped
 
     def _parse_remaining_lines(self, lines, original_string, with_file=None):
         # replacing occurrences of Scenario Outline, with just "Scenario"
