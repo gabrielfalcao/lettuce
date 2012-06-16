@@ -22,7 +22,7 @@ from mox import Mox
 
 def test_has_version():
     "A nice python module is supposed to have a version"
-    assert_equals(lettuce.version, '0.2.3')
+    assert_equals(lettuce.version, '0.2.4')
 
 
 def test_has_release():
