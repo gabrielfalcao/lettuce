@@ -39,7 +39,7 @@ if os.name.lower() == 'nt':
 
 setup(
     name='lettuce',
-    version='0.2.3',
+    version='0.2.4',
     description='Behaviour Driven Development for python',
     author=u'Gabriel Falcao',
     author_email='gabriel@nacaolivre.org',
