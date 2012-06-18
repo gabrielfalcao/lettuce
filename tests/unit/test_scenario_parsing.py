@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # <Lettuce - Behaviour Driven Development for python>
-# Copyright (C) <2010-2011>  Gabriel Falcão <gabriel@nacaolivre.org>
+# Copyright (C) <2010-2012>  Gabriel Falcão <gabriel@nacaolivre.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -175,6 +175,7 @@ Scenario: Adding some students to my university database
 
 """
 
+from sure import that
 from lettuce.core import Step
 from lettuce.core import Scenario
 from lettuce.core import Feature
@@ -300,7 +301,7 @@ def test_scenario_tables_are_solved_against_outlines():
             [],
             []
         ]
-    
+
     scenario = Scenario.from_string(OUTLINED_SCENARIO_WITH_SUBSTITUTIONS_IN_TABLE)
     for step, expected_hashes in zip(scenario.solved_steps, expected_hashes_per_step):
         assert_equals(type(step), Step)
@@ -431,3 +432,100 @@ def test_commented_scenarios():
     scenario = Scenario.from_string(COMMENTED_SCENARIO)
     assert_equals(scenario.name, u'Adding some students to my university database')
     assert_equals(len(scenario.steps), 4)
+
+
+def test_scenario_has_tag():
+    "A scenario object should be able to find at least one tag " \
+       "on the first line"
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=('@onetag\n' + SCENARIO1.strip()))
+
+    assert that(scenario.tags).deep_equals(['onetag'])
+
+
+def test_scenario_has_tags_singleline():
+    "A scenario object should be able to find many tags " \
+       "on the first line"
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=(
+            '@onetag @another @$%^&even-weird_chars \n' + SCENARIO1.strip()))
+
+    assert that(scenario.tags).deep_equals([
+        'onetag',
+        'another',
+        '$%^&even-weird_chars',
+    ])
+
+
+def test_scenario_matches_tags():
+    ("A scenario with tags should respond with True when "
+     ".matches_tags() is called with a valid list of tags")
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=('@onetag\n@another-one\n' + SCENARIO1.strip()))
+
+    assert that(scenario.tags).deep_equals(['onetag','another-one'])
+    assert scenario.matches_tags(['onetag'])
+    assert scenario.matches_tags(['another-one'])
+
+
+def test_scenario_matches_tags_fuzzywuzzy():
+    ("When Scenario#matches_tags is called with a member starting with ~ "
+     "it will consider a fuzzywuzzy match")
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=('@anothertag\n@another-tag\n' + SCENARIO1.strip()))
+
+    assert scenario.matches_tags(['~another'])
+
+
+def test_scenario_matches_tags_excluding():
+    ("When Scenario#matches_tags is called with a member starting with - "
+     "it will exclude that tag from the matching")
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=('@anothertag\n@another-tag\n' + SCENARIO1.strip()))
+
+    assert not scenario.matches_tags(['-anothertag'])
+    assert scenario.matches_tags(['-foobar'])
+
+
+def test_scenario_matches_tags_excluding_when_scenario_has_no_tags():
+    ("When Scenario#matches_tags is called for a scenario "
+     "that has no tags and the given match is a exclusionary tag")
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=(SCENARIO1.strip()))
+
+    assert scenario.matches_tags(['-nope', '-neither'])
+
+
+def test_scenario_matches_tags_excluding_fuzzywuzzy():
+    ("When Scenario#matches_tags is called with a member starting with -~ "
+     "it will exclude that tag from that fuzzywuzzy match")
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=('@anothertag\n@another-tag\n' + SCENARIO1.strip()))
+
+    assert not scenario.matches_tags(['-~anothertag'])
+
+
+def test_scenario_show_tags_in_its_representation():
+    ("Scenario#represented should show its tags")
+
+    scenario = Scenario.from_string(
+        SCENARIO1,
+        original_string=('@slow\n@firefox\n@chrome\n' + SCENARIO1.strip()))
+
+    assert that(scenario.represented()).equals(
+        u'  @slow @firefox @chrome\n  '
+        'Scenario: Adding some students to my university database')

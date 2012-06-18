@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # <Lettuce - Behaviour Driven Development for python>
-# Copyright (C) <2010-2011>  Gabriel Falcão <gabriel@nacaolivre.org>
+# Copyright (C) <2010-2012>  Gabriel Falcão <gabriel@nacaolivre.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import sys
-from lettuce import version
 from setuptools import setup
 
 
@@ -30,20 +29,27 @@ def get_packages():
 
     return packages
 
-required_modules = []
+required_modules = ['sure', 'fuzzywuzzy']
 
 if sys.version_info[:2] < (2, 6):
     required_modules.append('multiprocessing')
 
-setup(name='lettuce',
-    version=version,
+if os.name.lower() == 'nt':
+    required_modules.append('colorama')
+
+setup(
+    name='lettuce',
+    version='0.2.4',
     description='Behaviour Driven Development for python',
     author=u'Gabriel Falcao',
     author_email='gabriel@nacaolivre.org',
-    url='http://github.com/gabrielfalcao/lettuce',
+    url='http://lettuce.it',
     packages=get_packages(),
     install_requires=required_modules,
     entry_points={
-        'console_scripts': ['lettuce = lettuce.lettuce_cli:main'],
+        'console_scripts': ['lettuce = lettuce.bin:main'],
+        },
+    package_data={
+        'lettuce': ['COPYING', '*.md'],
     },
 )

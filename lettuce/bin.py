@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # <Lettuce - Behaviour Driven Development for python>
-# Copyright (C) <2010-2011>  Gabriel Falcão <gabriel@nacaolivre.org>
+# Copyright (C) <2010-2012>  Gabriel Falcão <gabriel@nacaolivre.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,6 +38,15 @@ def main(args=sys.argv[1:]):
                       default=None,
                       help='Comma separated list of scenarios to run')
 
+    parser.add_option("-t", "--tag",
+                      dest="tags",
+                      default=None,
+                      action='append',
+                      help='Tells lettuce to run the specified tags only; '
+                      'can be used multiple times to define more tags'
+                      '(prefixing tags with "-" will exclude them and '
+                      'prefixing with "~" will match approximate words)')
+
     parser.add_option("--with-xunit",
                       dest="enable_xunit",
                       action="store_true",
@@ -66,11 +75,12 @@ def main(args=sys.argv[1:]):
         verbosity=options.verbosity,
         enable_xunit=options.enable_xunit,
         xunit_filename=options.xunit_file,
+        tags=options.tags,
     )
 
     result = runner.run()
-    if not result or result.steps != result.steps_passed:
-        raise SystemExit(1)
+    failed = bool(result or result.steps != result.steps_passed)
+    raise SystemExit(int(failed))
 
 if __name__ == '__main__':
     main()

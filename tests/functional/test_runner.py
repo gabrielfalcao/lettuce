@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # <Lettuce - Behaviour Driven Development for python>
-# Copyright (C) <2010-2011>  Gabriel Falcão <gabriel@nacaolivre.org>
+# Copyright (C) <2010-2012>  Gabriel Falcão <gabriel@nacaolivre.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import lettuce
-
+from mock import Mock
 from StringIO import StringIO
 from os.path import dirname, join, abspath
 from nose.tools import assert_equals, with_setup, assert_raises
@@ -38,15 +38,21 @@ current_dir = abspath(dirname(__file__))
 lettuce_dir = abspath(dirname(lettuce.__file__))
 ojoin = lambda *x: join(current_dir, 'output_features', *x)
 sjoin = lambda *x: join(current_dir, 'syntax_features', *x)
+tjoin = lambda *x: join(current_dir, 'tag_features', *x)
+
 lettuce_path = lambda *x: fs.relpath(join(lettuce_dir, *x))
 
 call_line = StepDefinition.__call__.im_func.func_code.co_firstlineno + 5
 
-def feature_name(name):
-    return join(abspath(dirname(__file__)), 'output_features', name, "%s.feature" % name)
 
-def syntax_feature_name(name):
-    return sjoin(name, "%s.feature" % name)
+def joiner(callback, name):
+    return callback(name, "%s.feature" % name)
+
+
+feature_name = lambda name: joiner(ojoin, name)
+syntax_feature_name = lambda name: joiner(sjoin, name)
+tag_feature_name = lambda name: joiner(tjoin, name)
+
 
 @with_setup(prepare_stderr)
 def test_try_to_import_terrain():
@@ -1051,4 +1057,42 @@ def test_blank_step_hash_value():
         "1 feature (1 passed)\n"
         "1 scenario (1 passed)\n"
         "4 steps (4 passed)\n"
+    )
+
+
+@with_setup(prepare_stdout)
+def test_run_only_fast_tests():
+    "Runner can filter by tags"
+
+    from lettuce import step
+
+    good_one = Mock()
+    bad_one = Mock()
+
+    @step('I wait for 0 seconds')
+    def wait_for_0_seconds(step):
+        good_one(step.sentence)
+
+    @step('the time passed is 0 seconds')
+    def time_passed_0_sec(step):
+        good_one(step.sentence)
+
+    @step('I wait for 60 seconds')
+    def wait_for_60_seconds(step):
+        bad_one(step.sentence)
+
+    @step('the time passed is 1 minute')
+    def time_passed_1_min(step):
+        bad_one(step.sentence)
+
+    filename = tag_feature_name('timebound')
+    runner = Runner(filename, verbosity=1, tags=['fast-ish'])
+    runner.run()
+
+    assert_stdout_lines(
+        ".."
+        "\n"
+        "1 feature (1 passed)\n"
+        "1 scenario (1 passed)\n"
+        "2 steps (2 passed)\n"
     )

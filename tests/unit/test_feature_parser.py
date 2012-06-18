@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # <Lettuce - Behaviour Driven Development for python>
-# Copyright (C) <2010-2011>  Gabriel Falcão <gabriel@nacaolivre.org>
+# Copyright (C) <2010-2012>  Gabriel Falcão <gabriel@nacaolivre.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+from sure import that
+from lettuce import step
 from lettuce.core import Scenario
 from lettuce.core import Feature
 from nose.tools import assert_equals
@@ -148,11 +149,69 @@ Feature: Big sentence
     #     And another one, very tiny
 """
 
+FEATURE11 = """
+Feature: Yay tags
+  @many @other
+  @basic
+  @tags @here @:)
+  Scenario: Double Yay
+    Given this scenario has tags
+    Then it can be inspected from within the object
+"""
+
+FEATURE12 = """
+Feature: Yay tags and many scenarios
+  @many @other
+  @basic
+  @tags @here @:)
+  Scenario: Holy tag, Batman
+    Given this scenario has tags
+    Then it can be inspected from within the object
+
+  @only
+  @a-few @tags
+  Scenario: Holy guacamole
+    Given this scenario has tags
+    Then it can be inspected from within the object
+
+"""
+
+FEATURE13 = '''
+Feature: correct matching
+  @runme
+  Scenario: Holy tag, Batman
+    Given this scenario has tags
+    Then it can be inspected from within the object
+
+  Scenario: This has no tags
+    Given this scenario has no tags
+    Then I fill my email with gabriel@lettuce.it
+
+  @slow
+  Scenario: this is slow
+    Given this scenario has tags
+    When I fill my email with "gabriel@lettuce.it"
+    Then it can be inspected from within the object
+
+  Scenario: Also without tags
+    Given this scenario has no tags
+    Then I fill my email with 'gabriel@lettuce.it'
+'''
+
+FEATURE14 = """
+Feature:    Extra whitespace feature
+  I want to match scenarios with extra whitespace
+  Scenario:    Extra whitespace scenario
+    Given this scenario, which has extra leading whitespace
+    Then the scenario definition should still match
+"""
+
 
 def test_feature_has_repr():
     "Feature implements __repr__ nicely"
     feature = Feature.from_string(FEATURE1)
     assert_equals(repr(feature), '<Feature: "Rent movies">')
+
 
 def test_scenario_has_name():
     "It should extract the name string from the scenario"
@@ -165,6 +224,7 @@ def test_scenario_has_name():
         feature.name,
         "Rent movies"
     )
+
 
 def test_feature_has_scenarios():
     "A feature object should have a list of scenarios"
@@ -192,6 +252,7 @@ def test_feature_has_scenarios():
             {'Name': 'Matrix Revolutions', 'Rating': '4 stars', 'New': 'no', 'Available': '6'},
         ]
     )
+
 
 def test_can_parse_feature_description():
     "A feature object should have a description"
@@ -282,14 +343,16 @@ def test_feature_max_length_on_scenario_outline_keys():
     assert_equals(feature1.max_length, 68)
     assert_equals(feature2.max_length, 68)
 
+
 def test_description_on_long_named_feature():
     "Can parse the description on long named features"
     feature = Feature.from_string(FEATURE3)
     assert_equals(
         feature.description,
         "In order to describe my features\n"
-        "I want to add description on them"
+        "I want to add description on them",
     )
+
 
 def test_description_on_big_sentenced_steps():
     "Can parse the description on long sentenced steps"
@@ -298,11 +361,84 @@ def test_description_on_big_sentenced_steps():
         feature.description,
         "As a clever guy\n"
         "I want to describe this Feature\n"
-        "So that I can take care of my Scenario"
+        "So that I can take care of my Scenario",
     )
+
 
 def test_comments():
     "It should ignore lines that start with #, despite white spaces"
     feature = Feature.from_string(FEATURE10)
 
     assert_equals(feature.max_length, 55)
+
+
+def test_single_scenario_single_scenario():
+    "Features should have at least the first scenario parsed with tags"
+    feature = Feature.from_string(FEATURE11)
+
+    first_scenario = feature.scenarios[0]
+
+    assert that(first_scenario.tags).deep_equals([
+        'many', 'other', 'basic', 'tags', 'here', ':)'])
+
+
+def test_single_scenario_many_scenarios():
+    "Untagged scenario following a tagged one should have no tags"
+
+    @step('this scenario has tags')
+    def scenario_has_tags(step):
+        assert step.scenario.tags
+
+    @step('this scenario has no tags')
+    def scenario_has_no_tags(step):
+        assert not step.scenario.tags
+
+    @step('it can be inspected from within the object')
+    def inspected_within_object(step):
+        assert step.scenario.tags
+
+    @step(r'fill my email with [\'"]?([^\'"]+)[\'"]?')
+    def fill_email(step, email):
+        assert that(email).equals('gabriel@lettuce.it')
+
+    feature = Feature.from_string(FEATURE13)
+
+    first_scenario = feature.scenarios[0]
+    assert that(first_scenario.tags).equals(['runme'])
+
+    second_scenario = feature.scenarios[1]
+    assert that(second_scenario.tags).equals([])
+
+    third_scenario = feature.scenarios[2]
+    assert that(third_scenario.tags).equals(['slow'])
+
+    last_scenario = feature.scenarios[3]
+    assert that(last_scenario.tags).equals([])
+
+    result = feature.run()
+    print
+    print
+    for sr in result.scenario_results:
+        for failed in sr.steps_failed:
+            print "+" * 10
+            print
+            print failed.why.cause
+            print
+            print "+" * 10
+
+    print
+    print
+    assert result.passed
+
+
+def test_scenarios_with_extra_whitespace():
+    "Make sure that extra leading whitespace is ignored"
+    feature = Feature.from_string(FEATURE14)
+
+    assert_equals(type(feature.scenarios), list)
+    assert_equals(len(feature.scenarios), 1, "It should have 1 scenario")
+    assert_equals(feature.name, "Extra whitespace feature")
+
+    scenario = feature.scenarios[0]
+    assert_equals(type(scenario), Scenario)
+    assert_equals(scenario.name, "Extra whitespace scenario")

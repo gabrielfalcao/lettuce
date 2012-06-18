@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # <Lettuce - Behaviour Driven Development for python>
-# Copyright (C) <2010-2011>  Gabriel Falcão <gabriel@nacaolivre.org>
+# Copyright (C) <2010-2012>  Gabriel Falcão <gabriel@nacaolivre.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,15 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-version = '0.1.35'
-release = 'barium'
+version = '0.2.4'
+release = 'kryptonite'
 
 import os
 import sys
 import traceback
 from datetime import datetime
-
-from lettuce import fs
 
 from lettuce.core import Feature, TotalResult
 
@@ -37,8 +35,15 @@ from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
 from lettuce.exceptions import StepLoadingError
 from lettuce.plugins import xunit_output
-
+from lettuce import fs
 from lettuce import exceptions
+
+try:
+    from colorama import init as ms_windows_workaround
+    ms_windows_workaround()
+except ImportError:
+    pass
+
 
 __all__ = [
     'after',
@@ -71,12 +76,14 @@ class Runner(object):
     features and step definitions on there.
     """
     def __init__(self, base_path, scenarios=None, verbosity=0,
-                 enable_xunit=False, xunit_filename=None):
+                 enable_xunit=False, xunit_filename=None, tags=None):
         """ lettuce.Runner will try to find a terrain.py file and
         import it from within `base_path`
         """
 
+        self.tags = tags
         self.single_feature = None
+
         if os.path.isfile(base_path) and os.path.exists(base_path):
             self.single_feature = base_path
             base_path = os.path.dirname(base_path)
@@ -134,7 +141,7 @@ class Runner(object):
             for filename in features_files:
                 feature = Feature.from_file(filename)
                 results.append(
-                    feature.run(self.scenarios))
+                    feature.run(self.scenarios, tags=self.tags))
 
         except exceptions.LettuceSyntaxError, e:
             sys.stderr.write(e.msg)

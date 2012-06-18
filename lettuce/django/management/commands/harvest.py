@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # <Lettuce - Behaviour Driven Development for python>
-# Copyright (C) <2010-2011>  Gabriel Falcão <gabriel@nacaolivre.org>
+# Copyright (C) <2010-2012>  Gabriel Falcão <gabriel@nacaolivre.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ from django.test.utils import teardown_test_environment
 from lettuce import Runner
 from lettuce import registry
 
-from lettuce.django import server
+from lettuce.django.server import Server
 from lettuce.django import harvest_lettuces
 from lettuce.django.server import LettuceServerException
 
@@ -49,11 +49,24 @@ class Command(BaseCommand):
         make_option('-S', '--no-server', action='store_true', dest='no_server', default=False,
             help="will not run django's builtin HTTP server"),
 
+        make_option('-P', '--port', type='int', dest='port',
+            help="the port in which the HTTP server will run at"),
+
         make_option('-d', '--debug-mode', action='store_true', dest='debug', default=False,
             help="when put together with builtin HTTP server, forces django to run with settings.DEBUG=True"),
 
         make_option('-s', '--scenarios', action='store', dest='scenarios', default=None,
             help='Comma separated list of scenarios to run'),
+
+        make_option("-t", "--tag",
+                    dest="tags",
+                    type="str",
+                    action='append',
+                    default=None,
+                    help='Tells lettuce to run the specified tags only; '
+                    'can be used multiple times to define more tags'
+                    '(prefixing tags with "-" will exclude them and '
+                    'prefixing with "~" will match approximate words)'),
 
         make_option('--with-xunit', action='store_true', dest='enable_xunit', default=False,
             help='Output JUnit XML test results to a file'),
@@ -87,6 +100,8 @@ class Command(BaseCommand):
         apps_to_run = tuple(options.get('apps', '').split(","))
         apps_to_avoid = tuple(options.get('avoid_apps', '').split(","))
         run_server = not options.get('no_server', False)
+        tags = options.get('tags', None)
+        server = Server(port=options['port'])
 
         paths = self.get_paths(args, apps_to_run, apps_to_avoid)
         if run_server:
@@ -113,7 +128,9 @@ class Command(BaseCommand):
 
                 runner = Runner(path, options.get('scenarios'), verbosity,
                                 enable_xunit=options.get('enable_xunit'),
-                                xunit_filename=options.get('xunit_file'))
+                                xunit_filename=options.get('xunit_file'),
+                                tags=tags)
+
                 result = runner.run()
                 if app_module is not None:
                     registry.call_hook('after_each', 'app', app_module, result)
@@ -130,3 +147,4 @@ class Command(BaseCommand):
             registry.call_hook('after', 'harvest', results)
             server.stop(failed)
             teardown_test_environment()
+            raise SystemExit(int(failed))

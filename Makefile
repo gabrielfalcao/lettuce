@@ -3,7 +3,7 @@ all: check_dependencies unit functional integration doctest
 filename=lettuce-`python -c 'import lettuce;print lettuce.version'`.tar.gz
 
 export PYTHONPATH:= ${PWD}
-export LETTUCE_DEPENDENCIES:= nose mox sphinx lxml django
+export LETTUCE_DEPENDENCIES:= nose mox sphinx lxml django fuzzywuzzy mock
 
 check_dependencies:
 	@echo "Checking for dependencies to run tests ..."
@@ -17,11 +17,11 @@ unit: clean
 
 functional: clean
 	@echo "Running functional tests ..."
-	@nosetests -s --verbosity=2 --with-coverage --cover-erase --cover-inclusive tests/functional --cover-package=lettuce
+	@nosetests --stop -s --verbosity=2 --with-coverage --cover-erase --cover-inclusive tests/functional --cover-package=lettuce
 
 integration: clean
 	@echo "Running integration tests ..."
-	@nosetests -s --verbosity=2 tests/integration
+	@nosetests --stop -s --verbosity=2 tests/integration
 
 doctest: clean
 	@cd docs && make doctest

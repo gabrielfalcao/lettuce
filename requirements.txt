@@ -1,7 +1,9 @@
 mox
 nose
-django>=1.1.1
+django>=1.4
 sphinx
 lxml
 tornado
 coverage
+sure>=0.10.0
+mock>=0.8.0
