@@ -99,6 +99,7 @@ class ThreadedServer(multiprocessing.Process):
     Runs django's builtin in background
     """
     lock = multiprocessing.Lock()
+    daemon = True
 
     def __init__(self, address, port, *args, **kw):
         multiprocessing.Process.__init__(self)
@@ -117,7 +118,7 @@ class ThreadedServer(multiprocessing.Process):
 
         while True:
             time.sleep(0.1)
-            http = httplib.HTTPConnection(address, self.port)
+            http = httplib.HTTPConnection(address, self.port, timeout=1)
             try:
                 http.request("GET", "/")
             except socket.error:
@@ -161,11 +162,13 @@ class ThreadedServer(multiprocessing.Process):
 
         try:
             s = connector.connect((self.address, self.port))
-            print s
             self.lock.release()
             os.kill(os.getpid(), 9)
         except socket.error:
             pass
+
+        finally:
+            self.lock.release()
 
         try:
             server_address = (self.address, self.port)
