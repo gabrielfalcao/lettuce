@@ -107,8 +107,8 @@ class ThreadedServer(multiprocessing.Process):
 
     @staticmethod
     def get_real_address(address):
-        if address == '0.0.0.0':
-            address = 'localhost'
+        if address == '0.0.0.0' or address == 'localhost':
+            address = '127.0.0.1'
 
         return address
 

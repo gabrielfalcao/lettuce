@@ -1,7 +1,7 @@
 Feature: fetch admin media from lettuce + django builtin server
   Scenario: Running on port 7000
     Given my settings.py has "LETTUCE_SERVER_PORT" set to "7000"
-    Then I see that requesting "http://localhost:7000/media/css/base.css" gets "200"
+    Then I see that requesting "http://127.0.0.1:7000/media/css/base.css" gets "200"
 
   Scenario: Fetching admin media
     Given I navigate to "/admin/"
