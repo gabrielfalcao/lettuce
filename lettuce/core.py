@@ -693,7 +693,7 @@ class Scenario(object):
     def _find_tags_in(self, original_string):
         broad_regex = re.compile(ur"([@].*)%s: (%s)" % (
             self.language.scenario_separator,
-            self.name), re.DOTALL)
+            re.escape(self.name)), re.DOTALL)
 
         regexes = []
         if not self.previous_scenario:
@@ -702,9 +702,9 @@ class Scenario(object):
         else:
             regexes.append(re.compile(ur"(?:%s: %s.*)([@]?.*)%s: (%s)" % (
                 self.language.non_capturable_scenario_separator,
-                self.previous_scenario.name,
+                re.escape(self.previous_scenario.name),
                 self.language.scenario_separator,
-                self.name), re.DOTALL))
+                re.escape(self.name)), re.DOTALL))
 
         def try_finding_with(regex):
             found = regex.search(original_string)

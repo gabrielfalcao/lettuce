@@ -75,7 +75,7 @@ def main(args=sys.argv[1:]):
         verbosity=options.verbosity,
         enable_xunit=options.enable_xunit,
         xunit_filename=options.xunit_file,
-        tags=options.tags,
+        tags=[tag.strip('@') for tag in options.tags],
     )
 
     result = runner.run()
