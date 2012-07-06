@@ -328,6 +328,39 @@ Feature: Redis database server
         Then I expect server bootstrapping as M2
         And M2 is slave of M1
         And M2 contains database 3
+        """
+
+FEATURE16 = """
+@feature_runme
+Feature: correct matching
+  @runme1
+  Scenario: Holy tag, Batman [1]
+    Given this scenario has tags
+    Then it can be inspected from within the object
+
+  @runme2
+  Scenario: Holy tag2, Batman (2)
+    Given this scenario has other tags
+    Then it can be inspected from within the object
+
+  @runme3
+  Scenario: Holy tag3, Batman
+    Given this scenario has even more tags
+    Then it can be inspected from within the object
+
+"""
+
+FEATURE17 = """
+Feature: correct matching
+  @runme1
+  Scenario: Holy tag, Batman (1)
+    Given this scenario has tags
+    Then it can be inspected from within the object
+
+  @runme2
+  Scenario: Holy tag2, Batman [2]
+    Given this scenario has other tags
+    Then it can be inspected from within the object
 """
 
 
@@ -506,6 +539,20 @@ def test_single_scenario_single_scenario():
         'many', 'other', 'basic', 'tags', 'here', ':)'])
 
 
+def test_single_feature_single_tag():
+    "All scenarios within a feature inherit the feature's tags"
+    feature = Feature.from_string(FEATURE15)
+
+    assert that(feature.scenarios[0].tags).deep_equals([
+        'feature_runme', 'runme1'])
+
+    assert that(feature.scenarios[1].tags).deep_equals([
+        'feature_runme', 'runme2'])
+
+    assert that(feature.scenarios[2].tags).deep_equals([
+        'feature_runme', 'runme3'])
+
+
 def test_single_scenario_many_scenarios():
     "Untagged scenario following a tagged one should have no tags"
 
@@ -568,6 +615,7 @@ def test_scenarios_with_extra_whitespace():
     assert_equals(scenario.name, "Extra whitespace scenario")
 
 
+
 def test_scenarios_parsing():
     feature = Feature.from_string(FEATURE15)
     scenarios_and_tags = [(s.name, s.tags) for s in feature.scenarios]
@@ -591,3 +639,13 @@ def test_scenarios_parsing():
         ('Slave -> Master promotion', []),
         ('Restart farm', [u'restart_farm']),
     ])
+
+def test_scenarios_with_special_characters():
+    "Make sure that regex special characters in the scenario names are ignored"
+    feature = Feature.from_string(FEATURE17)
+
+    assert that(feature.scenarios[0].tags).deep_equals([
+        'runme1'])
+
+    assert that(feature.scenarios[1].tags).deep_equals([
+        'runme2'])
