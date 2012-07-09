@@ -848,6 +848,11 @@ class Feature(object):
                                                     language)
             self._set_definition(feature_definition)
 
+        if original_string and '@' in self.original_string:
+            self.tags = self._find_tags_in(original_string)
+        else:
+            self.tags = None
+
         self._add_myself_to_scenarios()
 
     @property
@@ -867,6 +872,35 @@ class Feature(object):
     def _add_myself_to_scenarios(self):
         for scenario in self.scenarios:
             scenario.feature = self
+            if scenario.tags and self.tags:
+                scenario.tags.extend(self.tags)
+
+    def _find_tags_in(self, original_string):
+        broad_regex = re.compile(ur"([@].*)%s: (%s)" % (
+            self.language.feature,
+            re.escape(self.name)), re.DOTALL)
+
+        regexes = [broad_regex]
+
+        def try_finding_with(regex):
+            found = regex.search(original_string)
+
+            if found:
+                tag_lines = found.group().splitlines()
+                tags = set(chain(*map(self._extract_tag, tag_lines)))
+                return tags
+
+        for regex in regexes:
+            found = try_finding_with(regex)
+            if found:
+                return found
+
+        return []
+
+    def _extract_tag(self, item):
+        regex = re.compile(r'(?:(?:^|\s+)[@]([^@\s]+))')
+        found = regex.findall(item)
+        return found
 
     def __repr__(self):
         return u'<%s: "%s">' % (self.language.first_of_feature, self.name)

@@ -217,7 +217,9 @@ Feature: correct matching
   @runme2
   Scenario: Holy tag2, Batman (2)
     Given this scenario has other tags
-    Then it can be inspected from within the object
+    Then it can be inspected from within the object even with the table
+    | What | Is | This  |
+    | It   | is | TABLE |
 
   @runme3
   Scenario: Holy tag3, Batman
@@ -419,14 +421,17 @@ def test_single_feature_single_tag():
     "All scenarios within a feature inherit the feature's tags"
     feature = Feature.from_string(FEATURE15)
 
+    # FIXME (mitgr81):  It seems worth the efficiency to not loop through the feature tags and
+    # check to see if every tag exists in the child.  The "right" fix might just be to not
+    # add the tag from the feature in the first scenario directly.
     assert that(feature.scenarios[0].tags).deep_equals([
-        'feature_runme', 'runme1'])
+        'feature_runme', 'runme1', 'feature_runme'])
 
     assert that(feature.scenarios[1].tags).deep_equals([
-        'feature_runme', 'runme2'])
+        'runme2', 'feature_runme'])
 
     assert that(feature.scenarios[2].tags).deep_equals([
-        'feature_runme', 'runme3'])
+        'runme3', 'feature_runme'])
 
 
 def test_single_scenario_many_scenarios():
