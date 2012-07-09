@@ -69,13 +69,17 @@ def main(args=sys.argv[1:]):
     except ValueError:
         pass
 
+    tags = None
+    if options.tags:
+        tags = [tag.strip('@') for tag in options.tags]
+
     runner = lettuce.Runner(
         base_path,
         scenarios=options.scenarios,
         verbosity=options.verbosity,
         enable_xunit=options.enable_xunit,
         xunit_filename=options.xunit_file,
-        tags=[tag.strip('@') for tag in options.tags],
+        tags=tags,
     )
 
     result = runner.run()
