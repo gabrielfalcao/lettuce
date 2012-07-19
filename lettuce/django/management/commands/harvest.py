@@ -138,8 +138,11 @@ class Command(BaseCommand):
                 results.append(result)
                 if not result or result.steps != result.steps_passed:
                     failed = True
+        except SystemExit, e:
+            failed = e.code
 
         except Exception, e:
+            failed = True
             import traceback
             traceback.print_exc(e)
 

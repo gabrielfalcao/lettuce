@@ -86,7 +86,7 @@ def call_hook(situation, kind, *args, **kw):
         except Exception, e:
             traceback.print_exc(e)
             print
-            sys.exit(2)
+            raise SystemExit(2)
 
 
 def clear():
