@@ -533,7 +533,7 @@ class Scenario(object):
         if original_string and '@' in self.original_string:
             self.tags = self._find_tags_in(original_string)
         else:
-            self.tags = None
+            self.tags = []
 
     @property
     def max_length(self):
