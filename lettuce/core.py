@@ -151,7 +151,7 @@ class ScenarioDescription(object):
 
         for pline, part in enumerate(string.splitlines()):
             part = part.strip()
-            if re.match(u"%s: " % language.scenario_separator + re.escape(scenario.name), part):
+            if re.match(u"%s:\W+" % language.scenario_separator + re.escape(scenario.name), part):
                 self.line = pline + 1
                 break
 
