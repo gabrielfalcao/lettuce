@@ -206,6 +206,130 @@ Feature:    Extra whitespace feature
     Then the scenario definition should still match
 """
 
+FEATURE15 = """
+Feature: Redis database server
+
+    Scenario: Bootstraping Redis role
+        Given I have a an empty running farm
+        When I add redis role to this farm
+        Then I expect server bootstrapping as M1
+        And scalarizr version is last in M1
+        And redis is running on M1
+
+    Scenario: Restart scalarizr
+        When I reboot scalarizr in M1
+        And see 'Scalarizr terminated' in M1 log
+        Then scalarizr process is 2 in M1
+        And not ERROR in M1 scalarizr log
+
+    @rebundle
+    Scenario: Rebundle server
+        When I create server snapshot for M1
+        Then Bundle task created for M1
+        And Bundle task becomes completed for M1
+
+    @rebundle
+    Scenario: Use new role
+        Given I have a an empty running farm
+        When I add to farm role created by last bundle task
+        Then I expect server bootstrapping as M1
+
+    @rebundle
+    Scenario: Restart scalarizr after bundling
+        When I reboot scalarizr in M1
+        And see 'Scalarizr terminated' in M1 log
+        Then scalarizr process is 2 in M1
+        And not ERROR in M1 scalarizr log
+
+    Scenario: Bundling data
+        When I trigger databundle creation
+        Then Scalr sends DbMsr_CreateDataBundle to M1
+        And Scalr receives DbMsr_CreateDataBundleResult from M1
+        And Last databundle date updated to current
+
+    Scenario: Modifying data
+        Given I have small-sized database 1 on M1
+        When I create a databundle
+        And I terminate server M1
+        Then I expect server bootstrapping as M1
+        And M1 contains database 1
+
+    Scenario: Reboot server
+        When I reboot server M1
+        Then Scalr receives RebootStart from M1
+        And Scalr receives RebootFinish from M1
+
+    Scenario: Backuping data on Master
+        When I trigger backup creation
+        Then Scalr sends DbMsr_CreateBackup to M1
+        And Scalr receives DbMsr_CreateBackupResult from M1
+        And Last backup date updated to current
+
+    Scenario: Setup replication
+        When I increase minimum servers to 2 for redis role
+        Then I expect server bootstrapping as M2
+        And scalarizr version is last in M2
+        And M2 is slave of M1
+
+    Scenario: Restart scalarizr in slave
+        When I reboot scalarizr in M2
+        And see 'Scalarizr terminated' in M2 log
+        Then scalarizr process is 2 in M2
+        And not ERROR in M2 scalarizr log
+
+    Scenario: Slave force termination
+        When I force terminate M2
+        Then Scalr sends HostDown to M1
+        And not ERROR in M1 scalarizr log
+        And redis is running on M1
+        And scalarizr process is 2 in M1
+        Then I expect server bootstrapping as M2
+        And not ERROR in M1 scalarizr log
+        And not ERROR in M2 scalarizr log
+        And redis is running on M1
+
+    @ec2
+    Scenario: Slave delete EBS
+        When I know M2 ebs storage
+        And M2 ebs status is in-use
+        Then I terminate server M2 with decrease
+        And M2 ebs status is deleting
+        And not ERROR in M1 scalarizr log
+
+    @ec2
+    Scenario: Setup replication for EBS test
+        When I increase minimum servers to 2 for redis role
+        Then I expect server bootstrapping as M2
+        And M2 is slave of M1
+
+    Scenario: Writing on Master, reading on Slave
+        When I create database 2 on M1
+        Then M2 contains database 2
+
+    Scenario: Slave -> Master promotion
+        Given I increase minimum servers to 3 for redis role
+        And I expect server bootstrapping as M3
+        When I create database 3 on M1
+        And I terminate server M1 with decrease
+        Then Scalr sends DbMsr_PromoteToMaster to N1
+        And Scalr receives DbMsr_PromoteToMasterResult from N1
+        And Scalr sends DbMsr_NewMasterUp to all
+        And M2 contains database 3
+
+    @restart_farm
+    Scenario: Restart farm
+        When I stop farm
+        And wait all servers are terminated
+        Then I start farm
+        And I expect server bootstrapping as M1
+        And scalarizr version is last in M1
+        And redis is running on M1
+        And M1 contains database 3
+        Then I expect server bootstrapping as M2
+        And M2 is slave of M1
+        And M2 contains database 3
+"""
+
 
 def test_feature_has_repr():
     "Feature implements __repr__ nicely"
@@ -442,3 +566,28 @@ def test_scenarios_with_extra_whitespace():
     scenario = feature.scenarios[0]
     assert_equals(type(scenario), Scenario)
     assert_equals(scenario.name, "Extra whitespace scenario")
+
+
+def test_scenarios_parsing():
+    feature = Feature.from_string(FEATURE15)
+    scenarios_and_tags = [(s.name, s.tags) for s in feature.scenarios]
+
+    scenarios_and_tags.should.equal([
+        ('Bootstraping Redis role', []),
+        ('Restart scalarizr', []),
+        ('Rebundle server', [u'rebundle']),
+        ('Use new role', [u'rebundle']),
+        ('Restart scalarizr after bundling', [u'rebundle']),
+        ('Bundling data', []),
+        ('Modifying data', []),
+        ('Reboot server', []),
+        ('Backuping data on Master', []),
+        ('Setup replication', []),
+        ('Restart scalarizr in slave', []),
+        ('Slave force termination', []),
+        ('Slave delete EBS', [u'ec2']),
+        ('Setup replication for EBS test', [u'ec2']),
+        ('Writing on Master, reading on Slave', []),
+        ('Slave -> Master promotion', []),
+        ('Restart farm', [u'restart_farm']),
+    ])
