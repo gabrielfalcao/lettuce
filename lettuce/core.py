@@ -700,7 +700,7 @@ class Scenario(object):
             regexes.append(broad_regex)
 
         else:
-            regexes.append(re.compile(ur"(?:%s: %s.*)([@]?.*)%s: (%s)" % (
+            regexes.append(re.compile(ur"(?:%s: %s.*)([@]?.*)%s: (%s)\s*\n" % (
                 self.language.non_capturable_scenario_separator,
                 self.previous_scenario.name,
                 self.language.scenario_separator,
