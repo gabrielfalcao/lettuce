@@ -7,8 +7,6 @@ cssselect==0.7.1
 distribute==0.6.27
 docutils==0.9.1
 fuzzywuzzy==0.1
-ipdb==0.7
-ipython==0.13
 lxml==3.0alpha2
 mock==1.0b1
 mox==0.5.3
