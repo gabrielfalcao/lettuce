@@ -31,7 +31,10 @@ from django.core.servers.basehttp import WSGIServer
 from django.core.servers.basehttp import ServerHandler
 from django.core.servers.basehttp import WSGIRequestHandler
 from django.core.servers.basehttp import WSGIServerException
-from django.core.servers.basehttp import AdminMediaHandler
+try:
+    from django.core.servers.basehttp import AdminMediaHandler
+except ImportError:
+    AdminMediaHandler = None
 try:
     from django.contrib.staticfiles.handlers import StaticFilesHandler
 except ImportError:
@@ -137,7 +140,8 @@ class ThreadedServer(multiprocessing.Process):
 
     def should_serve_admin_media(self):
         try:
-            return ('django.contrib.admin' in settings.INSTALLED_APPS or
+            return (('django.contrib.admin' in settings.INSTALLED_APPS and
+                     AdminMediaHandler) or
                     getattr(settings, 'LETTUCE_SERVE_ADMIN_MEDIA', False))
         except ImportError:
             return False
@@ -181,6 +185,11 @@ class ThreadedServer(multiprocessing.Process):
 
         handler = WSGIHandler()
         if self.should_serve_admin_media():
+            if not AdminMediaHandler:
+                raise LettuceServerException(
+                    "AdminMediaHandler is not available in this version of "
+                    "Django. Please set LETTUCE_SERVE_ADMIN_MEDIA = False "
+                    "in your Django settings.")
             admin_media_path = ''
             handler = AdminMediaHandler(handler, admin_media_path)
 
