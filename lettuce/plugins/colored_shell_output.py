@@ -27,7 +27,6 @@ from lettuce.terrain import before
 
 
 def wrt(what):
-    #sys.stdout.write(what.encode('utf-8'))
     if isinstance(what, unicode):
         what = what.encode('utf-8')
     sys.stdout.write(what)

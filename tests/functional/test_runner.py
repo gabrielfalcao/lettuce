@@ -366,7 +366,7 @@ def test_output_with_success_colorless_with_table():
         '\n'
         'Feature: Table Success           # tests/functional/output_features/success_table/success_table.feature:1\n'
         '\n'
-        '  Scenario: Add two numbers      # tests/functional/output_features/success_table/success_table.feature:2\n'
+        '  Scenario: Add two numbers ♥    # tests/functional/output_features/success_table/success_table.feature:2\n'
         '    Given I have 0 bucks         # tests/functional/output_features/success_table/success_table_steps.py:28\n'
         '    And that I have these items: # tests/functional/output_features/success_table/success_table_steps.py:32\n'
         '      | name    | price  |\n'
@@ -394,7 +394,7 @@ def test_output_with_success_colorful_with_table():
         '\n'
         '\033[1;37mFeature: Table Success           \033[1;30m# tests/functional/output_features/success_table/success_table.feature:1\033[0m\n'
         '\n'
-        '\033[1;37m  Scenario: Add two numbers      \033[1;30m# tests/functional/output_features/success_table/success_table.feature:2\033[0m\n'
+        '\033[1;37m  Scenario: Add two numbers ♥    \033[1;30m# tests/functional/output_features/success_table/success_table.feature:2\033[0m\n'
         '\033[1;30m    Given I have 0 bucks         \033[1;30m# tests/functional/output_features/success_table/success_table_steps.py:28\033[0m\n'
         '\033[A\033[1;32m    Given I have 0 bucks         \033[1;30m# tests/functional/output_features/success_table/success_table_steps.py:28\033[0m\n'
         '\033[1;30m    And that I have these items: \033[1;30m# tests/functional/output_features/success_table/success_table_steps.py:32\033[0m\n'
@@ -429,11 +429,11 @@ def test_output_with_failed_colorless_with_table():
     runner.run()
 
     assert_stdout_lines_with_traceback(
-        "\n"
+        ("\n"
         "Feature: Table Fail                           # tests/functional/output_features/failed_table/failed_table.feature:1\n"
         "\n"
         "  Scenario: See it fail                       # tests/functional/output_features/failed_table/failed_table.feature:2\n"
-        "    Given I have a dumb step that passes      # tests/functional/output_features/failed_table/failed_table_steps.py:20\n"
+        u"    Given I have a dumb step that passes ♥    # tests/functional/output_features/failed_table/failed_table_steps.py:20\n"
         "    And this one fails                        # tests/functional/output_features/failed_table/failed_table_steps.py:24\n"
         "    Traceback (most recent call last):\n"
         '      File "%(lettuce_core_file)s", line %(call_line)d, in __call__\n'
@@ -456,7 +456,7 @@ def test_output_with_failed_colorless_with_table():
         "\n"
         "@step(u'And this one does not even has definition')\n"
         "def and_this_one_does_not_even_has_definition(step):\n"
-        "    assert False, 'This step must be implemented'\n" % {
+        "    assert False, 'This step must be implemented'\n") % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')),
             'call_line':call_line,
@@ -475,8 +475,8 @@ def test_output_with_failed_colorful_with_table():
         "\033[1;37mFeature: Table Fail                           \033[1;30m# tests/functional/output_features/failed_table/failed_table.feature:1\033[0m\n"
         "\n"
         "\033[1;37m  Scenario: See it fail                       \033[1;30m# tests/functional/output_features/failed_table/failed_table.feature:2\033[0m\n"
-        "\033[1;30m    Given I have a dumb step that passes      \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:20\033[0m\n"
-        "\033[A\033[1;32m    Given I have a dumb step that passes      \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:20\033[0m\n"
+        u"\033[1;30m    Given I have a dumb step that passes ♥    \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:20\033[0m\n"
+        u"\033[A\033[1;32m    Given I have a dumb step that passes ♥    \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:20\033[0m\n"
         "\033[1;30m    And this one fails                        \033[1;30m# tests/functional/output_features/failed_table/failed_table_steps.py:24\033[0m\n"
         "\033[A\033[0;31m    And this one fails                        \033[1;41;33m# tests/functional/output_features/failed_table/failed_table_steps.py:24\033[0m\n"
         "\033[1;31m    Traceback (most recent call last):\n"
@@ -522,7 +522,7 @@ def test_output_with_successful_outline_colorless():
         'Feature: Successful Scenario Outline                          # tests/functional/output_features/success_outline/success_outline.feature:1\n'
         '  As lettuce author                                           # tests/functional/output_features/success_outline/success_outline.feature:2\n'
         '  In order to finish the first release                        # tests/functional/output_features/success_outline/success_outline.feature:3\n'
-        '  I want to make scenario outlines work :)                    # tests/functional/output_features/success_outline/success_outline.feature:4\n'
+        u'  I want to make scenario outlines work ♥                     # tests/functional/output_features/success_outline/success_outline.feature:4\n'
         '\n'
         '  Scenario Outline: fill a web form                           # tests/functional/output_features/success_outline/success_outline.feature:6\n'
         '    Given I open browser at "http://www.my-website.com/"      # tests/functional/output_features/success_outline/success_outline_steps.py:21\n'
@@ -557,7 +557,7 @@ def test_output_with_successful_outline_colorful():
         '\033[1;37mFeature: Successful Scenario Outline                          \033[1;30m# tests/functional/output_features/success_outline/success_outline.feature:1\033[0m\n'
         '\033[1;37m  As lettuce author                                           \033[1;30m# tests/functional/output_features/success_outline/success_outline.feature:2\033[0m\n'
         '\033[1;37m  In order to finish the first release                        \033[1;30m# tests/functional/output_features/success_outline/success_outline.feature:3\033[0m\n'
-        '\033[1;37m  I want to make scenario outlines work :)                    \033[1;30m# tests/functional/output_features/success_outline/success_outline.feature:4\033[0m\n'
+        u'\033[1;37m  I want to make scenario outlines work ♥                     \033[1;30m# tests/functional/output_features/success_outline/success_outline.feature:4\033[0m\n'
         '\n'
         '\033[1;37m  Scenario Outline: fill a web form                           \033[1;30m# tests/functional/output_features/success_outline/success_outline.feature:6\033[0m\n'
         '\033[0;36m    Given I open browser at "http://www.my-website.com/"      \033[1;30m# tests/functional/output_features/success_outline/success_outline_steps.py:21\033[0m\n'
@@ -592,7 +592,7 @@ def test_output_with_failful_outline_colorless():
         'Feature: Failful Scenario Outline                             # tests/functional/output_features/fail_outline/fail_outline.feature:1\n'
         '  As lettuce author                                           # tests/functional/output_features/fail_outline/fail_outline.feature:2\n'
         '  In order to finish the first release                        # tests/functional/output_features/fail_outline/fail_outline.feature:3\n'
-        '  I want to make scenario outlines work :)                    # tests/functional/output_features/fail_outline/fail_outline.feature:4\n'
+        u'  I want to make scenario outlines work ♥                     # tests/functional/output_features/fail_outline/fail_outline.feature:4\n'
         '\n'
         '  Scenario Outline: fill a web form                           # tests/functional/output_features/fail_outline/fail_outline.feature:6\n'
         '    Given I open browser at "http://www.my-website.com/"      # tests/functional/output_features/fail_outline/fail_outline_steps.py:21\n'
@@ -637,7 +637,7 @@ def test_output_with_failful_outline_colorful():
         '\033[1;37mFeature: Failful Scenario Outline                             \033[1;30m# tests/functional/output_features/fail_outline/fail_outline.feature:1\033[0m\n'
         '\033[1;37m  As lettuce author                                           \033[1;30m# tests/functional/output_features/fail_outline/fail_outline.feature:2\033[0m\n'
         '\033[1;37m  In order to finish the first release                        \033[1;30m# tests/functional/output_features/fail_outline/fail_outline.feature:3\033[0m\n'
-        '\033[1;37m  I want to make scenario outlines work :)                    \033[1;30m# tests/functional/output_features/fail_outline/fail_outline.feature:4\033[0m\n'
+        u'\033[1;37m  I want to make scenario outlines work ♥                     \033[1;30m# tests/functional/output_features/fail_outline/fail_outline.feature:4\033[0m\n'
         '\n'
         '\033[1;37m  Scenario Outline: fill a web form                           \033[1;30m# tests/functional/output_features/fail_outline/fail_outline.feature:6\033[0m\n'
         '\033[0;36m    Given I open browser at "http://www.my-website.com/"      \033[1;30m# tests/functional/output_features/fail_outline/fail_outline_steps.py:21\033[0m\n'

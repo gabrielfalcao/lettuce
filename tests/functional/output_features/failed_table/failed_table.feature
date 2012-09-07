@@ -1,7 +1,7 @@
 Feature: Table Fail
   Scenario: See it fail
 
-    Given I have a dumb step that passes
+    Given I have a dumb step that passes ♥
 
     And this one fails
 

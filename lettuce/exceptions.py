@@ -37,7 +37,6 @@ class ReasonToFail(object):
     """
     def __init__(self, exc):
         self.exception = exc
-        #self.cause = unicode(exc)
         if isinstance(exc.message, unicode):
             self.cause = unicode(exc)
         elif isinstance(exc.message, str):
