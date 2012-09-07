@@ -23,6 +23,7 @@ import sys
 import traceback
 from imp import reload
 from datetime import datetime
+import random
 
 from lettuce.core import Feature, TotalResult
 
@@ -76,7 +77,7 @@ class Runner(object):
     Takes a base path as parameter (string), so that it can look for
     features and step definitions on there.
     """
-    def __init__(self, base_path, scenarios=None, verbosity=0,
+    def __init__(self, base_path, scenarios=None, verbosity=0, random=False,
                  enable_xunit=False, xunit_filename=None, tags=None):
         """ lettuce.Runner will try to find a terrain.py file and
         import it from within `base_path`
@@ -107,6 +108,8 @@ class Runner(object):
         else:
             from lettuce.plugins import colored_shell_output as output
 
+        self.random = random
+
         if enable_xunit:
             xunit_output.enable(filename=xunit_filename)
 
@@ -132,6 +135,8 @@ class Runner(object):
             features_files = [self.single_feature]
         else:
             features_files = self.loader.find_feature_files()
+            if self.random:
+                random.shuffle(features_files)
 
         if not features_files:
             self.output.print_no_features_found(self.loader.base_dir)
@@ -142,7 +147,7 @@ class Runner(object):
             for filename in features_files:
                 feature = Feature.from_file(filename)
                 results.append(
-                    feature.run(self.scenarios, tags=self.tags))
+                    feature.run(self.scenarios, tags=self.tags, random=self.random))
 
         except exceptions.LettuceSyntaxError, e:
             sys.stderr.write(e.msg)

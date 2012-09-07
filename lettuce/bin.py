@@ -47,6 +47,12 @@ def main(args=sys.argv[1:]):
                       '(prefixing tags with "-" will exclude them and '
                       'prefixing with "~" will match approximate words)')
 
+    parser.add_option("-r", "--random",
+                      dest="random",
+                      action="store_true",
+                      default=False,
+                      help="Run scenarios in a more random order to avoid interference")
+
     parser.add_option("--with-xunit",
                       dest="enable_xunit",
                       action="store_true",
@@ -73,6 +79,7 @@ def main(args=sys.argv[1:]):
         base_path,
         scenarios=options.scenarios,
         verbosity=options.verbosity,
+        random=options.random,
         enable_xunit=options.enable_xunit,
         xunit_filename=options.xunit_file,
         tags=options.tags,
