@@ -86,11 +86,21 @@ class Language(object):
         return '<Language "%s">' % self.code
 
     def __getattr__(self, attr):
-        if not attr.startswith(u"first_of_"):
+        pattern = [u'first_of_', u'last_of']
+
+        if not re.match(u"(.*)_of_(.*)", attr):
             return super(Language, self).__getattribute__(attr)
 
-        name = re.sub(r'^first_of_', u'', attr)
-        return unicode(getattr(self, name, u'').split(u"|")[0])
+        elif re.match(u'%s' % pattern[0], attr):
+            name = re.sub(r'^first_of_', u'', attr)
+            return unicode(getattr(self, name, u'').split(u"|")[0])
+
+        elif re.match(u'%s' %pattern[1], attr):
+            name = re.sub(r'^last_of_', u'', attr)
+            return unicode(getattr(self, name, u'').split(u"|")[-1])
+        else:
+            # raise exception
+            pass
 
     @property
     def non_capturable_scenario_separator(self):
@@ -170,7 +180,7 @@ class FeatureDescription(object):
         for pline, part in enumerate(lines):
             part = part.strip()
             line = pline + 1
-            if part.startswith(u"%s:" % language.first_of_feature):
+            if re.match(u"(?:%s): " % language.feature, part):
                 self.line = line
             else:
                 for description in description_lines:
@@ -854,6 +864,10 @@ class Feature(object):
     @property
     def max_length(self):
         max_length = strings.column_width(u"%s: %s" % (self.language.first_of_feature, self.name))
+        if max_length == 0:
+            # in case feature has two keywords
+            max_length = strings.column_width(u"%s: %s" % (self.language.last_of_feature, self.name))
+
         for line in self.description.splitlines():
             length = strings.column_width(line.strip()) + Scenario.indentation
             if length > max_length:
@@ -893,7 +907,7 @@ class Feature(object):
         if not language:
             language = Language()
 
-        found = len(re.findall(r'%s:[ ]*\w+' % language.feature, "\n".join(lines), re.U))
+        found = len(re.findall(r'(?:%s):[ ]*\w+' % language.feature, "\n".join(lines), re.U))
 
         if found > 1:
             raise LettuceSyntaxError(with_file,
