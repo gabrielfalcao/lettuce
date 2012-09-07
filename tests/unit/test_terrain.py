@@ -14,6 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import sys
 from mox import Mox
 from nose.tools import assert_equals
 
@@ -228,6 +229,10 @@ def test_world_should_be_able_to_absorb_lambdas():
 def test_world_should_be_able_to_absorb_classs():
    u"world should be able to absorb class"
    assert not hasattr(world, 'MyClass')
+
+   if sys.version_info < (2, 5):
+       # python 2.5 doesn't support class decorators
+       return
 
    @world.absorb
    class MyClass:
