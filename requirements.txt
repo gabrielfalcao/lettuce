@@ -11,6 +11,6 @@ lxml==3.0alpha2
 mock==1.0b1
 mox==0.5.3
 nose==1.1.2
-sure==1.0.5
+sure==1.0.6
 tornado==2.3
-wsgiref==0.1.2
+tox==1.4.2
