@@ -230,13 +230,13 @@ def test_world_should_be_able_to_absorb_classs():
    u"world should be able to absorb class"
    assert not hasattr(world, 'MyClass')
 
-   if sys.version_info < (2, 5):
-       # python 2.5 doesn't support class decorators
+   if sys.version_info < (2, 6):
        return
 
-   @world.absorb
    class MyClass:
        pass
+
+   world.absorb(MyClass)
 
    assert hasattr(world, 'MyClass')
    assert_equals(world.MyClass, MyClass)
