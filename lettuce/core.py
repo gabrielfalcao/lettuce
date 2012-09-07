@@ -86,21 +86,12 @@ class Language(object):
         return '<Language "%s">' % self.code
 
     def __getattr__(self, attr):
-        pattern = [u'first_of_', u'last_of']
+        for pattern in [ur'^first_of_', ur'^last_of']:
+            if re.match(pattern, attr):
+                name = re.sub(pattern, u'', attr)
+                return unicode(getattr(self, name, u'').split(u"|")[0])
 
-        if not re.match(u"(.*)_of_(.*)", attr):
-            return super(Language, self).__getattribute__(attr)
-
-        elif re.match(u'%s' % pattern[0], attr):
-            name = re.sub(r'^first_of_', u'', attr)
-            return unicode(getattr(self, name, u'').split(u"|")[0])
-
-        elif re.match(u'%s' %pattern[1], attr):
-            name = re.sub(r'^last_of_', u'', attr)
-            return unicode(getattr(self, name, u'').split(u"|")[-1])
-        else:
-            # raise exception
-            pass
+        return super(Language, self).__getattribute__(attr)
 
     @property
     def non_capturable_scenario_separator(self):
