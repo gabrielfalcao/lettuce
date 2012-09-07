@@ -21,7 +21,12 @@ release = 'kryptonite'
 import os
 import sys
 import traceback
-from imp import reload
+try:
+    from imp import reload
+except ImportError:
+    # python 2.5 fallback
+    pass
+
 from datetime import datetime
 
 from lettuce.core import Feature, TotalResult
