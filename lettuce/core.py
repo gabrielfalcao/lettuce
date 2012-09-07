@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import random as rand
 import re
 import codecs
 from fuzzywuzzy import fuzz
@@ -983,9 +984,12 @@ class Feature(object):
 
         return scenarios, description
 
-    def run(self, scenarios=None, ignore_case=True, tags=None):
+    def run(self, scenarios=None, ignore_case=True, tags=None, random=False):
         call_hook('before_each', 'feature', self)
         scenarios_ran = []
+
+        if random:
+            rand.shuffle(self.scenarios)
 
         if isinstance(scenarios, (tuple, list)):
             if all(map(lambda x: isinstance(x, int), scenarios)):

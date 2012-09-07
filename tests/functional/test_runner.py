@@ -15,8 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
+import random
 import lettuce
-from mock import Mock
+from mock import Mock, patch
 from StringIO import StringIO
 from os.path import dirname, join, abspath
 from nose.tools import assert_equals, with_setup, assert_raises
@@ -1096,3 +1097,12 @@ def test_run_only_fast_tests():
         "1 scenario (1 passed)\n"
         "2 steps (2 passed)\n"
     )
+
+def test_run_random():
+    "Randomise the feature order"
+    filename = tag_feature_name('timebound')
+    runner = Runner('some_basepath', random=True)
+    assert_equals(True, runner.random)
+    with patch.object(random, 'shuffle') as pshuffle:
+        runner.run()
+        pshuffle.assert_called_once_with([])
