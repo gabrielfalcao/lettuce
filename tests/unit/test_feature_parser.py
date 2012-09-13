@@ -543,7 +543,7 @@ def test_single_scenario_single_scenario():
 
 def test_single_feature_single_tag():
     "All scenarios within a feature inherit the feature's tags"
-    feature = Feature.from_string(FEATURE15)
+    feature = Feature.from_string(FEATURE16)
 
     # FIXME (mitgr81):  It seems worth the efficiency to not loop through the feature tags and
     # check to see if every tag exists in the child.  The "right" fix might just be to not
