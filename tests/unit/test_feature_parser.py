@@ -352,6 +352,7 @@ Feature: correct matching
 
 """
 
+
 FEATURE17 = """
 Feature: correct matching
   @runme1
@@ -618,8 +619,6 @@ def test_scenarios_with_extra_whitespace():
     scenario = feature.scenarios[0]
     assert_equals(type(scenario), Scenario)
     assert_equals(scenario.name, "Extra whitespace scenario")
-
-
 
 def test_scenarios_parsing():
     feature = Feature.from_string(FEATURE15)
