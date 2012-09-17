@@ -34,6 +34,18 @@ from lettuce.exceptions import LettuceSyntaxError
 fs = FileSystem()
 
 
+class REP(object):
+    "RegEx Pattern"
+    first_of = re.compile(ur'^first_of_')
+    last_of = re.compile(ur'^last_of_')
+    language = re.compile(u"language:[ ]*([^\s]+)")
+    within_double_quotes = re.compile(r'("[^"]+")')
+    within_single_quotes = re.compile(r"('[^']+')")
+    only_whitespace = re.compile('^\s*$')
+    tag_extraction_regex = re.compile(r'(?:(?:^|\s+)[@]([^@\s]+))')
+    tag_strip_regex = re.compile(ur'(?:(?:^\s*|\s+)[@]\S+\s*)+$', re.DOTALL)
+
+
 class HashList(list):
     __base_msg = 'The step "%s" have no table defined, so ' \
         'that you can\'t use step.hashes.%s'
@@ -86,9 +98,9 @@ class Language(object):
         return '<Language "%s">' % self.code
 
     def __getattr__(self, attr):
-        for pattern in [ur'^first_of_', ur'^last_of']:
-            if re.match(pattern, attr):
-                name = re.sub(pattern, u'', attr)
+        for pattern in [REP.first_of, REP.last_of]:
+            if pattern.match(attr):
+                name = pattern.sub(u'', attr)
                 return unicode(getattr(self, name, u'').split(u"|")[0])
 
         return super(Language, self).__getattribute__(attr)
@@ -99,7 +111,7 @@ class Language(object):
 
     @classmethod
     def guess_from_string(cls, string):
-        match = re.search(u"language:[ ]*([^\s]+)", string)
+        match = re.search(REP.language, string)
         if match:
             instance = cls(match.group(1))
         else:
@@ -209,8 +221,8 @@ class Step(object):
         method_name = sentence
 
         groups = [
-            ('"', re.compile(r'("[^"]+")'), r'"([^"]*)"'),
-            ("'", re.compile(r"('[^']+')"), r"\'([^\']*)\'"),
+            ('"', REP.within_double_quotes, r'"([^"]*)"'),
+            ("'", REP.within_single_quotes, r"\'([^\']*)\'"),
         ]
 
         attribute_names = []
@@ -457,8 +469,7 @@ class Step(object):
                 invalid_first_line_error % (lines[0], 'multiline'))
 
         # Select only lines that aren't end-to-end whitespace
-        only_whitspace = re.compile('^\s*$')
-        lines = filter(lambda x: not only_whitspace.match(x), lines)
+        lines = filter(lambda x: not REP.only_whitespace.match(x), lines)
 
         step_strings = []
         in_multiline = False
@@ -724,9 +735,7 @@ class Scenario(object):
         return []
 
     def _extract_tag(self, item):
-        regex = re.compile(r'(?:(?:^|\s+)[@]([^@\s]+))')
-        found = regex.findall(item)
-        return found
+        return REP.tag_extraction_regex.findall(item)
 
     def _resolve_steps(self, steps, outlines, with_file, original_string):
         for outline in outlines:
@@ -937,9 +946,7 @@ class Feature(object):
         self.described_at = definition
 
     def _strip_next_scenario_tags(self, string):
-        regex = re.compile(ur'(?:(?:^\s*|\s+)[@]\S+\s*)+$', re.DOTALL)
-        stripped = regex.sub('', string)
-
+        stripped = REP.tag_strip_regex.sub('', string)
         return stripped
 
     def _parse_remaining_lines(self, lines, original_string, with_file=None):
