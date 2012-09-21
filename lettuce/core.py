@@ -88,6 +88,7 @@ class Language(object):
     examples = 'Examples|Scenarios'
     scenario_outline = 'Scenario Outline'
     scenario_separator = 'Scenario( Outline)?'
+    background = "Background"
 
     def __init__(self, code=u'en'):
         self.code = code
@@ -832,6 +833,31 @@ class Scenario(object):
         return scenario
 
 
+class Background(object):
+    def __init__(self, lines, feature,
+                 with_file=None,
+                 original_string=None,
+                 language=None):
+        self.steps = Step.many_from_lines(lines, with_file, original_string)
+        self.feature = feature
+        self.original_string = original_string
+        self.language = language
+
+    @classmethod
+    def from_string(new_background,
+                    lines,
+                    feature,
+                    with_file=None,
+                    original_string=None,
+                    language=None):
+        return new_background(
+            lines,
+            feature,
+            with_file=with_file,
+            original_string=original_string,
+            language=language)
+
+
 class Feature(object):
     """ Object that represents a feature."""
     described_at = None
@@ -845,7 +871,9 @@ class Feature(object):
         self.name = name
         self.language = language
 
-        self.scenarios, self.description = self._parse_remaining_lines(
+        (self.background,
+         self.scenarios,
+         self.description) = self._parse_remaining_lines(
             remaining_lines,
             original_string,
             with_file)
@@ -863,10 +891,13 @@ class Feature(object):
 
     @property
     def max_length(self):
-        max_length = strings.column_width(u"%s: %s" % (self.language.first_of_feature, self.name))
+        max_length = strings.column_width(u"%s: %s" % (
+            self.language.first_of_feature, self.name))
+
         if max_length == 0:
             # in case feature has two keywords
-            max_length = strings.column_width(u"%s: %s" % (self.language.last_of_feature, self.name))
+            max_length = strings.column_width(u"%s: %s" % (
+                self.language.last_of_feature, self.name))
 
         for line in self.description.splitlines():
             length = strings.column_width(line.strip()) + Scenario.indentation
@@ -894,9 +925,12 @@ class Feature(object):
 
         filename = self.described_at.file
         line = self.described_at.line
-        head = strings.rfill(self.get_head(), length, append=u"# %s:%d\n" % (filename, line))
-        for description, line in zip(self.description.splitlines(), self.described_at.description_at):
-            head += strings.rfill(u"  %s" % description, length, append=u"# %s:%d\n" % (filename, line))
+        head = strings.rfill(self.get_head(), length,
+                             append=u"# %s:%d\n" % (filename, line))
+        for description, line in zip(self.description.splitlines(),
+                                     self.described_at.description_at):
+            head += strings.rfill(
+                u"  %s" % description, length, append=u"# %s:%d\n" % (filename, line))
 
         return head
 
@@ -949,9 +983,19 @@ class Feature(object):
         stripped = REP.tag_strip_regex.sub('', string)
         return stripped
 
+    def _extract_desc_and_bg(self, joined):
+        if not re.search(self.language.background, joined):
+            return joined, None
+
+        parts = strings.split_wisely(joined, self.language.background)
+        description = parts.pop(0)
+
+        return description, parts
+
     def _parse_remaining_lines(self, lines, original_string, with_file=None):
-        # replacing occurrences of Scenario Outline, with just "Scenario"
         joined = u"\n".join(lines[1:])
+
+        # replacing occurrences of Scenario Outline, with just "Scenario"
         scenario_prefix = u'%s:' % self.language.first_of_scenario
         regex = re.compile(
             u"%s:\s" % self.language.scenario_separator, re.U | re.I | re.DOTALL)
@@ -961,9 +1005,17 @@ class Feature(object):
         parts = strings.split_wisely(joined, scenario_prefix)
 
         description = u""
+        background = None
 
         if not re.search("^" + scenario_prefix, joined):
-            description = parts[0]
+            description, background_lines = self._extract_desc_and_bg(parts[0])
+            background = background_lines and Background.from_string(
+                background_lines,
+                self,
+                with_file=with_file,
+                original_string=original_string,
+                language=self.language,
+            ) or None
             parts.pop(0)
 
         prefix = self.language.first_of_scenario
@@ -994,7 +1046,7 @@ class Feature(object):
             current_scenario = Scenario.from_string(current, **params)
             scenarios.append(current_scenario)
 
-        return scenarios, description
+        return background, scenarios, description
 
     def run(self, scenarios=None, ignore_case=True, tags=None, random=False):
         call_hook('before_each', 'feature', self)
