@@ -66,7 +66,7 @@ def main(args=sys.argv[1:]):
                       help='Write JUnit XML to this file. Defaults to '
                       'lettucetests.xml')
 
-    options, args = parser.parse_args()
+    options, args = parser.parse_args(args)
     if args:
         base_path = os.path.abspath(args[0])
 
