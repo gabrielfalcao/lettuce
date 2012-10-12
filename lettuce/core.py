@@ -987,8 +987,11 @@ class Feature(object):
         if not re.search(self.language.background, joined):
             return joined, None
 
-        parts = strings.split_wisely(joined, self.language.background)
+        parts = strings.split_wisely(
+            joined, "(%s):\s*" % self.language.background)
         description = parts.pop(0)
+        if parts:
+            parts = "".join(parts[1:]).splitlines()
 
         return description, parts
 
@@ -1009,6 +1012,7 @@ class Feature(object):
 
         if not re.search("^" + scenario_prefix, joined):
             description, background_lines = self._extract_desc_and_bg(parts[0])
+
             background = background_lines and Background.from_string(
                 background_lines,
                 self,
