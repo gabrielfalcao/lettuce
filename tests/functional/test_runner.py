@@ -18,6 +18,7 @@ import os
 import random
 import lettuce
 from mock import Mock, patch
+from sure import expect
 from StringIO import StringIO
 from os.path import dirname, join, abspath
 from nose.tools import assert_equals, with_setup, assert_raises
@@ -27,7 +28,6 @@ from lettuce.terrain import world
 from lettuce import Runner
 
 from tests.asserts import assert_lines
-from tests.asserts import assert_stderr
 from tests.asserts import prepare_stderr
 from tests.asserts import prepare_stdout
 from tests.asserts import assert_stderr_lines
@@ -40,6 +40,7 @@ lettuce_dir = abspath(dirname(lettuce.__file__))
 ojoin = lambda *x: join(current_dir, 'output_features', *x)
 sjoin = lambda *x: join(current_dir, 'syntax_features', *x)
 tjoin = lambda *x: join(current_dir, 'tag_features', *x)
+bjoin = lambda *x: join(current_dir, 'bg_features', *x)
 
 lettuce_path = lambda *x: fs.relpath(join(lettuce_dir, *x))
 
@@ -53,6 +54,7 @@ def joiner(callback, name):
 feature_name = lambda name: joiner(ojoin, name)
 syntax_feature_name = lambda name: joiner(sjoin, name)
 tag_feature_name = lambda name: joiner(tjoin, name)
+bg_feature_name = lambda name: joiner(bjoin, name)
 
 
 @with_setup(prepare_stderr)
@@ -1098,11 +1100,46 @@ def test_run_only_fast_tests():
         "2 steps (2 passed)\n"
     )
 
+
 def test_run_random():
     "Randomise the feature order"
-    filename = tag_feature_name('timebound')
+
     runner = Runner('some_basepath', random=True)
     assert_equals(True, runner.random)
     with patch.object(random, 'shuffle') as pshuffle:
         runner.run()
         pshuffle.assert_called_once_with([])
+
+
+@with_setup(prepare_stdout)
+def test_background_with_header():
+    "Running background with header"
+
+    from lettuce import step, world
+
+    @step(ur'the variable "(\w+)" holds (\d+)')
+    def set_variable(step, name, value):
+        setattr(world, name, int(value))
+
+    @step(ur'the variable "(\w+)" is equal to (\d+)')
+    def check_variable(step, name, expected):
+        expected = int(expected)
+        expect(world).to.have.property(name).being.equal(expected)
+
+    @step(ur'the variable "(\w+)" times (\d+) is equal to (\d+)')
+    def multiply_and_verify(step, name, times, expected):
+        times = int(times)
+        expected = int(expected)
+        (getattr(world, name) * times).should.equal(expected)
+
+    filename = bg_feature_name('header')
+    runner = Runner(filename, verbosity=1)
+    runner.run()
+
+    assert_stdout_lines(
+        "......."
+        "\n"
+        "1 feature (1 passed)\n"
+        "2 scenarios (2 passed)\n"
+        "7 steps (7 passed)\n"
+    )

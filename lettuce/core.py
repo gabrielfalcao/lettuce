@@ -843,6 +843,9 @@ class Background(object):
         self.original_string = original_string
         self.language = language
 
+    def run(self, ignore_case):
+        return [s.run(ignore_case) for s in self.steps]
+
     @classmethod
     def from_string(new_background,
                     lines,
@@ -1071,6 +1074,9 @@ class Feature(object):
 
             if not scenario.matches_tags(tags):
                 continue
+
+            if self.background:
+                self.background.run(ignore_case)
 
             scenarios_ran.extend(scenario.run(ignore_case))
 
