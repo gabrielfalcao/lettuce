@@ -873,6 +873,7 @@ class Feature(object):
 
         self.name = name
         self.language = language
+        self.original_string = original_string
 
         (self.background,
          self.scenarios,
@@ -880,8 +881,6 @@ class Feature(object):
             remaining_lines,
             original_string,
             with_file)
-
-        self.original_string = original_string
 
         if with_file:
             feature_definition = FeatureDescription(self,
@@ -992,8 +991,9 @@ class Feature(object):
 
         parts = strings.split_wisely(
             joined, "(%s):\s*" % self.language.background)
+
         description = parts.pop(0)
-        if parts:
+        if not re.search(self.language.background, description) and parts:
             parts = "".join(parts[1:]).splitlines()
 
         return description, parts

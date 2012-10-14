@@ -1143,3 +1143,37 @@ def test_background_with_header():
         "2 scenarios (2 passed)\n"
         "7 steps (7 passed)\n"
     )
+
+
+@with_setup(prepare_stdout)
+def test_background_without_header():
+    "Running background without header"
+
+    from lettuce import step, world
+
+    @step(ur'the variable "(\w+)" holds (\d+)')
+    def set_variable(step, name, value):
+        setattr(world, name, int(value))
+
+    @step(ur'the variable "(\w+)" is equal to (\d+)')
+    def check_variable(step, name, expected):
+        expected = int(expected)
+        expect(world).to.have.property(name).being.equal(expected)
+
+    @step(ur'the variable "(\w+)" times (\d+) is equal to (\d+)')
+    def multiply_and_verify(step, name, times, expected):
+        times = int(times)
+        expected = int(expected)
+        (getattr(world, name) * times).should.equal(expected)
+
+    filename = bg_feature_name('naked')
+    runner = Runner(filename, verbosity=1)
+    runner.run()
+
+    assert_stdout_lines(
+        "......."
+        "\n"
+        "1 feature (1 passed)\n"
+        "2 scenarios (2 passed)\n"
+        "7 steps (7 passed)\n"
+    )
