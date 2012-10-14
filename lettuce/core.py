@@ -993,10 +993,15 @@ class Feature(object):
             joined, "(%s):\s*" % self.language.background)
 
         description = parts.pop(0)
-        if not re.search(self.language.background, description) and parts:
-            parts = "".join(parts[1:]).splitlines()
 
-        return description, parts
+        if not re.search(self.language.background, description):
+            if parts:
+                parts = parts[1:]
+        else:
+            description = ""
+
+        background_string = "".join(parts).splitlines()
+        return description, background_string
 
     def _parse_remaining_lines(self, lines, original_string, with_file=None):
         joined = u"\n".join(lines[1:])

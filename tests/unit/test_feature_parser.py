@@ -357,6 +357,23 @@ Feature: Movie rental
         Then there are 5 more left
 """
 
+FEATURE17 = """
+Feature: Movie rental without MMF
+    Background:
+        Given I have the following movies in my database:
+           | Name                    | Rating  | New | Available |
+           | Matrix Revolutions      | 4 stars | no  | 6         |
+           | Iron Man 2              | 5 stars | yes | 11        |
+        And the following clients:
+           | Name      |
+           | John Doe  |
+           | Foo Bar   |
+
+    Scenario: Renting a featured movie
+        Given the client 'John Doe' rents 'Iron Man 2'
+        Then there are 10 more left
+"""
+
 
 def test_feature_has_repr():
     "Feature implements __repr__ nicely"
@@ -621,13 +638,47 @@ def test_scenarios_parsing():
     ])
 
 
-def test_background_parsing():
+def test_background_parsing_with_mmf():
     feature = Feature.from_string(FEATURE16)
     expect(feature.description).to.equal(
         "As a rental store owner\n"
         "I want to keep track of my clients\n"
         "So that I can manage my business better"
     )
+
+    expect(feature).to.have.property('background').being.a(Background)
+    expect(feature.background).to.have.property('steps')
+    expect(feature.background.steps).to.have.length_of(2)
+
+    step1, step2 = feature.background.steps
+    step1.sentence.should.equal(
+        'Given I have the following movies in my database:')
+    step1.hashes.should.equal(HashList(step1, [
+        {
+            u'Available': u'6',
+            u'Rating': u'4 stars',
+            u'Name': u'Matrix Revolutions',
+            u'New': u'no',
+        },
+        {
+            u'Available': u'11',
+            u'Rating': u'5 stars',
+            u'Name': u'Iron Man 2',
+            u'New': u'yes',
+        },
+    ]))
+
+    step2.sentence.should.equal(
+        'And the following clients:')
+    step2.hashes.should.equal(HashList(step2, [
+        {u'Name': u'John Doe'},
+        {u'Name': u'Foo Bar'},
+    ]))
+
+
+def test_background_parsing_without_mmf():
+    feature = Feature.from_string(FEATURE17)
+    expect(feature.description).to.be.empty
 
     expect(feature).to.have.property('background').being.a(Background)
     expect(feature.background).to.have.property('steps')
