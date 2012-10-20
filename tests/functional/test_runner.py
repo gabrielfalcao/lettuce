@@ -695,33 +695,33 @@ def test_output_with_failful_outline_colorful():
     )
 
 
-# @with_setup(prepare_stderr)
-# def test_many_features_a_file():
-#     "syntax checking: Fail if a file has more than one feature"
+@with_setup(prepare_stderr)
+def test_many_features_a_file():
+    "syntax checking: Fail if a file has more than one feature"
 
-#     filename = syntax_feature_name('many_features_a_file')
-#     runner = Runner(filename)
-#     assert_raises(SystemExit, runner.run)
+    filename = syntax_feature_name('many_features_a_file')
+    runner = Runner(filename)
+    assert_raises(SystemExit, runner.run)
 
-#     assert_stderr_lines(
-#         'Syntax error at: %s\n'
-#         'A feature file must contain ONLY ONE feature!\n' % filename
-#     )
+    assert_stderr_lines(
+        'Syntax error at: %s\n'
+        'A feature file must contain ONLY ONE feature!\n' % filename
+    )
 
 
-# @with_setup(prepare_stderr)
-# def test_feature_without_name():
-#     "syntax checking: Fail on features without name"
+@with_setup(prepare_stderr)
+def test_feature_without_name():
+    "syntax checking: Fail on features without name"
 
-#     filename = syntax_feature_name('feature_without_name')
-#     runner = Runner(filename)
-#     assert_raises(SystemExit, runner.run)
+    filename = syntax_feature_name('feature_without_name')
+    runner = Runner(filename)
+    assert_raises(SystemExit, runner.run)
 
-#     assert_stderr_lines(
-#         'Syntax error at: %s\n'
-#         'Features must have a name. e.g: "Feature: This is my name"\n'
-#         % filename
-#     )
+    assert_stderr_lines(
+        'Syntax error at: %s\n'
+        'Features must have a name. e.g: "Feature: This is my name"\n'
+        % filename
+    )
 
 
 @with_setup(prepare_stdout)
@@ -1236,7 +1236,7 @@ def test_background_without_header():
 
 @with_setup(prepare_stdout)
 def test_output_background_with_success_colorless():
-    "A feature with background should print it accordingly"
+    "A feature with background should print it accordingly under verbosity 3"
 
     from lettuce import step
 
@@ -1267,3 +1267,38 @@ def test_output_background_with_success_colorless():
         '1 scenario (1 passed)\n'
         '1 step (1 passed)\n'
     )
+
+
+# @with_setup(prepare_stdout)
+# def test_output_background_with_success_colorful():
+#     "A feature with background should print it accordingly under verbosity 4"
+
+#     from lettuce import step
+
+#     @step(ur'the variable "(\w+)" holds (\d+)')
+#     @step(ur'the variable "(\w+)" is equal to (\d+)')
+#     def just_pass(step, *args):
+#         pass
+
+#     filename = bg_feature_name('simple')
+#     runner = Runner(filename, verbosity=4)
+
+#     runner.run()
+
+#     assert_stdout_lines(
+#         '\n'
+#         'Feature: Simple and successful                # tests/functional/bg_features/simple/simple.feature:1\n'
+#         '  As the Lettuce maintainer                   # tests/functional/bg_features/simple/simple.feature:2\n'
+#         '  In order to make sure the output is pretty  # tests/functional/bg_features/simple/simple.feature:3\n'
+#         '  I want to automate its test                 # tests/functional/bg_features/simple/simple.feature:4\n'
+#         '\n'
+#         '  Background:\n'
+#         '    Given the variable "X" holds 2            # tests/functional/test_runner.py:1244\n'
+#         '\n'
+#         '  Scenario: multiplication changing the value # tests/functional/bg_features/simple/simple.feature:9\n'
+#         '    Given the variable "X" is equal to 2      # tests/functional/test_runner.py:1244\n'
+#         '\n'
+#         '1 feature (1 passed)\n'
+#         '1 scenario (1 passed)\n'
+#         '1 step (1 passed)\n'
+#     )
