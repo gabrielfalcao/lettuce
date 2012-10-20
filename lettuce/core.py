@@ -15,13 +15,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import random as rand
+
 import re
 import codecs
-from fuzzywuzzy import fuzz
 import unicodedata
-from itertools import chain
+
 from copy import deepcopy
+from fuzzywuzzy import fuzz
+from itertools import chain
+from random import shuffle
+
 from lettuce import strings
 from lettuce import languages
 from lettuce.fs import FileSystem
@@ -181,6 +184,7 @@ class FeatureDescription(object):
         self.line = None
         described_at = []
         description_lines = strings.get_stripped_lines(feature.description)
+
         for pline, part in enumerate(lines):
             part = part.strip()
             line = pline + 1
@@ -205,6 +209,8 @@ class Step(object):
     passed = None
     failed = None
     related_outline = None
+    scenario = None
+    background = None
 
     def __init__(self, sentence, remaining_lines, line=None, filename=None):
         self.sentence = sentence
@@ -301,12 +307,17 @@ class Step(object):
 
         return max_length
 
+    @property
+    def parent(self):
+        return self.scenario or self.background
+
     def represent_string(self, string):
         head = ' ' * self.indentation + string
         where = self.described_at
+
         if self.defined_at:
             where = self.defined_at
-        return strings.rfill(head, self.scenario.feature.max_length + 1, append=u'# %s:%d\n' % (where.file, where.line))
+        return strings.rfill(head, self.parent.feature.max_length + 1, append=u'# %s:%d\n' % (where.file, where.line))
 
     def represent_hashes(self):
         lines = strings.dicts_to_string(self.hashes, self.keys).splitlines()
@@ -834,17 +845,54 @@ class Scenario(object):
 
 
 class Background(object):
+    indentation = 2
+
     def __init__(self, lines, feature,
                  with_file=None,
                  original_string=None,
                  language=None):
-        self.steps = Step.many_from_lines(lines, with_file, original_string)
+        self.steps = map(self.add_self_to_step, Step.many_from_lines(
+            lines, with_file, original_string))
+
         self.feature = feature
         self.original_string = original_string
         self.language = language
 
+    def add_self_to_step(self, step):
+        step.background = self
+        return step
+
     def run(self, ignore_case):
-        return [s.run(ignore_case) for s in self.steps]
+        call_hook('before_each', 'background', self)
+        results = []
+
+        for step in self.steps:
+            call_hook('before_each', 'step', step)
+            try:
+                results.append(step.run(ignore_case))
+            except Exception, e:
+                print e
+                pass
+
+            call_hook('after_each', 'step', step)
+
+        call_hook('after_each', 'background', self, results)
+        return results
+
+    def __repr__(self):
+        return '<Background for feature: {0}>'.format(self.feature.name)
+
+    @property
+    def max_length(self):
+        max_length = 0
+        for step in self.steps:
+            if step.max_length > max_length:
+                max_length = step.max_length
+
+        return max_length
+
+    def represented(self):
+        return ((' ' * self.indentation) + 'Background:')
 
     @classmethod
     def from_string(new_background,
@@ -1065,7 +1113,7 @@ class Feature(object):
         scenarios_ran = []
 
         if random:
-            rand.shuffle(self.scenarios)
+            shuffle(self.scenarios)
 
         if isinstance(scenarios, (tuple, list)):
             if all(map(lambda x: isinstance(x, int), scenarios)):
