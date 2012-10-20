@@ -867,6 +867,7 @@ class Background(object):
         results = []
 
         for step in self.steps:
+            matched, step_definition = step.pre_run(ignore_case)
             call_hook('before_each', 'step', step)
             try:
                 results.append(step.run(ignore_case))
