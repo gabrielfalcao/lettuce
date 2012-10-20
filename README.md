@@ -1,5 +1,5 @@
 # lettuce
-> Version 0.2.9 - kryptonite
+> Version 0.2.10 - kryptonite
 
 ## On release names
 
