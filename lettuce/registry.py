@@ -54,6 +54,10 @@ CALLBACK_REGISTRY = CallbackDict(
             'after_each': [],
             'outline': [],
         },
+        'background': {
+            'before_each': [],
+            'after_each': [],
+        },
         'feature': {
             'before_each': [],
             'after_each': [],

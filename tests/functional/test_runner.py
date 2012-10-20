@@ -70,17 +70,17 @@ def test_try_to_import_terrain():
         raise AssertionError('The runner should raise ImportError !')
     except SystemExit:
         assert_stderr_lines_with_traceback(
-            'Lettuce has tried to load the conventional environment module ' \
-            '"terrain"\nbut it has errors, check its contents and ' \
-            'try to run lettuce again.\n\nOriginal traceback below:\n\n' \
+            'Lettuce has tried to load the conventional environment module '
+            '"terrain"\nbut it has errors, check its contents and '
+            'try to run lettuce again.\n\nOriginal traceback below:\n\n'
             "Traceback (most recent call last):\n"
             '  File "%(lettuce_core_file)s", line 44, in <module>\n'
-            '    terrain = fs.FileSystem._import("terrain")\n' \
-            '  File "%(lettuce_fs_file)s", line 63, in _import\n' \
-            '    module = imp.load_module(name, fp, pathname, description)\n' \
-            '  File "%(terrain_file)s", line 18\n' \
-            '    it is here just to cause a syntax error\n' \
-            "                  ^\n" \
+            '    terrain = fs.FileSystem._import("terrain")\n'
+            '  File "%(lettuce_fs_file)s", line 63, in _import\n'
+            '    module = imp.load_module(name, fp, pathname, description)\n'
+            '  File "%(terrain_file)s", line 18\n'
+            '    it is here just to cause a syntax error\n'
+            "                  ^\n"
             'SyntaxError: invalid syntax\n' % {
                 'lettuce_core_file': abspath(join(lettuce_dir, '__init__.py')),
                 'lettuce_fs_file': abspath(join(lettuce_dir, 'fs.py')),
@@ -90,6 +90,7 @@ def test_try_to_import_terrain():
 
     finally:
         os.chdir(original_path)
+
 
 def test_feature_representation_without_colors():
     "Feature represented without colors"
@@ -104,6 +105,7 @@ def test_feature_representation_without_colors():
         "  I want to be told the sum of two numbers             # tests/functional/simple_features/1st_feature_dir/some.feature:8\n"
     )
 
+
 def test_scenario_outline_representation_without_colors():
     "Scenario Outline represented without colors"
     feature_file = ojoin('..', 'simple_features', '1st_feature_dir', 'some.feature')
@@ -114,6 +116,7 @@ def test_scenario_outline_representation_without_colors():
         "  Scenario Outline: Add two numbers                    # tests/functional/simple_features/1st_feature_dir/some.feature:10\n"
     )
 
+
 def test_scenario_representation_without_colors():
     "Scenario represented without colors"
     feature_file = ojoin('runner_features', 'first.feature')
@@ -123,6 +126,7 @@ def test_scenario_representation_without_colors():
         feature.scenarios[0].represented(),
         "  Scenario: Do nothing                   # tests/functional/output_features/runner_features/first.feature:6\n"
     )
+
 
 def test_undefined_step_represent_string():
     "Undefined step represented without colors"
@@ -139,6 +143,7 @@ def test_undefined_step_represent_string():
         step.represent_string("foo bar"),
         "    foo bar                              # tests/functional/output_features/runner_features/first.feature:7\n"
     )
+
 
 def test_defined_step_represent_string():
     "Defined step represented without colors"
@@ -158,8 +163,9 @@ def test_defined_step_represent_string():
         "    Given I do nothing                   # tests/functional/output_features/runner_features/dumb_steps.py:6\n"
     )
 
+
 @with_setup(prepare_stdout)
-def test_output_with_success_colorless():
+def test_output_with_success_colorless2():
     "Testing the colorless output of a successful feature"
 
     runner = Runner(join(abspath(dirname(__file__)), 'output_features', 'runner_features'), verbosity=3)
@@ -179,6 +185,7 @@ def test_output_with_success_colorless():
         "1 scenario (1 passed)\n"
         "1 step (1 passed)\n"
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_with_success_colorless():
@@ -205,6 +212,7 @@ def test_output_with_success_colorless():
         "2 steps (2 passed)\n"
     )
 
+
 @with_setup(prepare_stdout)
 def test_output_with_success_colorful():
     "Testing the output of a successful feature"
@@ -213,20 +221,21 @@ def test_output_with_success_colorful():
     runner.run()
 
     assert_stdout_lines(
-        "\n" \
-        "\033[1;37mFeature: Dumb feature                    \033[1;30m# tests/functional/output_features/runner_features/first.feature:1\033[0m\n" \
-        "\033[1;37m  In order to test success               \033[1;30m# tests/functional/output_features/runner_features/first.feature:2\033[0m\n" \
-        "\033[1;37m  As a programmer                        \033[1;30m# tests/functional/output_features/runner_features/first.feature:3\033[0m\n" \
-        "\033[1;37m  I want to see that the output is green \033[1;30m# tests/functional/output_features/runner_features/first.feature:4\033[0m\n" \
-        "\n" \
-        "\033[1;37m  Scenario: Do nothing                   \033[1;30m# tests/functional/output_features/runner_features/first.feature:6\033[0m\n" \
-        "\033[1;30m    Given I do nothing                   \033[1;30m# tests/functional/output_features/runner_features/dumb_steps.py:6\033[0m\n" \
-        "\033[A\033[1;32m    Given I do nothing                   \033[1;30m# tests/functional/output_features/runner_features/dumb_steps.py:6\033[0m\n" \
-        "\n" \
-        "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
-        "\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
+        "\n"
+        "\033[1;37mFeature: Dumb feature                    \033[1;30m# tests/functional/output_features/runner_features/first.feature:1\033[0m\n"
+        "\033[1;37m  In order to test success               \033[1;30m# tests/functional/output_features/runner_features/first.feature:2\033[0m\n"
+        "\033[1;37m  As a programmer                        \033[1;30m# tests/functional/output_features/runner_features/first.feature:3\033[0m\n"
+        "\033[1;37m  I want to see that the output is green \033[1;30m# tests/functional/output_features/runner_features/first.feature:4\033[0m\n"
+        "\n"
+        "\033[1;37m  Scenario: Do nothing                   \033[1;30m# tests/functional/output_features/runner_features/first.feature:6\033[0m\n"
+        "\033[1;30m    Given I do nothing                   \033[1;30m# tests/functional/output_features/runner_features/dumb_steps.py:6\033[0m\n"
+        "\033[A\033[1;32m    Given I do nothing                   \033[1;30m# tests/functional/output_features/runner_features/dumb_steps.py:6\033[0m\n"
+        "\n"
+        "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n"
+        "\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n"
         "\033[1;37m1 step (\033[1;32m1 passed\033[1;37m)\033[0m\n"
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_with_success_colorful_newline():
@@ -236,24 +245,25 @@ def test_output_with_success_colorful_newline():
     runner.run()
 
     assert_stdout_lines(
-        "\n" \
-        "\033[1;37mFeature: Dumb feature                    \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:1\033[0m\n" \
-        "\033[1;37m  In order to test success               \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:2\033[0m\n" \
-        "\033[1;37m  As a programmer                        \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:3\033[0m\n" \
-        "\033[1;37m  I want to see that the output is green \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:4\033[0m\n" \
-        "\n" \
-        "\033[1;37m  Scenario: Do nothing                   \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:6\033[0m\n" \
-        "\033[1;30m    Given I do nothing                   \033[1;30m# tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\033[0m\n" \
-        "\033[A\033[1;32m    Given I do nothing                   \033[1;30m# tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\033[0m\n" \
-        "\n" \
-        "\033[1;37m  Scenario: Do nothing (again)           \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:9\033[0m\n" \
-        "\033[1;30m    Given I do nothing (again)           \033[1;30m# tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\033[0m\n" \
-        "\033[A\033[1;32m    Given I do nothing (again)           \033[1;30m# tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\033[0m\n" \
-        "\n" \
-        "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
-        "\033[1;37m2 scenarios (\033[1;32m2 passed\033[1;37m)\033[0m\n" \
+        "\n"
+        "\033[1;37mFeature: Dumb feature                    \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:1\033[0m\n"
+        "\033[1;37m  In order to test success               \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:2\033[0m\n"
+        "\033[1;37m  As a programmer                        \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:3\033[0m\n"
+        "\033[1;37m  I want to see that the output is green \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:4\033[0m\n"
+        "\n"
+        "\033[1;37m  Scenario: Do nothing                   \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:6\033[0m\n"
+        "\033[1;30m    Given I do nothing                   \033[1;30m# tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\033[0m\n"
+        "\033[A\033[1;32m    Given I do nothing                   \033[1;30m# tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\033[0m\n"
+        "\n"
+        "\033[1;37m  Scenario: Do nothing (again)           \033[1;30m# tests/functional/output_features/many_successful_scenarios/first.feature:9\033[0m\n"
+        "\033[1;30m    Given I do nothing (again)           \033[1;30m# tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\033[0m\n"
+        "\033[A\033[1;32m    Given I do nothing (again)           \033[1;30m# tests/functional/output_features/many_successful_scenarios/dumb_steps.py:6\033[0m\n"
+        "\n"
+        "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n"
+        "\033[1;37m2 scenarios (\033[1;32m2 passed\033[1;37m)\033[0m\n"
         "\033[1;37m2 steps (\033[1;32m2 passed\033[1;37m)\033[0m\n"
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_with_success_colorless_many_features():
@@ -284,6 +294,7 @@ def test_output_with_success_colorless_many_features():
         "4 steps (4 passed)\n"
     )
 
+
 @with_setup(prepare_stdout)
 def test_output_with_success_colorful_many_features():
     "Testing the colorful output of many successful features"
@@ -313,10 +324,11 @@ def test_output_with_success_colorful_many_features():
         "\033[1;30m    Then I see that the test passes \033[1;30m# tests/functional/output_features/many_successful_features/dumb_steps.py:8\033[0m\n"
         "\033[A\033[1;32m    Then I see that the test passes \033[1;30m# tests/functional/output_features/many_successful_features/dumb_steps.py:8\033[0m\n"
         "\n"
-        "\033[1;37m2 features (\033[1;32m2 passed\033[1;37m)\033[0m\n" \
-        "\033[1;37m2 scenarios (\033[1;32m2 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m2 features (\033[1;32m2 passed\033[1;37m)\033[0m\n"
+        "\033[1;37m2 scenarios (\033[1;32m2 passed\033[1;37m)\033[0m\n"
         "\033[1;37m4 steps (\033[1;32m4 passed\033[1;37m)\033[0m\n"
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_when_could_not_find_features():
@@ -331,6 +343,7 @@ def test_output_when_could_not_find_features():
         '\033[1;37mcould not find features at \033[1;33m./%s\033[0m\n' % path
     )
 
+
 @with_setup(prepare_stdout)
 def test_output_when_could_not_find_features_colorless():
     "Testing the colorful output of many successful features colorless"
@@ -344,6 +357,7 @@ def test_output_when_could_not_find_features_colorless():
         'could not find features at ./%s\n' % path
     )
 
+
 @with_setup(prepare_stdout)
 def test_output_when_could_not_find_features_verbosity_level_2():
     "Testing the colorful output of many successful features colorless"
@@ -356,6 +370,7 @@ def test_output_when_could_not_find_features_verbosity_level_2():
         'Oops!\n'
         'could not find features at ./%s\n' % path
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_with_success_colorless_with_table():
@@ -384,6 +399,7 @@ def test_output_with_success_colorless_with_table():
         '1 scenario (1 passed)\n'
         '5 steps (5 passed)\n'
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_with_success_colorful_with_table():
@@ -418,10 +434,11 @@ def test_output_with_success_colorful_with_table():
         '\033[1;32m     \033[1;37m |\033[1;32m name   \033[1;37m |\033[1;32m price \033[1;37m |\033[1;32m\033[0m\n'
         '\033[1;32m     \033[1;37m |\033[1;32m Porsche\033[1;37m |\033[1;32m 200000\033[1;37m |\033[1;32m\033[0m\n'
         '\n'
-        "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
-        "\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n"
+        "\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n"
         "\033[1;37m5 steps (\033[1;32m5 passed\033[1;37m)\033[0m\n"
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_with_failed_colorless_with_table():
@@ -461,9 +478,10 @@ def test_output_with_failed_colorless_with_table():
         "    assert False, 'This step must be implemented'\n") % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')),
-            'call_line':call_line,
+            'call_line': call_line,
         }
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_with_failed_colorful_with_table():
@@ -508,9 +526,10 @@ def test_output_with_failed_colorful_with_table():
         "\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')),
-            'call_line':call_line,
+            'call_line': call_line,
         }
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_with_successful_outline_colorless():
@@ -547,6 +566,7 @@ def test_output_with_successful_outline_colorless():
         '24 steps (24 passed)\n'
     )
 
+
 @with_setup(prepare_stdout)
 def test_output_with_successful_outline_colorful():
     "With colored output, a successful outline scenario should print beautifully."
@@ -577,10 +597,11 @@ def test_output_with_successful_outline_colorful():
         '\033[1;32m   \033[1;37m |\033[1;32m mary    \033[1;37m |\033[1;32m wee-9876\033[1;37m |\033[1;32m mary@email.com\033[1;37m |\033[1;32m Mary \| My Website\033[1;37m |\033[1;32m\033[0m\n'
         '\033[1;32m   \033[1;37m |\033[1;32m foo     \033[1;37m |\033[1;32m foo-bar \033[1;37m |\033[1;32m foo@bar.com   \033[1;37m |\033[1;32m Foo \| My Website \033[1;37m |\033[1;32m\033[0m\n'
         '\n'
-        "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n" \
-        "\033[1;37m3 scenarios (\033[1;32m3 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n"
+        "\033[1;37m3 scenarios (\033[1;32m3 passed\033[1;37m)\033[0m\n"
         "\033[1;37m24 steps (\033[1;32m24 passed\033[1;37m)\033[0m\n"
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_with_failful_outline_colorless():
@@ -623,9 +644,10 @@ def test_output_with_failful_outline_colorless():
         '24 steps (1 failed, 4 skipped, 19 passed)\n' % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'fail_outline', 'fail_outline_steps.py')),
-            'call_line':call_line,
+            'call_line': call_line,
         }
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_with_failful_outline_colorful():
@@ -663,41 +685,43 @@ def test_output_with_failful_outline_colorful():
         "    AssertionError\033[0m\n"
         '\033[1;32m   \033[1;37m |\033[1;32m foo     \033[1;37m |\033[1;32m foo-bar \033[1;37m |\033[1;32m foo@bar.com   \033[1;37m |\033[1;32m Welcome, Foo \033[1;37m |\033[1;32m\033[0m\n'
         '\n'
-        "\033[1;37m1 feature (\033[0;31m0 passed\033[1;37m)\033[0m\n" \
-        "\033[1;37m3 scenarios (\033[1;32m2 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m1 feature (\033[0;31m0 passed\033[1;37m)\033[0m\n"
+        "\033[1;37m3 scenarios (\033[1;32m2 passed\033[1;37m)\033[0m\n"
         "\033[1;37m24 steps (\033[0;31m1 failed\033[1;37m, \033[0;36m4 skipped\033[1;37m, \033[1;32m19 passed\033[1;37m)\033[0m\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'fail_outline', 'fail_outline_steps.py')),
-            'call_line':call_line,
+            'call_line': call_line,
         }
     )
 
-@with_setup(prepare_stderr)
-def test_many_features_a_file():
-    "syntax checking: Fail if a file has more than one feature"
 
-    filename = syntax_feature_name('many_features_a_file')
-    runner = Runner(filename)
-    assert_raises(SystemExit, runner.run)
+# @with_setup(prepare_stderr)
+# def test_many_features_a_file():
+#     "syntax checking: Fail if a file has more than one feature"
 
-    assert_stderr_lines(
-        'Syntax error at: %s\n'
-        'A feature file must contain ONLY ONE feature!\n' % filename
-    )
+#     filename = syntax_feature_name('many_features_a_file')
+#     runner = Runner(filename)
+#     assert_raises(SystemExit, runner.run)
 
-@with_setup(prepare_stderr)
-def test_feature_without_name():
-    "syntax checking: Fail on features without name"
+#     assert_stderr_lines(
+#         'Syntax error at: %s\n'
+#         'A feature file must contain ONLY ONE feature!\n' % filename
+#     )
 
-    filename = syntax_feature_name('feature_without_name')
-    runner = Runner(filename)
-    assert_raises(SystemExit, runner.run)
 
-    assert_stderr_lines(
-        'Syntax error at: %s\n'
-        'Features must have a name. e.g: "Feature: This is my name"\n'
-        % filename
-    )
+# @with_setup(prepare_stderr)
+# def test_feature_without_name():
+#     "syntax checking: Fail on features without name"
+
+#     filename = syntax_feature_name('feature_without_name')
+#     runner = Runner(filename)
+#     assert_raises(SystemExit, runner.run)
+
+#     assert_stderr_lines(
+#         'Syntax error at: %s\n'
+#         'Features must have a name. e.g: "Feature: This is my name"\n'
+#         % filename
+#     )
 
 
 @with_setup(prepare_stdout)
@@ -728,6 +752,7 @@ def test_output_snippets_with_groups_within_double_quotes_colorless():
         u'    assert False, \'This step must be implemented\'\n'
     )
 
+
 @with_setup(prepare_stdout)
 def test_output_snippets_with_groups_within_double_quotes_colorful():
     "Testing that the proposed snippet is clever enough to identify groups within double quotes. colorful"
@@ -742,8 +767,8 @@ def test_output_snippets_with_groups_within_double_quotes_colorful():
         u'\033[1;37m  Scenario: Propose matched groups                               \033[1;30m# tests/functional/output_features/double-quoted-snippet/double-quoted-snippet.feature:2\033[0m\n'
         u'\033[0;33m    Given I have "stuff here" and "more @#$%ˆ& bizar sutff h3r3" \033[1;30m# tests/functional/output_features/double-quoted-snippet/double-quoted-snippet.feature:3\033[0m\n'
         u'\n'
-        "\033[1;37m1 feature (\033[0;31m0 passed\033[1;37m)\033[0m\n" \
-        "\033[1;37m1 scenario (\033[0;31m0 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m1 feature (\033[0;31m0 passed\033[1;37m)\033[0m\n"
+        "\033[1;37m1 scenario (\033[0;31m0 passed\033[1;37m)\033[0m\n"
         "\033[1;37m1 step (\033[0;33m1 undefined\033[1;37m, \033[1;32m0 passed\033[1;37m)\033[0m\n"
         u'\n'
         u'\033[0;33mYou can implement step definitions for undefined steps with these snippets:\n'
@@ -785,6 +810,7 @@ def test_output_snippets_with_groups_within_single_quotes_colorless():
         u'    assert False, \'This step must be implemented\'\n'
     )
 
+
 @with_setup(prepare_stdout)
 def test_output_snippets_with_groups_within_single_quotes_colorful():
     "Testing that the proposed snippet is clever enough to identify groups within single quotes. colorful"
@@ -799,8 +825,8 @@ def test_output_snippets_with_groups_within_single_quotes_colorful():
         u'\033[1;37m  Scenario: Propose matched groups                               \033[1;30m# tests/functional/output_features/single-quoted-snippet/single-quoted-snippet.feature:2\033[0m\n'
         u'\033[0;33m    Given I have \'stuff here\' and \'more @#$%ˆ& bizar sutff h3r3\' \033[1;30m# tests/functional/output_features/single-quoted-snippet/single-quoted-snippet.feature:3\033[0m\n'
         u'\n'
-        "\033[1;37m1 feature (\033[0;31m0 passed\033[1;37m)\033[0m\n" \
-        "\033[1;37m1 scenario (\033[0;31m0 passed\033[1;37m)\033[0m\n" \
+        "\033[1;37m1 feature (\033[0;31m0 passed\033[1;37m)\033[0m\n"
+        "\033[1;37m1 scenario (\033[0;31m0 passed\033[1;37m)\033[0m\n"
         "\033[1;37m1 step (\033[0;33m1 undefined\033[1;37m, \033[1;32m0 passed\033[1;37m)\033[0m\n"
         u'\n'
         u'\033[0;33mYou can implement step definitions for undefined steps with these snippets:\n'
@@ -812,6 +838,7 @@ def test_output_snippets_with_groups_within_single_quotes_colorful():
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    assert False, \'This step must be implemented\'\033[0m\n'
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_snippets_with_groups_within_redundant_quotes():
@@ -841,6 +868,7 @@ def test_output_snippets_with_groups_within_redundant_quotes():
         u'def given_i_have_group1_and_group2(step, group1, group2):\n'
         u'    assert False, \'This step must be implemented\'\n'
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_snippets_with_normalized_unicode_names():
@@ -881,6 +909,7 @@ def test_output_snippets_with_normalized_unicode_names():
         u"    assert False, 'This step must be implemented'\n"
     )
 
+
 @with_setup(prepare_stdout)
 def test_output_level_2_success():
     'Output with verbosity 2 must show only the scenario names, followed by "... OK" in case of success'
@@ -896,6 +925,7 @@ def test_output_level_2_success():
         "2 scenarios (2 passed)\n"
         "2 steps (2 passed)\n"
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_level_2_fail():
@@ -919,9 +949,10 @@ def test_output_level_2_fail():
         "5 steps (1 failed, 2 skipped, 1 undefined, 1 passed)\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')),
-            'call_line':call_line,
+            'call_line': call_line,
         }
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_level_2_error():
@@ -946,9 +977,10 @@ def test_output_level_2_error():
         "2 steps (1 failed, 1 passed)\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'error_traceback', 'error_traceback_steps.py')),
-            'call_line':call_line,
+            'call_line': call_line,
         }
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_level_1_success():
@@ -964,6 +996,7 @@ def test_output_level_1_success():
         "2 scenarios (2 passed)\n"
         "2 steps (2 passed)\n"
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_level_1_fail():
@@ -987,9 +1020,10 @@ def test_output_level_1_fail():
         "5 steps (1 failed, 2 skipped, 1 undefined, 1 passed)\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')),
-            'call_line':call_line,
+            'call_line': call_line,
         }
     )
+
 
 @with_setup(prepare_stdout)
 def test_output_level_1_error():
@@ -1013,9 +1047,10 @@ def test_output_level_1_error():
         "2 steps (1 failed, 1 passed)\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'error_traceback', 'error_traceback_steps.py')),
-            'call_line':call_line,
+            'call_line': call_line,
         }
     )
+
 
 @with_setup(prepare_stdout)
 def test_commented_scenario():
@@ -1033,7 +1068,6 @@ def test_commented_scenario():
     )
 
 
-#with_setup(prepare_stderr)
 @with_setup(prepare_stdout)
 def test_blank_step_hash_value():
     "syntax checking: Blank in step hash column = empty string"
@@ -1041,13 +1075,13 @@ def test_blank_step_hash_value():
     from lettuce import step
 
     @step('ignore step')
-    def append_2_more(step):
+    def ignore_step(step):
         pass
 
     @step('string length calc')
-    def append_2_more(step):
+    def string_lenth_calc(step):
         for hash in step.hashes:
-            if len(hash["string"])+len(hash["string2"]) != int(hash["length"]):
+            if len(hash["string"]) + len(hash["string2"]) != int(hash["length"]):
                 raise AssertionError("fail")
 
     filename = syntax_feature_name('blank_values_in_hash')
@@ -1137,7 +1171,7 @@ def test_background_with_header():
     runner.run()
 
     assert_stdout_lines(
-        "......."
+        "........."
         "\n"
         "1 feature (1 passed)\n"
         "2 scenarios (2 passed)\n"
@@ -1149,7 +1183,20 @@ def test_background_with_header():
 def test_background_without_header():
     "Running background without header"
 
-    from lettuce import step, world
+    from lettuce import step, world, before, after
+
+    actions = {}
+
+    @before.each_background
+    def register_background_before(background):
+        actions['before'] = unicode(background)
+
+    @after.each_background
+    def register_background_after(background, results):
+        actions['after'] = {
+            'background': unicode(background),
+            'results': results,
+        }
 
     @step(ur'the variable "(\w+)" holds (\d+)')
     def set_variable(step, name, value):
@@ -1171,9 +1218,52 @@ def test_background_without_header():
     runner.run()
 
     assert_stdout_lines(
-        "......."
+        "........."
         "\n"
         "1 feature (1 passed)\n"
         "2 scenarios (2 passed)\n"
         "7 steps (7 passed)\n"
+    )
+
+    expect(actions).to.equal({
+        'after': {
+            'results': [True],
+            'background': u'<Background for feature: Without Header>'
+        },
+        'before': u'<Background for feature: Without Header>'
+    })
+
+
+@with_setup(prepare_stdout)
+def test_output_background_with_success_colorless():
+    "A feature with background should print it accordingly"
+
+    from lettuce import step
+
+    @step(ur'the variable "(\w+)" holds (\d+)')
+    @step(ur'the variable "(\w+)" is equal to (\d+)')
+    def just_pass(step, *args):
+        pass
+
+    filename = bg_feature_name('simple')
+    runner = Runner(filename, verbosity=3)
+
+    runner.run()
+
+    assert_stdout_lines(
+        '\n'
+        'Feature: Simple and successful                # tests/functional/bg_features/simple/simple.feature:1\n'
+        '  As the Lettuce maintainer                   # tests/functional/bg_features/simple/simple.feature:2\n'
+        '  In order to make sure the output is pretty  # tests/functional/bg_features/simple/simple.feature:3\n'
+        '  I want to automate its test                 # tests/functional/bg_features/simple/simple.feature:4\n'
+        '\n'
+        '  Background:\n'
+        '    Given the variable "X" holds 2            # tests/functional/test_runner.py:1244\n'
+        '\n'
+        '  Scenario: multiplication changing the value # tests/functional/bg_features/simple/simple.feature:9\n'
+        '    Given the variable "X" is equal to 2      # tests/functional/test_runner.py:1244\n'
+        '\n'
+        '1 feature (1 passed)\n'
+        '1 scenario (1 passed)\n'
+        '1 step (1 passed)\n'
     )

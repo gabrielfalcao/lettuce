@@ -54,6 +54,7 @@ for name, where, when in (
         ('all', 'all', '%(0)s'),
         ('each_step', 'step', '%(0)s_each'),
         ('each_scenario', 'scenario', '%(0)s_each'),
+        ('each_background', 'background', '%(0)s_each'),
         ('each_feature', 'feature', '%(0)s_each'),
         ('harvest', 'harvest', '%(0)s'),
         ('each_app', 'app', '%(0)s_each'),

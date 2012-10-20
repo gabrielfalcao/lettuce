@@ -96,7 +96,7 @@ def getlen(string):
 
 
 def dicts_to_string(dicts, order):
-    escape = "#{%s}" % str(time.time())
+    escape = "#{%s}" % unicode(time.time())
 
     def enline(line):
         return unicode(line).replace("|", escape)
@@ -133,7 +133,7 @@ def dicts_to_string(dicts, order):
 
 
 def parse_hashes(lines):
-    escape = "#{%s}" % str(time.time())
+    escape = "#{%s}" % unicode(time.time())
 
     def enline(line):
         return unicode(line.replace("\\|", escape)).strip()
