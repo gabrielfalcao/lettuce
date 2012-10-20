@@ -90,7 +90,7 @@ def call_hook(situation, kind, *args, **kw):
             print "=" * 1000
             traceback.print_exc(e)
             print
-            raise SystemExit(2)
+            raise
 
 
 def clear():

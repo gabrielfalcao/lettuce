@@ -695,35 +695,6 @@ def test_output_with_failful_outline_colorful():
     )
 
 
-@with_setup(prepare_stderr)
-def test_many_features_a_file():
-    "syntax checking: Fail if a file has more than one feature"
-
-    filename = syntax_feature_name('many_features_a_file')
-    runner = Runner(filename)
-    assert_raises(SystemExit, runner.run)
-
-    assert_stderr_lines(
-        'Syntax error at: %s\n'
-        'A feature file must contain ONLY ONE feature!\n' % filename
-    )
-
-
-@with_setup(prepare_stderr)
-def test_feature_without_name():
-    "syntax checking: Fail on features without name"
-
-    filename = syntax_feature_name('feature_without_name')
-    runner = Runner(filename)
-    assert_raises(SystemExit, runner.run)
-
-    assert_stderr_lines(
-        'Syntax error at: %s\n'
-        'Features must have a name. e.g: "Feature: This is my name"\n'
-        % filename
-    )
-
-
 @with_setup(prepare_stdout)
 def test_output_snippets_with_groups_within_double_quotes_colorless():
     "Testing that the proposed snippet is clever enough to identify groups within double quotes. colorless"
@@ -1258,10 +1229,10 @@ def test_output_background_with_success_colorless():
         '  I want to automate its test                 # tests/functional/bg_features/simple/simple.feature:4\n'
         '\n'
         '  Background:\n'
-        '    Given the variable "X" holds 2            # tests/functional/test_runner.py:1244\n'
+        '    Given the variable "X" holds 2            # tests/functional/test_runner.py:1215\n'
         '\n'
         '  Scenario: multiplication changing the value # tests/functional/bg_features/simple/simple.feature:9\n'
-        '    Given the variable "X" is equal to 2      # tests/functional/test_runner.py:1244\n'
+        '    Given the variable "X" is equal to 2      # tests/functional/test_runner.py:1215\n'
         '\n'
         '1 feature (1 passed)\n'
         '1 scenario (1 passed)\n'
@@ -1269,36 +1240,64 @@ def test_output_background_with_success_colorless():
     )
 
 
-# @with_setup(prepare_stdout)
-# def test_output_background_with_success_colorful():
-#     "A feature with background should print it accordingly under verbosity 4"
+@with_setup(prepare_stdout)
+def test_output_background_with_success_colorful():
+    "A feature with background should print it accordingly under verbosity 4"
 
-#     from lettuce import step
+    from lettuce import step
 
-#     @step(ur'the variable "(\w+)" holds (\d+)')
-#     @step(ur'the variable "(\w+)" is equal to (\d+)')
-#     def just_pass(step, *args):
-#         pass
+    @step(ur'the variable "(\w+)" holds (\d+)')
+    @step(ur'the variable "(\w+)" is equal to (\d+)')
+    def just_pass(step, *args):
+        pass
 
-#     filename = bg_feature_name('simple')
-#     runner = Runner(filename, verbosity=4)
+    filename = bg_feature_name('simple')
+    runner = Runner(filename, verbosity=4)
 
-#     runner.run()
+    runner.run()
 
-#     assert_stdout_lines(
-#         '\n'
-#         'Feature: Simple and successful                # tests/functional/bg_features/simple/simple.feature:1\n'
-#         '  As the Lettuce maintainer                   # tests/functional/bg_features/simple/simple.feature:2\n'
-#         '  In order to make sure the output is pretty  # tests/functional/bg_features/simple/simple.feature:3\n'
-#         '  I want to automate its test                 # tests/functional/bg_features/simple/simple.feature:4\n'
-#         '\n'
-#         '  Background:\n'
-#         '    Given the variable "X" holds 2            # tests/functional/test_runner.py:1244\n'
-#         '\n'
-#         '  Scenario: multiplication changing the value # tests/functional/bg_features/simple/simple.feature:9\n'
-#         '    Given the variable "X" is equal to 2      # tests/functional/test_runner.py:1244\n'
-#         '\n'
-#         '1 feature (1 passed)\n'
-#         '1 scenario (1 passed)\n'
-#         '1 step (1 passed)\n'
-#     )
+    assert_stdout_lines(
+        '\n'
+        '\033[1;37mFeature: Simple and successful                \033[1;30m# tests/functional/bg_features/simple/simple.feature:1\033[0m\n'
+        '\033[1;37m  As the Lettuce maintainer                   \033[1;30m# tests/functional/bg_features/simple/simple.feature:2\033[0m\n'
+        '\033[1;37m  In order to make sure the output is pretty  \033[1;30m# tests/functional/bg_features/simple/simple.feature:3\033[0m\n'
+        '\033[1;37m  I want to automate its test                 \033[1;30m# tests/functional/bg_features/simple/simple.feature:4\033[0m\n'
+        '\n'
+        '\033[1;37m  Background:\033[0m\n'
+        '\033[1;30m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1250\033[0m\n'
+        '\033[A\033[1;32m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1250\033[0m\n'
+        '\n'
+        '\033[1;37m  Scenario: multiplication changing the value \033[1;30m# tests/functional/bg_features/simple/simple.feature:9\033[0m\n'
+        '\033[1;30m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1250\033[0m\n'
+        '\033[A\033[1;32m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1250\033[0m\n'
+        '\n'
+        '\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n'
+        '\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n'
+        '\033[1;37m1 step (\033[1;32m1 passed\033[1;37m)\033[0m\n'
+    )
+
+
+@with_setup(prepare_stderr)
+def test_many_features_a_file():
+    "syntax checking: Fail if a file has more than one feature"
+
+    filename = syntax_feature_name('many_features_a_file')
+    runner = Runner(filename)
+    expect(runner.run).to.throw(SystemExit, (
+        'Syntax error at: %s\n'
+        'A feature file must contain ONLY ONE feature!\n' % filename
+    ))
+
+
+@with_setup(prepare_stderr)
+def test_feature_without_name():
+    "syntax checking: Fail on features without name"
+
+    filename = syntax_feature_name('feature_without_name')
+    runner = Runner(filename)
+
+    expect(runner.run).to.throw(SystemExit, (
+        'Syntax error at: %s\n'
+        'Features must have a name. e.g: "Feature: This is my name"\n'
+        % filename
+    ))
