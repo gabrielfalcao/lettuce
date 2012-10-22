@@ -1283,10 +1283,12 @@ def test_many_features_a_file():
 
     filename = syntax_feature_name('many_features_a_file')
     runner = Runner(filename)
-    expect(runner.run).to.throw(SystemExit, (
+    assert_raises(SystemExit, runner.run)
+
+    assert_stderr_lines(
         'Syntax error at: %s\n'
         'A feature file must contain ONLY ONE feature!\n' % filename
-    ))
+    )
 
 
 @with_setup(prepare_stderr)
@@ -1296,8 +1298,10 @@ def test_feature_without_name():
     filename = syntax_feature_name('feature_without_name')
     runner = Runner(filename)
 
-    expect(runner.run).to.throw(SystemExit, (
+    assert_raises(SystemExit, runner.run)
+
+    assert_stderr_lines(
         'Syntax error at: %s\n'
         'Features must have a name. e.g: "Feature: This is my name"\n'
         % filename
-    ))
+    )
