@@ -23,8 +23,8 @@ integration: clean
 	@echo "Running integration tests ..."
 	@nosetests --stop -s --verbosity=2 tests/integration
 
-doctest: clean
-	@cd docs && make doctest
+doctest:
+	@find documentation -name '*.md' | xargs steadymark
 
 documentation:
 	@cd docs && make html
