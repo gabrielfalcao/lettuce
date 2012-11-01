@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Welcome - Lettuce Documentation</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Lettuce is a behavior-driven development framework for python based on Cucumber. It supports over 15 languages and integrates with Django really well." />
+    <meta name="keywords" content="Lettuce, BDD, Python, Cucumber, Django, Sure,Introduction, Nutshell"/ >
+    <meta name="author" content="Gabriel Falcão" />
+    <link rel="stylesheet" href="http://localhost:4000/media/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://localhost:4000/media/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" href="http://localhost:4000/media/css/unicorn.main.css" />
+    <link rel="stylesheet" href="http://localhost:4000/media/css/unicorn.grey.css" class="skin-color" />
+    <link rel="stylesheet" href="http://localhost:4000/media/css/lettuce.docs.css" class="skin-color" />
+    <link rel="stylesheet" href="http://localhost:4000/media/css/pygments.css" class="skin-color" />
+    <link rel="shortcut icon" href="http://localhost:4000/favicon.png" type="image/x-icon" />
+  </head>
+  <body>
+    <div id="header">
+      <h1><a href="./dashboard.html">Welcome</a></h1>
+    </div>
+
+    <div id="sidebar">
+      <ul>
+	<li  class="active"><a href="http://localhost:4000"><i class="icon icon-home"></i> <span>Welcome</span></a></li>
+  	
+        
+  	  
+          
+          <li class="submenu open introduction">
+            <a href="#"><i class="icon icon-th-list"></i> <span>Introduction</span> <span class="label">2</span></a>
+            <ul>
+              <li ><a href="http://localhost:4000/Introduction/introduction-overview.html">Overview</a></li><li ><a href="http://localhost:4000/Introduction/introduction-installing.html">Installing</a></li>
+            </ul>
+          </li>
+        
+      </ul>
+    </div>
+    <div id="content">
+      <div id="content-header">
+	<h1>Welcome</h1>
+      </div>
+      <div id="breadcrumb">
+	<a href="#" title="Lettuce Documentation" class="tip-bottom"><i class="icon-home"></i> Lettuce Documentation</a>
+        
+        <span class="divider">/</span>
+	<a href="http://localhost:4000/index.html" class="current">Welcome</a>
+      </div>
+      <div class="container-fluid doc-contents">
+	<div class="row-fluid">
+	  <div class="span12">
+            <h1>Lettuce in a nutshell</h1>
+
+<h2>1 - install it</h2>
+<div class="highlight"><pre><span class="gp">user@machine:~$</span> <span class="o">[</span>sudo<span class="o">]</span> pip install lettuce
+</pre></div>
+<h2>2 - describe your first feature</h2>
+<div class="highlight"><pre><span class="no">Feature</span><span class="p">:</span> <span class="no">Manipulate</span> <span class="n">strings</span>
+  <span class="no">In</span> <span class="n">order</span> <span class="n">to</span> <span class="n">have</span> <span class="n">some</span> <span class="n">fun</span>
+  <span class="no">As</span> <span class="n">a</span> <span class="n">programming</span> <span class="n">beginner</span>
+  <span class="n">I</span> <span class="n">want</span> <span class="n">to</span> <span class="n">manipulate</span> <span class="n">strings</span>
+
+  <span class="no">Scenario</span><span class="p">:</span> <span class="no">Uppercased</span> <span class="n">strings</span>
+    <span class="no">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">string</span> <span class="s2">&quot;lettuce leaves&quot;</span>
+    <span class="no">When</span> <span class="n">I</span> <span class="n">put</span> <span class="n">it</span> <span class="k">in</span> <span class="n">upper</span> <span class="k">case</span>
+    <span class="no">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">string</span> <span class="n">is</span> <span class="s2">&quot;LETTUCE LEAVES&quot;</span>
+</pre></div>
+<h2>3 - define its steps</h2>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">lettuce</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I have the string &quot;(.*)&quot;&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">have_the_string</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">string</span> <span class="o">=</span> <span class="n">string</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I put it in upper case&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">put_it_in_upper</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">string</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">string</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I see the string is &quot;(.*)&quot;&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">see_the_string_is</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">world</span><span class="o">.</span><span class="n">string</span> <span class="o">==</span> <span class="n">expected</span><span class="p">,</span> \
+        <span class="s">&quot;Got </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">world</span><span class="o">.</span><span class="n">string</span>
+</pre></div>
+<h2>4 - watch it pass</h2>
+<div class="highlight"><pre><span class="gp">user@machine:~/Projects/my-project$</span> lettuce features/
+</pre></div>
+	  </div>
+	</div>
+    </div>
+    <script src="http://localhost:4000/media/js/excanvas.min.js"></script>
+    <script src="http://localhost:4000/media/js/jquery.min.js"></script>
+    <script src="http://localhost:4000/media/js/jquery.ui.custom.js"></script>
+    <script src="http://localhost:4000/media/js/bootstrap.min.js"></script>
+    <script src="http://localhost:4000/media/js/jquery.flot.min.js"></script>
+    <script src="http://localhost:4000/media/js/jquery.flot.resize.min.js"></script>
+    <script src="http://localhost:4000/media/js/jquery.peity.min.js"></script>
+    <script src="http://localhost:4000/media/js/fullcalendar.min.js"></script>
+    <script src="http://localhost:4000/media/js/unicorn.js"></script>
+    <script src="http://localhost:4000/media/js/unicorn.dashboard.js"></script>
+  </body>
+</html>

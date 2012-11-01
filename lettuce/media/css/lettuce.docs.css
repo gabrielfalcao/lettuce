@@ -1,0 +1,12 @@
+.doc-contents {font-size: 14px;}
+.doc-contents h1 {font-size: 28px; font-weight: bold;}
+.doc-contents h2 {font-size: 24px; font-weight: bold;}
+.doc-contents h3 {font-size: 20px; font-weight: bold;}
+.doc-contents h4 {font-size: 18px; font-weight: bold;}
+.doc-contents h5 {font-size: 18px; font-weight: normal;}
+.doc-contents h6 {font-size: 18px; font-weight: normal; text-transform: italic;}
+
+.doc-contents .row-fluid { margin: 0; }
+.doc-contents.container-fluid .row-fluid:first-child {
+  margin-top: 5px;
+}
