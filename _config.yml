@@ -9,4 +9,3 @@ keywords: Lettuce, BDD, Python, Cucumber, Django, Sure
 pygments: true
 future: true
 exclude: [Makefile]
-markdown: redcarpet2
