@@ -10,3 +10,4 @@ dist/
 *.swp
 tests/integration/django/grocery/grocery-db.sqlite
 .tox
+documentation/_site/
