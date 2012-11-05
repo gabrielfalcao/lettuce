@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Introducing Step Tables - Lettuce Documentation</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Instructions to install lettuce in your computer, requires python and maybe git." />
+    <meta name="keywords" content="Lettuce, BDD, Python, Cucumber, Django, Sure,Introducing Step Tables"/ >
+    <meta name="author" content="Gabriel Falcão" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/unicorn.main.css" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/unicorn.grey.css" class="skin-color" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/lettuce.docs.css" class="skin-color" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/pygments.css" class="skin-color" />
+    <link rel="shortcut icon" href="http://falcao.it/lettuce/favicon.png" type="image/x-icon" />
+  </head>
+  <body>
+    <div id="header">
+      <h1><a href="./dashboard.html">Introducing Step Tables</a></h1>
+    </div>
+
+    <div id="sidebar">
+      <ul>
+	<li ><a href="http://falcao.it/lettuce"><i class="icon icon-home"></i> <span>Welcome</span></a></li>
+  	
+        
+  	  
+          
+          <li class="submenu open tutorial">
+            <a href="#"><i class="icon icon-th-list"></i> <span>Tutorial</span> <span class="label">4</span></a>
+            <ul>
+              <li ><a href="http://falcao.it/lettuce/Tutorial/simple.html">Writing your very first test</a></li><li  class="active"><a href="http://falcao.it/lettuce/Tutorial/tables.html">Introducing Step Tables</a></li><li ><a href="http://falcao.it/lettuce/Tutorial/steps-from-step-definitions.html">calling steps from inside other steps</a></li><li ><a href="http://falcao.it/lettuce/Tutorial/multiline.html">Multi-line strings</a></li>
+            </ul>
+          </li>
+        
+  	  
+          
+          <li class="submenu open introduction">
+            <a href="#"><i class="icon icon-th-list"></i> <span>Introduction</span> <span class="label">3</span></a>
+            <ul>
+              <li ><a href="http://falcao.it/lettuce/Introduction/installing.html">Installing</a></li><li ><a href="http://falcao.it/lettuce/Introduction/overview.html">Overview</a></li><li ><a href="http://falcao.it/lettuce/Introduction/what-the-feature.html">What The Feature</a></li>
+            </ul>
+          </li>
+        
+        <li style="padding: 5px; text-align: right">
+          <iframe style="border: 0; margin: 0; padding: 0;" src="https://www.gittip.com/gabrielfalcao/widget.html" width="48pt" height="22pt"></iframe>
+        </li>
+      </ul>
+
+    </div>
+    <div id="content">
+      <div id="content-header">
+	<h1>Introducing Step Tables</h1>
+      </div>
+      <div id="breadcrumb">
+	<a href="#" title="Lettuce Documentation" class="tip-bottom"><i class="icon-home"></i> Lettuce Documentation</a>
+        
+        <span class="divider">/</span>
+	<a href="http://falcao.it/lettuce/Tutorial/tables.html">Tutorial</a>
+        
+        <span class="divider">/</span>
+	<a href="http://falcao.it/lettuce/Tutorial/tables.html" class="current">Introducing Step Tables</a>
+      </div>
+      <div class="container-fluid doc-contents">
+	<div class="row-fluid">
+	  <div class="span12">
+            <h1>handling data with tables</h1>
+
+<p>Let&#39;s imagine writing a MVC application. While writing the tests
+you will stumble in to a situation where there is a few models
+that must be added to the database, maybe you will also need to check
+the new state of those models.</p>
+
+<p>It means that as you write tests with lettuce, it can be very useful
+to handle data within steps.</p>
+
+<p>Step tables are here for you</p>
+<div class="highlight"><pre><span class="k">Feature:</span><span class="nf"> bill students alphabetically</span>
+<span class="nf">  In order to bill students properly</span>
+<span class="nf">  As a financial specialist</span>
+<span class="nf">  I want to bill those which name starts with some letter</span>
+
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Bill students which name starts with &quot;G&quot;</span>
+<span class="k">    Given </span><span class="nf">I have the following students in my database:</span>
+<span class="k">      |</span><span class="s"> name</span><span class="k">     |</span><span class="s"> monthly_due</span><span class="k"> |</span><span class="s"> billed</span><span class="k"> |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Anton</span><span class="k">    |</span><span class="s"> $ 500</span><span class="k">       |</span><span class="s"> no</span><span class="k">     |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Jack</span><span class="k">     |</span><span class="s"> $ 400</span><span class="k">       |</span><span class="s"> no</span><span class="k">     |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Gabriel</span><span class="k">  |</span><span class="s"> $ 300</span><span class="k">       |</span><span class="s"> no</span><span class="k">     |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Gloria</span><span class="k">   |</span><span class="s"> $ 442.65</span><span class="k">    |</span><span class="s"> no</span><span class="k">     |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Ken</span><span class="k">      |</span><span class="s"> $ 907.86</span><span class="k">    |</span><span class="s"> no</span><span class="k">     |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Leonard</span><span class="k">  |</span><span class="s"> $ 742.84</span><span class="k">    |</span><span class="s"> no</span><span class="k">     |</span><span class="nf"></span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">I bill names starting with &quot;</span><span class="s">G</span><span class="nf">&quot;</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">I see those billed students:</span>
+<span class="k">      |</span><span class="s"> Gabriel</span><span class="k">  |</span><span class="s"> $ 300</span><span class="k">       |</span><span class="s"> no</span><span class="k">     |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Gloria</span><span class="k">   |</span><span class="s"> $ 442.65</span><span class="k">    |</span><span class="s"> no</span><span class="k">     |</span><span class="nf"></span>
+<span class="nf">    </span><span class="k">And </span><span class="nf">those that weren&#39;t:</span>
+<span class="k">      |</span><span class="s"> Anton</span><span class="k">    |</span><span class="s"> $ 500</span><span class="k">       |</span><span class="s"> no</span><span class="k">     |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Jack</span><span class="k">     |</span><span class="s"> $ 400</span><span class="k">       |</span><span class="s"> no</span><span class="k">     |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Ken</span><span class="k">      |</span><span class="s"> $ 907.86</span><span class="k">    |</span><span class="s"> no</span><span class="k">     |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> Leonard</span><span class="k">  |</span><span class="s"> $ 742.84</span><span class="k">    |</span><span class="s"> no</span><span class="k">     |</span>
+</pre></div>
+<p>In the example above there are 4 steps, in which 3 contains tables.</p>
+
+<p>Now let us imagine that we&#39;re using Django_ and write a step definition
+that uses the table.</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">lettuce</span> <span class="kn">import</span> <span class="n">step</span>
+<span class="kn">from</span> <span class="nn">school.models</span> <span class="kn">import</span> <span class="n">Student</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I have the following students in my database:&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">students_in_database</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">student_dict</span> <span class="ow">in</span> <span class="n">step</span><span class="o">.</span><span class="n">hashes</span><span class="p">:</span>
+        <span class="n">person</span> <span class="o">=</span> <span class="n">Student</span><span class="p">(</span><span class="o">**</span><span class="n">student_dict</span><span class="p">)</span>
+        <span class="n">person</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+<p>What about handy functions for getting the first or the last row of
+the tables ?!</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">lettuce</span> <span class="kn">import</span> <span class="n">step</span>
+<span class="kn">from</span> <span class="nn">school.models</span> <span class="kn">import</span> <span class="n">Student</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I have the following students in my database:&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">students_in_database</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">person1</span> <span class="o">=</span> <span class="n">Student</span><span class="p">(</span><span class="o">**</span><span class="n">step</span><span class="o">.</span><span class="n">hashes</span><span class="o">.</span><span class="n">first</span><span class="p">)</span>
+    <span class="n">person2</span> <span class="o">=</span> <span class="n">Student</span><span class="p">(</span><span class="o">**</span><span class="n">step</span><span class="o">.</span><span class="n">hashes</span><span class="o">.</span><span class="n">last</span><span class="p">)</span>
+
+    <span class="n">person1</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="n">person2</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+<p>Easy, huh?!</p>
+
+<p>Every step has a attribute called hashes which is a list of
+dicts. Each dict has represents table headers as keys and each table
+row as value.</p>
+
+<p>In other words, lettuce will translate the table written in the first
+step as this equivalent dict</p>
+<div class="highlight"><pre><span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I have the following students in my database:&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">students_in_database</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">step</span><span class="o">.</span><span class="n">hashes</span> <span class="o">==</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;Anton&#39;</span><span class="p">,</span>
+            <span class="s">&#39;monthly_due&#39;</span><span class="p">:</span> <span class="s">&#39;$ 500&#39;</span><span class="p">,</span>
+            <span class="s">&#39;billed&#39;</span><span class="p">:</span> <span class="s">&#39;no&#39;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;Jack&#39;</span><span class="p">,</span>
+            <span class="s">&#39;monthly_due&#39;</span><span class="p">:</span> <span class="s">&#39;$ 400&#39;</span><span class="p">,</span>
+            <span class="s">&#39;billed&#39;</span><span class="p">:</span> <span class="s">&#39;no&#39;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;Gabriel&#39;</span><span class="p">,</span>
+            <span class="s">&#39;monthly_due&#39;</span><span class="p">:</span> <span class="s">&#39;$ 300&#39;</span><span class="p">,</span>
+            <span class="s">&#39;billed&#39;</span><span class="p">:</span> <span class="s">&#39;no&#39;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;Gloria&#39;</span><span class="p">,</span>
+            <span class="s">&#39;monthly_due&#39;</span><span class="p">:</span> <span class="s">&#39;$ 442.65&#39;</span><span class="p">,</span>
+            <span class="s">&#39;billed&#39;</span><span class="p">:</span> <span class="s">&#39;no&#39;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;Ken&#39;</span><span class="p">,</span>
+            <span class="s">&#39;monthly_due&#39;</span><span class="p">:</span> <span class="s">&#39;$ 907.86&#39;</span><span class="p">,</span>
+            <span class="s">&#39;billed&#39;</span><span class="p">:</span> <span class="s">&#39;no&#39;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="s">&#39;Leonard&#39;</span><span class="p">,</span>
+            <span class="s">&#39;monthly_due&#39;</span><span class="p">:</span> <span class="s">&#39;$ 742.84&#39;</span><span class="p">,</span>
+            <span class="s">&#39;billed&#39;</span><span class="p">:</span> <span class="s">&#39;no&#39;</span>
+        <span class="p">},</span>
+    <span class="p">]</span>
+</pre></div>
+	  </div>
+	</div>
+    </div>
+    <script src="http://falcao.it/lettuce/media/js/excanvas.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.ui.custom.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/bootstrap.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.flot.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.flot.resize.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.peity.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/fullcalendar.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/unicorn.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/unicorn.dashboard.js"></script>
+  </body>
+</html>

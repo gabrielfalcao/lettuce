@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>What The Feature - Lettuce Documentation</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Instructions to install lettuce in your computer, requires python and maybe git." />
+    <meta name="keywords" content="Lettuce, BDD, Python, Cucumber, Django, Sure,What The Feature"/ >
+    <meta name="author" content="Gabriel Falcão" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/unicorn.main.css" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/unicorn.grey.css" class="skin-color" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/lettuce.docs.css" class="skin-color" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/pygments.css" class="skin-color" />
+    <link rel="shortcut icon" href="http://falcao.it/lettuce/favicon.png" type="image/x-icon" />
+  </head>
+  <body>
+    <div id="header">
+      <h1><a href="./dashboard.html">What The Feature</a></h1>
+    </div>
+
+    <div id="sidebar">
+      <ul>
+	<li ><a href="http://falcao.it/lettuce"><i class="icon icon-home"></i> <span>Welcome</span></a></li>
+  	
+        
+  	  
+          
+          <li class="submenu open tutorial">
+            <a href="#"><i class="icon icon-th-list"></i> <span>Tutorial</span> <span class="label">4</span></a>
+            <ul>
+              <li ><a href="http://falcao.it/lettuce/Tutorial/simple.html">Writing your very first test</a></li><li ><a href="http://falcao.it/lettuce/Tutorial/tables.html">Introducing Step Tables</a></li><li ><a href="http://falcao.it/lettuce/Tutorial/steps-from-step-definitions.html">calling steps from inside other steps</a></li><li ><a href="http://falcao.it/lettuce/Tutorial/multiline.html">Multi-line strings</a></li>
+            </ul>
+          </li>
+        
+  	  
+          
+          <li class="submenu open introduction">
+            <a href="#"><i class="icon icon-th-list"></i> <span>Introduction</span> <span class="label">3</span></a>
+            <ul>
+              <li ><a href="http://falcao.it/lettuce/Introduction/installing.html">Installing</a></li><li ><a href="http://falcao.it/lettuce/Introduction/overview.html">Overview</a></li><li  class="active"><a href="http://falcao.it/lettuce/Introduction/what-the-feature.html">What The Feature</a></li>
+            </ul>
+          </li>
+        
+        <li style="padding: 5px; text-align: right">
+          <iframe style="border: 0; margin: 0; padding: 0;" src="https://www.gittip.com/gabrielfalcao/widget.html" width="48pt" height="22pt"></iframe>
+        </li>
+      </ul>
+
+    </div>
+    <div id="content">
+      <div id="content-header">
+	<h1>What The Feature</h1>
+      </div>
+      <div id="breadcrumb">
+	<a href="#" title="Lettuce Documentation" class="tip-bottom"><i class="icon-home"></i> Lettuce Documentation</a>
+        
+        <span class="divider">/</span>
+	<a href="http://falcao.it/lettuce/Introduction/what-the-feature.html">Introduction</a>
+        
+        <span class="divider">/</span>
+	<a href="http://falcao.it/lettuce/Introduction/what-the-feature.html" class="current">What The Feature</a>
+      </div>
+      <div class="container-fluid doc-contents">
+	<div class="row-fluid">
+	  <div class="span12">
+            <h1>What the f** eature ?</h1>
+
+<p>Unless you are used to <a href="http://cukes.info">cucumber</a> nomenclature, you may be wondering
+about the terms that surround Lettuce concepts.</p>
+
+<p>If this is your case, this introduction will guide you through the
+very basic keywords that cover Lettuce.</p>
+
+<h2>Features</h2>
+
+<p>Since Lettuce is used to test the behavior of a project, the behavior is broken
+up in to features of the system.</p>
+
+<p>After enumerating features, you need to create scenarios which will
+describe those feature. Thus, scenarios are components of a feature.</p>
+
+<p>Let&#39;s learn by example: suppose we want to create a system to manage a
+address book.</p>
+
+<p>OK, one of the very basic features of a address book is adding contacts, which will
+include their name and phone numbers.</p>
+
+<p>This is how Lettuce allows you to describe such feature:</p>
+<div class="highlight"><pre><span class="k">Feature:</span><span class="nf"> Add people to address book</span>
+<span class="nf">  In order to organize phone numbers of friends</span>
+<span class="nf">  As a wise person</span>
+<span class="nf">  I want to add a people to my address book</span>
+
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Add a person with name and phone number</span>
+<span class="k">    Given </span><span class="nf">I fill the field &quot;</span><span class="s">name</span><span class="nf">&quot; with &quot;</span><span class="s">John</span><span class="nf">&quot;</span>
+<span class="nf">    </span><span class="k">And </span><span class="nf">fill the field &quot;</span><span class="s">phone</span><span class="nf">&quot; with &quot;</span><span class="s">2233-4455</span><span class="nf">&quot;</span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">I save the data</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">I see that my contact book has the persons:</span>
+<span class="k">      |</span><span class="s"> name</span><span class="k"> |</span><span class="s"> phone</span><span class="k">     |</span><span class="nf"></span>
+<span class="k">      |</span><span class="s"> John</span><span class="k"> |</span><span class="s"> 2233-4455</span><span class="k"> |</span>
+
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Avoiding a invalid phone number</span>
+<span class="k">    Given </span><span class="nf">I fill the field &quot;</span><span class="s">name</span><span class="nf">&quot; with &quot;</span><span class="s">John</span><span class="nf">&quot;</span>
+<span class="nf">    </span><span class="k">And </span><span class="nf">fill the field &quot;</span><span class="s">phone</span><span class="nf">&quot; with &quot;</span><span class="s">000</span><span class="nf">&quot;</span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">I save the data</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">I get the error: &quot;</span><span class="s">000 is a invalid phone number</span><span class="nf">&quot;</span>
+</pre></div>
+<p>In the feature above we can notice a few elements, for instance:</p>
+
+<h3>The feature name:</h3>
+<div class="highlight"><pre><span class="k">Feature:</span><span class="nf"> Add people to contact book</span>
+</pre></div>
+<h3>Feature headline:</h3>
+<div class="highlight"><pre><span class="nf">In order to organize phone numbers of friends</span>
+<span class="nf">As a wise person</span>
+<span class="k">I </span><span class="nf">want to add a people to my address book</span>
+</pre></div>
+<h3>Scenarios:</h3>
+<div class="highlight"><pre><span class="k">Scenario:</span><span class="nf"> Add a person with name and phone</span>
+<span class="k">  Given </span><span class="nf">I fill the field &quot;</span><span class="s">name</span><span class="nf">&quot; with &quot;</span><span class="s">John</span><span class="nf">&quot;</span>
+<span class="nf">  </span><span class="k">And </span><span class="nf">fill the field &quot;</span><span class="s">phone</span><span class="nf">&quot; with &quot;</span><span class="s">2233-4455</span><span class="nf">&quot;</span>
+<span class="nf">  </span><span class="k">When </span><span class="nf">I save the data</span>
+<span class="nf">  </span><span class="k">Then </span><span class="nf">I see that my contact book has the persons:</span>
+<span class="k">    |</span><span class="s"> name</span><span class="k"> |</span><span class="s"> phone</span><span class="k">     |</span><span class="nf"></span>
+<span class="k">    |</span><span class="s"> John</span><span class="k"> |</span><span class="s"> 2233-4455</span><span class="k"> |</span>
+
+<span class="k">Scenario:</span><span class="nf"> Avoiding a invalid phone number</span>
+<span class="k">  Given </span><span class="nf">I fill the field &quot;</span><span class="s">name</span><span class="nf">&quot; with &quot;</span><span class="s">John</span><span class="nf">&quot;</span>
+<span class="nf">  </span><span class="k">And </span><span class="nf">fill the field &quot;</span><span class="s">phone</span><span class="nf">&quot; with &quot;</span><span class="s">000</span><span class="nf">&quot;</span>
+<span class="nf">  </span><span class="k">When </span><span class="nf">I save the data</span>
+<span class="nf">  </span><span class="k">Then </span><span class="nf">I get the error: &quot;</span><span class="s">000 is a invalid phone number</span><span class="nf">&quot;</span>
+</pre></div>
+<h2>Scenarios</h2>
+
+<p>One or more scenarios compose a feature. There are two kinds of
+scenarios:</p>
+
+<h3>Simple</h3>
+
+<p>The simple scenarios are composed by steps, no matter if they are
+simple or tabulated steps.</p>
+
+<p>The feature above is composed by two simple scenarios.</p>
+
+<h3>Outlined</h3>
+
+<p>Outlined scenarios are very handy because they help you to avoid
+repetition.</p>
+
+<p>Suppose that we need to fill the same form many times, each time
+with a different data set. This is how it could be done using scenario
+outlines:</p>
+
+<p>Let&#39;s see how it could be done with scenario outlines:</p>
+<div class="highlight"><pre><span class="k">Feature:</span><span class="nf"> Apply all my friends to attend a conference</span>
+<span class="nf">  In order to apply all my friends to the next PyCon</span>
+<span class="nf">  As a lazy person</span>
+<span class="nf">  I want to fill the same form many times</span>
+
+<span class="nf">  </span><span class="k">Scenario Outline:</span><span class="nf"> Apply my friends</span>
+<span class="nf">    Go to the conference website</span>
+<span class="nf">    Access the link &quot;I will attend&quot;</span>
+<span class="nf">    Fill the field &quot;name&quot; with &quot;&lt;friend_name&gt;&quot;</span>
+<span class="nf">    Fill the field &quot;email&quot; with &quot;&lt;friend_email&gt;&quot;</span>
+<span class="nf">    Fill the field &quot;birthday&quot; with &quot;&lt;friend_birthdate&gt;&quot;</span>
+<span class="nf">    Click on &quot;confirm attendance&quot; button</span>
+
+<span class="nf">  Examples:</span>
+<span class="nf">    | friend_name | friend_email         | friend_birthdate |</span>
+<span class="nf">    | Mary        | mary@domain.com      | 1988/02/10       |</span>
+<span class="nf">    | Lincoln     | lincoln@provider.net | 1987/09/10       |</span>
+<span class="nf">    | Marcus      | marcus@other.org     | 1990/10/05       |</span>
+</pre></div>
+<p>In a nutshell, the scenario above is equivalent to write the huge code
+bellow</p>
+<div class="highlight"><pre><span class="k">Feature:</span><span class="nf"> Apply all my friends to attend a conference</span>
+<span class="nf">  In order to apply all my friends to the next PyCon_</span>
+<span class="nf">  As a lazy person</span>
+<span class="nf">  I want to fill the same form many times</span>
+
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Apply Mary</span>
+<span class="nf">    Go to the conference website</span>
+<span class="nf">    Access the link &quot;I will attend&quot;</span>
+<span class="nf">    Fill the field &quot;name&quot; with &quot;Mary&quot;</span>
+<span class="nf">    Fill the field &quot;email&quot; with &quot;mary@domain.com&quot;</span>
+<span class="nf">    Fill the field &quot;birthday&quot; with &quot;1988/02/10&quot;</span>
+<span class="nf">    Click on &quot;confirm attendance&quot; button</span>
+
+<span class="nf">  Scenario: Apply Lincoln</span>
+<span class="nf">    Go to the conference website</span>
+<span class="nf">    Access the link &quot;I will attend&quot;</span>
+<span class="nf">    Fill the field &quot;name&quot; with &quot;Lincoln&quot;</span>
+<span class="nf">    Fill the field &quot;email&quot; with &quot;lincoln@provider.net&quot;</span>
+<span class="nf">    Fill the field &quot;birthday&quot; with &quot;1987/09/10&quot;</span>
+<span class="nf">    Click on &quot;confirm attendance&quot; button</span>
+
+<span class="nf">  Scenario: Apply Marcus</span>
+<span class="nf">    Go to the conference website</span>
+<span class="nf">    Access the link &quot;I will attend&quot;</span>
+<span class="nf">    Fill the field &quot;name&quot; with &quot;Marcus&quot;</span>
+<span class="nf">    Fill the field &quot;email&quot; with &quot;marcus@other.org&quot;</span>
+<span class="nf">    Fill the field &quot;birthday&quot; with &quot;1990/10/05&quot;</span>
+<span class="nf">    Click on &quot;confirm attendance&quot; button</span>
+</pre></div>
+<p>As you can notice, scenario outlines are very useful and help you on
+avoiding text and code repetition</p>
+
+<h2>Steps and its definitions</h2>
+
+<p>Comparable with Scenarios, Steps comes in two kinds:</p>
+
+<h3>Simple steps</h3>
+
+<p>Simple steps are actually simple and they are related to the step
+definitions inside the scenarios.</p>
+
+<p>Lettuce considers each line of a scenario as a simple step. The only
+exception is if the first non-blank character of the line is a pipe
+<code>|</code>. In this case, Lettuce will consider the step as a tabular step.</p>
+
+<p>For instance, a simple step may look like this</p>
+<div class="highlight"><pre><span class="k">Given </span><span class="nf">I go to the conference website</span>
+</pre></div>
+<h3>Tabular steps</h3>
+
+<p>Analog to Outlined Scenarios, the tabular steps are very useful, and
+avoid repetition of text.</p>
+
+<p>Tabular steps are specially useful to set up some data set in a
+scenario, or to compare a set of data to the expected results in the
+end of the scenario.</p>
+
+<p>However, feel free to use this whenever you find it useful.</p>
+
+<p>Example</p>
+<div class="highlight"><pre><span class="k">Given </span><span class="nf">I have the following contacts in my database</span>
+<span class="k">  |</span><span class="s"> name</span><span class="k">  |</span><span class="s"> phone</span><span class="k">      |</span><span class="nf"></span>
+<span class="k">  |</span><span class="s"> John</span><span class="k">  |</span><span class="s"> 2233-4455</span><span class="k">  |</span><span class="nf"></span>
+<span class="k">  |</span><span class="s"> Smith</span><span class="k"> |</span><span class="s"> 9988-7766</span><span class="k">  |</span>
+</pre></div>
+	  </div>
+	</div>
+    </div>
+    <script src="http://falcao.it/lettuce/media/js/excanvas.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.ui.custom.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/bootstrap.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.flot.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.flot.resize.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.peity.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/fullcalendar.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/unicorn.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/unicorn.dashboard.js"></script>
+  </body>
+</html>

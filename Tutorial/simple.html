@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Writing your very first test - Lettuce Documentation</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Instructions to install lettuce in your computer, requires python and maybe git." />
+    <meta name="keywords" content="Lettuce, BDD, Python, Cucumber, Django, Sure,Writing your very first test"/ >
+    <meta name="author" content="Gabriel Falcão" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/unicorn.main.css" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/unicorn.grey.css" class="skin-color" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/lettuce.docs.css" class="skin-color" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/pygments.css" class="skin-color" />
+    <link rel="shortcut icon" href="http://falcao.it/lettuce/favicon.png" type="image/x-icon" />
+  </head>
+  <body>
+    <div id="header">
+      <h1><a href="./dashboard.html">Writing your very first test</a></h1>
+    </div>
+
+    <div id="sidebar">
+      <ul>
+	<li ><a href="http://falcao.it/lettuce"><i class="icon icon-home"></i> <span>Welcome</span></a></li>
+  	
+        
+  	  
+          
+          <li class="submenu open tutorial">
+            <a href="#"><i class="icon icon-th-list"></i> <span>Tutorial</span> <span class="label">4</span></a>
+            <ul>
+              <li  class="active"><a href="http://falcao.it/lettuce/Tutorial/simple.html">Writing your very first test</a></li><li ><a href="http://falcao.it/lettuce/Tutorial/tables.html">Introducing Step Tables</a></li><li ><a href="http://falcao.it/lettuce/Tutorial/steps-from-step-definitions.html">calling steps from inside other steps</a></li><li ><a href="http://falcao.it/lettuce/Tutorial/multiline.html">Multi-line strings</a></li>
+            </ul>
+          </li>
+        
+  	  
+          
+          <li class="submenu open introduction">
+            <a href="#"><i class="icon icon-th-list"></i> <span>Introduction</span> <span class="label">3</span></a>
+            <ul>
+              <li ><a href="http://falcao.it/lettuce/Introduction/installing.html">Installing</a></li><li ><a href="http://falcao.it/lettuce/Introduction/overview.html">Overview</a></li><li ><a href="http://falcao.it/lettuce/Introduction/what-the-feature.html">What The Feature</a></li>
+            </ul>
+          </li>
+        
+        <li style="padding: 5px; text-align: right">
+          <iframe style="border: 0; margin: 0; padding: 0;" src="https://www.gittip.com/gabrielfalcao/widget.html" width="48pt" height="22pt"></iframe>
+        </li>
+      </ul>
+
+    </div>
+    <div id="content">
+      <div id="content-header">
+	<h1>Writing your very first test</h1>
+      </div>
+      <div id="breadcrumb">
+	<a href="#" title="Lettuce Documentation" class="tip-bottom"><i class="icon-home"></i> Lettuce Documentation</a>
+        
+        <span class="divider">/</span>
+	<a href="http://falcao.it/lettuce/Tutorial/simple.html">Tutorial</a>
+        
+        <span class="divider">/</span>
+	<a href="http://falcao.it/lettuce/Tutorial/simple.html" class="current">Writing your very first test</a>
+      </div>
+      <div class="container-fluid doc-contents">
+	<div class="row-fluid">
+	  <div class="span12">
+            <h1>Introduction</h1>
+
+<p>Lettuce is an extremely useful and charming tool for BDD_ (Behavior
+Driven Development). It can execute plain-text functional descriptions
+as automated tests for Python_ projects, just as Cucumber_ does for
+Gherkin.</p>
+
+<p>Lettuce_ makes the development and testing process really easy,
+scalable, readable and - what is best - it allows someone who doesn&#39;t
+program to describe the behavior of a certain system, without
+imagining those descriptions will automatically test the system during
+its development.</p>
+
+<p><img src="http://falcao.it/lettuce/images/tutorial/flow.png" alt="http://falcao.it/lettuce/images/tutorial/flow.png"></p>
+
+<h2>get lettuce</h2>
+
+<p>Make sure you&#39;ve got Python installed and then run from the terminal:</p>
+<div class="highlight"><pre><span class="gp">user@machine:~$</span> <span class="o">[</span>sudo<span class="o">]</span> pip install lettuce
+</pre></div>
+<h2>define a problem</h2>
+
+<p>Let&#39;s choose a problem to lettuce: <code>**Given a number, what is its factorial?**</code></p>
+
+<h4>note</h4>
+
+<p><code>
+   The factorial of a positive integer n, denoted by n!, is the
+   product of all positive integers less than or equal to n. The
+   factorial of 0 is 1
+</code></p>
+
+<h2>project structure</h2>
+
+<p>Build the directory tree bellow such as the files <code>zero.feature</code> and <code>steps.py</code> are empty.</p>
+<div class="highlight"><pre><span class="go">    /home/user/projects/mymath</span>
+<span class="go">         | tests</span>
+<span class="go">               | features</span>
+<span class="go">                    - zero.feature</span>
+<span class="go">                    - steps.py</span>
+</pre></div>
+<h2>lettuce it!</h2>
+
+<p>Lets begin to describe and solve our problem...</p>
+
+<h3>first round</h3>
+
+<h4>[a] describe behaviour</h4>
+
+<p>Start describing the expected behaviour of factorial in <code>zero.feature</code> using English:</p>
+<div class="highlight"><pre><span class="k">Feature:</span><span class="nf"> Compute factorial</span>
+<span class="nf">    In order to play with Lettuce</span>
+<span class="nf">    As beginners</span>
+<span class="nf">    We&#39;ll implement factorial</span>
+
+<span class="nf">    </span><span class="k">Scenario:</span><span class="nf"> Factorial of 0</span>
+<span class="k">        Given </span><span class="nf">I have the number </span><span class="s">0</span><span class="nf"></span>
+<span class="nf">        </span><span class="k">When </span><span class="nf">I compute its factorial</span>
+<span class="nf">        </span><span class="k">Then </span><span class="nf">I see the number </span><span class="s">1</span><span class="nf"></span>
+</pre></div>
+<p>.. Note::</p>
+<div class="highlight"><pre><span class="go">zero.feature must be inside features directory and its extension must</span>
+<span class="go">be .feature. However, you&#39;re free to choose its name.</span>
+</pre></div>
+<h4>[b] define steps in python</h4>
+
+<p>Now let&#39;s define the steps of the scenario, so Lettuce can
+understand the behaviour description. Create the <code>steps.py</code> file which will contain
+python code describing the steps.</p>
+
+<p>Python:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">lettuce</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I have the number (\d+)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">have_the_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+   <span class="n">world</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I compute its factorial&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">compute_its_factorial</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+   <span class="n">world</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">factorial</span><span class="p">(</span><span class="n">world</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I see the number (\d+)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">check_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+   <span class="n">expected</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
+   <span class="k">assert</span> <span class="n">world</span><span class="o">.</span><span class="n">number</span> <span class="o">==</span> <span class="n">expected</span><span class="p">,</span> \
+       <span class="s">&quot;Got </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">world</span><span class="o">.</span><span class="n">number</span>
+
+<span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+   <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+</pre></div>
+<h4>note</h4>
+
+<p><code>steps.py</code> must be inside features directory, but the names doesn&#39;t
+   need to be <code>steps.py</code> it can be any python file with a <code>.py</code> extension.
+   Lettuce_ will look for python files recursively within features
+   dir.</p>
+
+<p>Ideally, factorial will be defined somewhere else. However, as this is
+just a first example, we&#39;ll implement it inside steps.py, so you get
+the idea of how to use Lettuce.</p>
+
+<p><strong>Notice that, until now, we haven&#39;t defined the factorial function (it&#39;s returning -1).</strong></p>
+
+<h4>[c] run and watch it fail</h4>
+
+<p>Go to the tests directory and run from the terminal:</p>
+<div class="highlight"><pre><span class="gp">user@machine:~/projects/mymath/tests$</span> lettuce
+</pre></div>
+<p>As you haven&#39;t implemented factorial, it is no surprise the behavior
+won&#39;t be reached:</p>
+
+<p><img src="http://falcao.it/lettuce/images/tutorial/screenshot1.png" alt="http://falcao.it/lettuce/images/tutorial/screenshot1.png"></p>
+
+<p>Our only scenario failed :(
+Let&#39;s solve it...</p>
+
+<h4>[d] write code to make it pass</h4>
+
+<p>Well, by definition, we know that the factorial of 0 is 1. As our only
+feature is this... we could force factorial to return 1.</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">lettuce</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I have the number (\d+)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">have_the_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I compute its factorial&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">compute_its_factorial</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">factorial</span><span class="p">(</span><span class="n">world</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I see the number (\d+)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">check_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">world</span><span class="o">.</span><span class="n">number</span> <span class="o">==</span> <span class="n">expected</span><span class="p">,</span> \
+        <span class="s">&quot;Got </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">world</span><span class="o">.</span><span class="n">number</span>
+
+<span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">1</span>
+</pre></div>
+<h4>[e] run again and watch it pass</h4>
+
+<p>Again, run from the terminal:</p>
+<div class="highlight"><pre><span class="gp">user@machine:~/projects/mymath/tests$</span> lettuce
+</pre></div>
+<p>And you&#39;ll be happy to see your factorial implementation passed all the behaviours expected:</p>
+
+<p><img src="http://falcao.it/lettuce/images/tutorial/screenshot2.png" alt="http://falcao.it/lettuce/images/tutorial/screenshot2.png"></p>
+
+<p>Great! :)</p>
+
+<p>However, one test is not enough for checking the quality of our
+solution... So let&#39;s lettuce it again!</p>
+
+<h3>second round</h3>
+
+<p>Let&#39;s provide more tests so our problem is better described, and so we
+provide a more accurate implementation of factorial:</p>
+
+<h4>[a] describe behaviour</h4>
+
+<p>Let&#39;s provide two new scenarios, for numbers 1 and 2:</p>
+<div class="highlight"><pre><span class="k">Feature:</span><span class="nf"> Compute factorial</span>
+<span class="nf">  In order to play with Lettuce</span>
+<span class="nf">  As beginners</span>
+<span class="nf">  We&#39;ll implement factorial</span>
+
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Factorial of 0</span>
+<span class="k">    Given </span><span class="nf">I have the number </span><span class="s">0</span><span class="nf"></span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">I compute its factorial</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">I see the number </span><span class="s">1</span><span class="nf"></span>
+
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Factorial of 1</span>
+<span class="k">    Given </span><span class="nf">I have the number </span><span class="s">1</span><span class="nf"></span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">I compute its factorial</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">I see the number </span><span class="s">1</span><span class="nf"></span>
+
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Factorial of 2</span>
+<span class="k">    Given </span><span class="nf">I have the number </span><span class="s">2</span><span class="nf"></span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">I compute its factorial</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">I see the number </span><span class="s">2</span><span class="nf"></span>
+</pre></div>
+<h4>[b] define steps in python</h4>
+
+<p>As we haven&#39;t changed the definition, no need to make changes on this
+step.</p>
+
+<h4>[c] run and watch it fail</h4>
+<div class="highlight"><pre><span class="gp">user@machine:~/projects/mymath/tests$</span> lettuce
+</pre></div>
+<p>When running Lettuce we realize that our previous implementation of
+factorial works fine both for 0 and for 1, but not for 2 - it
+fails. :(</p>
+
+<p><img src="http://falcao.it/lettuce/images/tutorial/screenshot3.png" alt="http://falcao.it/lettuce/images/tutorial/screenshot3.png"></p>
+
+<h4>[d] write code to make it pass</h4>
+
+<p>Let&#39;s provide a solution so we get the right factorial for all
+scenarios, specially for number 2:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">lettuce</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I have the number (\d+)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">have_the_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I compute its factorial&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">compute_its_factorial</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">factorial</span><span class="p">(</span><span class="n">world</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I see the number (\d+)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">check_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">world</span><span class="o">.</span><span class="n">number</span> <span class="o">==</span> <span class="n">expected</span><span class="p">,</span> \
+        <span class="s">&quot;Got </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">world</span><span class="o">.</span><span class="n">number</span>
+
+<span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">number</span>
+</pre></div>
+<h4>[e] run again and watch it pass</h4>
+<div class="highlight"><pre><span class="gp">user@machine:~/projects/mymath/tests$</span> lettuce
+</pre></div>
+<p><img src="http://falcao.it/lettuce/images/tutorial/screenshot4.png" alt="http://falcao.it/lettuce/images/tutorial/screenshot4.png"></p>
+
+<p>Great! Three scenarios described and they are alright!</p>
+
+<h3>third round</h3>
+
+<p>Let&#39;s provide more tests so our problem is better described and we get
+new errors so we&#39;ll be able to solve them.</p>
+
+<h4>[a] describe behaviour</h4>
+<div class="highlight"><pre><span class="k">Feature:</span><span class="nf"> Compute factorial</span>
+<span class="nf">  In order to play with Lettuce</span>
+<span class="nf">  As beginners</span>
+<span class="nf">  We&#39;ll implement factorial</span>
+
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Factorial of 0</span>
+<span class="k">    Given </span><span class="nf">I have the number </span><span class="s">0</span><span class="nf"></span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">I compute its factorial</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">I see the number </span><span class="s">1</span><span class="nf"></span>
+
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Factorial of 1</span>
+<span class="k">    Given </span><span class="nf">I have the number </span><span class="s">1</span><span class="nf"></span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">I compute its factorial</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">I see the number </span><span class="s">1</span><span class="nf"></span>
+
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Factorial of 2</span>
+<span class="k">    Given </span><span class="nf">I have the number </span><span class="s">2</span><span class="nf"></span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">I compute its factorial</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">I see the number </span><span class="s">2</span><span class="nf"></span>
+
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Factorial of 3</span>
+<span class="k">    Given </span><span class="nf">I have the number </span><span class="s">3</span><span class="nf"></span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">I compute its factorial</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">I see the number </span><span class="s">6</span><span class="nf"></span>
+
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Factorial of 4</span>
+<span class="k">    Given </span><span class="nf">I have the number </span><span class="s">4</span><span class="nf"></span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">I compute its factorial</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">I see the number </span><span class="s">24</span><span class="nf"></span>
+</pre></div>
+<h4>[b] define steps in python</h4>
+
+<p>As we haven&#39;t changed the definition, no need to make changes on this
+step.</p>
+
+<h4>[c] run and watch it fail</h4>
+<div class="highlight"><pre><span class="gp">user@machine:~/projects/mymath/tests$</span> lettuce
+</pre></div>
+<p><img src="http://falcao.it/lettuce/images/tutorial/screenshot5.png" alt="http://falcao.it/lettuce/images/tutorial/screenshot5.png"></p>
+
+<h4>[d] write code to make it pass</h4>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">lettuce</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I have the number (\d+)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">have_the_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I compute its factorial&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">compute_its_factorial</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">world</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">factorial</span><span class="p">(</span><span class="n">world</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I see the number (\d+)&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">check_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">world</span><span class="o">.</span><span class="n">number</span> <span class="o">==</span> <span class="n">expected</span><span class="p">,</span> \
+        <span class="s">&quot;Got </span><span class="si">%d</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">world</span><span class="o">.</span><span class="n">number</span>
+
+<span class="k">def</span> <span class="nf">factorial</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">number</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">number</span><span class="o">*</span><span class="n">factorial</span><span class="p">(</span><span class="n">number</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+<h4>[e] run again and watch it pass</h4>
+<div class="highlight"><pre><span class="gp">user@machine:~/projects/mymath/tests$</span> lettuce
+</pre></div>
+<p><img src="http://falcao.it/lettuce/images/tutorial/screenshot6.png" alt="http://falcao.it/lettuce/images/tutorial/screenshot6.png"></p>
+
+<h3>forth round</h3>
+
+<p>All steps should be repeated as long as you can keep doing them - the
+quality of your software depends on these.</p>
+
+<p>Have a nice lettuce...! ;)</p>
+
+	  </div>
+	</div>
+    </div>
+    <script src="http://falcao.it/lettuce/media/js/excanvas.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.ui.custom.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/bootstrap.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.flot.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.flot.resize.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.peity.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/fullcalendar.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/unicorn.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/unicorn.dashboard.js"></script>
+  </body>
+</html>

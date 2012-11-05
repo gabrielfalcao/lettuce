@@ -1,0 +1,34 @@
+<h1>scenario outlines</h1>
+
+<p>On our first <a href="http://falcao.it/lettuce/Tutorial/simple.html">description file</a>,
+<code>zero.feature</code>, all scenarios were similar. This made us repeat most of
+the text again and again.</p>
+
+<p><strong>Isn&#39;t there a better way to deal with this - when several scenarios
+are almost equal and only some values change?</strong></p>
+
+<p>Yes, there is! :) You just need to use scenarios outlines.</p>
+
+<p>An example is shown below:</p>
+<div class="highlight"><pre><span class="k">Feature:</span><span class="nf"> Compute factorial</span>
+<span class="nf">  In order to play with Lettuce</span>
+<span class="nf">  As beginners</span>
+<span class="nf">  We&#39;ll implement factorial</span>
+
+<span class="nf">  </span><span class="k">Scenario Outline:</span><span class="nf"> Factorials [0-4]</span>
+<span class="k">    Given </span><span class="nf">I have the number </span><span class="nv">&lt;number&gt;</span><span class="nf"></span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">I compute its factorial</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">I see the number </span><span class="nv">&lt;result&gt;</span><span class="nf"></span>
+
+<span class="nf">  </span><span class="k">Examples:</span>
+<span class="k">    |</span><span class="nv"> number</span><span class="k"> |</span><span class="nv"> result</span><span class="k"> |</span><span class="nf"></span>
+<span class="k">    |</span><span class="s"> 0</span><span class="k">      |</span><span class="s"> 1</span><span class="k">      |</span><span class="nf"></span>
+<span class="k">    |</span><span class="s"> 1</span><span class="k">      |</span><span class="s"> 1</span><span class="k">      |</span><span class="nf"></span>
+<span class="k">    |</span><span class="s"> 2</span><span class="k">      |</span><span class="s"> 2</span><span class="k">      |</span><span class="nf"></span>
+<span class="k">    |</span><span class="s"> 3</span><span class="k">      |</span><span class="s"> 6</span><span class="k">      |</span><span class="nf"></span>
+<span class="k">    |</span><span class="s"> 4</span><span class="k">      |</span><span class="s"> 24</span><span class="k">     |</span>
+</pre></div>
+<p>This way, you will only need to provide the values that really change,
+reducing &quot;copy &amp; paste&quot; work and making your tests more clear.</p>
+
+<p><img src="http://falcao.it/lettuce/images/tutorial/screenshot7.png" alt="image"></p>

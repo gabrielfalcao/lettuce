@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>calling steps from inside other steps - Lettuce Documentation</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Instructions to install lettuce in your computer, requires python and maybe git." />
+    <meta name="keywords" content="Lettuce, BDD, Python, Cucumber, Django, Sure,calling steps from inside other steps"/ >
+    <meta name="author" content="Gabriel Falcão" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/unicorn.main.css" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/unicorn.grey.css" class="skin-color" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/lettuce.docs.css" class="skin-color" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/pygments.css" class="skin-color" />
+    <link rel="shortcut icon" href="http://falcao.it/lettuce/favicon.png" type="image/x-icon" />
+  </head>
+  <body>
+    <div id="header">
+      <h1><a href="./dashboard.html">calling steps from inside other steps</a></h1>
+    </div>
+
+    <div id="sidebar">
+      <ul>
+	<li ><a href="http://falcao.it/lettuce"><i class="icon icon-home"></i> <span>Welcome</span></a></li>
+  	
+        
+  	  
+          
+          <li class="submenu open tutorial">
+            <a href="#"><i class="icon icon-th-list"></i> <span>Tutorial</span> <span class="label">4</span></a>
+            <ul>
+              <li ><a href="http://falcao.it/lettuce/Tutorial/simple.html">Writing your very first test</a></li><li ><a href="http://falcao.it/lettuce/Tutorial/tables.html">Introducing Step Tables</a></li><li  class="active"><a href="http://falcao.it/lettuce/Tutorial/steps-from-step-definitions.html">calling steps from inside other steps</a></li><li ><a href="http://falcao.it/lettuce/Tutorial/multiline.html">Multi-line strings</a></li>
+            </ul>
+          </li>
+        
+  	  
+          
+          <li class="submenu open introduction">
+            <a href="#"><i class="icon icon-th-list"></i> <span>Introduction</span> <span class="label">3</span></a>
+            <ul>
+              <li ><a href="http://falcao.it/lettuce/Introduction/installing.html">Installing</a></li><li ><a href="http://falcao.it/lettuce/Introduction/overview.html">Overview</a></li><li ><a href="http://falcao.it/lettuce/Introduction/what-the-feature.html">What The Feature</a></li>
+            </ul>
+          </li>
+        
+        <li style="padding: 5px; text-align: right">
+          <iframe style="border: 0; margin: 0; padding: 0;" src="https://www.gittip.com/gabrielfalcao/widget.html" width="48pt" height="22pt"></iframe>
+        </li>
+      </ul>
+
+    </div>
+    <div id="content">
+      <div id="content-header">
+	<h1>calling steps from inside other steps</h1>
+      </div>
+      <div id="breadcrumb">
+	<a href="#" title="Lettuce Documentation" class="tip-bottom"><i class="icon-home"></i> Lettuce Documentation</a>
+        
+        <span class="divider">/</span>
+	<a href="http://falcao.it/lettuce/Tutorial/steps-from-step-definitions.html">Tutorial</a>
+        
+        <span class="divider">/</span>
+	<a href="http://falcao.it/lettuce/Tutorial/steps-from-step-definitions.html" class="current">calling steps from inside other steps</a>
+      </div>
+      <div class="container-fluid doc-contents">
+	<div class="row-fluid">
+	  <div class="span12">
+            <h1>calling steps from step definitions</h1>
+
+<p>Our tests should be as expressive as possible. However, we also want to
+re-use steps that we&#39;ve seen before. With the tools we&#39;ve used so far,
+you could end up with seriously long step definitions.</p>
+<div class="highlight"><pre><span class="k">Scenario:</span><span class="nf"> Logged-in user does something cool.</span>
+<span class="k">  Given </span><span class="nf">I go to the home page</span>
+<span class="nf">  </span><span class="k">And </span><span class="nf">I click the login button</span>
+<span class="nf">  </span><span class="k">And </span><span class="nf">I fill in username:floppy password:banana</span>
+<span class="nf">  </span><span class="k">And </span><span class="nf">I click &quot;</span><span class="s">Login</span><span class="nf">&quot;</span>
+<span class="nf">  </span><span class="k">When </span><span class="nf">I finally do something interesting</span>
+<span class="nf">  </span><span class="k">Then </span><span class="nf">I&#39;m already too bored to care.</span>
+</pre></div>
+<p>In this case, we probably had a test case (maybe several) for which it
+was actually valuable to express how the user interacted with the login
+form. That&#39;s where we got the step definitions for our login sequence.
+When the login form isn&#39;t especially interesting any more, however,
+these steps are just noise. We&#39;d really like to be able to define
+something like this without duplicating our step definitions.</p>
+<div class="highlight"><pre><span class="k">Scenario:</span><span class="nf"> Logged-in user does something cool.</span>
+<span class="k">  Given </span><span class="nf">I am logged in</span>
+<span class="nf">  </span><span class="k">When </span><span class="nf">I do something interesting</span>
+<span class="nf">  </span><span class="k">Then </span><span class="nf">The world becomes a better place</span>
+</pre></div>
+<p>Lettuce affords you the ability to write such a &quot;step of steps&quot; with a
+set of helpers matching each of the grammar terms <code>Given</code>, <code>When</code> and
+<code>Then</code>. You could accomplish the above like so.</p>
+<div class="highlight"><pre><span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I am logged in&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">is_logged_in</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">step</span><span class="o">.</span><span class="n">given</span><span class="p">(</span><span class="s">&#39;I go to the home page&#39;</span><span class="p">)</span>
+    <span class="n">step</span><span class="o">.</span><span class="n">given</span><span class="p">(</span><span class="s">&#39;I click the login button&#39;</span><span class="p">)</span>
+    <span class="c"># ... and so on.</span>
+</pre></div>
+<h2>running blocks of steps</h2>
+
+<p>It is sometimes even desirable to run blocks of steps, copy-and-pasted
+directly from Feature specifications. The <code>Step.behave_as</code> method lets
+you do this, and you can use <code>str.format</code> to fill in parameters
+dynamically. For example, we can write the above step definition like
+so:</p>
+<div class="highlight"><pre><span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I am logged in&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">is_logged_in</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">step</span><span class="o">.</span><span class="n">behave_as</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">        Given I go to the home page</span>
+<span class="s">          And I click the login button</span>
+<span class="s">          And I fill in username:{user} password:{pass}</span>
+<span class="s">          And I click &quot;Login&quot;</span>
+<span class="s">    &quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="s">&#39;floppy&#39;</span><span class="p">,</span> <span class="k">pass</span><span class="o">=</span><span class="s">&#39;banana&#39;</span><span class="p">))</span>
+</pre></div>
+<p>This can be combined with step argument capture for step definitions
+that are both expressive and DRY.</p>
+
+	  </div>
+	</div>
+    </div>
+    <script src="http://falcao.it/lettuce/media/js/excanvas.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.ui.custom.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/bootstrap.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.flot.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.flot.resize.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.peity.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/fullcalendar.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/unicorn.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/unicorn.dashboard.js"></script>
+  </body>
+</html>

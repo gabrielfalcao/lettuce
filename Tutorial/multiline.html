@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Multi-line strings - Lettuce Documentation</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Instructions to install lettuce in your computer, requires python and maybe git." />
+    <meta name="keywords" content="Lettuce, BDD, Python, Cucumber, Django, Sure,Multi-line strings"/ >
+    <meta name="author" content="Gabriel Falcão" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/bootstrap-responsive.min.css" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/unicorn.main.css" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/unicorn.grey.css" class="skin-color" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/lettuce.docs.css" class="skin-color" />
+    <link rel="stylesheet" href="http://falcao.it/lettuce/media/css/pygments.css" class="skin-color" />
+    <link rel="shortcut icon" href="http://falcao.it/lettuce/favicon.png" type="image/x-icon" />
+  </head>
+  <body>
+    <div id="header">
+      <h1><a href="./dashboard.html">Multi-line strings</a></h1>
+    </div>
+
+    <div id="sidebar">
+      <ul>
+	<li ><a href="http://falcao.it/lettuce"><i class="icon icon-home"></i> <span>Welcome</span></a></li>
+  	
+        
+  	  
+          
+          <li class="submenu open tutorial">
+            <a href="#"><i class="icon icon-th-list"></i> <span>Tutorial</span> <span class="label">4</span></a>
+            <ul>
+              <li ><a href="http://falcao.it/lettuce/Tutorial/simple.html">Writing your very first test</a></li><li ><a href="http://falcao.it/lettuce/Tutorial/tables.html">Introducing Step Tables</a></li><li ><a href="http://falcao.it/lettuce/Tutorial/steps-from-step-definitions.html">calling steps from inside other steps</a></li><li  class="active"><a href="http://falcao.it/lettuce/Tutorial/multiline.html">Multi-line strings</a></li>
+            </ul>
+          </li>
+        
+  	  
+          
+          <li class="submenu open introduction">
+            <a href="#"><i class="icon icon-th-list"></i> <span>Introduction</span> <span class="label">3</span></a>
+            <ul>
+              <li ><a href="http://falcao.it/lettuce/Introduction/installing.html">Installing</a></li><li ><a href="http://falcao.it/lettuce/Introduction/overview.html">Overview</a></li><li ><a href="http://falcao.it/lettuce/Introduction/what-the-feature.html">What The Feature</a></li>
+            </ul>
+          </li>
+        
+        <li style="padding: 5px; text-align: right">
+          <iframe style="border: 0; margin: 0; padding: 0;" src="https://www.gittip.com/gabrielfalcao/widget.html" width="48pt" height="22pt"></iframe>
+        </li>
+      </ul>
+
+    </div>
+    <div id="content">
+      <div id="content-header">
+	<h1>Multi-line strings</h1>
+      </div>
+      <div id="breadcrumb">
+	<a href="#" title="Lettuce Documentation" class="tip-bottom"><i class="icon-home"></i> Lettuce Documentation</a>
+        
+        <span class="divider">/</span>
+	<a href="http://falcao.it/lettuce/Tutorial/multiline.html">Tutorial</a>
+        
+        <span class="divider">/</span>
+	<a href="http://falcao.it/lettuce/Tutorial/multiline.html" class="current">Multi-line strings</a>
+      </div>
+      <div class="container-fluid doc-contents">
+	<div class="row-fluid">
+	  <div class="span12">
+            <h1>multi-line strings</h1>
+
+<p>Now imagine you are writing an application which manipulates strings.
+When writing the tests, you may find yourself wanting to put multi-line
+strings in your steps.</p>
+
+<p>Multi-line strings will do the trick</p>
+<div class="highlight"><pre><span class="k">Feature:</span><span class="nf"> Split a string into multiple lines on spaces</span>
+<span class="nf">  In order to make strings more readable</span>
+<span class="nf">  As a user</span>
+<span class="nf">  I want to have words split into their own lines</span>
+
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Split small-ish string</span>
+<span class="k">    Given </span><span class="nf">I have the string &quot;</span><span class="s">one two three four five</span><span class="nf">&quot;</span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">I ask to have the string split into lines</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">I should see the following:</span>
+<span class="nf">      </span><span class="k">&quot;&quot;&quot;</span><span class="s"></span>
+<span class="s">      one</span>
+<span class="s">      two</span>
+<span class="s">      three</span>
+<span class="s">      four</span>
+<span class="s">      five</span>
+<span class="s">      </span><span class="k">&quot;&quot;&quot;</span><span class="nf"></span>
+</pre></div>
+<p>A line with nothing but three quotes (&quot;&quot;&quot;) is used to indicate the
+beginning and the end of a multi-line string.</p>
+
+<p>Now, let&#39;s define a step that knows how to use this.</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">lettuce</span> <span class="kn">import</span> <span class="n">step</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I should see the following:&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">i_should_see_the_following</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">step</span><span class="o">.</span><span class="n">multiline</span> <span class="o">==</span> <span class="s">&quot;&quot;&quot;one</span>
+<span class="s">two</span>
+<span class="s">three</span>
+<span class="s">four</span>
+<span class="s">five&quot;&quot;&quot;</span>
+</pre></div>
+<p>Nice and straightforward.</p>
+
+<p>Notice that leading spaces are stripped, and there&#39;s not a newline at
+the beginning or end. This is due to the way that the parser strips
+blank lines and leading and trailing whitespace.</p>
+
+<p>If you need blank lines leading or trailing whitespace, you can include
+lines which start and/or end with double quote, and they will be
+concatenated with the other multiline lines, with the quotes stripped
+off and their whitespace preserved.</p>
+
+<p>For example</p>
+<div class="highlight"><pre><span class="k">Feature:</span><span class="nf"> Split a string into multiple lines on spaces</span>
+<span class="nf">  In order to make strings more readable</span>
+<span class="nf">  As a user</span>
+<span class="nf">  I want to have words split into their own lines</span>
+
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Split small-ish string</span>
+<span class="k">    Given </span><span class="nf">I have the string &quot;</span><span class="s">one two three four five</span><span class="nf">&quot;</span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">I ask to have the string split into lines</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">I should see the following:</span>
+<span class="nf">      </span><span class="k">&quot;&quot;&quot;</span><span class="s"></span>
+<span class="s">     &quot; one</span>
+<span class="s">     &quot; two  &quot;</span>
+<span class="s">     &quot;  three   &quot;</span>
+<span class="s">     &quot;   four    &quot;</span>
+<span class="s">     &quot;    five     &quot;</span>
+<span class="s">     &quot;</span>
+<span class="s">      </span><span class="k">&quot;&quot;&quot;</span><span class="nf"></span>
+</pre></div>
+<p>Which we can verify like so:</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">lettuce</span> <span class="kn">import</span> <span class="n">step</span>
+
+<span class="nd">@step</span><span class="p">(</span><span class="s">&#39;I should see the following:&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">i_should_see_the_following</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">step</span><span class="o">.</span><span class="n">multiline</span> <span class="o">==</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span>
+    <span class="s">&#39; one&#39;</span><span class="p">,</span>
+    <span class="s">&#39;  two  &#39;</span><span class="p">,</span>
+    <span class="s">&#39;   three   &#39;</span><span class="p">,</span>
+    <span class="s">&#39;    four    &#39;</span><span class="p">,</span>
+    <span class="s">&#39;     five     &#39;</span><span class="p">,</span>
+    <span class="s">&#39;&#39;</span><span class="p">])</span>
+</pre></div>
+<p>Admittedly, this is a hack, but there&#39;s no clean way to preserve
+whitespace in only one section of a feature definition in the current
+parser implementation.</p>
+
+<p>Note that the first line doesn&#39;t have any whitespace at the end, and
+thus doesn&#39;t need to have a quote at the end of it.</p>
+
+<p>Also note that if you want a double quote at the beginning of a line in
+your string, you&#39;ll have to start your line with two double quotes,
+since the first one will be stripped off.</p>
+
+	  </div>
+	</div>
+    </div>
+    <script src="http://falcao.it/lettuce/media/js/excanvas.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.ui.custom.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/bootstrap.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.flot.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.flot.resize.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/jquery.peity.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/fullcalendar.min.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/unicorn.js"></script>
+    <script src="http://falcao.it/lettuce/media/js/unicorn.dashboard.js"></script>
+  </body>
+</html>
