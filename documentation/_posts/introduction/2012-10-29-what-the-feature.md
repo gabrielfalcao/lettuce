@@ -133,34 +133,34 @@ In a nutshell, the scenario above is equivalent to write the huge code
 bellow
 
 ```gherkin
-    Feature: Apply all my friends to attend a conference
-      In order to apply all my friends to the next PyCon_
-      As a lazy person
-      I want to fill the same form many times
+Feature: Apply all my friends to attend a conference
+  In order to apply all my friends to the next PyCon_
+  As a lazy person
+  I want to fill the same form many times
 
-      Scenario: Apply Mary
-        Go to the conference website
-        Access the link "I will attend"
-        Fill the field "name" with "Mary"
-        Fill the field "email" with "mary@domain.com"
-        Fill the field "birthday" with "1988/02/10"
-        Click on "confirm attendance" button
+  Scenario: Apply Mary
+    Go to the conference website
+    Access the link "I will attend"
+    Fill the field "name" with "Mary"
+    Fill the field "email" with "mary@domain.com"
+    Fill the field "birthday" with "1988/02/10"
+    Click on "confirm attendance" button
 
-      Scenario: Apply Lincoln
-        Go to the conference website
-        Access the link "I will attend"
-        Fill the field "name" with "Lincoln"
-        Fill the field "email" with "lincoln@provider.net"
-        Fill the field "birthday" with "1987/09/10"
-        Click on "confirm attendance" button
+  Scenario: Apply Lincoln
+    Go to the conference website
+    Access the link "I will attend"
+    Fill the field "name" with "Lincoln"
+    Fill the field "email" with "lincoln@provider.net"
+    Fill the field "birthday" with "1987/09/10"
+    Click on "confirm attendance" button
 
-      Scenario: Apply Marcus
-        Go to the conference website
-        Access the link "I will attend"
-        Fill the field "name" with "Marcus"
-        Fill the field "email" with "marcus@other.org"
-        Fill the field "birthday" with "1990/10/05"
-        Click on "confirm attendance" button
+  Scenario: Apply Marcus
+    Go to the conference website
+    Access the link "I will attend"
+    Fill the field "name" with "Marcus"
+    Fill the field "email" with "marcus@other.org"
+    Fill the field "birthday" with "1990/10/05"
+    Click on "confirm attendance" button
 ```
 
 As you can notice, scenario outlines are very useful and help you on
@@ -183,7 +183,7 @@ exception is if the first non-blank character of the line is a pipe
 For instance, a simple step may look like this
 
 ```gherkin
-    Given I go to the conference website
+Given I go to the conference website
 ```
 
 ### Tabular steps
@@ -200,8 +200,8 @@ However, feel free to use this whenever you find it useful.
 Example
 
 ```gherkin
-    Given I have the following contacts in my database
-      | name  | phone      |
-      | John  | 2233-4455  |
-      | Smith | 9988-7766  |
+Given I have the following contacts in my database
+  | name  | phone      |
+  | John  | 2233-4455  |
+  | Smith | 9988-7766  |
 ```
