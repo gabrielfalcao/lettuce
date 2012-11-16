@@ -25,8 +25,10 @@ failed_scenarios = []
 scenarios_and_its_fails = {}
 
 
-def wrt(string):
-    sys.stdout.write(string.encode('utf-8'))
+def wrt(what):
+    if isinstance(what, unicode):
+        what = what.encode('utf-8')
+    sys.stdout.write(what)
 
 
 @before.each_scenario

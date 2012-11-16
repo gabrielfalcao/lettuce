@@ -1,7 +1,7 @@
 Feature: Failful Scenario Outline
   As lettuce author
   In order to finish the first release
-  I want to make scenario outlines work :)
+  I want to make scenario outlines work ♥
 
   Scenario Outline: fill a web form
     Given I open browser at "http://www.my-website.com/"

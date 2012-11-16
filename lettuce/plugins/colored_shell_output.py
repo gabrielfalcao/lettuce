@@ -27,7 +27,9 @@ from lettuce.terrain import before
 
 
 def wrt(what):
-    sys.stdout.write(what.encode('utf-8'))
+    if isinstance(what, unicode):
+        what = what.encode('utf-8')
+    sys.stdout.write(what)
 
 
 def wrap_file_and_line(string, start, end):
@@ -60,7 +62,7 @@ def print_step_running(step):
 
     color = '\033[1;30m'
 
-    if step.scenario.outlines:
+    if step.scenario and step.scenario.outlines:
         color = '\033[0;36m'
 
     string = step.represent_string(step.original_sentence)
@@ -73,7 +75,7 @@ def print_step_running(step):
 
 @after.each_step
 def print_step_ran(step):
-    if step.scenario.outlines:
+    if step.scenario and step.scenario.outlines:
         return
 
     if step.hashes and step.defined_at:
@@ -248,3 +250,11 @@ def print_no_features_found(where):
     write_out(
         '\033[1;37mcould not find features at '
         '\033[1;33m%s\033[0m\n' % where)
+
+
+@before.each_background
+def print_background_running(background):
+    wrt('\n')
+    wrt('\033[1;37m')
+    wrt(background.represented())
+    wrt('\033[0m\n')

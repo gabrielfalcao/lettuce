@@ -35,15 +35,37 @@ def prepare_stderr():
     std = StringIO()
     sys.stderr = std
 
+
 def assert_lines(original, expected):
     original = original.decode('utf-8') if isinstance(original, basestring) else original
     assert_lines_unicode(original, expected)
 
+
 def assert_lines_unicode(original, expected):
+    if isinstance(expected, unicode):
+        expected = expected.encode('utf-8')
+
+    if isinstance(original, unicode):
+        original = original.encode('utf-8')
+
+    expected_lines = expected.splitlines(1)
+    original_lines = original.splitlines(1)
+
     if original != expected:
-        diff = ''.join(list(Differ().compare(expected.splitlines(1), original.splitlines(1))))
-        raise AssertionError, 'Output differed as follows:\n' + diff + "\nOutput was:\n" + original +"\nExpected was:\n"+expected
-    assert_equals(len(expected), len(original), 'Output appears equal, but of different lengths.')
+        comparison = Differ().compare(expected_lines, original_lines)
+        if isinstance(comparison, unicode):
+            expected = expected.encode('utf-8')
+
+        diff = u''.encode('utf-8').join(comparison)
+        msg = (u'Output differed as follows:\n{0}\n'
+               'Output was:\n{1}\nExpected was:\n{2}'.encode('utf-8'))
+
+        raise AssertionError(repr(msg.format(diff, original, expected)).replace(r'\n', '\n'))
+
+    assert_equals(
+        len(expected), len(original),
+        u'Output appears equal, but of different lengths.')
+
 
 def assert_lines_with_traceback(one, other):
     lines_one = one.splitlines()
@@ -63,6 +85,7 @@ def assert_lines_with_traceback(one, other):
             assert_unicode_equals(line1, line2)
 
     assert_unicode_equals(len(lines_one), len(lines_other))
+
 
 def assert_unicode_equals(original, expected):
     if isinstance(original, basestring):
@@ -89,4 +112,3 @@ def assert_stdout_lines_with_traceback(other):
 
 def assert_stderr_lines_with_traceback(other):
     assert_lines_with_traceback(sys.stderr.getvalue(), other)
-

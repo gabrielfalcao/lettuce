@@ -1,5 +1,5 @@
 Feature: Table Success
-  Scenario: Add two numbers
+  Scenario: Add two numbers ♥
 
     Given I have 0 bucks
     And that I have these items:

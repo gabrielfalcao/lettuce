@@ -24,7 +24,9 @@ from lettuce.terrain import before
 
 
 def wrt(what):
-    sys.stdout.write(what.encode('utf-8'))
+    if isinstance(what, unicode):
+        what = what.encode('utf-8')
+    sys.stdout.write(what)
 
 
 @after.each_step
@@ -48,6 +50,13 @@ def print_step_running(step):
 def print_scenario_running(scenario):
     wrt('\n')
     wrt(scenario.represented())
+
+
+@before.each_background
+def print_background_running(background):
+    wrt('\n')
+    wrt(background.represented())
+    wrt('\n')
 
 
 @after.outline

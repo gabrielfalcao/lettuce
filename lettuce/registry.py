@@ -14,7 +14,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import sys
 import os
 import threading
 import traceback
@@ -55,6 +54,10 @@ CALLBACK_REGISTRY = CallbackDict(
             'after_each': [],
             'outline': [],
         },
+        'background': {
+            'before_each': [],
+            'after_each': [],
+        },
         'feature': {
             'before_each': [],
             'after_each': [],
@@ -84,9 +87,10 @@ def call_hook(situation, kind, *args, **kw):
         try:
             callback(*args, **kw)
         except Exception, e:
+            print "=" * 1000
             traceback.print_exc(e)
             print
-            raise SystemExit(2)
+            raise
 
 
 def clear():

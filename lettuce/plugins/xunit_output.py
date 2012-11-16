@@ -23,7 +23,10 @@ from xml.dom import minidom
 
 def wrt_output(filename, content):
     f = open(filename, "w")
-    f.write(content.encode('utf-8'))
+    if isinstance(content, unicode):
+        content = content.encode('utf-8')
+
+    f.write(content)
     f.close()
 
 
@@ -48,13 +51,13 @@ def enable(filename=None):
     def create_test_case_step(step):
         if step.scenario.outlines:
             return
-        
+
         classname = "%s : %s" % (step.scenario.feature.name, step.scenario.name)
         tc = doc.createElement("testcase")
         tc.setAttribute("classname", classname)
         tc.setAttribute("name", step.sentence)
         tc.setAttribute("time", str(total_seconds((datetime.now() - step.started))))
-        
+
         if not step.ran:
             skip=doc.createElement("skipped")
             tc.appendChild(skip)
@@ -68,12 +71,12 @@ def enable(filename=None):
             tc.appendChild(failure)
 
         root.appendChild(tc)
-    
+
     @before.outline
     def time_outline(scenario, order, outline, reasons_to_fail):
         scenario.outline_started = datetime.now()
         pass
-    
+
     @after.outline
     def create_test_case_outline(scenario, order, outline, reasons_to_fail):
         classname = "%s : %s" % (scenario.feature.name, scenario.name)
