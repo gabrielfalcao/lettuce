@@ -46,6 +46,8 @@ class FeatureLoader(object):
                 if 'empty module name' in err_msg.lower():
                     continue
                 else:
+                    e.args = ('{0} when importing {1}'
+                              .format(e, filename)),
                     raise e
 
             reload(module)  # always take fresh meat :)
