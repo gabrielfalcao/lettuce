@@ -65,7 +65,8 @@ def enable(filename=None):
         if step.failed:
             cdata = doc.createCDATASection(step.why.traceback)
             failure = doc.createElement("failure")
-            failure.setAttribute("message", step.why.cause)
+            if hasattr(step.why, 'cause'):
+                failure.setAttribute("message", step.why.cause)
             failure.setAttribute("type", step.why.exception.__class__.__name__)
             failure.appendChild(cdata)
             tc.appendChild(failure)
