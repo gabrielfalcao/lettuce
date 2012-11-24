@@ -14,6 +14,15 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from sure import expect
+from lettuce.core import Step
+from lettuce.core import Scenario
+from lettuce.core import Feature
+from lettuce.exceptions import LettuceSyntaxError
+
+from nose.tools import assert_equals
+from nose.tools import assert_raises
+
 
 SCENARIO1 = """
 Scenario: Adding some students to my university database
@@ -175,14 +184,24 @@ Scenario: Adding some students to my university database
 
 """
 
-from sure import that
-from lettuce.core import Step
-from lettuce.core import Scenario
-from lettuce.core import Feature
-from lettuce.exceptions import LettuceSyntaxError
+INLINE_COMMENTS = '''
+Scenario: Making a sword
+  Given I am using an anvil
+  And I am using a hammer # informational "comment"
+'''
 
-from nose.tools import assert_equals
-from nose.tools import assert_raises
+INLINE_COMMENTS_IGNORED_WITHIN_DOUBLE_QUOTES = '''
+Scenario: Tweeting
+  Given I am logged in on twitter
+  When I search for the hashtag "#hammer"
+'''
+
+INLINE_COMMENTS_IGNORED_WITHIN_SINGLE_QUOTES = """
+Scenario: Tweeting
+  Given I am logged in on twitter
+  When I search for the hashtag '#hammer'
+"""
+
 
 def test_scenario_has_name():
     "It should extract the name of the scenario"
@@ -427,6 +446,7 @@ def test_scenario_aggregate_all_examples_blocks():
         ]
     )
 
+
 def test_commented_scenarios():
     "A scenario string that contains lines starting with '#' will be commented"
     scenario = Scenario.from_string(COMMENTED_SCENARIO)
@@ -435,26 +455,26 @@ def test_commented_scenarios():
 
 
 def test_scenario_has_tag():
-    "A scenario object should be able to find at least one tag " \
-       "on the first line"
+    ("A scenario object should be able to find at least one tag "
+     "on the first line")
 
     scenario = Scenario.from_string(
         SCENARIO1,
         original_string=('@onetag\n' + SCENARIO1.strip()))
 
-    assert that(scenario.tags).deep_equals(['onetag'])
+    expect(scenario.tags).to.equal(['onetag'])
 
 
 def test_scenario_has_tags_singleline():
-    "A scenario object should be able to find many tags " \
-       "on the first line"
+    ("A scenario object should be able to find many tags "
+     "on the first line")
 
     scenario = Scenario.from_string(
         SCENARIO1,
         original_string=(
             '@onetag @another @$%^&even-weird_chars \n' + SCENARIO1.strip()))
 
-    assert that(scenario.tags).deep_equals([
+    expect(scenario.tags).to.equal([
         'onetag',
         'another',
         '$%^&even-weird_chars',
@@ -469,7 +489,7 @@ def test_scenario_matches_tags():
         SCENARIO1,
         original_string=('@onetag\n@another-one\n' + SCENARIO1.strip()))
 
-    assert that(scenario.tags).deep_equals(['onetag','another-one'])
+    expect(scenario.tags).to.equal(['onetag', 'another-one'])
     assert scenario.matches_tags(['onetag'])
     assert scenario.matches_tags(['another-one'])
 
@@ -526,6 +546,43 @@ def test_scenario_show_tags_in_its_representation():
         SCENARIO1,
         original_string=('@slow\n@firefox\n@chrome\n' + SCENARIO1.strip()))
 
-    assert that(scenario.represented()).equals(
+    expect(scenario.represented()).to.equal(
         u'  @slow @firefox @chrome\n  '
         'Scenario: Adding some students to my university database')
+
+
+def test_scenario_with_inline_comments():
+    ("Scenarios can have steps with inline comments")
+
+    scenario = Scenario.from_string(INLINE_COMMENTS)
+
+    step1, step2 = scenario.steps
+
+    expect(step1.sentence).to.equal(u'Given I am using an anvil')
+    expect(step2.sentence).to.equal(u'And I am using a hammer')
+
+
+def test_scenario_with_hash_within_double_quotes():
+    ("Scenarios have hashes within double quotes and yet don't "
+     "consider them as comments")
+
+    scenario = Scenario.from_string(
+        INLINE_COMMENTS_IGNORED_WITHIN_DOUBLE_QUOTES)
+
+    step1, step2 = scenario.steps
+
+    expect(step1.sentence).to.equal(u'Given I am logged in on twitter')
+    expect(step2.sentence).to.equal(u'When I search for the hashtag "#hammer"')
+
+
+def test_scenario_with_hash_within_single_quotes():
+    ("Scenarios have hashes within single quotes and yet don't "
+     "consider them as comments")
+
+    scenario = Scenario.from_string(
+        INLINE_COMMENTS_IGNORED_WITHIN_SINGLE_QUOTES)
+
+    step1, step2 = scenario.steps
+
+    expect(step1.sentence).to.equal(u'Given I am logged in on twitter')
+    expect(step2.sentence).to.equal(u"When I search for the hashtag '#hammer'")

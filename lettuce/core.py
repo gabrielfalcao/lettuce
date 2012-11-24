@@ -47,6 +47,8 @@ class REP(object):
     only_whitespace = re.compile('^\s*$')
     tag_extraction_regex = re.compile(r'(?:(?:^|\s+)[@]([^@\s]+))')
     tag_strip_regex = re.compile(ur'(?:(?:^\s*|\s+)[@]\S+\s*)+$', re.DOTALL)
+    comment_strip1 = re.compile(ur'(^[^\'"]*)[#]([^\'"]*)$')
+    comment_strip2 = re.compile(ur'(^[^\'"]+)[#](.*)$')
 
 
 class HashList(list):
@@ -414,6 +416,12 @@ class Step(object):
         self.passed = True
         return True
 
+    @classmethod
+    def _handle_inline_comments(klass, line):
+        line = REP.comment_strip1.sub(r'\g<1>\g<2>', line)
+        line = REP.comment_strip2.sub(r'\g<1>', line)
+        return line
+
     @staticmethod
     def run_all(steps, outline=None, run_callbacks=False, ignore_case=True):
         """Runs each step in the given list of steps.
@@ -491,6 +499,8 @@ class Step(object):
                 step_strings[-1] += "\n%s" % line
             elif strings.wise_startswith(line, u"|") or in_multiline:
                 step_strings[-1] += "\n%s" % line
+            elif '#' in line:
+                step_strings.append(klass._handle_inline_comments(line))
             else:
                 step_strings.append(line)
 
