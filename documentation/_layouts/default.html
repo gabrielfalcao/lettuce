@@ -24,7 +24,7 @@
       <ul>
 	<li {% if page.url == "/index.html" %} class="active"{% endif %}><a href="{{ site.url }}"><i class="icon icon-home"></i> <span>Welcome</span></a></li>
   	{% assign categories_list = site.categories %}
-        {% for category in categories_list %}
+        {% for category in categories_list reversed %}
   	  {% assign category_name = category[0] %}
           {% assign category_slug = category_name | slug %}
           <li class="submenu open {{ category_slug }}">
