@@ -13,108 +13,115 @@ mature, aims for simplicity and the best of all: it's fun to use it.
 
 To make it even more fun, lettuce has built-in support for Django.
 
-Getting started
-===============
+## Getting started
 
-1. install the lettuce django app
----------------------------------
+### 1. install the lettuce django app
 
 Pick up any Django project, and add `lettuce.django` in its
 `settings.py` configuration file:
 
-    INSTALLED_APPS = (
-        'django.contrib.auth',
-        'django.contrib.admin',
+```python
+INSTALLED_APPS = (
+    'django.contrib.auth',
+    'django.contrib.admin',
 
-        # ... other apps here ...
-        'my_app',
-        'foobar',
-        'another_app',
-        'lettuce.django', # this guy will do the job :)
-    )
+    # ... other apps here ...
+    'my_app',
+    'foobar',
+    'another_app',
+    'lettuce.django', # this guy will do the job :)
+)
+```
 
 Considering the configuration above, let's say we want to write tests
 for the `my_app` django application.
 
-2. create the feature directories
----------------------------------
+### 2. create the feature directories
 
 Lettuce will look for a `features` folder inside every installed app:
 
-    /home/user/projects/djangoproject
-         | settings.py
-         | manage.py
-         | urls.py
-         | my_app
-               | features
-                    - index.feature
-                    - index.py
-         | foobar
-               | features
-                    - carrots.feature
-                    - foobar-steps.py
-         | another_app
-               | features
-                    - first.feature
-                    - second.feature
-                    - many_steps.py
+```
+/home/user/projects/djangoproject
+     | settings.py
+     | manage.py
+     | urls.py
+     | my_app
+           | features
+                - index.feature
+                - index.py
+     | foobar
+           | features
+                - carrots.feature
+                - foobar-steps.py
+     | another_app
+           | features
+                - first.feature
+                - second.feature
+                - many_steps.py
+```
 
-3. write your first feature
----------------------------
+### 3. write your first feature
 
-`@index.feature`:
 
-    Feature: Rocking with lettuce and django
+`index.feature`:
 
-        Scenario: Simple Hello World
-            Given I access the url "/"
-            Then I see the header "Hello World"
+```gherkin
+Feature: Rocking with lettuce and django
 
-        Scenario: Hello + capitalized name
-            Given I access the url "/some-name"
-            Then I see the header "Hello Some Name"
+    Scenario: Simple Hello World
+        Given I access the url "/"
+        Then I see the header "Hello World"
 
-`@index-steps.py`:
+    Scenario: Hello + capitalized name
+        Given I access the url "/some-name"
+        Then I see the header "Hello Some Name"
+```
 
-    from lettuce import *
-    from lxml import html
-    from django.test.client import Client
-    from nose.tools import assert_equals
+`index-steps.py`:
 
-    @before.all
-    def set_browser():
-        world.browser = Client()
+```python
+from lettuce import *
+from lxml import html
+from django.test.client import Client
+from nose.tools import assert_equals
 
-    @step(r'I access the url "(.*)"')
-    def access_url(step, url):
-        response = world.browser.get(url)
-        world.dom = html.fromstring(response.content)
+@before.all
+def set_browser():
+    world.browser = Client()
 
-    @step(r'I see the header "(.*)"')
-    def see_header(step, text):
-        header = world.dom.cssselect('h1')[0]
-        assert header.text == text
+@step(r'I access the url "(.*)"')
+def access_url(step, url):
+    response = world.browser.get(url)
+    world.dom = html.fromstring(response.content)
 
-4. run the tests
-----------------
+@step(r'I see the header "(.*)"')
+def see_header(step, text):
+    header = world.dom.cssselect('h1')[0]
+    assert header.text == text
+```
+
+
+### 4. run the tests
 
 Once you install the `lettuce.django` app, the command `harvest` will be
 available:
 
-    user@machine:~projects/djangoproject $ python manage.py harvest
+```bash
+user@machine:~projects/djangoproject $ python manage.py harvest
+```
 
-5. specifying feature files
----------------------------
+### 5. specifying feature files
 
 The `harvest` command accepts a path to feature files, in order to run
 only the features you want.
 
 Example:
 
-    user@machine:~projects/djangoproject $ python manage.py harvest path/to/my-test.feature
+```bash
+user@machine:~projects/djangoproject $ python manage.py harvest path/to/my-test.feature
+```
 
-6. grab actual example code
----------------------------
+### 6. grab actual example code
 
 In order to assure that lettuce integrate well with Django, it have a
 set of integration tests, there are a actual Django project running with
@@ -124,16 +131,13 @@ You can grab the code at the
 [alfaces](http://github.com/gabrielfalcao/lettuce/tree/master/tests/integration/django/alfaces/)
 folder of lettuce git repository
 
-Technical details
-=================
+## Technical details
 
-If you want to write acceptance tests that run with web browsers, you
-can user tools like [twill](http://twill.idyll.org/python-api.html),
-[selenium](http://seleniumhq.org/docs/appendix_installing_python_driver_client.html),
-[webdriver](http://code.google.com/p/selenium/wiki/PythonBindings?redir=1)
-and [windmill](http://www.getwindmill.com/)
+The programmer can write acceptance tests that run in web browsers
+with lettuce + [splinter](http://splinter.cobrateam.info/), which is a library that leverages interacting with browser drivers such as [selenium webdriver](http://code.google.com/p/selenium/wiki/PythonBindings?redir=1)
 
-red-tape-less builtin server
+
+## Hassle-less  builtin server
 ----------------------------
 
 Lettuce cleverly runs an instance of the built-in Django HTTP server in
@@ -144,8 +148,7 @@ and so on until it reaches the maximum port number 65535.
 So that you can use browser-based tools such as those listed above to
 access Django.
 
-figure out django urls
-----------------------
+### Figure out django urls
 
 As the Django HTTP server can be running in any port within the range
 8000 - 65535, it could be hard to figure out the correct URL for your
@@ -156,13 +159,15 @@ Wrong!
 Lettuce is here for you. Within your steps you can use the `django_url`
 utility function:
 
-    from lettuce import step, world
-    from lettuce.django import django_url
+```python
+from lettuce import step, world
+from lettuce.django import django_url
 
-    @step(r'Given I navigate to "(.*)"')
-    def navigate_to_url(step, url):
-        full_url = django_url(url)
-        world.browser.get(full_url)
+@step(r'Given I navigate to "(.*)"')
+def navigate_to_url(step, url):
+    full_url = django_url(url)
+    world.browser.get(full_url)
+```
 
 ### what does `django_url` do ?!?
 
@@ -171,15 +176,16 @@ It prepends a Django-internal URL with the HTTP server address.
 In other words, if lettuce binds the http server to localhost:9090 and
 you call `django_url` with `"/admin/login"`:
 
-    from lettuce.django import django_url
-    django_url("/admin/login")
+```python
+from lettuce.django import django_url
+django_url("/admin/login")
+```
 
-It returns:
+It will return:
 
-    "http://localhost:9090/admin/login"
+`http://localhost:9090/admin/login`
 
-terrain also available in django projects
------------------------------------------
+## Terrain also available in django projects
 
 At this point you probably know how :ref:\`terrain-py\` works, and it
 also works with Django projects.
@@ -190,31 +196,33 @@ located at the root of your Django project.
 Taking the very first example of this documentation page, your Django
 project layout would like like this:
 
-    /home/user/projects/djangoproject
-         | settings.py
-         | manage.py
-         | urls.py
-         | terrain.py
-         | my_app
-               | features
-                    - index.feature
-                    - index.py
-         | foobar
-               | features
-                    - carrots.feature
-                    - foobar-steps.py
-         | another_app
-               | features
-                    - first.feature
-                    - second.feature
-                    - many_steps.py
+```
+/home/user/projects/djangoproject
+     | settings.py
+     | manage.py
+     | urls.py
+     | terrain.py
+     | my_app
+           | features
+                - index.feature
+                - index.py
+     | foobar
+           | features
+                - carrots.feature
+                - foobar-steps.py
+     | another_app
+           | features
+                - first.feature
+                - second.feature
+                - many_steps.py
+```
 
 Notice the `terrain.py` file at the project root, there you can populate
 the :ref:\`lettuce-world\` and organize your features and steps with it
 :)
 
-Running without HTTP server
----------------------------
+
+## Running without HTTP server
 
 Sometimes you may just do not want to run Django's built-in HTTP server
 running in background, in those cases all you need to do is run the
@@ -222,11 +230,12 @@ running in background, in those cases all you need to do is run the
 
 Example:
 
-    python manage.py harvest --no-server
-    python manage.py harvest -S
+```bash
+python manage.py harvest --no-server
+python manage.py harvest -S
+```
 
-running the HTTP server in other port than 8000
------------------------------------------------
+## running the HTTP server in other port than 8000
 
 If you face the problem of having lettuce running on port 8000, you can
 change that behaviour.
