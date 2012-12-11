@@ -56,10 +56,12 @@ def enable(filename=None):
         tc = doc.createElement("testcase")
         tc.setAttribute("classname", classname)
         tc.setAttribute("name", step.sentence)
-        tc.setAttribute("time", str(total_seconds((datetime.now() - step.started))))
-
-        if not step.ran:
+        if step.ran:
+            tc.setAttribute("time", str(total_seconds((datetime.now() - step.started))))
+        else:
+            tc.setAttribute("time", str(0))
             skip=doc.createElement("skipped")
+            skip.setAttribute("type", "UndefinedStep(%s)" % step.sentence)
             tc.appendChild(skip)
 
         if step.failed:
