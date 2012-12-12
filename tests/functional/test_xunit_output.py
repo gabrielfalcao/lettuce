@@ -86,6 +86,7 @@ def test_xunit_output_with_one_error():
     assert_equals(1, len(called), "Function not called")
     xunit_output.wrt_output = old
 
+
 @with_setup(prepare_stdout, registry.clear)
 def test_xunit_output_with_different_filename():
     'Test xunit output with different filename'
@@ -105,3 +106,26 @@ def test_xunit_output_with_different_filename():
     xunit_output.wrt_output = old
 
 
+@with_setup(prepare_stdout, registry.clear)
+def test_xunit_output_with_no_steps():
+    'Test xunit output with no steps'
+    called = []
+    def assert_correct_xml(filename, content):
+        print filename
+        print content
+        called.append(True)
+        assert_xsd_valid(filename, content)
+        root = etree.fromstring(content)
+        assert_equals(root.get("tests"), "1")
+        assert_equals(root.find("testcase").get("name"), "Given I do nothing")
+        assert_equals(len(root.getchildren()), 1)
+        assert_equals(root.find("testcase/skipped").get("type"), "UndefinedStep(Given I do nothing)")
+        assert_equals(float(root.find("testcase").get("time")), 0)
+
+    old = xunit_output.wrt_output
+    xunit_output.wrt_output = assert_correct_xml
+    runner = Runner(feature_name('no_steps_defined'), enable_xunit=True)
+    runner.run()
+
+    assert_equals(1, len(called), "Function not called")
+    xunit_output.wrt_output = old
