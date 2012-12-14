@@ -104,4 +104,20 @@ def test_xunit_output_with_different_filename():
     assert_equals(1, len(called), "Function not called")
     xunit_output.wrt_output = old
 
+@with_setup(prepare_stdout, registry.clear)
+def test_xunit_output_with_unicode_characters_in_error_messages():
+    called = []
+    def assert_correct_xml(filename, content):
+        called.append(True)
+        assert_xsd_valid(filename, content)
+
+    old = xunit_output.wrt_output
+    xunit_output.wrt_output = assert_correct_xml
+    runner = Runner(feature_name('unicode_traceback'), enable_xunit=True,
+                    xunit_filename="custom_filename.xml")
+    runner.run()
+
+    assert_equals(1, len(called), "Function not called")
+    xunit_output.wrt_output = old
+
 
