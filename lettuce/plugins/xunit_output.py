@@ -54,8 +54,8 @@ def enable(filename=None):
 
         classname = "%s : %s" % (step.scenario.feature.name, step.scenario.name)
         tc = doc.createElement("testcase")
-        tc.setAttribute("classname", classname)
-        tc.setAttribute("name", step.sentence)
+        tc.setAttribute("classname", classname.encode('utf-8'))
+        tc.setAttribute("name", step.sentence.encode('utf-8'))
         tc.setAttribute("time", str(total_seconds((datetime.now() - step.started))))
 
         if not step.ran:
