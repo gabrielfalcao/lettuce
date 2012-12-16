@@ -174,6 +174,6 @@ LANGUAGES = {
         'scenario': u'Situasjon',
         'scenario_outline': u'Situasjon Oversikt',
         'scenario_separator': u'(Situasjon Oversikt|Situasjon)',
-        'background': u'(?:Background)',
+        'background': u'(?:Bakgrunn)',
     }
 }
