@@ -85,7 +85,7 @@ LANGUAGES = {
         'scenario_outline': u'Plan de Scénario|Plan du Scénario',
         'scenario_separator': u'(Plan de Scénario|Plan du Scénario|Scénario)',
         'background': u'(?:Background)',
-   },
+    },
     'de': {
         'examples': u'Beispiele|Szenarios',
         'feature': u'Funktionalität|Funktion',
@@ -95,7 +95,7 @@ LANGUAGES = {
         'scenario_outline': u'Szenario-Zusammenfassung|Zusammenfassung',
         'scenario_separator': u'(Szenario-Zusammenfassung|Zusammenfassung)',
         'background': u'(?:Background)',
-   },
+    },
     'ja': {
         'examples': u'例',
         'feature': u'フィーチャ',
@@ -115,8 +115,8 @@ LANGUAGES = {
         'scenario_outline': u'Senaryo taslağı|Senaryo Taslağı',
         'scenario_separator': u'(Senaryo taslağı|Senaryo Taslağı|Senaryo)',
         'background': u'(?:Background)',
-     },
-     'zh-CN': {
+    },
+    'zh-CN': {
         'examples': u'例如|场景集',
         'feature': u'特性',
         'name': u'Simplified Chinese',
@@ -126,7 +126,7 @@ LANGUAGES = {
         'scenario_separator': u'(场景模板|场景)',
         'background': u'(?:背景)',
     },
-     'zh-TW': {
+    'zh-TW': {
         'examples': u'例如|場景集',
         'feature': u'特性',
         'name': u'Traditional Chinese',
@@ -174,7 +174,7 @@ LANGUAGES = {
         'scenario': u'Situasjon',
         'scenario_outline': u'Situasjon Oversikt',
         'scenario_separator': u'(Situasjon Oversikt|Situasjon)',
-        'background': u'(?:Background)',
+        'background': u'(?:Bakgrunn)',
     },
     'sv': {
         'examples': u'Exempel|Scenarion',
