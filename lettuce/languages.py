@@ -175,5 +175,15 @@ LANGUAGES = {
         'scenario_outline': u'Situasjon Oversikt',
         'scenario_separator': u'(Situasjon Oversikt|Situasjon)',
         'background': u'(?:Background)',
-    }
+    },
+    'sv': {
+        'examples': u'Exempel|Scenarion',
+        'feature': u'Egenskaper',
+        'name': u'Swedish',
+        'native': u'Svenska',
+        'scenario': u'Scenario',
+        'scenario_outline': u'Scenarioöversikt',
+        'scenario_separator': u'(Scenarioöversikt|Scenario)',
+        'background': u'(?:Context)',
+    },
 }
