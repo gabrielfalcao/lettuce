@@ -63,11 +63,11 @@ def enable(filename=None):
             tc.appendChild(skip)
 
         if step.failed:
-            cdata = doc.createCDATASection(step.why.traceback)
+            cdata = doc.createCDATASection(step.why.traceback.encode('utf-8'))
             failure = doc.createElement("failure")
             if hasattr(step.why, 'cause'):
-                failure.setAttribute("message", step.why.cause)
-            failure.setAttribute("type", step.why.exception.__class__.__name__)
+                failure.setAttribute("message", step.why.cause.encode('utf-8'))
+            failure.setAttribute("type", step.why.exception.__class__.__name__.encode('utf-8'))
             failure.appendChild(cdata)
             tc.appendChild(failure)
 
