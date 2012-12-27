@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from lettuce.terrain import after
 from lettuce.terrain import before
 from xml.dom import minidom
@@ -56,7 +56,10 @@ def enable(filename=None):
         tc = doc.createElement("testcase")
         tc.setAttribute("classname", classname.encode('utf-8'))
         tc.setAttribute("name", step.sentence.encode('utf-8'))
-        tc.setAttribute("time", str(total_seconds((datetime.now() - step.started))))
+        try:
+            tc.setAttribute("time", str(total_seconds((datetime.now() - step.started))))
+        except AttributeError:
+            tc.setAttribute("time", str(total_seconds(timedelta(seconds=0))))
 
         if not step.ran:
             skip=doc.createElement("skipped")

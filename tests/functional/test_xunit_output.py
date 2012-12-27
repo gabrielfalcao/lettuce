@@ -120,4 +120,17 @@ def test_xunit_output_with_unicode_characters_in_error_messages():
     assert_equals(1, len(called), "Function not called")
     xunit_output.wrt_output = old
 
+@with_setup(prepare_stdout, registry.clear)
+def test_xunit_does_not_throw_exception_when_missing_step_definition():
+    def dummy_write(filename, content):
+        pass
+
+    old = xunit_output.wrt_output
+    xunit_output.wrt_output = dummy_write
+    runner = Runner(feature_name('missing_steps'), enable_xunit=True,
+                    xunit_filename="mising_steps.xml")
+    runner.run()
+
+    xunit_output.wrt_output = old
+
 
