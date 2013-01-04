@@ -61,6 +61,8 @@ def print_end(total):
         print  # just a line to separate things here
         for scenario in failed_scenarios:
             reason = scenarios_and_its_fails[scenario]
+            wrt(str(reason.step))
+            wrt("\n")
             wrt(reason.traceback)
 
     wrt("\n")
