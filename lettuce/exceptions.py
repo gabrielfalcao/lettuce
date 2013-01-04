@@ -35,7 +35,8 @@ class ReasonToFail(object):
     AssertionError raised within a step definition.  With these data
     lettuce show detailed traceback to user in a nice representation.
     """
-    def __init__(self, exc):
+    def __init__(self, step, exc):
+        self.step = step
         self.exception = exc
         if isinstance(exc.message, unicode):
             self.cause = unicode(exc)
