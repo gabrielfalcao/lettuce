@@ -18,6 +18,7 @@
 import os
 from lettuce import core
 from lettuce.terrain import after
+from lettuce.terrain import before
 from lettuce.plugins.reporter import Reporter
 
 class DotReporter(Reporter):
@@ -33,6 +34,7 @@ class DotReporter(Reporter):
 
 reporter = DotReporter()
 
+before.each_scenario(reporter.print_scenario_running)
 after.each_scenario(reporter.print_scenario_ran)
 after.each_step(reporter.store_failed_step)
 after.all(reporter.print_end)

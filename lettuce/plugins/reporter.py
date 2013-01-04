@@ -15,6 +15,9 @@ class Reporter(object):
             self.scenarios_and_its_fails[step.scenario] = step.why
             self.failed_scenarios.append(step.scenario)
 
+    def print_scenario_running(self, scenario):
+        pass
+
     def print_scenario_ran(self, scenario):
         pass
 
