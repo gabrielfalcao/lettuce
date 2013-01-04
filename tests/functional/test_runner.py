@@ -979,7 +979,7 @@ def test_output_level_1_fail():
     runner.run()
 
     assert_stdout_lines_with_traceback(
-        ".F...\n"
+        "F\n"
         "\n"
         "Traceback (most recent call last):\n"
         '  File "%(lettuce_core_file)s", line %(call_line)d, in __call__\n'
@@ -1062,7 +1062,7 @@ def test_blank_step_hash_value():
     runner.run()
 
     assert_stdout_lines(
-        "...."
+        "."
         "\n"
         "1 feature (1 passed)\n"
         "1 scenario (1 passed)\n"
@@ -1100,7 +1100,7 @@ def test_run_only_fast_tests():
     runner.run()
 
     assert_stdout_lines(
-        ".."
+        "."
         "\n"
         "1 feature (1 passed)\n"
         "1 scenario (1 passed)\n"
@@ -1144,7 +1144,7 @@ def test_background_with_header():
     runner.run()
 
     assert_stdout_lines(
-        "........."
+        ".."
         "\n"
         "1 feature (1 passed)\n"
         "2 scenarios (2 passed)\n"
@@ -1191,7 +1191,7 @@ def test_background_without_header():
     runner.run()
 
     assert_stdout_lines(
-        "........."
+        ".."
         "\n"
         "1 feature (1 passed)\n"
         "2 scenarios (2 passed)\n"
