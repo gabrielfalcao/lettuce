@@ -116,6 +116,12 @@ Once you install the ``lettuce.django`` app, the command ``harvest`` will be ava
 
    user@machine:~projects/djangoproject $ python manage.py harvest
 
+
+The ``harvest`` command executes the ``django.test.utils.setup_test_environment``
+function before it starts up the Django server. One side-effect is that the
+server will not send out any emails, because it configures Django to use the
+locmem_ in-memory email backend.
+
 5. specifying feature files
 ===========================
 
@@ -406,3 +412,4 @@ You can also specify it at ``settings.py`` so that you won't need to type the sa
 .. _windmill: http://www.getwindmill.com/
 .. _webdriver: http://code.google.com/p/selenium/wiki/PythonBindings?redir=1
 .. _GAE: http://code.google.com/appengine
+.. _locmem: https://docs.djangoproject.com/en/dev/topics/email/#in-memory-backend
