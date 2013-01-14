@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 LANGUAGES = {
     'en': {
         'examples': u'Examples|Scenarios',
@@ -24,6 +25,7 @@ LANGUAGES = {
         'scenario': u'Scenario',
         'scenario_outline': u'Scenario Outline',
         'scenario_separator': u'(Scenario Outline|Scenario)',
+        'background': u'(?:Background)',
     },
     'pt-br': {
         'examples': u'Exemplos|Cenários',
@@ -33,6 +35,7 @@ LANGUAGES = {
         'scenario': u'Cenário|Cenario',
         'scenario_outline': u'Esquema do Cenário|Esquema do Cenario',
         'scenario_separator': u'(Esquema do Cenário|Esquema do Cenario|Cenario|Cenário)',
+        'background': u'(?:Contexto|Considerações)',
     },
     'pl': {
         'examples': u'Przykład',
@@ -42,6 +45,7 @@ LANGUAGES = {
         'scenario': u'Scenariusz',
         'scenario_outline': u'Zarys Scenariusza',
         'scenario_separator': u'(Zarys Scenariusza|Scenariusz)',
+        'background': u'(?:Background)',
     },
     'ca': {
         'examples': u'Exemples',
@@ -51,6 +55,7 @@ LANGUAGES = {
         'scenario': u'Escenari',
         'scenario_outline': u"Esquema d'Escenari",
         'scenario_separator': u"(Esquema d'Escenari|Escenari)",
+        'background': u'(?:Background)',
     },
     'es': {
         'examples': u'Ejemplos',
@@ -60,6 +65,7 @@ LANGUAGES = {
         'scenario': u'Escenario',
         'scenario_outline': u'Esquema de Escenario',
         'scenario_separator': u'(Esquema de Escenario|Escenario)',
+        'background': u'(?:Contexto|Consideraciones)',
     },
     'hu': {
         'examples': u'Példák',
@@ -69,6 +75,7 @@ LANGUAGES = {
         'scenario': u'Forgatókönyv',
         'scenario_outline': u'Forgatókönyv vázlat',
         'scenario_separator': u'(Forgatókönyv|Forgatókönyv vázlat)',
+        'background': u'(?:Background)',
     },
     'fr': {
         'examples': u'Exemples|Scénarios',
@@ -78,7 +85,8 @@ LANGUAGES = {
         'scenario': u'Scénario',
         'scenario_outline': u'Plan de Scénario|Plan du Scénario',
         'scenario_separator': u'(Plan de Scénario|Plan du Scénario|Scénario)',
-   },
+        'background': u'(?:Background)',
+    },
     'de': {
         'examples': u'Beispiele|Szenarios',
         'feature': u'Funktionalität|Funktion',
@@ -87,7 +95,8 @@ LANGUAGES = {
         'scenario': u'Szenario',
         'scenario_outline': u'Szenario-Zusammenfassung|Zusammenfassung',
         'scenario_separator': u'(Szenario-Zusammenfassung|Zusammenfassung)',
-   },
+        'background': u'(?:Background)',
+    },
     'ja': {
         'examples': u'例',
         'feature': u'フィーチャ',
@@ -96,6 +105,7 @@ LANGUAGES = {
         'scenario': u'シナリオ',
         'scenario_outline': u'シナリオアウトライン|シナリオテンプレート|テンプレ|シナリオテンプレ',
         'scenario_separator': u'(シナリオ|シナリオアウトライン|シナリオテンプレート|テンプレ|シナリオテンプレ)',
+        'background': u'(?:Background)',
     },
     'tr': {
         'examples': u'Örnekler',
@@ -105,8 +115,9 @@ LANGUAGES = {
         'scenario': u'Senaryo',
         'scenario_outline': u'Senaryo taslağı|Senaryo Taslağı',
         'scenario_separator': u'(Senaryo taslağı|Senaryo Taslağı|Senaryo)',
-     },
-     'zh-CN': {
+        'background': u'(?:Background)',
+    },
+    'zh-CN': {
         'examples': u'例如|场景集',
         'feature': u'特性',
         'name': u'Simplified Chinese',
@@ -114,8 +125,9 @@ LANGUAGES = {
         'scenario': u'场景',
         'scenario_outline': u'场景模板',
         'scenario_separator': u'(场景模板|场景)',
+        'background': u'(?:背景)',
     },
-     'zh-TW': {
+    'zh-TW': {
         'examples': u'例如|場景集',
         'feature': u'特性',
         'name': u'Traditional Chinese',
@@ -123,6 +135,7 @@ LANGUAGES = {
         'scenario': u'場景',
         'scenario_outline': u'場景模板',
         'scenario_separator': u'(場景模板|場景)',
+        'background': u'(?:背景)',
     },
     'ru': {
         'examples': u'Примеры|Сценарии',
@@ -132,6 +145,7 @@ LANGUAGES = {
         'scenario': u'Сценарий',
         'scenario_outline': u'Структура сценария',
         'scenario_separator': u'(Структура сценария|Сценарий)',
+        'background': u'(?:Background)',
     },
     'uk': {
         'examples': u'Приклади|Сценарії',
@@ -141,6 +155,7 @@ LANGUAGES = {
         'scenario': u'Сценарій',
         'scenario_outline': u'Структура сценарію',
         'scenario_separator': u'(Структура сценарію|Сценарій)',
+        'background': u'(?:Background)',
     },
     'it': {
         'examples': u'Esempi|Scenari|Scenarii',
@@ -150,6 +165,7 @@ LANGUAGES = {
         'scenario': u'Scenario',
         'scenario_outline': u'Schema di Scenario|Piano di Scenario',
         'scenario_separator': u'(Schema di Scenario|Piano di Scenario|Scenario)',
+        'background': u'(?:Background)',
     },
     'no': {
         'examples': u'Eksempler',
@@ -159,5 +175,16 @@ LANGUAGES = {
         'scenario': u'Situasjon',
         'scenario_outline': u'Situasjon Oversikt',
         'scenario_separator': u'(Situasjon Oversikt|Situasjon)',
-    }
+        'background': u'(?:Bakgrunn)',
+    },
+    'sv': {
+        'examples': u'Exempel|Scenarion',
+        'feature': u'Egenskaper',
+        'name': u'Swedish',
+        'native': u'Svenska',
+        'scenario': u'Scenario',
+        'scenario_outline': u'Scenarioöversikt',
+        'scenario_separator': u'(Scenarioöversikt|Scenario)',
+        'background': u'(?:Context)',
+    },
 }

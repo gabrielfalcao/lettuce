@@ -14,10 +14,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from sure import that
+from sure import that, expect
 from lettuce import step
 from lettuce.core import Scenario
 from lettuce.core import Feature
+from lettuce.core import Background
+from lettuce.core import HashList
 from nose.tools import assert_equals
 
 FEATURE1 = """
@@ -330,7 +332,7 @@ Feature: Redis database server
         And M2 contains database 3
         """
 
-FEATURE16 = """
+FEATURE18 = """
 @feature_runme
 Feature: correct matching
   @runme1
@@ -353,7 +355,7 @@ Feature: correct matching
 """
 
 
-FEATURE17 = """
+FEATURE19 = """
 Feature: correct matching
   @runme1
   Scenario: Holy tag, Batman (1)
@@ -364,6 +366,48 @@ Feature: correct matching
   Scenario: Holy tag2, Batman [2]
     Given this scenario has other tags
     Then it can be inspected from within the object
+"""
+
+FEATURE16 = """
+Feature: Movie rental
+    As a rental store owner
+    I want to keep track of my clients
+    So that I can manage my business better
+
+    Background:
+        Given I have the following movies in my database:
+           | Name                    | Rating  | New | Available |
+           | Matrix Revolutions      | 4 stars | no  | 6         |
+           | Iron Man 2              | 5 stars | yes | 11        |
+        And the following clients:
+           | Name      |
+           | John Doe  |
+           | Foo Bar   |
+
+    Scenario: Renting a featured movie
+        Given the client 'John Doe' rents 'Iron Man 2'
+        Then there are 10 more left
+
+    Scenario: Renting an old movie
+        Given the client 'Foo Bar' rents 'Matrix Revolutions'
+        Then there are 5 more left
+"""
+
+FEATURE17 = """
+Feature: Movie rental without MMF
+    Background:
+        Given I have the following movies in my database:
+           | Name                    | Rating  | New | Available |
+           | Matrix Revolutions      | 4 stars | no  | 6         |
+           | Iron Man 2              | 5 stars | yes | 11        |
+        And the following clients:
+           | Name      |
+           | John Doe  |
+           | Foo Bar   |
+
+    Scenario: Renting a featured movie
+        Given the client 'John Doe' rents 'Iron Man 2'
+        Then there are 10 more left
 """
 
 
@@ -544,7 +588,7 @@ def test_single_scenario_single_scenario():
 
 def test_single_feature_single_tag():
     "All scenarios within a feature inherit the feature's tags"
-    feature = Feature.from_string(FEATURE16)
+    feature = Feature.from_string(FEATURE18)
 
     # FIXME (mitgr81):  It seems worth the efficiency to not loop through the feature tags and
     # check to see if every tag exists in the child.  The "right" fix might just be to not
@@ -621,6 +665,7 @@ def test_scenarios_with_extra_whitespace():
     assert_equals(scenario.name, "Extra whitespace scenario")
 
 def test_scenarios_parsing():
+    "Tags are parsed correctly"
     feature = Feature.from_string(FEATURE15)
     scenarios_and_tags = [(s.name, s.tags) for s in feature.scenarios]
 
@@ -646,10 +691,81 @@ def test_scenarios_parsing():
 
 def test_scenarios_with_special_characters():
     "Make sure that regex special characters in the scenario names are ignored"
-    feature = Feature.from_string(FEATURE17)
+    feature = Feature.from_string(FEATURE19)
 
     assert that(feature.scenarios[0].tags).deep_equals([
         'runme1'])
 
     assert that(feature.scenarios[1].tags).deep_equals([
         'runme2'])
+
+def test_background_parsing_with_mmf():
+    feature = Feature.from_string(FEATURE16)
+    expect(feature.description).to.equal(
+        "As a rental store owner\n"
+        "I want to keep track of my clients\n"
+        "So that I can manage my business better"
+    )
+
+    expect(feature).to.have.property('background').being.a(Background)
+    expect(feature.background).to.have.property('steps')
+    expect(feature.background.steps).to.have.length_of(2)
+
+    step1, step2 = feature.background.steps
+    step1.sentence.should.equal(
+        'Given I have the following movies in my database:')
+    step1.hashes.should.equal(HashList(step1, [
+        {
+            u'Available': u'6',
+            u'Rating': u'4 stars',
+            u'Name': u'Matrix Revolutions',
+            u'New': u'no',
+        },
+        {
+            u'Available': u'11',
+            u'Rating': u'5 stars',
+            u'Name': u'Iron Man 2',
+            u'New': u'yes',
+        },
+    ]))
+
+    step2.sentence.should.equal(
+        'And the following clients:')
+    step2.hashes.should.equal(HashList(step2, [
+        {u'Name': u'John Doe'},
+        {u'Name': u'Foo Bar'},
+    ]))
+
+
+def test_background_parsing_without_mmf():
+    feature = Feature.from_string(FEATURE17)
+    expect(feature.description).to.be.empty
+
+    expect(feature).to.have.property('background').being.a(Background)
+    expect(feature.background).to.have.property('steps')
+    expect(feature.background.steps).to.have.length_of(2)
+
+    step1, step2 = feature.background.steps
+    step1.sentence.should.equal(
+        'Given I have the following movies in my database:')
+    step1.hashes.should.equal(HashList(step1, [
+        {
+            u'Available': u'6',
+            u'Rating': u'4 stars',
+            u'Name': u'Matrix Revolutions',
+            u'New': u'no',
+        },
+        {
+            u'Available': u'11',
+            u'Rating': u'5 stars',
+            u'Name': u'Iron Man 2',
+            u'New': u'yes',
+        },
+    ]))
+
+    step2.sentence.should.equal(
+        'And the following clients:')
+    step2.hashes.should.equal(HashList(step2, [
+        {u'Name': u'John Doe'},
+        {u'Name': u'Foo Bar'},
+    ]))

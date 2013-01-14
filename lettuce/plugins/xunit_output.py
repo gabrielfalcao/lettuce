@@ -56,16 +56,19 @@ def enable(filename=None):
         tc = doc.createElement("testcase")
         tc.setAttribute("classname", classname)
         tc.setAttribute("name", step.sentence)
-        tc.setAttribute("time", str(total_seconds((datetime.now() - step.started))))
-
-        if not step.ran:
+        if step.ran:
+            tc.setAttribute("time", str(total_seconds((datetime.now() - step.started))))
+        else:
+            tc.setAttribute("time", str(0))
             skip=doc.createElement("skipped")
+            skip.setAttribute("type", "UndefinedStep(%s)" % step.sentence)
             tc.appendChild(skip)
 
         if step.failed:
             cdata = doc.createCDATASection(step.why.traceback)
             failure = doc.createElement("failure")
-            failure.setAttribute("message", step.why.cause)
+            if hasattr(step.why, 'cause'):
+                failure.setAttribute("message", step.why.cause)
             failure.setAttribute("type", step.why.exception.__class__.__name__)
             failure.appendChild(cdata)
             tc.appendChild(failure)

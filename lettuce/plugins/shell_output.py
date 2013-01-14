@@ -52,6 +52,13 @@ def print_scenario_running(scenario):
     wrt(scenario.represented())
 
 
+@before.each_background
+def print_background_running(background):
+    wrt('\n')
+    wrt(background.represented())
+    wrt('\n')
+
+
 @after.outline
 def print_outline(scenario, order, outline, reasons_to_fail):
     table = strings.dicts_to_string(scenario.outlines, scenario.keys)

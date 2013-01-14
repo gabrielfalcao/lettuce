@@ -60,7 +60,7 @@ def assert_lines_unicode(original, expected):
         msg = (u'Output differed as follows:\n{0}\n'
                'Output was:\n{1}\nExpected was:\n{2}'.encode('utf-8'))
 
-        raise AssertionError(msg.format(diff, original, expected))
+        raise AssertionError(repr(msg.format(diff, original, expected)).replace(r'\n', '\n'))
 
     assert_equals(
         len(expected), len(original),

@@ -14,16 +14,16 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 from lettuce import core
+from sure import expect
 from nose.tools import assert_equals
 from nose.tools import assert_not_equals
 
 STEP_WITH_TABLE = u'''
 Given I have the following items in my shelf:
-      | name  | description                                           |
-      | Glass | a nice glass to drink grape juice                     |
-      | Pasta | a pasta to cook and eat with grape juice in the glass |
+  | name  | description                                           |
+  | Glass | a nice glass to drink grape juice                     |
+  | Pasta | a pasta to cook and eat with grape juice in the glass |
 '''
 
 
