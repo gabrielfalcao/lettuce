@@ -157,8 +157,10 @@ class StepDescription(object):
         self.file = filename
         if self.file:
             self.file = fs.relpath(self.file)
+        else:
+            self.file = "unknown file"
 
-        self.line = line
+        self.line = line or 0
 
 
 class ScenarioDescription(object):
