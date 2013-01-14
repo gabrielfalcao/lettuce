@@ -818,7 +818,6 @@ class Scenario(object):
                     language=None,
                     previous_scenario=None):
         """ Creates a new scenario from string"""
-
         # ignoring comments
         string = "\n".join(strings.get_stripped_lines(string, ignore_lines_starting_with='#'))
 
@@ -835,10 +834,13 @@ class Scenario(object):
             keys, outlines = strings.parse_hashes(strings.get_stripped_lines(part))
 
         lines = strings.get_stripped_lines(string)
-        scenario_line = lines.pop(0)
+
+        scenario_line = lines.pop(0).strip()
 
         for repl in (language.scenario_outline, language.scenario):
-            scenario_line = strings.remove_it(scenario_line, u"(%s): " % repl)
+            scenario_line = strings.remove_it(scenario_line, u"(%s): " % repl).strip()
+
+
 
         scenario = new_scenario(
             name=scenario_line,
@@ -998,7 +1000,11 @@ class Feature(object):
     @classmethod
     def from_string(new_feature, string, with_file=None, language=None):
         """Creates a new feature from string"""
-        lines = strings.get_stripped_lines(string, ignore_lines_starting_with='#')
+
+        lines = strings.get_stripped_lines(
+            string,
+            ignore_lines_starting_with='#',
+        )
         if not language:
             language = Language()
 
@@ -1062,13 +1068,26 @@ class Feature(object):
         background_string = "".join(parts).splitlines()
         return description, background_string
 
+    def _check_scenario_syntax(self, lines, filename):
+        empty_scenario = ('%s:' % (self.language.first_of_scenario)).lower()
+
+        for line in lines:
+            if line.lower() == empty_scenario:
+                raise LettuceSyntaxError(
+                    filename,
+                    ('In the feature "%s", scenarios '
+                     'must have a name, make sure to declare a scenario like '
+                     'this: `Scenario: name of your scenario`' % self.name),
+                )
+
     def _parse_remaining_lines(self, lines, original_string, with_file=None):
         joined = u"\n".join(lines[1:])
 
+        self._check_scenario_syntax(lines, filename=with_file)
         # replacing occurrences of Scenario Outline, with just "Scenario"
         scenario_prefix = u'%s:' % self.language.first_of_scenario
         regex = re.compile(
-            u"%s:\s" % self.language.scenario_separator, re.U | re.I | re.DOTALL)
+            ur"%s:[\t\r\f\v]*" % self.language.scenario_separator, re.U | re.I | re.DOTALL)
 
         joined = regex.sub(scenario_prefix, joined)
 
@@ -1090,6 +1109,7 @@ class Feature(object):
             parts.pop(0)
 
         prefix = self.language.first_of_scenario
+
         upcoming_scenarios = [
             u"%s: %s" % (prefix, s) for s in parts if s.strip()]
 

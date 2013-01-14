@@ -20,6 +20,7 @@ from lettuce.core import Scenario
 from lettuce.core import Feature
 from lettuce.core import Background
 from lettuce.core import HashList
+from lettuce.exceptions import LettuceSyntaxError
 from nose.tools import assert_equals
 
 FEATURE1 = """
@@ -374,11 +375,17 @@ Feature: Movie rental without MMF
         Then there are 10 more left
 """
 
+FEATURE18 = """
+Feature: My scenarios have no name
+    Scenario:
+        Given this scenario raises a syntax error
+"""
+
 
 def test_feature_has_repr():
     "Feature implements __repr__ nicely"
     feature = Feature.from_string(FEATURE1)
-    assert_equals(repr(feature), '<Feature: "Rent movies">')
+    expect(repr(feature)).to.equal('<Feature: "Rent movies">')
 
 
 def test_scenario_has_name():
@@ -388,10 +395,7 @@ def test_scenario_has_name():
 
     assert isinstance(feature, Feature)
 
-    assert_equals(
-        feature.name,
-        "Rent movies"
-    )
+    expect(feature.name).to.equal("Rent movies")
 
 
 def test_feature_has_scenarios():
@@ -399,8 +403,8 @@ def test_feature_has_scenarios():
 
     feature = Feature.from_string(FEATURE1)
 
-    assert_equals(type(feature.scenarios), list)
-    assert_equals(len(feature.scenarios), 3, "It should have 3 scenarios")
+    expect(feature.scenarios).to.be.a(list)
+    expect(feature.scenarios).to.have.length_of(3)
 
     expected_scenario_names = [
         "Renting a featured movie",
@@ -409,17 +413,26 @@ def test_feature_has_scenarios():
     ]
 
     for scenario, expected_name in zip(feature.scenarios, expected_scenario_names):
-        assert_equals(type(scenario), Scenario)
-        assert_equals(scenario.name, expected_name)
+        expect(scenario).to.be.a(Scenario)
+        expect(scenario.name).to.equal(expected_name)
 
-    assert_equals(feature.scenarios[1].steps[0].keys, ('Name', 'Rating', 'New', 'Available'))
-    assert_equals(
-        feature.scenarios[1].steps[0].hashes,
-        [
-            {'Name': 'A night at the museum 2', 'Rating': '3 stars', 'New': 'yes', 'Available': '9'},
-            {'Name': 'Matrix Revolutions', 'Rating': '4 stars', 'New': 'no', 'Available': '6'},
-        ]
-    )
+    expect(feature.scenarios[1].steps[0].keys).to.equal(
+        ('Name', 'Rating', 'New', 'Available'))
+
+    expect(list(feature.scenarios[1].steps[0].hashes)).to.equal([
+        {
+            'Name': 'A night at the museum 2',
+            'Rating': '3 stars',
+            'New': 'yes',
+            'Available': '9',
+        },
+        {
+            'Name': 'Matrix Revolutions',
+            'Rating': '4 stars',
+            'New': 'no',
+            'Available': '6',
+        },
+    ])
 
 
 def test_can_parse_feature_description():
@@ -708,3 +721,14 @@ def test_background_parsing_without_mmf():
         {u'Name': u'John Doe'},
         {u'Name': u'Foo Bar'},
     ]))
+
+
+def test_syntax_error_for_scenarios_with_no_name():
+    ("Trying to parse features with unnamed "
+     "scenarios will cause a syntax error")
+    expect(Feature.from_string).when.called_with(FEATURE18).to.throw(
+        LettuceSyntaxError,
+        ('In the feature "My scenarios have no name", '
+         'scenarios must have a name, make sure to declare '
+         'a scenario like this: `Scenario: name of your scenario`')
+    )
