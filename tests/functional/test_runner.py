@@ -908,6 +908,8 @@ def test_output_level_2_fail():
     assert_stdout_lines_with_traceback(
         "See it fail ... FAILED\n"
         "\n"
+        "\n"
+        "<Step: \"And this one fails\">\n"
         "Traceback (most recent call last):\n"
         '  File "%(lettuce_core_file)s", line %(call_line)d, in __call__\n'
         "    ret = self.function(self.step, *args, **kw)\n"
@@ -936,6 +938,8 @@ def test_output_level_2_error():
         "It should pass ... OK\n"
         "It should raise an exception different of AssertionError ... ERROR\n"
         "\n"
+        "\n"
+        "<Step: \"Given my step that blows a exception\">\n"
         "Traceback (most recent call last):\n"
         '  File "%(lettuce_core_file)s", line %(call_line)d, in __call__\n'
         "    ret = self.function(self.step, *args, **kw)\n"
@@ -977,8 +981,9 @@ def test_output_level_1_fail():
     runner.run()
 
     assert_stdout_lines_with_traceback(
-        ".F...\n"
+        "F\n"
         "\n"
+        "<Step: \"And this one fails\">\n"
         "Traceback (most recent call last):\n"
         '  File "%(lettuce_core_file)s", line %(call_line)d, in __call__\n'
         "    ret = self.function(self.step, *args, **kw)\n"
@@ -1006,6 +1011,7 @@ def test_output_level_1_error():
     assert_stdout_lines_with_traceback(
         ".E\n"
         "\n"
+        "<Step: \"Given my step that blows a exception\">\n"
         "Traceback (most recent call last):\n"
         '  File "%(lettuce_core_file)s", line %(call_line)d, in __call__\n'
         "    ret = self.function(self.step, *args, **kw)\n"
@@ -1060,7 +1066,7 @@ def test_blank_step_hash_value():
     runner.run()
 
     assert_stdout_lines(
-        "...."
+        "."
         "\n"
         "1 feature (1 passed)\n"
         "1 scenario (1 passed)\n"
@@ -1098,7 +1104,7 @@ def test_run_only_fast_tests():
     runner.run()
 
     assert_stdout_lines(
-        ".."
+        "."
         "\n"
         "1 feature (1 passed)\n"
         "1 scenario (1 passed)\n"
@@ -1142,7 +1148,7 @@ def test_background_with_header():
     runner.run()
 
     assert_stdout_lines(
-        "........."
+        ".."
         "\n"
         "1 feature (1 passed)\n"
         "2 scenarios (2 passed)\n"
@@ -1189,7 +1195,7 @@ def test_background_without_header():
     runner.run()
 
     assert_stdout_lines(
-        "........."
+        ".."
         "\n"
         "1 feature (1 passed)\n"
         "2 scenarios (2 passed)\n"
@@ -1229,10 +1235,10 @@ def test_output_background_with_success_colorless():
         '  I want to automate its test                 # tests/functional/bg_features/simple/simple.feature:4\n'
         '\n'
         '  Background:\n'
-        '    Given the variable "X" holds 2            # tests/functional/test_runner.py:1215\n'
+        '    Given the variable "X" holds 2            # tests/functional/test_runner.py:1221\n'
         '\n'
         '  Scenario: multiplication changing the value # tests/functional/bg_features/simple/simple.feature:9\n'
-        '    Given the variable "X" is equal to 2      # tests/functional/test_runner.py:1215\n'
+        '    Given the variable "X" is equal to 2      # tests/functional/test_runner.py:1221\n'
         '\n'
         '1 feature (1 passed)\n'
         '1 scenario (1 passed)\n'
@@ -1264,12 +1270,12 @@ def test_output_background_with_success_colorful():
         '\033[1;37m  I want to automate its test                 \033[1;30m# tests/functional/bg_features/simple/simple.feature:4\033[0m\n'
         '\n'
         '\033[1;37m  Background:\033[0m\n'
-        '\033[1;30m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1250\033[0m\n'
-        '\033[A\033[1;32m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1250\033[0m\n'
+        '\033[1;30m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1256\033[0m\n'
+        '\033[A\033[1;32m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1256\033[0m\n'
         '\n'
         '\033[1;37m  Scenario: multiplication changing the value \033[1;30m# tests/functional/bg_features/simple/simple.feature:9\033[0m\n'
-        '\033[1;30m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1250\033[0m\n'
-        '\033[A\033[1;32m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1250\033[0m\n'
+        '\033[1;30m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1256\033[0m\n'
+        '\033[A\033[1;32m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1256\033[0m\n'
         '\n'
         '\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n'
         '\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n'
