@@ -46,7 +46,13 @@ try:
 except ImportError:
     pass
 
+from lettuce.django import mail
 from lettuce.registry import call_hook
+
+
+def create_mail_queue():
+    mail.queue = multiprocessing.Queue()
+    return mail.queue
 
 
 class LettuceServerException(WSGIServerException):
@@ -104,10 +110,16 @@ class ThreadedServer(multiprocessing.Process):
     lock = multiprocessing.Lock()
     daemon = True
 
-    def __init__(self, address, port, *args, **kw):
+    def __init__(self, address, port, mail_queue, *args, **kw):
         multiprocessing.Process.__init__(self)
         self.address = address
         self.port = port
+        self.mail_queue = mail_queue
+
+    def configure_mail_queue(self):
+        mail.queue = self.mail_queue
+        settings.EMAIL_BACKEND = \
+            'lettuce.django.mail.backends.QueueEmailBackend'
 
     @staticmethod
     def get_real_address(address):
@@ -161,6 +173,8 @@ class ThreadedServer(multiprocessing.Process):
                 os.unlink(pidfile)
 
         open(pidfile, 'w').write(unicode(os.getpid()))
+
+        self.configure_mail_queue()
 
         connector = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -217,7 +231,8 @@ class Server(object):
     def __init__(self, address='0.0.0.0', port=None):
         self.port = int(port or getattr(settings, 'LETTUCE_SERVER_PORT', 8000))
         self.address = unicode(address)
-        self._actual_server = ThreadedServer(self.address, self.port)
+        queue = create_mail_queue()
+        self._actual_server = ThreadedServer(self.address, self.port, queue)
 
     def start(self):
         """Starts the webserver thread, and waits it to be available"""

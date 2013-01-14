@@ -262,6 +262,32 @@ Notice the ``terrain.py`` file at the project root, there you can
 populate the :ref:`lettuce-world` and organize your features and steps
 with it :)
 
+Checking email
+==============
+
+When you run your Django server under lettuce, emails sent by your server
+do not get transmitted over the Internet. Instead, these emails are
+added to a :class:`multiprocessing.Queue` object at
+``lettuce.django.mail.queue``.
+
+Example:
+
+.. highlight:: python
+
+::
+
+  from lettuce import step
+  from lettuce.django import mail
+  from nose.tools import assert_equals
+
+
+  @step(u'an email is sent to "([^"]*?)" with subject "([^"]*)"')
+  def email_sent(step, to, subject):
+      message = mail.queue.get(True, timeout=5)
+      assert_equals(message.subject, subject)
+      assert_equals(message.recipients(), [to])
+
+
 Running without HTTP server
 ===========================
 
