@@ -118,9 +118,10 @@ Once you install the ``lettuce.django`` app, the command ``harvest`` will be ava
 
 
 The ``harvest`` command executes the ``django.test.utils.setup_test_environment``
-function before it starts up the Django server. One side-effect is that the
-server will not send out any emails, because it configures Django to use the
-locmem_ in-memory email backend.
+function before it starts up the Django server. Typically, invoking this function
+would configure Django to use the locmem_ in-memory email backend. However,
+Lettuce uses a custom Django email backend to support retrieving email from
+Lettuce test scripts. See :ref:`lettuce-checking-email` for more details.
 
 5. specifying feature files
 ===========================
@@ -261,6 +262,8 @@ project layout would like like this:
 Notice the ``terrain.py`` file at the project root, there you can
 populate the :ref:`lettuce-world` and organize your features and steps
 with it :)
+
+.. _lettuce-checking-email:
 
 Checking email
 ==============
