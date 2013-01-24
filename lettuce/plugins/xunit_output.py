@@ -19,7 +19,7 @@ from datetime import datetime, timedelta
 from lettuce.terrain import after
 from lettuce.terrain import before
 from xml.dom import minidom
-from lettuce.strings import utf8_bytestring
+from lettuce.strings import utf8_string
 
 
 def wrt_output(filename, content):
@@ -53,7 +53,7 @@ def enable(filename=None):
         if step.scenario.outlines:
             return
 
-        classname = utf8_bytestring(u"%s : %s" % (step.scenario.feature.name, step.scenario.name))
+        classname = utf8_string(u"%s : %s" % (step.scenario.feature.name, step.scenario.name))
         tc = doc.createElement("testcase")
         tc.setAttribute("classname", classname)
         tc.setAttribute("name", step.sentence.encode('utf-8'))

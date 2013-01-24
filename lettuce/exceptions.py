@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import traceback
+from lettuce.strings import utf8_string
 
 
 class NoDefinitionFound(Exception):
@@ -38,11 +39,9 @@ class ReasonToFail(object):
     def __init__(self, step, exc):
         self.step = step
         self.exception = exc
-        if isinstance(exc.message, unicode):
-            self.cause = unicode(exc)
-        elif isinstance(exc.message, str):
-            self.cause = str(exc)
-        self.traceback = traceback.format_exc(exc)
+        if isinstance(exc.message, basestring):
+            self.cause = utf8_string(exc.message)
+        self.traceback = utf8_string(traceback.format_exc(exc))
 
 
 class LettuceSyntaxError(SyntaxError):

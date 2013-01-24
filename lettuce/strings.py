@@ -20,9 +20,10 @@ import time
 import unicodedata
 
 
-def utf8_bytestring(s):
+def utf8_string(s):
     if isinstance(s, str):
         s = s.decode("utf-8")
+
     elif isinstance(s, unicode):
         s = s.encode("utf-8")
     return s
