@@ -15,10 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from lettuce.terrain import after
 from lettuce.terrain import before
 from xml.dom import minidom
+from lettuce.strings import utf8_bytestring
 
 
 def wrt_output(filename, content):
@@ -52,24 +53,26 @@ def enable(filename=None):
         if step.scenario.outlines:
             return
 
-        classname = "%s : %s" % (step.scenario.feature.name, step.scenario.name)
+        classname = utf8_bytestring(u"%s : %s" % (step.scenario.feature.name, step.scenario.name))
         tc = doc.createElement("testcase")
         tc.setAttribute("classname", classname)
-        tc.setAttribute("name", step.sentence)
-        if step.ran:
+        tc.setAttribute("name", step.sentence.encode('utf-8'))
+        try:
             tc.setAttribute("time", str(total_seconds((datetime.now() - step.started))))
-        else:
-            tc.setAttribute("time", str(0))
-            skip=doc.createElement("skipped")
+        except AttributeError:
+            tc.setAttribute("time", str(total_seconds(timedelta(seconds=0))))
+
+        if not step.ran:
+            skip = doc.createElement("skipped")
             skip.setAttribute("type", "UndefinedStep(%s)" % step.sentence)
             tc.appendChild(skip)
 
         if step.failed:
-            cdata = doc.createCDATASection(step.why.traceback)
+            cdata = doc.createCDATASection(step.why.traceback.encode('utf-8'))
             failure = doc.createElement("failure")
             if hasattr(step.why, 'cause'):
-                failure.setAttribute("message", step.why.cause)
-            failure.setAttribute("type", step.why.exception.__class__.__name__)
+                failure.setAttribute("message", step.why.cause.encode('utf-8'))
+            failure.setAttribute("type", step.why.exception.__class__.__name__.encode('utf-8'))
             failure.appendChild(cdata)
             tc.appendChild(failure)
 

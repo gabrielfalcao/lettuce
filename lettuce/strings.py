@@ -20,6 +20,14 @@ import time
 import unicodedata
 
 
+def utf8_bytestring(s):
+    if isinstance(s, str):
+        s = s.decode("utf-8")
+    elif isinstance(s, unicode):
+        s = s.encode("utf-8")
+    return s
+
+
 def escape_if_necessary(what):
     what = unicode(what)
     if len(what) is 1:
