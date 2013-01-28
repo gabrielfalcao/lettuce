@@ -1311,3 +1311,19 @@ def test_feature_without_name():
         'Features must have a name. e.g: "Feature: This is my name"\n'
         % filename
     )
+
+
+@with_setup(prepare_stderr)
+def test_feature_missing_scenarios():
+    "syntax checking: Fail on features missing scenarios"
+
+    filename = syntax_feature_name("feature_missing_scenarios")
+    runner = Runner(filename)
+
+    assert_raises(SystemExit, runner.run)
+
+    assert_stderr_lines(
+        u"Syntax error at: %s\n"
+        "Features must have scenarios.\nPlease refer to the documentation "
+        "available at http://lettuce.it for more information.\n" % filename
+    )

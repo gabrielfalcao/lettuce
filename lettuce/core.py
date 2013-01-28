@@ -1133,6 +1133,13 @@ class Feature(object):
         background = None
 
         if not re.search("^" + scenario_prefix, joined):
+            if not parts:
+                raise LettuceSyntaxError(
+                    with_file,
+                    (u"Features must have scenarios.\n"
+                     "Please refer to the documentation available at http://lettuce.it for more information.")
+                )
+
             description, background_lines = self._extract_desc_and_bg(parts[0])
 
             background = background_lines and Background.from_string(
