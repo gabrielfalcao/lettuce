@@ -73,6 +73,9 @@ class Command(BaseCommand):
 
         make_option('--xunit-file', action='store', dest='xunit_file', default=None,
             help='Write JUnit XML to this file. Defaults to lettucetests.xml'),
+
+        make_option("--failfast", dest="failfast", default=False,
+                    action="store_true", help='Stop running in the first failure'),
     )
 
     def stopserver(self, failed=False):
@@ -101,6 +104,8 @@ class Command(BaseCommand):
         apps_to_avoid = tuple(options.get('avoid_apps', '').split(","))
         run_server = not options.get('no_server', False)
         tags = options.get('tags', None)
+        failfast = options.get('failfast', False)
+
         server = Server(port=options['port'])
 
         paths = self.get_paths(args, apps_to_run, apps_to_avoid)
@@ -129,7 +134,7 @@ class Command(BaseCommand):
                 runner = Runner(path, options.get('scenarios'), verbosity,
                                 enable_xunit=options.get('enable_xunit'),
                                 xunit_filename=options.get('xunit_file'),
-                                tags=tags)
+                                tags=tags, failfast=failfast)
 
                 result = runner.run()
                 if app_module is not None:

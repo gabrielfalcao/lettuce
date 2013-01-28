@@ -83,7 +83,8 @@ class Runner(object):
     features and step definitions on there.
     """
     def __init__(self, base_path, scenarios=None, verbosity=0, random=False,
-                 enable_xunit=False, xunit_filename=None, tags=None):
+                 enable_xunit=False, xunit_filename=None, tags=None,
+                 failfast=False):
         """ lettuce.Runner will try to find a terrain.py file and
         import it from within `base_path`
         """
@@ -99,6 +100,7 @@ class Runner(object):
         self.loader = fs.FeatureLoader(base_path)
         self.verbosity = verbosity
         self.scenarios = scenarios and map(int, scenarios.split(",")) or None
+        self.failfast = failfast
 
         sys.path.remove(base_path)
 
@@ -152,15 +154,24 @@ class Runner(object):
             for filename in features_files:
                 feature = Feature.from_file(filename)
                 results.append(
-                    feature.run(self.scenarios, tags=self.tags, random=self.random))
+                    feature.run(self.scenarios,
+                                tags=self.tags,
+                                random=self.random,
+                                failfast=self.failfast))
 
         except exceptions.LettuceSyntaxError, e:
             sys.stderr.write(e.msg)
             failed = True
         except:
-            e = sys.exc_info()[1]
-            print "Died with %s" % str(e)
-            traceback.print_exc()
+            if not self.failfast:
+                e = sys.exc_info()[1]
+                print "Died with %s" % str(e)
+                traceback.print_exc()
+            else:
+                print
+                print ("Lettuce aborted running any more tests "
+                       "because was called with the `--failfast` option")
+
             failed = True
 
         finally:

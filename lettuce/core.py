@@ -425,7 +425,7 @@ class Step(object):
         return line
 
     @staticmethod
-    def run_all(steps, outline=None, run_callbacks=False, ignore_case=True):
+    def run_all(steps, outline=None, run_callbacks=False, ignore_case=True, failfast=False):
         """Runs each step in the given list of steps.
 
         Returns a tuple of five lists:
@@ -460,6 +460,8 @@ class Step(object):
                 steps_undefined.append(e.step)
 
             except Exception, e:
+                if failfast:
+                    raise
                 steps_failed.append(step)
                 reasons_to_fail.append(step.why)
 
@@ -685,7 +687,7 @@ class Scenario(object):
     def failed(self):
         return any([step.failed for step in self.steps])
 
-    def run(self, ignore_case):
+    def run(self, ignore_case, failfast=False):
         """Runs a scenario, running each of its steps. Also call
         before_each and after_each callbacks for steps and scenario"""
 
@@ -693,7 +695,7 @@ class Scenario(object):
         call_hook('before_each', 'scenario', self)
 
         def run_scenario(almost_self, order=-1, outline=None, run_callbacks=False):
-            all_steps, steps_passed, steps_failed, steps_undefined, reasons_to_fail = Step.run_all(self.steps, outline, run_callbacks, ignore_case)
+            all_steps, steps_passed, steps_failed, steps_undefined, reasons_to_fail = Step.run_all(self.steps, outline, run_callbacks, ignore_case, failfast=failfast)
             skip = lambda x: x not in steps_passed and x not in steps_undefined and x not in steps_failed
 
             steps_skipped = filter(skip, all_steps)
@@ -1181,7 +1183,7 @@ class Feature(object):
 
         return background, scenarios, description
 
-    def run(self, scenarios=None, ignore_case=True, tags=None, random=False):
+    def run(self, scenarios=None, ignore_case=True, tags=None, random=False, failfast=False):
         call_hook('before_each', 'feature', self)
         scenarios_ran = []
 
@@ -1204,7 +1206,7 @@ class Feature(object):
             if self.background:
                 self.background.run(ignore_case)
 
-            scenarios_ran.extend(scenario.run(ignore_case))
+            scenarios_ran.extend(scenario.run(ignore_case, failfast=failfast))
 
         call_hook('after_each', 'feature', self)
         return FeatureResult(self, *scenarios_ran)

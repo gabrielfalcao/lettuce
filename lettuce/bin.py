@@ -66,6 +66,12 @@ def main(args=sys.argv[1:]):
                       help='Write JUnit XML to this file. Defaults to '
                       'lettucetests.xml')
 
+    parser.add_option("--failfast",
+                      dest="failfast",
+                      default=False,
+                      action="store_true",
+                      help='Stop running in the first failure')
+
     options, args = parser.parse_args(args)
     if args:
         base_path = os.path.abspath(args[0])
@@ -86,6 +92,7 @@ def main(args=sys.argv[1:]):
         random=options.random,
         enable_xunit=options.enable_xunit,
         xunit_filename=options.xunit_file,
+        failfast=options.failfast,
         tags=tags,
     )
 
