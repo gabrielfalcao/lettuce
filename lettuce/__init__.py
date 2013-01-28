@@ -41,7 +41,10 @@ from lettuce.registry import call_hook
 from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
 from lettuce.exceptions import StepLoadingError
-from lettuce.plugins import xunit_output
+from lettuce.plugins import (
+    xunit_output,
+    autopdb
+)
 from lettuce import fs
 from lettuce import exceptions
 
@@ -84,7 +87,7 @@ class Runner(object):
     """
     def __init__(self, base_path, scenarios=None, verbosity=0, random=False,
                  enable_xunit=False, xunit_filename=None, tags=None,
-                 failfast=False):
+                 failfast=False, auto_pdb=False):
         """ lettuce.Runner will try to find a terrain.py file and
         import it from within `base_path`
         """
@@ -101,6 +104,8 @@ class Runner(object):
         self.verbosity = verbosity
         self.scenarios = scenarios and map(int, scenarios.split(",")) or None
         self.failfast = failfast
+        if auto_pdb:
+            autopdb.enable(self)
 
         sys.path.remove(base_path)
 

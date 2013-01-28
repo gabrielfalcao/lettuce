@@ -76,6 +76,9 @@ class Command(BaseCommand):
 
         make_option("--failfast", dest="failfast", default=False,
                     action="store_true", help='Stop running in the first failure'),
+
+        make_option("--pdb", dest="auto_pdb", default=False,
+                    action="store_true", help='Launches an interactive debugger upon error'),
     )
 
     def stopserver(self, failed=False):
@@ -105,6 +108,7 @@ class Command(BaseCommand):
         run_server = not options.get('no_server', False)
         tags = options.get('tags', None)
         failfast = options.get('failfast', False)
+        auto_pdb = options.get('auto_pdb', False)
 
         server = Server(port=options['port'])
 
@@ -134,7 +138,7 @@ class Command(BaseCommand):
                 runner = Runner(path, options.get('scenarios'), verbosity,
                                 enable_xunit=options.get('enable_xunit'),
                                 xunit_filename=options.get('xunit_file'),
-                                tags=tags, failfast=failfast)
+                                tags=tags, failfast=failfast, auto_pdb=auto_pdb)
 
                 result = runner.run()
                 if app_module is not None:

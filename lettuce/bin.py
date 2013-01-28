@@ -72,6 +72,12 @@ def main(args=sys.argv[1:]):
                       action="store_true",
                       help='Stop running in the first failure')
 
+    parser.add_option("--pdb",
+                      dest="auto_pdb",
+                      default=False,
+                      action="store_true",
+                      help='Launches an interactive debugger upon error')
+
     options, args = parser.parse_args(args)
     if args:
         base_path = os.path.abspath(args[0])
@@ -93,6 +99,7 @@ def main(args=sys.argv[1:]):
         enable_xunit=options.enable_xunit,
         xunit_filename=options.xunit_file,
         failfast=options.failfast,
+        auto_pdb=options.auto_pdb,
         tags=tags,
     )
 
