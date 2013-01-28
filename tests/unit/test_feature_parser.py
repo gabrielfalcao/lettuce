@@ -411,7 +411,7 @@ Feature: Movie rental without MMF
         Then there are 10 more left
 """
 
-FEATURE18 = """
+FEATURE20 = """
 Feature: My scenarios have no name
     Scenario:
         Given this scenario raises a syntax error
@@ -787,7 +787,7 @@ def test_background_parsing_without_mmf():
 def test_syntax_error_for_scenarios_with_no_name():
     ("Trying to parse features with unnamed "
      "scenarios will cause a syntax error")
-    expect(Feature.from_string).when.called_with(FEATURE18).to.throw(
+    expect(Feature.from_string).when.called_with(FEATURE20).to.throw(
         LettuceSyntaxError,
         ('In the feature "My scenarios have no name", '
          'scenarios must have a name, make sure to declare '

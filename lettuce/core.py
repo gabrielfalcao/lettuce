@@ -1106,7 +1106,6 @@ class Feature(object):
 
     def _check_scenario_syntax(self, lines, filename):
         empty_scenario = ('%s:' % (self.language.first_of_scenario)).lower()
-
         for line in lines:
             if line.lower() == empty_scenario:
                 raise LettuceSyntaxError(
