@@ -16,8 +16,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import commands
 from lettuce.fs import FileSystem
+from sure import expect
 
 current_directory = FileSystem.dirname(__file__)
+
 
 def test_django_agains_couves():
     'it always call @after.all hooks, even after exceptions'
@@ -26,7 +28,18 @@ def test_django_agains_couves():
 
     status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3")
 
-    assert "Couves before all" in out
-    assert "Couves after all" in out
+    expect("Couves before all").to.be.within(out)
+    expect("Couves after all").to.be.within(out)
     FileSystem.popd()
 
+
+def test_django_agains_couves_nohooks():
+    'it only calls @before.all and @after.all hooks if there are features found'
+
+    FileSystem.pushd(current_directory, "django", "couves")
+
+    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --tags=nothingwillbefound")
+
+    expect("Couves before all").to.not_be.within(out)
+    expect("Couves after all").to.not_be.within(out)
+    FileSystem.popd()

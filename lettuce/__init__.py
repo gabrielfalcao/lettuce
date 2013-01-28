@@ -133,8 +133,6 @@ class Runner(object):
             print "Error loading step definitions:\n", e
             return
 
-        call_hook('before', 'all')
-
         results = []
         if self.single_feature:
             features_files = [self.single_feature]
@@ -146,6 +144,8 @@ class Runner(object):
         if not features_files:
             self.output.print_no_features_found(self.loader.base_dir)
             return
+
+        call_hook('before', 'all')
 
         failed = False
         try:
