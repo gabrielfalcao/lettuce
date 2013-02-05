@@ -1,6 +1,6 @@
 # lettuce
 > Version 0.2.14 - kryptonite
-
+[![Build Status](https://secure.travis-ci.org/gabrielfalcao/lettuce.png)](http://travis-ci.org/gabrielfalcao/lettuce)
 ## On release names
 
 Lettuce release names will be inspired by any green stuff.
