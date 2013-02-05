@@ -1,4 +1,4 @@
-Feature: Test the django app FOO BAR
+Feature: Test the django app leaves
   Scenario: This one is present
     Given I say foo bar
     Then it fails

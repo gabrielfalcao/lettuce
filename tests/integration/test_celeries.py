@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import commands
 from lettuce.fs import FileSystem
-from sure import expect
+from sure import this as the
 
 current_directory = FileSystem.dirname(__file__)
 
@@ -26,8 +26,24 @@ def test_failfast():
 
     FileSystem.pushd(current_directory, "django", "celeries")
 
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --failfast")
+    status, output = commands.getstatusoutput("python manage.py harvest --verbosity=3 --failfast")
 
-    expect("This one is present").to.be.within(out)
-    expect("This one is never called").to.not_be.within(out)
+    the(output).should.contain("This one is present")
+    the(output).should.contain("Celeries before all")
+    the(output).should.contain("Celeries before harvest")
+    the(output).should.contain("Celeries before feature 'Test the django app leaves'")
+    the(output).should.contain("Celeries before scenario 'This one is present'")
+
+    the(output).should.contain("Celeries before step 'Given I say foo bar'")
+    the(output).should.contain("Celeries after step 'Given I say foo bar'")
+    the(output).should.contain("Celeries before step 'Then it fails'")
+    the(output).should.contain("Celeries after step 'Then it fails'")
+
+    the(output).should.contain("Celeries after scenario 'This one is present'")
+    the(output).should.contain("Celeries after feature 'Test the django app leaves'")
+    the(output).should.contain("Celeries after harvest")
+    the(output).should.contain("Celeries after all")
+
+    the(output).should_not.contain("This one is never called")
+
     FileSystem.popd()

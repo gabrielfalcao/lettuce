@@ -180,12 +180,11 @@ class Runner(object):
             failed = True
 
         finally:
+            total = TotalResult(results)
+            call_hook('after', 'all', total)
+
             if failed:
                 raise SystemExit(2)
-
-            total = TotalResult(results)
-
-            call_hook('after', 'all', total)
 
             finished_at = datetime.now()
             time_took = finished_at - started_at

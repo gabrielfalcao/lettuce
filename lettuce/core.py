@@ -695,7 +695,13 @@ class Scenario(object):
         call_hook('before_each', 'scenario', self)
 
         def run_scenario(almost_self, order=-1, outline=None, run_callbacks=False):
-            all_steps, steps_passed, steps_failed, steps_undefined, reasons_to_fail = Step.run_all(self.steps, outline, run_callbacks, ignore_case, failfast=failfast)
+            try:
+                all_steps, steps_passed, steps_failed, steps_undefined, reasons_to_fail = Step.run_all(self.steps, outline, run_callbacks, ignore_case, failfast=failfast)
+            except:
+                if failfast:
+                    call_hook('after_each', 'scenario', self)
+                raise
+
             skip = lambda x: x not in steps_passed and x not in steps_undefined and x not in steps_failed
 
             steps_skipped = filter(skip, all_steps)
@@ -1196,20 +1202,26 @@ class Feature(object):
         else:
             scenarios_to_run = range(1, len(self.scenarios) + 1)
 
-        for index, scenario in enumerate(self.scenarios):
-            if scenarios_to_run and (index + 1) not in scenarios_to_run:
-                continue
+        try:
+            for index, scenario in enumerate(self.scenarios):
+                if scenarios_to_run and (index + 1) not in scenarios_to_run:
+                    continue
 
-            if not scenario.matches_tags(tags):
-                continue
+                if not scenario.matches_tags(tags):
+                    continue
 
-            if self.background:
-                self.background.run(ignore_case)
+                if self.background:
+                    self.background.run(ignore_case)
 
-            scenarios_ran.extend(scenario.run(ignore_case, failfast=failfast))
+                scenarios_ran.extend(scenario.run(ignore_case, failfast=failfast))
+        except:
+            if failfast:
+                call_hook('after_each', 'feature', self)
 
-        call_hook('after_each', 'feature', self)
-        return FeatureResult(self, *scenarios_ran)
+            raise
+        else:
+            call_hook('after_each', 'feature', self)
+            return FeatureResult(self, *scenarios_ran)
 
 
 class FeatureResult(object):
