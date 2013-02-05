@@ -14,7 +14,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from sure import that, expect
+from sure import expect
+from sure.old import that
 from lettuce import step
 from lettuce.core import Scenario
 from lettuce.core import Feature
