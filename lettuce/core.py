@@ -696,6 +696,9 @@ class Scenario(object):
 
         def run_scenario(almost_self, order=-1, outline=None, run_callbacks=False):
             try:
+                if self.background:
+                    self.background.run(ignore_case)
+
                 all_steps, steps_passed, steps_failed, steps_undefined, reasons_to_fail = Step.run_all(self.steps, outline, run_callbacks, ignore_case, failfast=failfast)
             except:
                 if failfast:
@@ -1185,6 +1188,7 @@ class Feature(object):
 
             params.update(kw)
             current_scenario = Scenario.from_string(current, **params)
+            current_scenario.background = background
             scenarios.append(current_scenario)
 
         return background, scenarios, description
@@ -1209,9 +1213,6 @@ class Feature(object):
 
                 if not scenario.matches_tags(tags):
                     continue
-
-                if self.background:
-                    self.background.run(ignore_case)
 
                 scenarios_ran.extend(scenario.run(ignore_case, failfast=failfast))
         except:
