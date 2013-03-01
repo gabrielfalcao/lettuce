@@ -1,5 +1,5 @@
 # lettuce
-> Version 0.2.14 - kryptonite
+> Version 0.2.15 - kryptonite
 
 [![Build Status](https://secure.travis-ci.org/gabrielfalcao/lettuce.png)](http://travis-ci.org/gabrielfalcao/lettuce)
 
