@@ -24,6 +24,7 @@ from lettuce import terminal
 
 from lettuce.terrain import after
 from lettuce.terrain import before
+from lettuce.terrain import world
 
 
 def wrt(what):
@@ -131,6 +132,16 @@ def print_step_ran(step):
 
 @before.each_scenario
 def print_scenario_running(scenario):
+    if scenario.background:
+        # Only print the background on the first scenario run
+        # So, we determine if this was called previously with the attached background.
+        # If so, skip the print_scenario() since we'll call it again in the after_background.
+        if not hasattr(world, 'background_scenario_holder'):
+            world.background_scenario_holder = {}
+        if scenario.background not in world.background_scenario_holder:
+            # We haven't seen this background before, add our 1st scenario
+            world.background_scenario_holder[scenario.background] = scenario
+            return
     string = scenario.represented()
     string = wrap_file_and_line(string, '\033[1;30m', '\033[0m')
     write_out("\n\033[1;37m%s" % string)
@@ -258,3 +269,9 @@ def print_background_running(background):
     wrt('\033[1;37m')
     wrt(background.represented())
     wrt('\033[0m\n')
+
+
+@after.each_background
+def print_first_scenario_running(background, results):
+    scenario = world.background_scenario_holder[background]
+    print_scenario_running(scenario)
