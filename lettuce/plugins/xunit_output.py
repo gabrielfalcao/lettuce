@@ -50,10 +50,12 @@ def enable(filename=None):
 
     @after.each_step
     def create_test_case_step(step):
-        if step.scenario.outlines:
+        parent = step.scenario or step.background
+        if getattr(parent, 'outlines', None):
             return
-
-        classname = utf8_string(u"%s : %s" % (step.scenario.feature.name, step.scenario.name))
+        
+        name = getattr(parent, 'name', 'Background')    # Background sections are nameless
+        classname = utf8_string(u"%s : %s" % (parent.feature.name, name))
         tc = doc.createElement("testcase")
         tc.setAttribute("classname", classname)
         tc.setAttribute("name", step.sentence.encode('utf-8'))

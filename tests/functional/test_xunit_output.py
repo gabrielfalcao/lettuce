@@ -26,7 +26,7 @@ from lettuce import registry
 from lettuce import Runner
 from lettuce import xunit_output
 from lxml import etree
-from tests.functional.test_runner import feature_name
+from tests.functional.test_runner import feature_name, bg_feature_name
 from tests.asserts import prepare_stdout
 
 
@@ -154,6 +154,42 @@ def test_xunit_output_with_no_steps():
     old = xunit_output.wrt_output
     xunit_output.wrt_output = assert_correct_xml
     runner = Runner(feature_name('no_steps_defined'), enable_xunit=True)
+    runner.run()
+
+    assert_equals(1, len(called), "Function not called")
+    xunit_output.wrt_output = old
+
+
+@with_setup(prepare_stdout, registry.clear)
+def test_xunit_output_with_background_section():
+    'Test xunit output with a background section in the feature'
+    called = []
+    
+    def assert_correct_xml(filename, content):
+        called.append(True)
+        assert_xsd_valid(filename, content)
+        root = etree.fromstring(content)
+        assert_equals(root.get("tests"), "1")
+        assert_equals(root.get("failures"), "0")
+        assert_equals(len(root.getchildren()), 2)
+
+        passed1, passed2 = root.findall("testcase")
+        assert_equals(passed1.get("name"), 'Given the variable "X" holds 2')
+        assert_true(float(passed1.get("time")) > 0)
+        assert_equals(passed2.get("name"), 'Given the variable "X" is equal to 2')
+        assert_true(float(passed2.get("time")) > 0)
+    
+    from lettuce import step
+    
+    @step(ur'the variable "(\w+)" holds (\d+)')
+    @step(ur'the variable "(\w+)" is equal to (\d+)')
+    def just_pass(step, *args):
+        pass
+    
+    filename = bg_feature_name('simple')
+    old = xunit_output.wrt_output
+    xunit_output.wrt_output = assert_correct_xml
+    runner = Runner(filename, enable_xunit=True)
     runner.run()
 
     assert_equals(1, len(called), "Function not called")
