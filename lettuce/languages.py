@@ -85,7 +85,7 @@ LANGUAGES = {
         'scenario': u'Scénario',
         'scenario_outline': u'Plan de Scénario|Plan du Scénario',
         'scenario_separator': u'(Plan de Scénario|Plan du Scénario|Scénario)',
-        'background': u'(?:Background)',
+        'background': u'(?:Background|Contexte)',
     },
     'de': {
         'examples': u'Beispiele|Szenarios',
