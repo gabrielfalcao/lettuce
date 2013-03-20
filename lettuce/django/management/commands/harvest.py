@@ -18,6 +18,7 @@ import os
 import sys
 from optparse import make_option
 from django.conf import settings
+from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.test.utils import setup_test_environment
 from django.test.utils import teardown_test_environment
@@ -48,6 +49,9 @@ class Command(BaseCommand):
 
         make_option('-S', '--no-server', action='store_true', dest='no_server', default=False,
             help="will not run django's builtin HTTP server"),
+
+        make_option('-T', '--test-server', action='store_true', dest='test_database', default=False,
+            help="will run django's builtin HTTP server using the test databases"),
 
         make_option('-P', '--port', type='int', dest='port',
             help="the port in which the HTTP server will run at"),
@@ -106,9 +110,29 @@ class Command(BaseCommand):
         apps_to_run = tuple(options.get('apps', '').split(","))
         apps_to_avoid = tuple(options.get('avoid_apps', '').split(","))
         run_server = not options.get('no_server', False)
+        test_database = options.get('test_database', False)
         tags = options.get('tags', None)
         failfast = options.get('failfast', False)
         auto_pdb = options.get('auto_pdb', False)
+
+        if test_database:
+            migrate_south = getattr(settings, "SOUTH_TESTS_MIGRATE", True)
+            try:
+                from south.management.commands import patch_for_test_db_setup
+                patch_for_test_db_setup()
+            except:
+                migrate_south = False
+                pass
+
+            from django.test.simple import DjangoTestSuiteRunner
+            self._testrunner = DjangoTestSuiteRunner()
+            self._testrunner.setup_test_environment()
+            self._old_db_config = self._testrunner.setup_databases()
+
+            call_command('syncdb', verbosity=0, interactive=False,)
+            if migrate_south:
+               call_command('migrate', verbosity=0, interactive=False,)
+
 
         server = Server(port=options['port'])
 
@@ -157,6 +181,11 @@ class Command(BaseCommand):
 
         finally:
             registry.call_hook('after', 'harvest', results)
-            server.stop(failed)
+            
+            if test_database:
+                self._testrunner.teardown_databases(self._old_db_config)
+
             teardown_test_environment()
+            server.stop(failed)
+
             raise SystemExit(int(failed))
