@@ -31,6 +31,10 @@ def wrt_output(filename, content):
     f.close()
 
 
+def write_xml_doc(filename, doc):
+    wrt_output(filename, doc.toxml())
+
+
 def total_seconds(td):
     return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 1e6) / 1e6
 
@@ -55,10 +59,10 @@ def enable(filename=None):
             return
         
         name = getattr(parent, 'name', 'Background')    # Background sections are nameless
-        classname = utf8_string(u"%s : %s" % (parent.feature.name, name))
+        classname = u"%s : %s" % (parent.feature.name, name)
         tc = doc.createElement("testcase")
         tc.setAttribute("classname", classname)
-        tc.setAttribute("name", step.sentence.encode('utf-8'))
+        tc.setAttribute("name", step.sentence)
         try:
             tc.setAttribute("time", str(total_seconds((datetime.now() - step.started))))
         except AttributeError:
@@ -70,11 +74,11 @@ def enable(filename=None):
             tc.appendChild(skip)
 
         if step.failed:
-            cdata = doc.createCDATASection(step.why.traceback.encode('utf-8'))
+            cdata = doc.createCDATASection(step.why.traceback)
             failure = doc.createElement("failure")
             if hasattr(step.why, 'cause'):
-                failure.setAttribute("message", step.why.cause.encode('utf-8'))
-            failure.setAttribute("type", step.why.exception.__class__.__name__.encode('utf-8'))
+                failure.setAttribute("message", step.why.cause)
+            failure.setAttribute("type", step.why.exception.__class__.__name__)
             failure.appendChild(cdata)
             tc.appendChild(failure)
 
@@ -109,4 +113,4 @@ def enable(filename=None):
         root.setAttribute("errors", '0')
         root.setAttribute("time", '0')
         doc.appendChild(root)
-        wrt_output(output_filename, doc.toxml())
+        write_xml_doc(output_filename, doc)

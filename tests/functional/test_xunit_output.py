@@ -22,6 +22,7 @@ import lettuce
 from StringIO import StringIO
 
 from nose.tools import assert_equals, assert_true, with_setup
+from sure import expect
 from lettuce import registry
 from lettuce import Runner
 from lettuce import xunit_output
@@ -194,3 +195,22 @@ def test_xunit_output_with_background_section():
 
     assert_equals(1, len(called), "Function not called")
     xunit_output.wrt_output = old
+
+
+@with_setup(prepare_stdout, registry.clear)
+def test_xunit_xml_output_with_no_errors():
+    'Test xunit doc xml output'
+
+    called = []
+
+    def assert_correct_xml_output(filename, doc):
+        called.append(True)
+        expect(doc.toxml).when.called.doesnt.throw(UnicodeDecodeError)
+
+    old = xunit_output.write_xml_doc
+    xunit_output.write_xml_doc = assert_correct_xml_output
+    runner = Runner(feature_name('xunit_unicode_and_bytestring_mixing'), enable_xunit=True)
+    try:
+        runner.run()
+    finally:
+        xunit_output.write_xml_doc = old
