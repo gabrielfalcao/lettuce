@@ -122,8 +122,8 @@ class Command(BaseCommand):
                 migrate_south = False
                 pass
 
-            from django.test.simple import DjangoTestSuiteRunner
-            self._testrunner = DjangoTestSuiteRunner()
+            from django.test.utils import get_runner
+            self._testrunner = get_runner(settings)(interactive=False)
             self._testrunner.setup_test_environment()
             self._old_db_config = self._testrunner.setup_databases()
 
