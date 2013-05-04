@@ -104,8 +104,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         setup_test_environment()
 
-        settings.DEBUG = options.get('debug', False)
-
         verbosity = int(options.get('verbosity', 4))
         apps_to_run = tuple(options.get('apps', '').split(","))
         apps_to_avoid = tuple(options.get('avoid_apps', '').split(","))
@@ -133,6 +131,7 @@ class Command(BaseCommand):
             if migrate_south:
                call_command('migrate', verbosity=0, interactive=False,)
 
+        settings.DEBUG = options.get('debug', False)
 
         server = Server(port=options['port'])
 
