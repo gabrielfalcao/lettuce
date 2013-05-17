@@ -27,7 +27,7 @@ doctest:
 	@find documentation -name '*.md' | xargs steadymark
 
 documentation:
-	@cd docs && make html
+	@markment --theme=flat-ui -o ./_public specs
 
 clean:
 	@printf "Cleaning up files that are already in .gitignore... "
@@ -41,7 +41,7 @@ withdraw-documentation:
 
 deploy-documentation:documentation withdraw-documentation
 	@printf 'Deploying documentation to http://lettuce.it ...'
-	@cd ./docs/_build/html && tar -zcp *  | ssh gabrielfalcao@gabrielfalcao.com "tar zxp -C ./lettuce.it/public/"
+	@cd ./_public && tar -zcp *  | ssh gabrielfalcao@gabrielfalcao.com "tar zxp -C ./lettuce.it/public/"
 	@echo "DONE!"
 
 deploy: deploy-documentation

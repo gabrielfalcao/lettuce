@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="../assets/css/flat-ui.css" rel="stylesheet">
+    <link href="../assets/css/github.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">Lettuce
+          <small>Behaviour Driven Development for python</small></h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div class="sidebar-nav">
+            <ul class="share mrl">
+              <div class="btn btn-primary btn-block btn-large">
+                <h3>Sections</h3>
+              </div>
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#calling-steps-from-step-definitions">
+         calling steps from step definitions
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#running-blocks-of-steps">
+         running blocks of steps
+    </a>
+  
+    
+  
+              
+            </ul>
+          </div>
+        </div>
+        <div class="span8">
+          <h1 id="calling-steps-from-step-definitions" name="calling-steps-from-step-definitions"><a href="#calling-steps-from-step-definitions">calling steps from step definitions</a></h1>
+<p>Our tests should be as expressive as possible. However, we also want to
+re-use steps that we&#39;ve seen before. With the tools we&#39;ve used so far,
+you could end up with seriously long step definitions.</p>
+<div class="highlight"><pre name="calling-steps-from-step-definitions-example-1"><span class="n">Scenario</span><span class="o">:</span> <span class="n">Logged</span><span class="o">-</span><span class="k">in</span> <span class="n">user</span> <span class="n">does</span> <span class="n">something</span> <span class="n">cool</span><span class="o">.</span>
+  <span class="n">Given</span> <span class="n">I</span> <span class="n">go</span> <span class="n">to</span> <span class="n">the</span> <span class="n">home</span> <span class="n">page</span>
+  <span class="n">And</span> <span class="n">I</span> <span class="n">click</span> <span class="n">the</span> <span class="n">login</span> <span class="n">button</span>
+  <span class="n">And</span> <span class="n">I</span> <span class="n">fill</span> <span class="k">in</span> <span class="n">username</span><span class="o">:</span><span class="n">floppy</span> <span class="n">password</span><span class="o">:</span><span class="n">banana</span>
+  <span class="n">And</span> <span class="n">I</span> <span class="n">click</span> <span class="s2">"Login"</span>
+  <span class="n">When</span> <span class="n">I</span> <span class="n">finally</span> <span class="k">do</span> <span class="n">something</span> <span class="n">interesting</span>
+  <span class="n">Then</span> <span class="n">I</span><span class="err">'</span><span class="n">m</span> <span class="n">already</span> <span class="n">too</span> <span class="n">bored</span> <span class="n">to</span> <span class="n">care</span><span class="o">.</span>
+</pre></div>
+<p>In this case, we probably had a test case (maybe several) for which it
+was actually valuable to express how the user interacted with the login
+form. That&#39;s where we got the step definitions for our login sequence.
+When the login form isn&#39;t especially interesting any more, however,
+these steps are just noise. We&#39;d really like to be able to define
+something like this without duplicating our step definitions.</p>
+<div class="highlight"><pre name="calling-steps-from-step-definitions-example-2"><span class="n">Scenario</span><span class="o">:</span> <span class="n">Logged</span><span class="o">-</span><span class="k">in</span> <span class="n">user</span> <span class="n">does</span> <span class="n">something</span> <span class="n">cool</span><span class="o">.</span>
+  <span class="n">Given</span> <span class="n">I</span> <span class="n">am</span> <span class="n">logged</span> <span class="k">in</span>
+  <span class="n">When</span> <span class="n">I</span> <span class="k">do</span> <span class="n">something</span> <span class="n">interesting</span>
+  <span class="n">Then</span> <span class="n">The</span> <span class="n">world</span> <span class="n">becomes</span> <span class="n">a</span> <span class="n">better</span> <span class="n">place</span>
+</pre></div>
+<p>Lettuce affords you the ability to write such a &ldquo;step of steps&rdquo; with a
+set of helpers matching each of the grammar terms <code>Given</code>, <code>When</code> and
+<code>Then</code>. You could accomplish the above like so.</p>
+<div class="highlight"><pre name="calling-steps-from-step-definitions-example-3"><span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I am logged in'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">is_logged_in</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">step</span><span class="p">.</span><span class="n">given</span><span class="p">(</span><span class="s">'I go to the home page'</span><span class="p">)</span>
+    <span class="n">step</span><span class="p">.</span><span class="n">given</span><span class="p">(</span><span class="s">'I click the login button'</span><span class="p">)</span>
+    # <span class="p">...</span> <span class="n">and</span> <span class="n">so</span> <span class="n">on</span><span class="p">.</span>
+</pre></div><h2 id="running-blocks-of-steps" name="running-blocks-of-steps"><a href="#running-blocks-of-steps">running blocks of steps</a></h2>
+<p>It is sometimes even desirable to run blocks of steps, copy-and-pasted
+directly from Feature specifications. The <code>Step.behave_as</code> method lets
+you do this, and you can use <code>str.format</code> to fill in parameters
+dynamically. For example, we can write the above step definition like
+so:</p>
+<div class="highlight"><pre name="calling-steps-from-step-definitions-example-4"><span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I am logged in'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">is_logged_in</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">step</span><span class="p">.</span><span class="n">behave_as</span><span class="p">(</span>"""
+        <span class="n">Given</span> <span class="n">I</span> <span class="n">go</span> <span class="n">to</span> <span class="n">the</span> <span class="n">home</span> <span class="n">page</span>
+          <span class="n">And</span> <span class="n">I</span> <span class="n">click</span> <span class="n">the</span> <span class="n">login</span> <span class="n">button</span>
+          <span class="n">And</span> <span class="n">I</span> <span class="n">fill</span> <span class="n">in</span> <span class="n">username</span><span class="p">:{</span><span class="n">user</span><span class="p">}</span> <span class="n">password</span><span class="p">:{</span><span class="n">pass</span><span class="p">}</span>
+          <span class="n">And</span> <span class="n">I</span> <span class="n">click</span> "<span class="n">Login</span>"
+    """<span class="p">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="p">=</span><span class="s">'floppy'</span><span class="p">,</span> <span class="n">pass</span><span class="p">=</span><span class="s">'banana'</span><span class="p">))</span>
+</pre></div>
+<p>This can be combined with step argument capture for step definitions
+that are both expressive and DRY.</p>
+
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="span7">
+            <h3 class="footer-title">Lettuce</h3>
+            <p>Lettuce is maintained by gabrielfalcao. <br />
+              This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+            </p>
+            <p>
+              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
+              <a class="footer-brand" href="http://designmodo.com" target="_blank">
+                <img src="../assets/images/footer/logo.png" alt="Designmodo.com">
+              </a>
+            </p>
+          </div> <!-- /span8 -->
+
+          <div class="span5">
+            <div class="footer-banner">
+              <h3 class="footer-title">Table of contents</h3>
+              <ul>
+                 
+                <li>
+                  <a href="../contents.html">
+                        contents.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/documentation.html">
+                        documentation.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install-debian-squeeze.html">
+                        install-debian-squeeze.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/testing.html">
+                        testing.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/overview.html">
+                        overview.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/wtf.html">
+                        wtf.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/django-lxml.html">
+                        django-lxml.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/nose.html">
+                        nose.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/cli.html">
+                        cli.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/features.html">
+                        features.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/languages.html">
+                        languages.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/terrain.html">
+                        terrain.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./django.html">
+                        django.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./multiline.html">
+                        multiline.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./scenario-outlines.html">
+                        scenario-outlines.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./simple.html">
+                        simple.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./steps-from-step-definitions.html">
+                        steps-from-step-definitions.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./tables.html">
+                        tables.md
+                  </a>
+                </li>
+                 
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

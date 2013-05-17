@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="../assets/css/flat-ui.css" rel="stylesheet">
+    <link href="../assets/css/github.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">Lettuce
+          <small>Behaviour Driven Development for python</small></h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div class="sidebar-nav">
+            <ul class="share mrl">
+              <div class="btn btn-primary btn-block btn-large">
+                <h3>Sections</h3>
+              </div>
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#the--quot-terrain-quot-">
+         the &quot;terrain&quot;
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#terrain-py">
+         terrain.py
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#in-practice">
+         in practice
+    </a>
+  
+    
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#world">
+         world
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#in-practice">
+         in practice
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#world-absorb">
+         world.absorb
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#world-spew">
+         world.spew
+    </a>
+  
+    
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#hooks">
+         hooks
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-before-all">
+         @before.all
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-after-all">
+         @after.all
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-before-each_feature">
+         @before.each_feature
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-after-each_feature">
+         @after.each_feature
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-before-each_scenario">
+         @before.each_scenario
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-after-each_scenario">
+         @after.each_scenario
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-before-each_step">
+         @before.each_step
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-after-each_step">
+         @after.each_step
+    </a>
+  
+    
+  
+    
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#django-specific-hooks">
+         django-specific hooks
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-before-harvest">
+         @before.harvest
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-after-harvest">
+         @after.harvest
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-before-each_app">
+         @before.each_app
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-after-each_app">
+         @after.each_app
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-before-runserver-and--after-runserver">
+         @before.runserver and @after.runserver
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-before-handle_request-and--after-handle_request">
+         @before.handle_request and @after.handle_request
+    </a>
+  
+    
+  
+    
+  
+              
+            </ul>
+          </div>
+        </div>
+        <div class="span8">
+          <h1 id="the--quot-terrain-quot-" name="the--quot-terrain-quot-"><a href="#the--quot-terrain-quot-">the &ldquo;terrain&rdquo;</a></h1>
+<p>Terrain is a &ldquo;pun&rdquo; with lettuce and its &ldquo;living place&rdquo;, its about setup
+and teardown, and general hacking on your lettuce tests.</p>
+<h2 id="terrain-py" name="terrain-py"><a href="#terrain-py">terrain.py</a></h2>
+<p>By convention lettuce tries do load a file called <code>terrain.py</code> located
+at the current directory.</p>
+
+<p>Think at this file as a global setup place, there you can setup global
+hooks, and put things into lettuce &ldquo;world&rdquo;.</p>
+<h3 id="in-practice" name="in-practice"><a href="#in-practice">in practice</a></h3>
+<p>Try out this file layout:</p>
+<div class="highlight"><pre name="the--quot-terrain-quot--example-1"><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">projects</span><span class="o">/</span><span class="n">some</span><span class="o">-</span><span class="n">project</span>
+       <span class="o">|</span> <span class="n">features</span>
+            <span class="o">-</span> <span class="n">the</span><span class="o">-</span><span class="n">name</span><span class="o">-</span><span class="n">of</span><span class="o">-</span><span class="n">my</span><span class="o">-</span><span class="n">test</span><span class="p">.</span><span class="n">feature</span>
+            <span class="o">-</span> <span class="n">the</span><span class="o">-</span><span class="n">file</span><span class="o">-</span><span class="n">which</span><span class="o">-</span><span class="n">holds</span><span class="o">-</span><span class="n">step</span><span class="o">-</span><span class="n">definitions</span><span class="p">.</span><span class="n">py</span>
+            <span class="o">-</span> <span class="n">terrain</span><span class="p">.</span><span class="n">py</span>
+</pre></div>
+<p>Then add some setup at <code>terrain.py</code> and run lettuce</p>
+<div class="highlight"><pre name="the--quot-terrain-quot--example-2"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">some</span><span class="o">-</span><span class="n">project</span>$ <span class="n">lettuce</span>
+</pre></div>
+<p>And notice <code>terrain.py</code> will be loaded before anything</p>
+<h2 id="world" name="world"><a href="#world">world</a></h2>
+<p>For the sake of turning easier and funnier to write tests, lettuce
+&ldquo;violates&rdquo; some principles of good design in python, such as avoiding
+implicity and using global stuff.</p>
+
+<p>The &ldquo;world&rdquo; concept of lettuce is mostly about &ldquo;global stuff&rdquo;.</p>
+<h3 id="in-practice" name="in-practice"><a href="#in-practice">in practice</a></h3>
+<p>Imagine a file located somewhere that will be imported by your
+application before lettuce start running tests:</p>
+
+<p>So that, within some step file you could use things previously set on
+<code>world</code>:</p>
+
+<p>And the feature could have something like:</p>
+<div class="highlight"><pre name="the--quot-terrain-quot--example-3"><span class="n">Feature</span><span class="o">:</span> <span class="n">test</span> <span class="n">lettuce</span><span class="err">'</span><span class="n">s</span> <span class="n">world</span>
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">check</span> <span class="n">variable</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">exemplify</span> <span class="s2">"world"</span> <span class="n">by</span> <span class="n">seeing</span> <span class="n">that</span> <span class="n">some</span> <span class="n">variable</span> <span class="n">contains</span> <span class="s2">"yay!"</span>
+</pre></div><h3 id="world-absorb" name="world-absorb"><a href="#world-absorb">world.absorb</a></h3>
+<p>It can be really useful to put functions and/or classes in
+<strong>lettuce.world</strong></p>
+
+<p>For example:</p>
+
+<p>But as you can notice, as your project grows, there can be a lot of
+repetitive lines, not DRY at all :(</p>
+
+<p>In order to avoid that, lettuce provides a &ldquo;absorb&rdquo; decorator that lives
+within &ldquo;world&rdquo;</p>
+
+<p>Let&#39;s see it in action:</p>
+
+<p>You can also use it with classes:</p>
+
+<p>And even with lambdas, <strong>but in this case you need to name it</strong></p>
+<h3 id="world-spew" name="world-spew"><a href="#world-spew">world.spew</a></h3>
+<p>Well, if you read the topic above, you may be guessing: &ldquo;if I keep
+stashing things in lettuce.world, it may bloat it sometime, or confuse
+member names along my steps, or hooks.</p>
+
+<p>For those cases after <strong>&quot;absorbing&rdquo;</strong> something, world can also
+<strong>&ldquo;spew&rdquo;</strong> it.</p>
+<h2 id="hooks" name="hooks"><a href="#hooks">hooks</a></h2>
+<p>Lettuce has hooks that are called sequentially before and after each
+action</p>
+
+<p>Presented as python decorators, it can be used to take any actions you
+find useful.</p>
+
+<p>For example, you can set a browser driver at :ref:lettuce-world, and
+close the connection after all, populate database with test mass or
+anything you want, for example</p>
+
+<p>Let&#39;s see it from outside in</p>
+<h3 id="-before-all" name="-before-all"><a href="#-before-all">@before.all</a></h3>
+<p>This hook is ran before lettuce look for and load feature files</p>
+
+<p>The decorated function takes <strong>NO</strong> parameters</p>
+<h3 id="-after-all" name="-after-all"><a href="#-after-all">@after.all</a></h3>
+<p>This hook is ran after lettuce run all features, scenarios and steps</p>
+
+<p>The decorated function takes a :ref:total-result as parameter, so
+that you can use the result statistics somehow</p>
+<h3 id="-before-each_feature" name="-before-each_feature"><a href="#-before-each_feature">@before.each_feature</a></h3>
+<p>This hook is ran before lettuce run each feature</p>
+
+<p>The decorated function takes a :ref:feature-class as parameter, so
+that you can use it to fetch scenarios and steps inside.</p>
+<h3 id="-after-each_feature" name="-after-each_feature"><a href="#-after-each_feature">@after.each_feature</a></h3>
+<p>This hooks behaves in the same way @before.each_feature does, except by
+the fact that its ran <em>after</em> lettuce run the feature.</p>
+<h3 id="-before-each_scenario" name="-before-each_scenario"><a href="#-before-each_scenario">@before.each_scenario</a></h3>
+<p>This hook is ran before lettuce run each scenario</p>
+
+<p>The decorated function takes a :ref:scenario-class as parameter, so
+that you can use it to fetch steps inside.</p>
+<h3 id="-after-each_scenario" name="-after-each_scenario"><a href="#-after-each_scenario">@after.each_scenario</a></h3>
+<p>This hooks behaves in the same way @before.each_scenario does, except
+by the fact that its ran <em>after</em> lettuce run the scenario.</p>
+<h3 id="-before-each_step" name="-before-each_step"><a href="#-before-each_step">@before.each_step</a></h3>
+<p>This hook is ran before lettuce run each step</p>
+
+<p>The decorated function takes a :ref:step-class as parameter, so that
+you can use it to fetch tables and so.</p>
+<h4 id="-after-each_step" name="-after-each_step"><a href="#-after-each_step">@after.each_step</a></h4>
+<p>This hooks behaves in the same way @before.each_step does, except by
+the fact that its ran <em>after</em> lettuce run the step.</p>
+<h2 id="django-specific-hooks" name="django-specific-hooks"><a href="#django-specific-hooks">django-specific hooks</a></h2>
+<p>Since lettuce officially supports <a href="http://djangoproject.com/" title="None">Django</a>,
+there are a few specific hooks that help on setting up your test suite
+on it.</p>
+<h3 id="-before-harvest" name="-before-harvest"><a href="#-before-harvest">@before.harvest</a></h3>
+<p>This hook is ran before lettuce start harvesting your Django tests. It
+can be very useful for setting up browser drivers (such as selenium),
+before all tests start to run on Django.</p>
+
+<p>The decorated function takes a dict with the local variables within the
+<code>harvest</code> management command.</p>
+<h3 id="-after-harvest" name="-after-harvest"><a href="#-after-harvest">@after.harvest</a></h3>
+<p>This hook is ran right after lettuce finish harvesting your Django
+tests. It can be very useful for shutting down previously started
+browser drivers (see the example above).</p>
+
+<p>The decorated function takes a list of :ref:total-result objects.</p>
+<h3 id="-before-each_app" name="-before-each_app"><a href="#-before-each_app">@before.each_app</a></h3>
+<p>This hook is ran before lettuce run each
+<a href="http://djangoproject.com/" title="None">Django</a> app.</p>
+
+<p>The decorated function takes the python module that corresponds to the
+current app.</p>
+<h3 id="-after-each_app" name="-after-each_app"><a href="#-after-each_app">@after.each_app</a></h3>
+<p>This hook is ran after lettuce run each
+<a href="http://djangoproject.com/" title="None">Django</a> app.</p>
+
+<p>The decorated function takes two arguments:</p>
+
+<ul>
+<li>  the python module that corresponds to the current app.</li>
+<li>  a :ref:total-result as parameter, so that you can use the result
+statistics somehow</li>
+</ul>
+<h3 id="-before-runserver-and--after-runserver" name="-before-runserver-and--after-runserver"><a href="#-before-runserver-and--after-runserver">@before.runserver and @after.runserver</a></h3>
+<p>These hooks are ran right before, and after lettuce starts up the
+built-in http server.</p>
+
+<p>The decorated function takes a <code>lettuce.django.server.ThreadedServer</code>
+object.</p>
+<h3 id="-before-handle_request-and--after-handle_request" name="-before-handle_request-and--after-handle_request"><a href="#-before-handle_request-and--after-handle_request">@before.handle_request and @after.handle_request</a></h3>
+<p>These hooks are ran right before, and after lettuce&#39;s built-in HTTP
+server responds to a request.</p>
+
+<p>Both decorated functions takes these two arguments:</p>
+
+<ul>
+<li>  a <code>django.core.servers.basehttp.WSGIServer</code> object.</li>
+<li>  a <code>lettuce.django.server.ThreadedServer</code> object.</li>
+</ul>
+
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="span7">
+            <h3 class="footer-title">Lettuce</h3>
+            <p>Lettuce is maintained by gabrielfalcao. <br />
+              This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+            </p>
+            <p>
+              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
+              <a class="footer-brand" href="http://designmodo.com" target="_blank">
+                <img src="../assets/images/footer/logo.png" alt="Designmodo.com">
+              </a>
+            </p>
+          </div> <!-- /span8 -->
+
+          <div class="span5">
+            <div class="footer-banner">
+              <h3 class="footer-title">Table of contents</h3>
+              <ul>
+                 
+                <li>
+                  <a href="../contents.html">
+                        contents.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/documentation.html">
+                        documentation.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install-debian-squeeze.html">
+                        install-debian-squeeze.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/testing.html">
+                        testing.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/overview.html">
+                        overview.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/wtf.html">
+                        wtf.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/django-lxml.html">
+                        django-lxml.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/nose.html">
+                        nose.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./cli.html">
+                        cli.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./features.html">
+                        features.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./languages.html">
+                        languages.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./terrain.html">
+                        terrain.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/django.html">
+                        django.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/multiline.html">
+                        multiline.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/scenario-outlines.html">
+                        scenario-outlines.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/simple.html">
+                        simple.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/steps-from-step-definitions.html">
+                        steps-from-step-definitions.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/tables.html">
+                        tables.md
+                  </a>
+                </li>
+                 
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

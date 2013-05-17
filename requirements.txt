@@ -14,3 +14,4 @@ nose==1.1.2
 sure==1.0.6
 tornado==2.3
 tox==1.4.2
+markment==0.1.6

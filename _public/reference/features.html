@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="../assets/css/flat-ui.css" rel="stylesheet">
+    <link href="../assets/css/github.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">Lettuce
+          <small>Behaviour Driven Development for python</small></h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div class="sidebar-nav">
+            <ul class="share mrl">
+              <div class="btn btn-primary btn-block btn-large">
+                <h3>Sections</h3>
+              </div>
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#features--scenarios-and-steps-reference">
+         features, scenarios and steps reference
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#feature">
+         Feature
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#feature-name">
+         Feature.name
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#feature-scenarios">
+         Feature.scenarios
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#feature-described_at">
+         Feature.described_at
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#feature-max_length">
+         Feature.max_length
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#feature-get_head">
+         Feature.get_head
+    </a>
+  
+    
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#totalresult">
+         TotalResult
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#totalresult-features_ran">
+         TotalResult.features_ran
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#totalresult-features_passed">
+         TotalResult.features_passed
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#totalresult-scenarios_ran">
+         TotalResult.scenarios_ran
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#totalresult-scenarios_passed">
+         TotalResult.scenarios_passed
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#totalresult-steps">
+         TotalResult.steps
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#totalresult-proposed_definitions">
+         TotalResult.proposed_definitions
+    </a>
+  
+    
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#scenario">
+         Scenario
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#scenario-steps">
+         Scenario.steps
+    </a>
+  
+    
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#step">
+         Step
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#step-sentence">
+         Step.sentence
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#step-definition">
+         step definition
+    </a>
+  
+    
+  
+    
+  
+              
+            </ul>
+          </div>
+        </div>
+        <div class="span8">
+          <h1 id="features--scenarios-and-steps-reference" name="features--scenarios-and-steps-reference"><a href="#features--scenarios-and-steps-reference">features, scenarios and steps reference</a></h1>
+<p>Features, scenarios and steps are python objects within lettuce&#39;s
+feature engine.</p>
+
+<p>Here you will find out very &ldquo;hacky&rdquo; details about those objects. If you
+stumbled here looking for a introduction, it might be a good idea to
+read :ref:the feature tutorial &lt;tutorial-simple&gt; for a
+introduction.</p>
+
+<p>In order to exemplify the usage of attributes and methods below, let&#39;s
+consider that there is a feature in a file called <code>some.feature</code></p>
+<div class="highlight"><pre name="features--scenarios-and-steps-reference-example-1"><span class="c"># language: en</span>
+<span class="c"># just a comment</span>
+
+<span class="c"># another one</span>
+<span class="n">Feature</span><span class="p">:</span> <span class="n">some</span> <span class="n">feature</span>
+  <span class="n">Here</span> <span class="n">comes</span>
+  <span class="n">The</span> <span class="n">feature</span>
+  <span class="n">Description</span>
+
+  <span class="n">Scenario</span><span class="p">:</span> <span class="k">try</span> <span class="n">out</span> <span class="n">something</span>
+    <span class="n">Given</span> <span class="no">I</span> <span class="n">show</span> <span class="n">lettuce</span> <span class="n">running</span>
+    <span class="n">Then</span> <span class="no">I</span> <span class="n">should</span> <span class="n">be</span> <span class="n">happy</span>
+</pre></div><h2 id="feature" name="feature"><a href="#feature">Feature</a></h2><h3 id="feature-name" name="feature-name"><a href="#feature-name">Feature.name</a></h3>
+<p>A string containing the name of the feature</p>
+<div class="highlight"><pre name="features--scenarios-and-steps-reference-example-2"><span class="n">feature</span><span class="p">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">'some feature'</span>
+</pre></div><h3 id="feature-scenarios" name="feature-scenarios"><a href="#feature-scenarios">Feature.scenarios</a></h3>
+<p>A list of scenario objects</p>
+
+<p>The attribute <code>scenarios</code> could be used as follows</p>
+<div class="highlight"><pre name="features--scenarios-and-steps-reference-example-3"><span class="n">feature</span><span class="p">.</span><span class="n">scenarios</span><span class="p">[</span>0<span class="p">].</span><span class="n">name</span> <span class="o">==</span> <span class="s">'try out something'</span>
+</pre></div><h3 id="feature-described_at" name="feature-described_at"><a href="#feature-described_at">Feature.described_at</a></h3>
+<p>A FeatureDescription object, has the file and line which the feature was
+described. Lettuce uses it to output those metadata.</p>
+
+<p>The attribute <code>described_at</code> could be used as follows</p>
+<div class="highlight"><pre name="features--scenarios-and-steps-reference-example-4"><span class="c"># the line in which the feature started</span>
+<span class="n">feature</span><span class="p">.</span><span class="n">described_at</span><span class="p">.</span><span class="nb">line</span> <span class="o">==</span> 5
+
+<span class="c"># the filename path</span>
+<span class="s">'some.feature'</span> <span class="n">in</span> <span class="n">feature</span><span class="p">.</span><span class="n">described_at</span><span class="p">.</span><span class="n">file</span>
+
+<span class="c"># a tuple with the lines that contains the feature description</span>
+<span class="n">feature</span><span class="p">.</span><span class="n">described_at</span><span class="p">.</span><span class="n">description_at</span> <span class="o">==</span> <span class="p">(</span>6<span class="p">,</span> 7<span class="p">,</span> 8<span class="p">)</span>
+</pre></div><h3 id="feature-max_length" name="feature-max_length"><a href="#feature-max_length">Feature.max_length</a></h3>
+<p>A property that calculates the maximum length of all lines that built
+the feature.</p>
+
+<p>Mostly used by shell output to find out where to print the feature
+description.</p>
+
+<p>Example:</p>
+<div class="highlight"><pre name="features--scenarios-and-steps-reference-example-5"><span class="n">feature</span><span class="p">.</span><span class="n">max_length</span> <span class="o">==</span> 21
+</pre></div><h3 id="feature-get_head" name="feature-get_head"><a href="#feature-get_head">Feature.get_head</a></h3>
+<p>Does represent the feature with its first representation in current
+language followed by a colon and the feature name.</p>
+
+<p>Example:</p>
+<div class="highlight"><pre name="features--scenarios-and-steps-reference-example-6"><span class="n">feature</span><span class="p">.</span><span class="n">get_head</span><span class="p">()</span> <span class="o">==</span> <span class="s">'Feature: some feature'</span>
+</pre></div>
+<p>But if the same feature would written in Brazilian Portuguese, for
+example:</p>
+<div class="highlight"><pre name="features--scenarios-and-steps-reference-example-7"><span class="c"># language: pt-br</span>
+<span class="c"># apenas um coment&#225;rio</span>
+
+<span class="c"># e outro</span>
+<span class="n">Funcionalidade</span><span class="p">:</span> <span class="n">alguma</span> <span class="n">funcionalidade</span>
+  <span class="n">Aqui</span> <span class="n">vem</span>
+  <span class="n">a</span> <span class="n">descri</span>&#231;&#227;<span class="n">o</span>
+  <span class="n">da</span> <span class="n">funcionalidade</span>
+
+  <span class="n">Cen</span>&#225;<span class="n">rio</span><span class="p">:</span> <span class="p">...</span>
+    <span class="p">...</span>
+</pre></div>
+<p>Then, <code>Feature.get_head()</code> would give:</p>
+<div class="highlight"><pre name="features--scenarios-and-steps-reference-example-8"><span class="n">feature</span><span class="p">.</span><span class="n">get_head</span><span class="p">()</span> <span class="o">==</span> <span class="s">'Funcionalidade: alguma funcionalidade'</span>
+</pre></div><h2 id="totalresult" name="totalresult"><a href="#totalresult">TotalResult</a></h2><h3 id="totalresult-features_ran" name="totalresult-features_ran"><a href="#totalresult-features_ran">TotalResult.features_ran</a></h3>
+<p>Integer, the total of features ran</p>
+<h3 id="totalresult-features_passed" name="totalresult-features_passed"><a href="#totalresult-features_passed">TotalResult.features_passed</a></h3>
+<p>Integer, the total of features passed</p>
+<h3 id="totalresult-scenarios_ran" name="totalresult-scenarios_ran"><a href="#totalresult-scenarios_ran">TotalResult.scenarios_ran</a></h3>
+<p>Integer, the total of scenarios ran</p>
+<h3 id="totalresult-scenarios_passed" name="totalresult-scenarios_passed"><a href="#totalresult-scenarios_passed">TotalResult.scenarios_passed</a></h3>
+<p>Integer, the total of scenarios passed</p>
+<h3 id="totalresult-steps" name="totalresult-steps"><a href="#totalresult-steps">TotalResult.steps</a></h3>
+<p>Integer, the number of steps that were supposed to run</p>
+<h3 id="totalresult-proposed_definitions" name="totalresult-proposed_definitions"><a href="#totalresult-proposed_definitions">TotalResult.proposed_definitions</a></h3>
+<p>A list of :ref:step-class that have no :ref:step-definition</p>
+<h2 id="scenario" name="scenario"><a href="#scenario">Scenario</a></h2><h3 id="scenario-steps" name="scenario-steps"><a href="#scenario-steps">Scenario.steps</a></h3>
+<p>A list of scenario objects</p>
+
+<p>The attribute <code>scenarios</code> could be used as follows</p>
+<div class="highlight"><pre name="features--scenarios-and-steps-reference-example-9"><span class="n">scenario</span><span class="p">.</span><span class="n">steps</span><span class="p">[</span>0<span class="p">].</span><span class="n">sentence</span> <span class="o">==</span> <span class="s">'try out something'</span>
+</pre></div><h2 id="step" name="step"><a href="#step">Step</a></h2><h3 id="step-sentence" name="step-sentence"><a href="#step-sentence">Step.sentence</a></h3>
+<p>The string that represents the step</p>
+<div class="highlight"><pre name="features--scenarios-and-steps-reference-example-10"><span class="n">step</span><span class="p">.</span><span class="n">sentence</span> <span class="o">==</span> <span class="s">'Given I show lettuce running'</span>
+</pre></div><h3 id="step-definition" name="step-definition"><a href="#step-definition">step definition</a></h3>
+<p>A decorator that can be used on any python function, takes a regex
+string as parameter, so that the function can me matched against steps.</p>
+<div class="highlight"><pre name="features--scenarios-and-steps-reference-example-11"><span class="n">from</span> <span class="n">lettuce</span> <span class="n">import</span> <span class="n">step</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I am (happy|sad)'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">show_lettuce_running_here</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s">'happy'</span><span class="p">:</span>
+        <span class="k">return</span> # <span class="n">everything</span> <span class="n">is</span> <span class="n">fine</span>!
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">assert</span> <span class="n">False</span><span class="p">,</span> <span class="s">'you should be happy, dude!'</span>
+</pre></div>
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="span7">
+            <h3 class="footer-title">Lettuce</h3>
+            <p>Lettuce is maintained by gabrielfalcao. <br />
+              This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+            </p>
+            <p>
+              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
+              <a class="footer-brand" href="http://designmodo.com" target="_blank">
+                <img src="../assets/images/footer/logo.png" alt="Designmodo.com">
+              </a>
+            </p>
+          </div> <!-- /span8 -->
+
+          <div class="span5">
+            <div class="footer-banner">
+              <h3 class="footer-title">Table of contents</h3>
+              <ul>
+                 
+                <li>
+                  <a href="../contents.html">
+                        contents.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/documentation.html">
+                        documentation.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install-debian-squeeze.html">
+                        install-debian-squeeze.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/testing.html">
+                        testing.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/overview.html">
+                        overview.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/wtf.html">
+                        wtf.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/django-lxml.html">
+                        django-lxml.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/nose.html">
+                        nose.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./cli.html">
+                        cli.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./features.html">
+                        features.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./languages.html">
+                        languages.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./terrain.html">
+                        terrain.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/django.html">
+                        django.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/multiline.html">
+                        multiline.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/scenario-outlines.html">
+                        scenario-outlines.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/simple.html">
+                        simple.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/steps-from-step-definitions.html">
+                        steps-from-step-definitions.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/tables.html">
+                        tables.md
+                  </a>
+                </li>
+                 
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

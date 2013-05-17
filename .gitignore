@@ -11,3 +11,4 @@ dist/
 tests/integration/django/grocery/grocery-db.sqlite
 .tox
 documentation/_site/
+./_public

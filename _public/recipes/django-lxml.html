@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="../assets/css/flat-ui.css" rel="stylesheet">
+    <link href="../assets/css/github.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">Lettuce
+          <small>Behaviour Driven Development for python</small></h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div class="sidebar-nav">
+            <ul class="share mrl">
+              <div class="btn btn-primary btn-block btn-large">
+                <h3>Sections</h3>
+              </div>
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#web-development-fun-with-lettuce-and-django">
+         Web development fun with Lettuce and Django
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#getting-started">
+         Getting started
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#1--install-the-lettuce-django-app">
+         1. install the lettuce django app
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#2--create-the-feature-directories">
+         2. create the feature directories
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#3--write-your-first-feature">
+         3. write your first feature
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#4--run-the-tests">
+         4. run the tests
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#5--specifying-feature-files">
+         5. specifying feature files
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#6--grab-actual-example-code">
+         6. grab actual example code
+    </a>
+  
+    
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#technical-details">
+         Technical details
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#red-tape-less-builtin-server">
+         red-tape-less builtin server
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#figure-out-django-urls">
+         figure out django urls
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#what-does--code-django_url--code--do----">
+         what does <code>django_url</code> do ?!?
+    </a>
+  
+    
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#terrain-also-available-in-django-projects">
+         terrain also available in django projects
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#running-without-http-server">
+         Running without HTTP server
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#running-the-http-server-in-other-port-than-8000">
+         running the HTTP server in other port than 8000
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#running-the-http-server-with-settings-debug-true">
+         running the HTTP server with settings.DEBUG=True
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#running-only-the-specified-scenarios">
+         running only the specified scenarios
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#to-run-or-not-to-run--that-is-the-question-">
+         to run or not to run? That is the question!
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#running-tests-from-just-certain-apps">
+         running tests from just certain apps
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#running-tests-from-all-apps--except-by-some">
+         running tests from all apps, except by some
+    </a>
+  
+    
+  
+    
+  
+    
+  
+              
+            </ul>
+          </div>
+        </div>
+        <div class="span8">
+          <h1 id="web-development-fun-with-lettuce-and-django" name="web-development-fun-with-lettuce-and-django"><a href="#web-development-fun-with-lettuce-and-django">Web development fun with Lettuce and Django</a></h1>
+<p><a href="http://djangoproject.com" title="None">Django</a> is a awesome web framework, very
+mature, aims for simplicity and the best of all: it&#39;s fun to use it.</p>
+
+<p>To make it even more fun, lettuce has built-in support for Django.</p>
+<h2 id="getting-started" name="getting-started"><a href="#getting-started">Getting started</a></h2><h3 id="1--install-the-lettuce-django-app" name="1--install-the-lettuce-django-app"><a href="#1--install-the-lettuce-django-app">1. install the lettuce django app</a></h3>
+<p>Pick up any Django project, and add <code>lettuce.django</code> in its
+<code>settings.py</code> configuration file:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-1"><span class="n">INSTALLED_APPS</span> <span class="p">=</span> <span class="p">(</span>
+    <span class="s">'django.contrib.auth'</span><span class="p">,</span>
+    <span class="s">'django.contrib.admin'</span><span class="p">,</span>
+
+    # <span class="p">...</span> <span class="n">other</span> <span class="n">apps</span> <span class="n">here</span> <span class="p">...</span>
+    <span class="s">'my_app'</span><span class="p">,</span>
+    <span class="s">'foobar'</span><span class="p">,</span>
+    <span class="s">'another_app'</span><span class="p">,</span>
+    <span class="s">'lettuce.django'</span><span class="p">,</span> # <span class="n">this</span> <span class="n">guy</span> <span class="n">will</span> <span class="n">do</span> <span class="n">the</span> <span class="n">job</span> <span class="p">:)</span>
+<span class="p">)</span>
+</pre></div>
+<p>Considering the configuration above, let&#39;s say we want to write tests
+for the <code>my_app</code> django application.</p>
+<h3 id="2--create-the-feature-directories" name="2--create-the-feature-directories"><a href="#2--create-the-feature-directories">2. create the feature directories</a></h3>
+<p>Lettuce will look for a <code>features</code> folder inside every installed app:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-2"><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">projects</span><span class="o">/</span><span class="n">djangoproject</span>
+     <span class="o">|</span> <span class="n">settings</span><span class="p">.</span><span class="n">py</span>
+     <span class="o">|</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span>
+     <span class="o">|</span> <span class="n">urls</span><span class="p">.</span><span class="n">py</span>
+     <span class="o">|</span> <span class="n">my_app</span>
+           <span class="o">|</span> <span class="n">features</span>
+                <span class="o">-</span> <span class="n">index</span><span class="p">.</span><span class="n">feature</span>
+                <span class="o">-</span> <span class="n">index</span><span class="p">.</span><span class="n">py</span>
+     <span class="o">|</span> <span class="n">foobar</span>
+           <span class="o">|</span> <span class="n">features</span>
+                <span class="o">-</span> <span class="n">carrots</span><span class="p">.</span><span class="n">feature</span>
+                <span class="o">-</span> <span class="n">foobar</span><span class="o">-</span><span class="n">steps</span><span class="p">.</span><span class="n">py</span>
+     <span class="o">|</span> <span class="n">another_app</span>
+           <span class="o">|</span> <span class="n">features</span>
+                <span class="o">-</span> <span class="n">first</span><span class="p">.</span><span class="n">feature</span>
+                <span class="o">-</span> <span class="n">second</span><span class="p">.</span><span class="n">feature</span>
+                <span class="o">-</span> <span class="n">many_steps</span><span class="p">.</span><span class="n">py</span>
+</pre></div><h3 id="3--write-your-first-feature" name="3--write-your-first-feature"><a href="#3--write-your-first-feature">3. write your first feature</a></h3>
+<p><code>@index.feature</code>:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-3"><span class="n">Feature</span><span class="o">:</span> <span class="n">Rocking</span> <span class="k">with</span> <span class="n">lettuce</span> <span class="n">and</span> <span class="n">django</span>
+
+    <span class="n">Scenario</span><span class="o">:</span> <span class="n">Simple</span> <span class="n">Hello</span> <span class="n">World</span>
+        <span class="n">Given</span> <span class="n">I</span> <span class="n">access</span> <span class="n">the</span> <span class="n">url</span> <span class="s2">"/"</span>
+        <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">header</span> <span class="s2">"Hello World"</span>
+
+    <span class="n">Scenario</span><span class="o">:</span> <span class="n">Hello</span> <span class="o">+</span> <span class="n">capitalized</span> <span class="n">name</span>
+        <span class="n">Given</span> <span class="n">I</span> <span class="n">access</span> <span class="n">the</span> <span class="n">url</span> <span class="s2">"/some-name"</span>
+        <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">header</span> <span class="s2">"Hello Some Name"</span>
+</pre></div>
+<p><code>@index-steps.py</code>:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-4"><span class="n">from</span> <span class="n">lettuce</span> <span class="n">import</span> <span class="o">*</span>
+<span class="n">from</span> <span class="n">lxml</span> <span class="n">import</span> <span class="n">html</span>
+<span class="n">from</span> <span class="n">django</span><span class="p">.</span><span class="n">test</span><span class="p">.</span><span class="n">client</span> <span class="n">import</span> <span class="n">Client</span>
+<span class="n">from</span> <span class="n">nose</span><span class="p">.</span><span class="n">tools</span> <span class="n">import</span> <span class="n">assert_equals</span>
+
+<span class="p">@</span><span class="n">before</span><span class="p">.</span><span class="n">all</span>
+<span class="n">def</span> <span class="n">set_browser</span><span class="p">():</span>
+    <span class="n">world</span><span class="p">.</span><span class="n">browser</span> <span class="p">=</span> <span class="n">Client</span><span class="p">()</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="n">r</span><span class="o">'</span><span class="n">I</span> <span class="n">access</span> <span class="n">the</span> <span class="n">url</span> "<span class="p">(</span><span class="o">.*</span><span class="p">)</span>"<span class="s">')</span>
+<span class="s">def access_url(step, url):</span>
+<span class="s">    response = world.browser.get(url)</span>
+<span class="s">    world.dom = html.fromstring(response.content)</span>
+
+<span class="s">@step(r'</span><span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">header</span> "<span class="p">(</span><span class="o">.*</span><span class="p">)</span>"<span class="s">')</span>
+<span class="s">def see_header(step, text):</span>
+<span class="s">    header = world.dom.cssselect('</span><span class="n">h1</span><span class="o">'</span><span class="p">)[</span>0<span class="p">]</span>
+    <span class="n">assert</span> <span class="n">header</span><span class="p">.</span><span class="n">text</span> <span class="o">==</span> <span class="n">text</span>
+</pre></div><h3 id="4--run-the-tests" name="4--run-the-tests"><a href="#4--run-the-tests">4. run the tests</a></h3>
+<p>Once you install the <code>lettuce.django</code> app, the command <code>harvest</code> will be
+available:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-5"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~</span><span class="n">projects</span><span class="o">/</span><span class="n">djangoproject</span> $ <span class="n">python</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span> <span class="n">harvest</span>
+</pre></div>
+<p>The <code>harvest</code> command executes the
+<code>django.test.utils.setup_test_environment</code> function before it starts up
+the Django server. One side-effect is that the server will not send out
+any emails, because it configures Django to use the
+<a href="https://docs.djangoproject.com/en/dev/topics/email/#in-memory-backend" title="None">locmem</a>
+in-memory email backend.</p>
+<h3 id="5--specifying-feature-files" name="5--specifying-feature-files"><a href="#5--specifying-feature-files">5. specifying feature files</a></h3>
+<p>The <code>harvest</code> command accepts a path to feature files, in order to run
+only the features you want.</p>
+
+<p>Example:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-6"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~</span><span class="n">projects</span><span class="o">/</span><span class="n">djangoproject</span> $ <span class="n">python</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span> <span class="n">harvest</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">my</span><span class="o">-</span><span class="n">test</span><span class="p">.</span><span class="n">feature</span>
+</pre></div><h3 id="6--grab-actual-example-code" name="6--grab-actual-example-code"><a href="#6--grab-actual-example-code">6. grab actual example code</a></h3>
+<p>In order to assure that lettuce integrate well with Django, it have a
+set of integration tests, there are a actual Django project running with
+lettuce.</p>
+
+<p>You can grab the code at the
+<a href="http://github.com/gabrielfalcao/lettuce/tree/master/tests/integration/django/alfaces/" title="None">alfaces</a>
+folder of lettuce git repository</p>
+<h2 id="technical-details" name="technical-details"><a href="#technical-details">Technical details</a></h2>
+<p>If you want to write acceptance tests that run with web browsers, you
+can user tools like <a href="http://twill.idyll.org/python-api.html" title="None">twill</a>,
+<a href="http://seleniumhq.org/docs/appendix_installing_python_driver_client.html" title="None">selenium</a>,
+<a href="http://code.google.com/p/selenium/wiki/PythonBindings?redir=1" title="None">webdriver</a>
+and <a href="http://www.getwindmill.com/" title="None">windmill</a></p>
+<h3 id="red-tape-less-builtin-server" name="red-tape-less-builtin-server"><a href="#red-tape-less-builtin-server">red-tape-less builtin server</a></h3>
+<p>Lettuce cleverly runs an instance of the built-in Django HTTP server in
+the background. It tries to bind the HTTP server at <code>localhost:8000</code> but
+if the port is busy, it keeps trying to run in higher ports: 8001, 8002
+and so on until it reaches the maximum port number 65535.</p>
+
+<p>So that you can use browser-based tools such as those listed above to
+access Django.</p>
+<h3 id="figure-out-django-urls" name="figure-out-django-urls"><a href="#figure-out-django-urls">figure out django urls</a></h3>
+<p>As the Django HTTP server can be running in any port within the range
+8000 - 65535, it could be hard to figure out the correct URL for your
+project, right?</p>
+
+<p>Wrong!</p>
+
+<p>Lettuce is here for you. Within your steps you can use the <code>django_url</code>
+utility function:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-7"><span class="n">from</span> <span class="n">lettuce</span> <span class="n">import</span> <span class="n">step</span><span class="p">,</span> <span class="n">world</span>
+<span class="n">from</span> <span class="n">lettuce</span><span class="p">.</span><span class="n">django</span> <span class="n">import</span> <span class="n">django_url</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="n">r</span><span class="o">'</span><span class="n">Given</span> <span class="n">I</span> <span class="n">navigate</span> <span class="n">to</span> "<span class="p">(</span><span class="o">.*</span><span class="p">)</span>"<span class="s">'</span><span class="err">)</span>
+<span class="n">def</span> <span class="n">navigate_to_url</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+    <span class="n">full_url</span> <span class="p">=</span> <span class="n">django_url</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">world</span><span class="p">.</span><span class="n">browser</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">full_url</span><span class="p">)</span>
+</pre></div><h4 id="what-does--code-django_url--code--do----" name="what-does--code-django_url--code--do----"><a href="#what-does--code-django_url--code--do----">what does <code>django_url</code> do ?!?</a></h4>
+<p>It prepends a Django-internal URL with the HTTP server address.</p>
+
+<p>In other words, if lettuce binds the http server to localhost:9090 and
+you call <code>django_url</code> with <code>&quot;/admin/login&quot;</code>:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-8"><span class="n">from</span> <span class="n">lettuce</span><span class="p">.</span><span class="n">django</span> <span class="n">import</span> <span class="n">django_url</span>
+<span class="n">django_url</span><span class="p">(</span>"<span class="o">/</span><span class="n">admin</span><span class="o">/</span><span class="n">login</span>"<span class="p">)</span>
+</pre></div>
+<p>It returns:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-9">"<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span>9090<span class="o">/</span><span class="n">admin</span><span class="o">/</span><span class="n">login</span>"
+</pre></div><h3 id="terrain-also-available-in-django-projects" name="terrain-also-available-in-django-projects"><a href="#terrain-also-available-in-django-projects">terrain also available in django projects</a></h3>
+<p>At this point you probably know how :ref:terrain-py works, and it
+also works with Django projects.</p>
+
+<p>You can setup environment and stuff like that within a <code>terrain.py</code> file
+located at the root of your Django project.</p>
+
+<p>Taking the very first example of this documentation page, your Django
+project layout would like like this:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-10"><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">projects</span><span class="o">/</span><span class="n">djangoproject</span>
+     <span class="o">|</span> <span class="n">settings</span><span class="p">.</span><span class="n">py</span>
+     <span class="o">|</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span>
+     <span class="o">|</span> <span class="n">urls</span><span class="p">.</span><span class="n">py</span>
+     <span class="o">|</span> <span class="n">terrain</span><span class="p">.</span><span class="n">py</span>
+     <span class="o">|</span> <span class="n">my_app</span>
+           <span class="o">|</span> <span class="n">features</span>
+                <span class="o">-</span> <span class="n">index</span><span class="p">.</span><span class="n">feature</span>
+                <span class="o">-</span> <span class="n">index</span><span class="p">.</span><span class="n">py</span>
+     <span class="o">|</span> <span class="n">foobar</span>
+           <span class="o">|</span> <span class="n">features</span>
+                <span class="o">-</span> <span class="n">carrots</span><span class="p">.</span><span class="n">feature</span>
+                <span class="o">-</span> <span class="n">foobar</span><span class="o">-</span><span class="n">steps</span><span class="p">.</span><span class="n">py</span>
+     <span class="o">|</span> <span class="n">another_app</span>
+           <span class="o">|</span> <span class="n">features</span>
+                <span class="o">-</span> <span class="n">first</span><span class="p">.</span><span class="n">feature</span>
+                <span class="o">-</span> <span class="n">second</span><span class="p">.</span><span class="n">feature</span>
+                <span class="o">-</span> <span class="n">many_steps</span><span class="p">.</span><span class="n">py</span>
+</pre></div>
+<p>Notice the <code>terrain.py</code> file at the project root, there you can populate
+the :ref:lettuce-world and organize your features and steps with it
+:)</p>
+<h3 id="running-without-http-server" name="running-without-http-server"><a href="#running-without-http-server">Running without HTTP server</a></h3>
+<p>Sometimes you may just do not want to run Django&#39;s built-in HTTP server
+running in background, in those cases all you need to do is run the
+<code>harvest</code> command with the <code>--no-server</code> or <code>-S</code> option.</p>
+
+<p>Example:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-11"><span class="n">python</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span> <span class="n">harvest</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">server</span>
+<span class="n">python</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span> <span class="n">harvest</span> <span class="o">-</span><span class="n">S</span>
+</pre></div><h3 id="running-the-http-server-in-other-port-than-8000" name="running-the-http-server-in-other-port-than-8000"><a href="#running-the-http-server-in-other-port-than-8000">running the HTTP server in other port than 8000</a></h3>
+<p>If you face the problem of having lettuce running on port 8000, you can
+change that behaviour.</p>
+
+<p>Before running the server, lettuce will try to read the setting
+<code>LETTUCE_SERVER_PORT</code> which <strong>must</strong> be a <strong>integer</strong></p>
+
+<p>Example:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-12"><span class="n">LETTUCE_SERVER_PORT</span> <span class="p">=</span> 7000
+</pre></div>
+<p>This can be really useful if 7000 is your default development port, for
+example.</p>
+<h3 id="running-the-http-server-with-settings-debug-true" name="running-the-http-server-with-settings-debug-true"><a href="#running-the-http-server-with-settings-debug-true">running the HTTP server with settings.DEBUG=True</a></h3>
+<p>In order to run tests against the nearest configuration of production,
+lettuce sets up settings.DEBUG=False</p>
+
+<p>However, for debug purposes one can face a misleading HTTP 500 error
+without traceback in Django. For those cases lettuce provides the
+<code>--debug-mode</code> or <code>-d</code> option.</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-13"><span class="n">python</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span> <span class="n">harvest</span> <span class="o">--</span><span class="n">debug</span><span class="o">-</span><span class="n">mode</span>
+<span class="n">python</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span> <span class="n">harvest</span> <span class="o">-</span><span class="n">d</span>
+</pre></div><h3 id="running-only-the-specified-scenarios" name="running-only-the-specified-scenarios"><a href="#running-only-the-specified-scenarios">running only the specified scenarios</a></h3>
+<p>You can also specify the index of the scenarios you want to run through
+the command line, to do so, run with <code>--scenarios</code> or <code>-s</code> options
+followed by the scenario numbers separated by commas.</p>
+
+<p>For example, let&#39;s say you want to run the scenarios 4, 7, 8 and 10:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-14"><span class="n">python</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span> <span class="n">harvest</span> <span class="o">--</span><span class="n">scenarios</span><span class="p">=</span>4<span class="p">,</span>7<span class="p">,</span>8<span class="p">,</span>10
+<span class="n">python</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span> <span class="n">harvest</span> <span class="o">-</span><span class="n">s</span> 4<span class="p">,</span>7<span class="p">,</span>8<span class="p">,</span>10
+</pre></div><h3 id="to-run-or-not-to-run--that-is-the-question-" name="to-run-or-not-to-run--that-is-the-question-"><a href="#to-run-or-not-to-run--that-is-the-question-">to run or not to run? That is the question!</a></h3>
+<p>During your development workflow you may face two situations:</p>
+<h4 id="running-tests-from-just-certain-apps" name="running-tests-from-just-certain-apps"><a href="#running-tests-from-just-certain-apps">running tests from just certain apps</a></h4>
+<p>Lettuce takes a comma-separated list of app names to run tests against.</p>
+
+<p>For example, the command below would run ONLY the tests within the apps
+<code>myapp</code> and <code>foobar</code>:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-15"><span class="n">python</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span> <span class="n">harvest</span> <span class="o">--</span><span class="n">apps</span><span class="p">=</span><span class="n">myapp</span><span class="p">,</span><span class="n">foobar</span>
+
+# <span class="n">or</span>
+
+<span class="n">python</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span> <span class="n">harvest</span> <span class="o">--</span><span class="n">a</span>  <span class="n">myapp</span><span class="p">,</span><span class="n">foobar</span>
+</pre></div>
+<p>You can also specify it at <code>settings.py</code> so that you won&#39;t need to type
+the same command-line parameters all the time:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-16"><span class="n">LETTUCE_APPS</span> <span class="p">=</span> <span class="p">(</span>
+    <span class="s">'myapp'</span><span class="p">,</span>
+    <span class="s">'foobar'</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">INSTALLED_APPS</span> <span class="p">=</span> <span class="p">(</span>
+    <span class="s">'django.contrib.auth'</span><span class="p">,</span>
+    <span class="s">'django.contrib.admin'</span><span class="p">,</span>
+    <span class="s">'my_app'</span><span class="p">,</span>
+    <span class="s">'foobar'</span><span class="p">,</span>
+    <span class="s">'another_app'</span><span class="p">,</span>
+    <span class="s">'lettuce.django'</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div><h4 id="running-tests-from-all-apps--except-by-some" name="running-tests-from-all-apps--except-by-some"><a href="#running-tests-from-all-apps--except-by-some">running tests from all apps, except by some</a></h4>
+<p>Lettuce takes a comma-separated list of app names which tests must NOT
+be ran.</p>
+
+<p>For example, the command below would run ALL the tests BUT those within
+the apps <code>another_app</code> and <code>foobar</code>:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-17"><span class="n">python</span> <span class="n">manage</span><span class="p">.</span><span class="n">py</span> <span class="n">harvest</span> <span class="o">--</span><span class="n">avoid</span><span class="o">-</span><span class="n">apps</span><span class="p">=</span><span class="n">another_app</span><span class="p">,</span><span class="n">foobar</span>
+</pre></div>
+<p>You can also specify it at <code>settings.py</code> so that you won&#39;t need to type
+the same command-line parameters all the time:</p>
+<div class="highlight"><pre name="web-development-fun-with-lettuce-and-django-example-18"><span class="n">LETTUCE_AVOID_APPS</span> <span class="p">=</span> <span class="p">(</span>
+    <span class="s">'another_app'</span><span class="p">,</span>
+    <span class="s">'foobar'</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">INSTALLED_APPS</span> <span class="p">=</span> <span class="p">(</span>
+    <span class="s">'django.contrib.auth'</span><span class="p">,</span>
+    <span class="s">'django.contrib.admin'</span><span class="p">,</span>
+    <span class="s">'my_app'</span><span class="p">,</span>
+    <span class="s">'foobar'</span><span class="p">,</span>
+    <span class="s">'another_app'</span><span class="p">,</span>
+    <span class="s">'lettuce.django'</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="span7">
+            <h3 class="footer-title">Lettuce</h3>
+            <p>Lettuce is maintained by gabrielfalcao. <br />
+              This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+            </p>
+            <p>
+              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
+              <a class="footer-brand" href="http://designmodo.com" target="_blank">
+                <img src="../assets/images/footer/logo.png" alt="Designmodo.com">
+              </a>
+            </p>
+          </div> <!-- /span8 -->
+
+          <div class="span5">
+            <div class="footer-banner">
+              <h3 class="footer-title">Table of contents</h3>
+              <ul>
+                 
+                <li>
+                  <a href="../contents.html">
+                        contents.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/documentation.html">
+                        documentation.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install-debian-squeeze.html">
+                        install-debian-squeeze.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/testing.html">
+                        testing.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/overview.html">
+                        overview.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/wtf.html">
+                        wtf.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./django-lxml.html">
+                        django-lxml.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./nose.html">
+                        nose.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/cli.html">
+                        cli.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/features.html">
+                        features.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/languages.html">
+                        languages.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/terrain.html">
+                        terrain.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/django.html">
+                        django.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/multiline.html">
+                        multiline.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/scenario-outlines.html">
+                        scenario-outlines.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/simple.html">
+                        simple.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/steps-from-step-definitions.html">
+                        steps-from-step-definitions.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/tables.html">
+                        tables.md
+                  </a>
+                </li>
+                 
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

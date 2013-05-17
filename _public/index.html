@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="./assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="./assets/css/flat-ui.css" rel="stylesheet">
+    <link href="./assets/css/github.css" rel="stylesheet">
+    <link rel="shortcut icon" href="./assets/images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">Lettuce
+          <small>Behaviour Driven Development for python</small></h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div class="sidebar-nav">
+            <ul class="share mrl">
+              <div class="btn btn-primary btn-block btn-large">
+                <h3>Sections</h3>
+              </div>
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#getting-involved--">
+         getting involved !
+    </a>
+  
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#hands-on-">
+         hands on!
+    </a>
+  
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#introduction">
+         introduction
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#what-the-feature---">
+         what the feature ?!
+    </a>
+  
+    
+  
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#walkthrough">
+         walkthrough
+    </a>
+  
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#integrate-">
+         integrate!
+    </a>
+  
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#furthermore">
+         furthermore
+    </a>
+  
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#recipes">
+         recipes
+    </a>
+  
+              
+            </ul>
+          </div>
+        </div>
+        <div class="span8">
+          <p>######## nutshell ########</p>
+
+<p><strong>install it</strong></p>
+<div class="highlight"><pre><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~</span>$ <span class="p">[</span><span class="n">sudo</span><span class="p">]</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">lettuce</span>
+</pre></div>
+<p><strong>describe your first feature</strong></p>
+<div class="highlight"><pre><span class="n">Feature</span><span class="o">:</span> <span class="n">Manipulate</span> <span class="n">strings</span>
+  <span class="n">In</span> <span class="n">order</span> <span class="n">to</span> <span class="n">have</span> <span class="n">some</span> <span class="n">fun</span>
+  <span class="n">As</span> <span class="n">a</span> <span class="n">programming</span> <span class="n">beginner</span>
+  <span class="n">I</span> <span class="n">want</span> <span class="n">to</span> <span class="n">manipulate</span> <span class="n">strings</span>
+
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">Uppercased</span> <span class="n">strings</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">string</span> <span class="s2">"lettuce leaves"</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">put</span> <span class="n">it</span> <span class="k">in</span> <span class="n">upper</span> <span class="k">case</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">string</span> <span class="k">is</span> <span class="s2">"LETTUCE LEAVES"</span>
+</pre></div>
+<p><strong>define its steps</strong></p>
+
+<p><strong>watch it pass</strong></p>
+<div class="highlight"><pre><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">Projects</span><span class="o">/</span><span class="n">my</span><span class="o">-</span><span class="n">project</span>$ <span class="n">lettuce</span> <span class="n">features</span><span class="o">/</span>
+</pre></div><h1 id="getting-involved--" name="getting-involved--"><a href="#getting-involved--">getting involved !</a></h1>
+<p><strong>github project page</strong></p>
+
+<p>Fork it, propose features, explore the code</p>
+
+<p><a href="http://github.com/gabrielfalcao/lettuce" title="None">github.com/gabrielfalcao/lettuce</a>.</p>
+
+<p><strong>feedback</strong></p>
+
+<p><a href="http://github.com/gabrielfalcao/lettuce/issues" title="None">issue tracker</a>.</p>
+
+<p><strong>discuss</strong></p>
+
+<ul>
+<li><p><a href="http://groups.google.com/group/lettuce-users" title="None">lettuce users mailing
+list</a>.</p></li>
+<li><p><a href="http://groups.google.com/group/lettuce-developers" title="None">lettuce development mailing
+list</a>.</p></li>
+</ul>
+
+<p><strong>hack</strong></p>
+
+<p>:doc:/dev/index</p>
+
+<p><strong>donate</strong></p>
+
+<p><a href="http://pledgie.com/campaigns/10604" title="None">support lettuce development</a></p>
+<h1 id="hands-on-" name="hands-on-"><a href="#hands-on-">hands on!</a></h1>
+<p>Is this your first experience with Lettuce ?!?</p>
+
+<p>So, why don&#39;t you go straight to the :ref:quick start tutorial
+&lt;tutorial-simple&gt; ?!</p>
+<h1 id="introduction" name="introduction"><a href="#introduction">introduction</a></h1>
+<p><strong>what is Lettuce, and what it does</strong></p>
+
+<blockquote>
+<ul>
+<li>  :ref:overview &lt;intro-overview&gt;</li>
+<li>  :ref:installation &lt;intro-install&gt;</li>
+</ul>
+</blockquote>
+<h2 id="what-the-feature---" name="what-the-feature---"><a href="#what-the-feature---">what the feature ?!</a></h2>
+<blockquote>
+<ul>
+<li>  :ref:understand the terms behind Lettuce &lt;intro-wtf&gt;</li>
+</ul>
+</blockquote>
+<h1 id="walkthrough" name="walkthrough"><a href="#walkthrough">walkthrough</a></h1>
+<blockquote>
+<ul>
+<li>  :ref:write your first feature &lt;tutorial-simple&gt;</li>
+<li>  :ref:handling data with tables &lt;tutorial-tables&gt;</li>
+<li>  :ref:multi-line strings &lt;tutorial-multiline&gt;</li>
+<li>  :ref:don&#39;t repeat yourself, meet scenario outlines
+&lt;tutorial-scenario-outlines&gt;</li>
+<li>  :ref:clean up your spec definitions, calling one step from
+another &lt;tutorial-steps-from-step-definitions&gt;</li>
+</ul>
+</blockquote>
+<h1 id="integrate-" name="integrate-"><a href="#integrate-">integrate!</a></h1>
+<blockquote>
+<ul>
+<li>  :ref:Lettuce and Django &lt;recipes-django-lxml&gt;, for the sake
+of web development fun</li>
+</ul>
+</blockquote>
+<h1 id="furthermore" name="furthermore"><a href="#furthermore">furthermore</a></h1>
+<p><strong>reference and concepts</strong></p>
+
+<blockquote>
+<ul>
+<li>  :ref:the command line &lt;reference-cli&gt;, how to run lettuce
+with different verbosity levels, and other cli options</li>
+<li>  :ref:features, scenarios and steps &lt;reference-features&gt;,
+diving into lettuce&#39;s core</li>
+<li>  :ref:terrain, world and hooks &lt;reference-terrain&gt;, stuff
+about setting up a environment for lettuce</li>
+<li>  :ref:language support &lt;reference-languages&gt;</li>
+</ul>
+</blockquote>
+<h1 id="recipes" name="recipes"><a href="#recipes">recipes</a></h1>
+<p><strong>make your own salad</strong></p>
+
+<blockquote>
+<ul>
+<li>  :ref:nicer assertions with nose &lt;recipes-nose&gt;</li>
+</ul>
+</blockquote>
+
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="span7">
+            <h3 class="footer-title">Lettuce</h3>
+            <p>Lettuce is maintained by gabrielfalcao. <br />
+              This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+            </p>
+            <p>
+              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
+              <a class="footer-brand" href="http://designmodo.com" target="_blank">
+                <img src="./assets/images/footer/logo.png" alt="Designmodo.com">
+              </a>
+            </p>
+          </div> <!-- /span8 -->
+
+          <div class="span5">
+            <div class="footer-banner">
+              <h3 class="footer-title">Table of contents</h3>
+              <ul>
+                 
+                <li>
+                  <a href="./contents.html">
+                        contents.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./dev/documentation.html">
+                        documentation.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./dev/index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./dev/install-debian-squeeze.html">
+                        install-debian-squeeze.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./dev/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./dev/testing.html">
+                        testing.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./intro/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./intro/overview.html">
+                        overview.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./intro/wtf.html">
+                        wtf.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./recipes/django-lxml.html">
+                        django-lxml.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./recipes/nose.html">
+                        nose.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./reference/cli.html">
+                        cli.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./reference/features.html">
+                        features.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./reference/languages.html">
+                        languages.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./reference/terrain.html">
+                        terrain.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./tutorial/django.html">
+                        django.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./tutorial/multiline.html">
+                        multiline.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./tutorial/scenario-outlines.html">
+                        scenario-outlines.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./tutorial/simple.html">
+                        simple.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./tutorial/steps-from-step-definitions.html">
+                        steps-from-step-definitions.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./tutorial/tables.html">
+                        tables.md
+                  </a>
+                </li>
+                 
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

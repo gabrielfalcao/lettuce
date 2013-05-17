@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="../assets/css/flat-ui.css" rel="stylesheet">
+    <link href="../assets/css/github.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">Lettuce
+          <small>Behaviour Driven Development for python</small></h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div class="sidebar-nav">
+            <ul class="share mrl">
+              <div class="btn btn-primary btn-block btn-large">
+                <h3>Sections</h3>
+              </div>
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#lettuce-recipe--using-nose-for-pretty-assertions">
+         Lettuce recipe: Using nose for pretty assertions
+    </a>
+  
+              
+            </ul>
+          </div>
+        </div>
+        <div class="span8">
+          <h1 id="lettuce-recipe--using-nose-for-pretty-assertions" name="lettuce-recipe--using-nose-for-pretty-assertions"><a href="#lettuce-recipe--using-nose-for-pretty-assertions">Lettuce recipe: Using nose for pretty assertions</a></h1>
+<p>Lettuce uses python&#39;s builtin exception :exc:AssertionError to mark
+tests as failed.</p>
+
+<p>Although in order to describe the assertion with a custom string you
+would need to do something like:</p>
+<div class="highlight"><pre name="lettuce-recipe--using-nose-for-pretty-assertions-example-1"><span class="n">from</span> <span class="n">lettuce</span> <span class="n">import</span> <span class="n">step</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'some step with "(.*)"'</span><span class="p">):</span>
+<span class="n">def</span> <span class="n">some_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">from</span><span class="p">):</span>
+    <span class="n">assert</span> <span class="n">from</span> <span class="o">==</span> <span class="s">'expectation'</span><span class="p">,</span> <span class="o">\</span>
+        "<span class="n">Ooops</span><span class="p">,</span> <span class="s">'%s'</span> <span class="n">should</span> <span class="n">be</span> <span class="n">equal</span> <span class="s">'expectation'</span><span class="p">,</span> <span class="n">but</span> <span class="n">isn</span><span class="o">'</span><span class="n">t</span>" <span class="c">% from</span>
+</pre></div>
+<p><a href="http://code.google.com/p/python-nose/" title="None">nose</a> is a python module that
+provides a set of assert functions that already have a nice description,
+and fortunately it still uses :exc:AssertionError, which makes
+<a href="http://code.google.com/p/python-nose/" title="None">nose</a> totally compliant with
+lettuce.</p>
+
+<p>The example below shows how the step above could be written taking
+advantage of <a href="http://code.google.com/p/python-nose/" title="None">nose</a>:</p>
+<div class="highlight"><pre name="lettuce-recipe--using-nose-for-pretty-assertions-example-2"><span class="n">from</span> <span class="n">lettuce</span> <span class="n">import</span> <span class="n">step</span>
+<span class="n">from</span> <span class="n">nose</span><span class="p">.</span><span class="n">tools</span> <span class="n">import</span> <span class="n">assert_equals</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'some step with "(.*)"'</span><span class="p">):</span>
+<span class="n">def</span> <span class="n">some_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">from</span><span class="p">):</span>
+    <span class="n">assert_equals</span><span class="p">(</span><span class="n">from</span><span class="p">,</span> <span class="s">'expectation'</span><span class="p">)</span>
+</pre></div>
+<p>It rocks, huh?!</p>
+
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="span7">
+            <h3 class="footer-title">Lettuce</h3>
+            <p>Lettuce is maintained by gabrielfalcao. <br />
+              This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+            </p>
+            <p>
+              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
+              <a class="footer-brand" href="http://designmodo.com" target="_blank">
+                <img src="../assets/images/footer/logo.png" alt="Designmodo.com">
+              </a>
+            </p>
+          </div> <!-- /span8 -->
+
+          <div class="span5">
+            <div class="footer-banner">
+              <h3 class="footer-title">Table of contents</h3>
+              <ul>
+                 
+                <li>
+                  <a href="../contents.html">
+                        contents.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/documentation.html">
+                        documentation.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install-debian-squeeze.html">
+                        install-debian-squeeze.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/testing.html">
+                        testing.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/overview.html">
+                        overview.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/wtf.html">
+                        wtf.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./django-lxml.html">
+                        django-lxml.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./nose.html">
+                        nose.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/cli.html">
+                        cli.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/features.html">
+                        features.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/languages.html">
+                        languages.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/terrain.html">
+                        terrain.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/django.html">
+                        django.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/multiline.html">
+                        multiline.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/scenario-outlines.html">
+                        scenario-outlines.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/simple.html">
+                        simple.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/steps-from-step-definitions.html">
+                        steps-from-step-definitions.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/tables.html">
+                        tables.md
+                  </a>
+                </li>
+                 
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

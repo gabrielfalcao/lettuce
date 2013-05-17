@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="../assets/css/flat-ui.css" rel="stylesheet">
+    <link href="../assets/css/github.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">Lettuce
+          <small>Behaviour Driven Development for python</small></h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div class="sidebar-nav">
+            <ul class="share mrl">
+              <div class="btn btn-primary btn-block btn-large">
+                <h3>Sections</h3>
+              </div>
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#introduction">
+         introduction
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#get-lettuce">
+         get lettuce
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#define-a-problem">
+         define a problem
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#project-structure">
+         project structure
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#lettuce-it-">
+         lettuce it!
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#first-round">
+         first round
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-a--describe-behaviour">
+         [a] describe behaviour
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-b--define-steps-in-python">
+         [b] define steps in python
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-c--run-and-watch-it-fail">
+         [c] run and watch it fail
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-d--write-code-to-make-it-pass">
+         [d] write code to make it pass
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-e--run-again-and-watch-it-pass">
+         [e] run again and watch it pass
+    </a>
+  
+    
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#second-round">
+         second round
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-a--describe-behaviour">
+         [a] describe behaviour
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-b--define-steps-in-python">
+         [b] define steps in python
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-c--run-and-watch-it-fail">
+         [c] run and watch it fail
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-d--write-code-to-make-it-pass">
+         [d] write code to make it pass
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-e--run-again-and-watch-it-pass">
+         [e] run again and watch it pass
+    </a>
+  
+    
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#third-round">
+         third round
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-a--describe-behaviour">
+         [a] describe behaviour
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-b--define-steps-in-python">
+         [b] define steps in python
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-c--run-and-watch-it-fail">
+         [c] run and watch it fail
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-d--write-code-to-make-it-pass">
+         [d] write code to make it pass
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#-e--run-again-and-watch-it-pass">
+         [e] run again and watch it pass
+    </a>
+  
+    
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#forth-round">
+         forth round
+    </a>
+  
+    
+  
+    
+  
+              
+            </ul>
+          </div>
+        </div>
+        <div class="span8">
+          <h1 id="introduction" name="introduction"><a href="#introduction">introduction</a></h1>
+<p>Lettuce_ is an extremely useful and charming tool for BDD_ (Behavior
+Driven Development). It can execute plain-text functional descriptions
+as automated tests for Python_ projects, just as Cucumber_ does for
+Ruby_.</p>
+
+<p>Lettuce_ makes the development and testing process really easy,
+scalable, readable and - what is best - it allows someone who doesn&#39;t
+program to describe the behavior of a certain system, without imagining
+those descriptions will automatically test the system during its
+development.</p>
+
+<p><img src="./flow.png" title="None" alt="image" /></p>
+<h2 id="get-lettuce" name="get-lettuce"><a href="#get-lettuce">get lettuce</a></h2>
+<p>Make sure you&#39;ve got Python installed and then run from the terminal:</p>
+<div class="highlight"><pre name="introduction-example-1"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~</span>$ <span class="p">[</span><span class="n">sudo</span><span class="p">]</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">lettuce</span>
+</pre></div><h2 id="define-a-problem" name="define-a-problem"><a href="#define-a-problem">define a problem</a></h2>
+<p>Let&#39;s choose a problem to lettuce: <strong>Given a number, what is its
+factorial?</strong></p>
+<h2 id="project-structure" name="project-structure"><a href="#project-structure">project structure</a></h2>
+<p>Build the directory tree bellow such as the files <code>zero.feature</code> and
+<code>steps.py</code> are empty.</p>
+<div class="highlight"><pre name="introduction-example-2"><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">user</span><span class="o">/</span><span class="n">projects</span><span class="o">/</span><span class="n">mymath</span>
+     <span class="o">|</span> <span class="n">tests</span>
+           <span class="o">|</span> <span class="n">features</span>
+                <span class="o">-</span> <span class="n">zero</span><span class="p">.</span><span class="n">feature</span>
+                <span class="o">-</span> <span class="n">steps</span><span class="p">.</span><span class="n">py</span>
+</pre></div><h2 id="lettuce-it-" name="lettuce-it-"><a href="#lettuce-it-">lettuce it!</a></h2>
+<p>Lets begin to describe and solve our problem&hellip;</p>
+<h3 id="first-round" name="first-round"><a href="#first-round">first round</a></h3><h4 id="-a--describe-behaviour" name="-a--describe-behaviour"><a href="#-a--describe-behaviour">[a] describe behaviour</a></h4>
+<p>Start describing the expected behaviour of factorial in <code>zero.feature</code>
+using English:</p>
+<div class="highlight"><pre name="introduction-example-3"><span class="n">Feature</span><span class="o">:</span> <span class="n">Compute</span> <span class="n">factorial</span>
+    <span class="n">In</span> <span class="n">order</span> <span class="n">to</span> <span class="n">play</span> <span class="k">with</span> <span class="n">Lettuce</span>
+    <span class="n">As</span> <span class="n">beginners</span>
+    <span class="n">We</span><span class="err">'</span><span class="n">ll</span> <span class="n">implement</span> <span class="n">factorial</span>
+
+    <span class="n">Scenario</span><span class="o">:</span> <span class="n">Factorial</span> <span class="n">of</span> <span class="mi">0</span>
+        <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">0</span>
+        <span class="n">When</span> <span class="n">I</span> <span class="n">compute</span> <span class="n">its</span> <span class="n">factorial</span>
+        <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">1</span>
+</pre></div><h4 id="-b--define-steps-in-python" name="-b--define-steps-in-python"><a href="#-b--define-steps-in-python">[b] define steps in python</a></h4>
+<p>Now let&#39;s define the steps of the scenario, so Lettuce can understand
+the behaviour description. Create the <code>steps.py</code> file which will contain
+python code describing the steps.</p>
+
+<p>Python:</p>
+<div class="highlight"><pre name="introduction-example-4"><span class="n">from</span> <span class="n">lettuce</span> <span class="n">import</span> <span class="o">*</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I have the number (\d+)'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">have_the_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+    <span class="n">world</span><span class="p">.</span><span class="n">number</span> <span class="p">=</span> <span class="n">int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I compute its factorial'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">compute_its_factorial</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">world</span><span class="p">.</span><span class="n">number</span> <span class="p">=</span> <span class="nb">factorial</span><span class="p">(</span><span class="n">world</span><span class="p">.</span><span class="n">number</span><span class="p">)</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I see the number (\d+)'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">check_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">expected</span> <span class="p">=</span> <span class="n">int</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
+    <span class="n">assert</span> <span class="n">world</span><span class="p">.</span><span class="n">number</span> <span class="o">==</span> <span class="n">expected</span><span class="p">,</span> <span class="o">\</span>
+        "<span class="n">Got</span> <span class="c">%d" % world.number</span>
+
+<span class="n">def</span> <span class="nb">factorial</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span>1
+</pre></div>
+<p>Ideally, factorial will be defined somewhere else. However, as this is
+just a first example, we&#39;ll implement it inside steps.py, so you get the
+idea of how to use Lettuce.</p>
+
+<p><strong>Notice that, until now, we haven&#39;t defined the factorial function
+(it&#39;s returning -1).</strong></p>
+<h4 id="-c--run-and-watch-it-fail" name="-c--run-and-watch-it-fail"><a href="#-c--run-and-watch-it-fail">[c] run and watch it fail</a></h4>
+<p>Go to the tests directory and run from the terminal:</p>
+<div class="highlight"><pre name="introduction-example-5"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">mymath</span><span class="o">/</span><span class="n">tests</span>$ <span class="n">lettuce</span>
+</pre></div>
+<p>As you haven&#39;t implemented factorial, it is no surprise the behavior
+won&#39;t be reached:</p>
+
+<p><img src="./screenshot1.png" title="None" alt="image" />
+Our only scenario failed :( Let&#39;s solve it&hellip;</p>
+<h4 id="-d--write-code-to-make-it-pass" name="-d--write-code-to-make-it-pass"><a href="#-d--write-code-to-make-it-pass">[d] write code to make it pass</a></h4>
+<p>Well, by definition, we know that the factorial of 0 is 1. As our only
+feature is this&hellip; we could force factorial to return 1.</p>
+<div class="highlight"><pre name="introduction-example-6"><span class="n">from</span> <span class="n">lettuce</span> <span class="n">import</span> <span class="o">*</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I have the number (\d+)'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">have_the_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+    <span class="n">world</span><span class="p">.</span><span class="n">number</span> <span class="p">=</span> <span class="n">int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I compute its factorial'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">compute_its_factorial</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">world</span><span class="p">.</span><span class="n">number</span> <span class="p">=</span> <span class="nb">factorial</span><span class="p">(</span><span class="n">world</span><span class="p">.</span><span class="n">number</span><span class="p">)</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I see the number (\d+)'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">check_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">expected</span> <span class="p">=</span> <span class="n">int</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
+    <span class="n">assert</span> <span class="n">world</span><span class="p">.</span><span class="n">number</span> <span class="o">==</span> <span class="n">expected</span><span class="p">,</span> <span class="o">\</span>
+        "<span class="n">Got</span> <span class="c">%d" % world.number</span>
+
+<span class="n">def</span> <span class="nb">factorial</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="k">return</span> 1
+</pre></div><h4 id="-e--run-again-and-watch-it-pass" name="-e--run-again-and-watch-it-pass"><a href="#-e--run-again-and-watch-it-pass">[e] run again and watch it pass</a></h4>
+<p>Again, run from the terminal:</p>
+<div class="highlight"><pre name="introduction-example-7"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">mymath</span><span class="o">/</span><span class="n">tests</span>$ <span class="n">lettuce</span>
+</pre></div>
+<p>And you&#39;ll be happy to see your factorial implementation passed all the
+behaviours expected:</p>
+
+<p><img src="./screenshot2.png" title="None" alt="image" />
+Great! :)</p>
+
+<p>However, one test is not enough for checking the quality of our
+solution&hellip; So let&#39;s lettuce it again!</p>
+<h3 id="second-round" name="second-round"><a href="#second-round">second round</a></h3>
+<p>Let&#39;s provide more tests so our problem is better described, and so we
+provide a more accurate implementation of factorial:</p>
+<h4 id="-a--describe-behaviour" name="-a--describe-behaviour"><a href="#-a--describe-behaviour">[a] describe behaviour</a></h4>
+<p>Let&#39;s provide two new scenarios, for numbers 1 and 2:</p>
+<div class="highlight"><pre name="introduction-example-8"><span class="n">Feature</span><span class="o">:</span> <span class="n">Compute</span> <span class="n">factorial</span>
+  <span class="n">In</span> <span class="n">order</span> <span class="n">to</span> <span class="n">play</span> <span class="k">with</span> <span class="n">Lettuce</span>
+  <span class="n">As</span> <span class="n">beginners</span>
+  <span class="n">We</span><span class="err">'</span><span class="n">ll</span> <span class="n">implement</span> <span class="n">factorial</span>
+
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">Factorial</span> <span class="n">of</span> <span class="mi">0</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">0</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">compute</span> <span class="n">its</span> <span class="n">factorial</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">1</span>
+
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">Factorial</span> <span class="n">of</span> <span class="mi">1</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">1</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">compute</span> <span class="n">its</span> <span class="n">factorial</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">1</span>
+
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">Factorial</span> <span class="n">of</span> <span class="mi">2</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">2</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">compute</span> <span class="n">its</span> <span class="n">factorial</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">2</span>
+</pre></div><h4 id="-b--define-steps-in-python" name="-b--define-steps-in-python"><a href="#-b--define-steps-in-python">[b] define steps in python</a></h4>
+<p>As we haven&#39;t changed the definition, no need to make changes on this
+step.</p>
+<h4 id="-c--run-and-watch-it-fail" name="-c--run-and-watch-it-fail"><a href="#-c--run-and-watch-it-fail">[c] run and watch it fail</a></h4><div class="highlight"><pre name="introduction-example-9"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">mymath</span><span class="o">/</span><span class="n">tests</span>$ <span class="n">lettuce</span>
+</pre></div>
+<p>When running Lettuce we realize that our previous implementation of
+factorial works fine both for 0 and for 1, but not for 2 - it fails. :(</p>
+
+<p><img src="./screenshot3.png" title="None" alt="image" /></p>
+<h4 id="-d--write-code-to-make-it-pass" name="-d--write-code-to-make-it-pass"><a href="#-d--write-code-to-make-it-pass">[d] write code to make it pass</a></h4>
+<p>Let&#39;s provide a solution so we get the right factorial for all
+scenarios, specially for number 2:</p>
+<div class="highlight"><pre name="introduction-example-10"><span class="n">from</span> <span class="n">lettuce</span> <span class="n">import</span> <span class="o">*</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I have the number (\d+)'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">have_the_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+    <span class="n">world</span><span class="p">.</span><span class="n">number</span> <span class="p">=</span> <span class="n">int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I compute its factorial'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">compute_its_factorial</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">world</span><span class="p">.</span><span class="n">number</span> <span class="p">=</span> <span class="nb">factorial</span><span class="p">(</span><span class="n">world</span><span class="p">.</span><span class="n">number</span><span class="p">)</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I see the number (\d+)'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">check_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">expected</span> <span class="p">=</span> <span class="n">int</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
+    <span class="n">assert</span> <span class="n">world</span><span class="p">.</span><span class="n">number</span> <span class="o">==</span> <span class="n">expected</span><span class="p">,</span> <span class="o">\</span>
+        "<span class="n">Got</span> <span class="c">%d" % world.number</span>
+
+<span class="n">def</span> <span class="nb">factorial</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="n">number</span> <span class="p">=</span> <span class="n">int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">==</span> 0<span class="p">)</span> <span class="n">or</span> <span class="p">(</span><span class="n">number</span> <span class="o">==</span> 1<span class="p">):</span>
+        <span class="k">return</span> 1
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">number</span>
+</pre></div><h4 id="-e--run-again-and-watch-it-pass" name="-e--run-again-and-watch-it-pass"><a href="#-e--run-again-and-watch-it-pass">[e] run again and watch it pass</a></h4><div class="highlight"><pre name="introduction-example-11"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">mymath</span><span class="o">/</span><span class="n">tests</span>$ <span class="n">lettuce</span>
+</pre></div>
+<p><img src="./screenshot4.png" title="None" alt="image" />
+Great! Three scenarios described and they are alright!</p>
+<h3 id="third-round" name="third-round"><a href="#third-round">third round</a></h3>
+<p>Let&#39;s provide more tests so our problem is better described and we get
+new errors so we&#39;ll be able to solve them.</p>
+<h4 id="-a--describe-behaviour" name="-a--describe-behaviour"><a href="#-a--describe-behaviour">[a] describe behaviour</a></h4><div class="highlight"><pre name="introduction-example-12"><span class="n">Feature</span><span class="o">:</span> <span class="n">Compute</span> <span class="n">factorial</span>
+  <span class="n">In</span> <span class="n">order</span> <span class="n">to</span> <span class="n">play</span> <span class="k">with</span> <span class="n">Lettuce</span>
+  <span class="n">As</span> <span class="n">beginners</span>
+  <span class="n">We</span><span class="err">'</span><span class="n">ll</span> <span class="n">implement</span> <span class="n">factorial</span>
+
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">Factorial</span> <span class="n">of</span> <span class="mi">0</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">0</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">compute</span> <span class="n">its</span> <span class="n">factorial</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">1</span>
+
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">Factorial</span> <span class="n">of</span> <span class="mi">1</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">1</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">compute</span> <span class="n">its</span> <span class="n">factorial</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">1</span>
+
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">Factorial</span> <span class="n">of</span> <span class="mi">2</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">2</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">compute</span> <span class="n">its</span> <span class="n">factorial</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">2</span>
+
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">Factorial</span> <span class="n">of</span> <span class="mi">3</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">3</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">compute</span> <span class="n">its</span> <span class="n">factorial</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">6</span>
+
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">Factorial</span> <span class="n">of</span> <span class="mi">4</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">4</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">compute</span> <span class="n">its</span> <span class="n">factorial</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">number</span> <span class="mi">24</span>
+</pre></div><h4 id="-b--define-steps-in-python" name="-b--define-steps-in-python"><a href="#-b--define-steps-in-python">[b] define steps in python</a></h4>
+<p>As we haven&#39;t changed the definition, no need to make changes on this
+step.</p>
+<h4 id="-c--run-and-watch-it-fail" name="-c--run-and-watch-it-fail"><a href="#-c--run-and-watch-it-fail">[c] run and watch it fail</a></h4><div class="highlight"><pre name="introduction-example-13"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">mymath</span><span class="o">/</span><span class="n">tests</span>$ <span class="n">lettuce</span>
+</pre></div>
+<p><img src="./screenshot5.png" title="None" alt="image" /></p>
+<h4 id="-d--write-code-to-make-it-pass" name="-d--write-code-to-make-it-pass"><a href="#-d--write-code-to-make-it-pass">[d] write code to make it pass</a></h4><div class="highlight"><pre name="introduction-example-14"><span class="n">from</span> <span class="n">lettuce</span> <span class="n">import</span> <span class="o">*</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I have the number (\d+)'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">have_the_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+    <span class="n">world</span><span class="p">.</span><span class="n">number</span> <span class="p">=</span> <span class="n">int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I compute its factorial'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">compute_its_factorial</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">world</span><span class="p">.</span><span class="n">number</span> <span class="p">=</span> <span class="nb">factorial</span><span class="p">(</span><span class="n">world</span><span class="p">.</span><span class="n">number</span><span class="p">)</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I see the number (\d+)'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">check_number</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+    <span class="n">expected</span> <span class="p">=</span> <span class="n">int</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
+    <span class="n">assert</span> <span class="n">world</span><span class="p">.</span><span class="n">number</span> <span class="o">==</span> <span class="n">expected</span><span class="p">,</span> <span class="o">\</span>
+        "<span class="n">Got</span> <span class="c">%d" % world.number</span>
+
+<span class="n">def</span> <span class="nb">factorial</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+    <span class="n">number</span> <span class="p">=</span> <span class="n">int</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">==</span> 0<span class="p">)</span> <span class="n">or</span> <span class="p">(</span><span class="n">number</span> <span class="o">==</span> 1<span class="p">):</span>
+        <span class="k">return</span> 1
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">number</span><span class="o">*</span><span class="nb">factorial</span><span class="p">(</span><span class="n">number</span><span class="o">-</span>1<span class="p">)</span>
+</pre></div><h4 id="-e--run-again-and-watch-it-pass" name="-e--run-again-and-watch-it-pass"><a href="#-e--run-again-and-watch-it-pass">[e] run again and watch it pass</a></h4><div class="highlight"><pre name="introduction-example-15"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">mymath</span><span class="o">/</span><span class="n">tests</span>$ <span class="n">lettuce</span>
+</pre></div>
+<p><img src="./screenshot6.png" title="None" alt="image" /></p>
+<h3 id="forth-round" name="forth-round"><a href="#forth-round">forth round</a></h3>
+<p>All steps should be repeated as long as you can keep doing them - the
+quality of your software depends on these.</p>
+
+<p>Have a nice lettuce&hellip;! ;)</p>
+
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="span7">
+            <h3 class="footer-title">Lettuce</h3>
+            <p>Lettuce is maintained by gabrielfalcao. <br />
+              This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+            </p>
+            <p>
+              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
+              <a class="footer-brand" href="http://designmodo.com" target="_blank">
+                <img src="../assets/images/footer/logo.png" alt="Designmodo.com">
+              </a>
+            </p>
+          </div> <!-- /span8 -->
+
+          <div class="span5">
+            <div class="footer-banner">
+              <h3 class="footer-title">Table of contents</h3>
+              <ul>
+                 
+                <li>
+                  <a href="../contents.html">
+                        contents.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/documentation.html">
+                        documentation.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install-debian-squeeze.html">
+                        install-debian-squeeze.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/testing.html">
+                        testing.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/overview.html">
+                        overview.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/wtf.html">
+                        wtf.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/django-lxml.html">
+                        django-lxml.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/nose.html">
+                        nose.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/cli.html">
+                        cli.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/features.html">
+                        features.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/languages.html">
+                        languages.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/terrain.html">
+                        terrain.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./django.html">
+                        django.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./multiline.html">
+                        multiline.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./scenario-outlines.html">
+                        scenario-outlines.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./simple.html">
+                        simple.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./steps-from-step-definitions.html">
+                        steps-from-step-definitions.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./tables.html">
+                        tables.md
+                  </a>
+                </li>
+                 
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

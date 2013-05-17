@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="../assets/css/flat-ui.css" rel="stylesheet">
+    <link href="../assets/css/github.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">Lettuce
+          <small>Behaviour Driven Development for python</small></h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div class="sidebar-nav">
+            <ul class="share mrl">
+              <div class="btn btn-primary btn-block btn-large">
+                <h3>Sections</h3>
+              </div>
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#multi-line-strings">
+         multi-line strings
+    </a>
+  
+              
+            </ul>
+          </div>
+        </div>
+        <div class="span8">
+          <h1 id="multi-line-strings" name="multi-line-strings"><a href="#multi-line-strings">multi-line strings</a></h1>
+<p>Now imagine you are writing an application which manipulates strings.
+When writing the tests, you may find yourself wanting to put multi-line
+strings in your steps.</p>
+
+<p>Multi-line strings will do the trick</p>
+<div class="highlight"><pre name="multi-line-strings-example-1"><span class="n">Feature</span><span class="o">:</span> <span class="n">Split</span> <span class="n">a</span> <span class="n">string</span> <span class="n">into</span> <span class="n">multiple</span> <span class="n">lines</span> <span class="n">on</span> <span class="n">spaces</span>
+  <span class="n">In</span> <span class="n">order</span> <span class="n">to</span> <span class="n">make</span> <span class="n">strings</span> <span class="n">more</span> <span class="n">readable</span>
+  <span class="n">As</span> <span class="n">a</span> <span class="n">user</span>
+  <span class="n">I</span> <span class="n">want</span> <span class="n">to</span> <span class="n">have</span> <span class="n">words</span> <span class="n">split</span> <span class="n">into</span> <span class="n">their</span> <span class="n">own</span> <span class="n">lines</span>
+
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">Split</span> <span class="n">small</span><span class="o">-</span><span class="n">ish</span> <span class="n">string</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">string</span> <span class="s2">"one two three four five"</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">ask</span> <span class="n">to</span> <span class="n">have</span> <span class="n">the</span> <span class="n">string</span> <span class="n">split</span> <span class="n">into</span> <span class="n">lines</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">should</span> <span class="n">see</span> <span class="n">the</span> <span class="n">following</span><span class="o">:</span>
+      <span class="s2">"""</span>
+<span class="s2">      one</span>
+<span class="s2">      two</span>
+<span class="s2">      three</span>
+<span class="s2">      four</span>
+<span class="s2">      five</span>
+<span class="s2">      """</span>
+</pre></div>
+<p>A line with nothing but three quotes (&ldquo;&rdquo;&ldquo;) is used to indicate the
+beginning and the end of a multi-line string.</p>
+
+<p>Now, let&#39;s define a step that knows how to use this.</p>
+<div class="highlight"><pre name="multi-line-strings-example-2"><span class="n">from</span> <span class="n">lettuce</span> <span class="n">import</span> <span class="n">step</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I should see the following:'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">i_should_see_the_following</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">assert</span> <span class="n">step</span><span class="p">.</span><span class="n">multiline</span> <span class="o">==</span> """<span class="n">one</span>
+<span class="n">two</span>
+<span class="n">three</span>
+<span class="n">four</span>
+<span class="n">five</span>"""
+</pre></div>
+<p>Nice and straightforward.</p>
+
+<p>Notice that leading spaces are stripped, and there&#39;s not a newline at
+the beginning or end. This is due to the way that the parser strips
+blank lines and leading and trailing whitespace.</p>
+
+<p>If you need blank lines leading or trailing whitespace, you can include
+lines which start and/or end with double quote, and they will be
+concatenated with the other multiline lines, with the quotes stripped
+off and their whitespace preserved.</p>
+
+<p>For example</p>
+<div class="highlight"><pre name="multi-line-strings-example-3"><span class="n">Feature</span><span class="o">:</span> <span class="n">Split</span> <span class="n">a</span> <span class="n">string</span> <span class="n">into</span> <span class="n">multiple</span> <span class="n">lines</span> <span class="n">on</span> <span class="n">spaces</span>
+  <span class="n">In</span> <span class="n">order</span> <span class="n">to</span> <span class="n">make</span> <span class="n">strings</span> <span class="n">more</span> <span class="n">readable</span>
+  <span class="n">As</span> <span class="n">a</span> <span class="n">user</span>
+  <span class="n">I</span> <span class="n">want</span> <span class="n">to</span> <span class="n">have</span> <span class="n">words</span> <span class="n">split</span> <span class="n">into</span> <span class="n">their</span> <span class="n">own</span> <span class="n">lines</span>
+
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">Split</span> <span class="n">small</span><span class="o">-</span><span class="n">ish</span> <span class="n">string</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">string</span> <span class="s2">"one two three four five"</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">ask</span> <span class="n">to</span> <span class="n">have</span> <span class="n">the</span> <span class="n">string</span> <span class="n">split</span> <span class="n">into</span> <span class="n">lines</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">should</span> <span class="n">see</span> <span class="n">the</span> <span class="n">following</span><span class="o">:</span>
+      <span class="s2">"""</span>
+<span class="s2">     "</span> <span class="n">one</span>
+     <span class="s2">" two  "</span>
+     <span class="s2">"  three   "</span>
+     <span class="s2">"   four    "</span>
+     <span class="s2">"    five     "</span>
+     <span class="s2">"</span>
+<span class="s2">      """</span>
+</pre></div>
+<p>Which we can verify like so:</p>
+<div class="highlight"><pre name="multi-line-strings-example-4"><span class="n">from</span> <span class="n">lettuce</span> <span class="n">import</span> <span class="n">step</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I should see the following:'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">i_should_see_the_following</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">assert</span> <span class="n">step</span><span class="p">.</span><span class="n">multiline</span> <span class="o">==</span> <span class="s">'\n'</span><span class="p">.</span><span class="n">join</span><span class="p">([</span>
+    <span class="s">' one'</span><span class="p">,</span>
+    <span class="s">'  two  '</span><span class="p">,</span>
+    <span class="s">'   three   '</span><span class="p">,</span>
+    <span class="s">'    four    '</span><span class="p">,</span>
+    <span class="s">'     five     '</span><span class="p">,</span>
+    <span class="s">''</span><span class="p">])</span>
+</pre></div>
+<p>Admittedly, this is a hack, but there&#39;s no clean way to preserve
+whitespace in only one section of a feature definition in the current
+parser implementation.</p>
+
+<p>Note that the first line doesn&#39;t have any whitespace at the end, and
+thus doesn&#39;t need to have a quote at the end of it.</p>
+
+<p>Also note that if you want a double quote at the beginning of a line in
+your string, you&#39;ll have to start your line with two double quotes,
+since the first one will be stripped off.</p>
+
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="span7">
+            <h3 class="footer-title">Lettuce</h3>
+            <p>Lettuce is maintained by gabrielfalcao. <br />
+              This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+            </p>
+            <p>
+              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
+              <a class="footer-brand" href="http://designmodo.com" target="_blank">
+                <img src="../assets/images/footer/logo.png" alt="Designmodo.com">
+              </a>
+            </p>
+          </div> <!-- /span8 -->
+
+          <div class="span5">
+            <div class="footer-banner">
+              <h3 class="footer-title">Table of contents</h3>
+              <ul>
+                 
+                <li>
+                  <a href="../contents.html">
+                        contents.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/documentation.html">
+                        documentation.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install-debian-squeeze.html">
+                        install-debian-squeeze.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/testing.html">
+                        testing.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/overview.html">
+                        overview.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/wtf.html">
+                        wtf.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/django-lxml.html">
+                        django-lxml.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/nose.html">
+                        nose.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/cli.html">
+                        cli.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/features.html">
+                        features.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/languages.html">
+                        languages.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/terrain.html">
+                        terrain.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./django.html">
+                        django.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./multiline.html">
+                        multiline.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./scenario-outlines.html">
+                        scenario-outlines.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./simple.html">
+                        simple.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./steps-from-step-definitions.html">
+                        steps-from-step-definitions.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./tables.html">
+                        tables.md
+                  </a>
+                </li>
+                 
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

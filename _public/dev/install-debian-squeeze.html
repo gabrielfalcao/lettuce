@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="../assets/css/flat-ui.css" rel="stylesheet">
+    <link href="../assets/css/github.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">Lettuce
+          <small>Behaviour Driven Development for python</small></h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div class="sidebar-nav">
+            <ul class="share mrl">
+              <div class="btn btn-primary btn-block btn-large">
+                <h3>Sections</h3>
+              </div>
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#installation-on-debian-squeeze">
+         Installation on Debian Squeeze
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#variables">
+         Variables
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#install-system-dependencies">
+         Install system dependencies
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#get-sources">
+         Get sources
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#create-virtualenv">
+         Create virtualenv
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#install-lettuce-in-develop-mode">
+         Install lettuce in develop mode
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#check-installation">
+         Check installation
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#done-">
+         Done!
+    </a>
+  
+    
+  
+              
+            </ul>
+          </div>
+        </div>
+        <div class="span8">
+          <h1 id="installation-on-debian-squeeze" name="installation-on-debian-squeeze"><a href="#installation-on-debian-squeeze">Installation on Debian Squeeze</a></h1>
+<p>Recipe to get a development environment for lettuce in a fresh install
+of Debian Squeeze.</p>
+<h2 id="variables" name="variables"><a href="#variables">Variables</a></h2>
+<p>The following values are used below. You may customize them depending on
+your needs.</p>
+<div class="highlight"><pre name="installation-on-debian-squeeze-example-1"><span class="c"># Lettuce installation directory.</span>
+<span class="n">lettuce_dir</span><span class="p">=</span><span class="o">~/</span><span class="n">lettuce</span>
+<span class="c"># Virtualenv directory.</span>
+<span class="n">lettuce_env_dir</span><span class="p">=</span>$<span class="n">lettuce_dir</span>
+<span class="c"># Git.</span>
+<span class="n">upstream_url</span><span class="p">=</span><span class="s">"https://github.com/gabrielfalcao/lettuce.git"</span>
+<span class="n">fork_url</span><span class="p">=</span>$<span class="n">upstream_url</span>
+<span class="c"># System's package manager.</span>
+<span class="nb">system</span><span class="o">-</span><span class="n">install</span><span class="p">()</span> <span class="p">{</span> <span class="n">su</span> <span class="o">-</span><span class="n">c</span> <span class="s">"aptitude install ${*}"</span> <span class="p">}</span>
+</pre></div><h2 id="install-system-dependencies" name="install-system-dependencies"><a href="#install-system-dependencies">Install system dependencies</a></h2>
+<p>Execute the following commands:</p>
+<div class="highlight"><pre name="installation-on-debian-squeeze-example-2"><span class="n">system</span><span class="o">-</span><span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">dev</span> <span class="n">python</span><span class="o">-</span><span class="n">virtualenv</span> <span class="n">git</span> <span class="n">libxml2</span><span class="o">-</span><span class="n">dev</span> <span class="n">libxslt</span><span class="o">-</span><span class="n">dev</span>
+</pre></div><h2 id="get-sources" name="get-sources"><a href="#get-sources">Get sources</a></h2><div class="highlight"><pre name="installation-on-debian-squeeze-example-3"><span class="n">git</span> <span class="n">clone</span> $<span class="n">fork_url</span> $<span class="n">lettuce_dir</span>
+# <span class="n">Configure</span> <span class="n">upstream</span>
+<span class="n">cd</span> $<span class="n">lettuce_dir</span>
+<span class="n">git</span> <span class="n">remote</span> <span class="n">add</span> <span class="n">upstream</span> $<span class="n">upstream_url</span>
+</pre></div><h2 id="create-virtualenv" name="create-virtualenv"><a href="#create-virtualenv">Create virtualenv</a></h2><div class="highlight"><pre name="installation-on-debian-squeeze-example-4"><span class="n">virtualenv</span> <span class="o">--</span><span class="n">distribute</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span> $<span class="n">lettuce_env_dir</span>
+<span class="n">source</span> $<span class="n">lettuce_env_dir</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">activate</span>
+<span class="n">cd</span> $<span class="n">lettuce_dir</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span>
+</pre></div><h2 id="install-lettuce-in-develop-mode" name="install-lettuce-in-develop-mode"><a href="#install-lettuce-in-develop-mode">Install lettuce in develop mode</a></h2><div class="highlight"><pre name="installation-on-debian-squeeze-example-5"><span class="n">python</span> <span class="n">setup</span><span class="p">.</span><span class="n">py</span> <span class="n">develop</span>
+</pre></div><h2 id="check-installation" name="check-installation"><a href="#check-installation">Check installation</a></h2>
+<p>You should be able to run lettuce and tests.</p>
+<div class="highlight"><pre name="installation-on-debian-squeeze-example-6"><span class="n">lettuce</span> <span class="o">--</span><span class="n">help</span>
+</pre></div><h2 id="done-" name="done-"><a href="#done-">Done!</a></h2>
+<p>Go back to :doc:/dev/index and learn about :doc:/dev/testing.</p>
+
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="span7">
+            <h3 class="footer-title">Lettuce</h3>
+            <p>Lettuce is maintained by gabrielfalcao. <br />
+              This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+            </p>
+            <p>
+              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
+              <a class="footer-brand" href="http://designmodo.com" target="_blank">
+                <img src="../assets/images/footer/logo.png" alt="Designmodo.com">
+              </a>
+            </p>
+          </div> <!-- /span8 -->
+
+          <div class="span5">
+            <div class="footer-banner">
+              <h3 class="footer-title">Table of contents</h3>
+              <ul>
+                 
+                <li>
+                  <a href="../contents.html">
+                        contents.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./documentation.html">
+                        documentation.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./install-debian-squeeze.html">
+                        install-debian-squeeze.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./testing.html">
+                        testing.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/overview.html">
+                        overview.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/wtf.html">
+                        wtf.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/django-lxml.html">
+                        django-lxml.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/nose.html">
+                        nose.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/cli.html">
+                        cli.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/features.html">
+                        features.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/languages.html">
+                        languages.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/terrain.html">
+                        terrain.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/django.html">
+                        django.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/multiline.html">
+                        multiline.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/scenario-outlines.html">
+                        scenario-outlines.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/simple.html">
+                        simple.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/steps-from-step-definitions.html">
+                        steps-from-step-definitions.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/tables.html">
+                        tables.md
+                  </a>
+                </li>
+                 
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
