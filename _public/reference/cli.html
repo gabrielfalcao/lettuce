@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="../assets/css/flat-ui.css" rel="stylesheet">
+    <link href="../assets/css/github.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">Lettuce
+          <small>Behaviour Driven Development for python</small></h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div class="sidebar-nav">
+            <ul class="share mrl">
+              <div class="btn btn-primary btn-block btn-large">
+                <h3>Sections</h3>
+              </div>
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#the-command-line">
+         the command line
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#running-a-specific-feature-file">
+         running a specific feature file
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#running-only-some-scenarios-of-a-specific-feature-file">
+         running only some scenarios of a specific feature file
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#running-only-some-scenarios-all-feature-files">
+         running only some scenarios all feature files
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#verbosity-levels">
+         verbosity levels
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#level-1---dots-for-each-feature">
+         level 1 - dots for each feature
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#level-2---scenario-names">
+         level 2 - scenario names
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#level-3---full-feature-print--but-colorless">
+         level 3 - full feature print, but colorless
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#level-4---full-feature-print--but-colorful">
+         level 4 - full feature print, but colorful
+    </a>
+  
+    
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#getting-help-from-shell">
+         getting help from shell
+    </a>
+  
+    
+  
+    
+  
+              
+            </ul>
+          </div>
+        </div>
+        <div class="span8">
+          <h1 id="the-command-line" name="the-command-line"><a href="#the-command-line">the command line</a></h1>
+<p>Lettuce is used as a command line utility, it means that currently the
+only way to use it is through a shell.</p>
+
+<p>Once in a shell, you can use lettuce in 2 ways:</p>
+
+<ul>
+<li>  in the :ref:usual way &lt;tutorial-simple&gt;</li>
+</ul>
+
+<p>Which means having the simple features/step_definitions folder
+somewhere in your project</p>
+
+<ul>
+<li>  within a :ref:Django-powered &lt;recipes-django-lxml&gt; project.</li>
+</ul>
+
+<p>The difference between them is that within Django you have more options,
+but both ways have these common options:</p>
+<h2 id="running-a-specific-feature-file" name="running-a-specific-feature-file"><a href="#running-a-specific-feature-file">running a specific feature file</a></h2><div class="highlight"><pre name="the-command-line-example-1"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">myproj</span>$ <span class="n">lettuce</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">some</span><span class="o">/</span><span class="n">file</span><span class="p">.</span><span class="n">feature</span>
+</pre></div>
+<p>With this option, your feature can even be out of the default <code>features</code>
+folder.</p>
+<h2 id="running-only-some-scenarios-of-a-specific-feature-file" name="running-only-some-scenarios-of-a-specific-feature-file"><a href="#running-only-some-scenarios-of-a-specific-feature-file">running only some scenarios of a specific feature file</a></h2><div class="highlight"><pre name="the-command-line-example-2"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">myproj</span>$ <span class="n">lettuce</span> <span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">some</span><span class="o">/</span><span class="n">file</span><span class="p">.</span><span class="n">feature</span> <span class="o">-</span><span class="n">s</span> 3<span class="p">,</span>5<span class="p">,</span>9
+</pre></div>
+<p>This will run the scenarios 3, 5 and 9 from file
+<code>path/to/some/file.feature</code></p>
+<h2 id="running-only-some-scenarios-all-feature-files" name="running-only-some-scenarios-all-feature-files"><a href="#running-only-some-scenarios-all-feature-files">running only some scenarios all feature files</a></h2>
+<p>Maybe you can find it senseless, but it works like that, and does not
+hurt so far :)</p>
+<div class="highlight"><pre name="the-command-line-example-3"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">myproj</span>$ <span class="n">lettuce</span> <span class="o">-</span><span class="n">s</span> 3<span class="p">,</span>5<span class="p">,</span>9
+</pre></div>
+<p>Yeah, guess what?</p>
+
+<p>This command will run the scenarios 3, 5 and 9 of all feature files
+living on <code>myproj/features</code> folder.</p>
+<h3 id="verbosity-levels" name="verbosity-levels"><a href="#verbosity-levels">verbosity levels</a></h3><h4 id="level-1---dots-for-each-feature" name="level-1---dots-for-each-feature"><a href="#level-1---dots-for-each-feature">level 1 - dots for each feature</a></h4><div class="highlight"><pre name="the-command-line-example-4"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">myproj</span>$ <span class="n">lettuce</span> <span class="o">--</span><span class="n">verbosity</span><span class="p">=</span>1
+</pre></div>
+<p>This is lettuce&#39;s minimum verbosity level. It shows dots for each step
+run, regardless of what scenario or what feature is currently running.</p>
+
+<p>For example, if you have a feature that looks like:</p>
+<div class="highlight"><pre name="the-command-line-example-5"><span class="n">Feature</span><span class="o">:</span> <span class="n">Manipulate</span> <span class="n">strings</span>
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">Uppercased</span> <span class="n">strings</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">string</span> <span class="s2">"lettuce leaves"</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">put</span> <span class="n">it</span> <span class="k">in</span> <span class="n">upper</span> <span class="k">case</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">string</span> <span class="k">is</span> <span class="s2">"LETTUCE LEAVES"</span>
+</pre></div>
+<p>The output will be:</p>
+<div class="highlight"><pre name="the-command-line-example-6"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">myproj</span>$ <span class="n">lettuce</span> <span class="o">-</span><span class="n">v</span> 1
+<span class="p">...</span>
+
+1 <span class="n">feature</span> <span class="p">(</span>1 <span class="n">passed</span><span class="p">)</span>
+1 <span class="n">scenario</span> <span class="p">(</span>1 <span class="n">passed</span><span class="p">)</span>
+3 <span class="n">steps</span> <span class="p">(</span>3 <span class="n">passed</span><span class="p">)</span>
+</pre></div><h4 id="level-2---scenario-names" name="level-2---scenario-names"><a href="#level-2---scenario-names">level 2 - scenario names</a></h4><div class="highlight"><pre name="the-command-line-example-7"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">myproj</span>$ <span class="n">lettuce</span> <span class="o">--</span><span class="n">verbosity</span><span class="p">=</span>2
+</pre></div>
+<p>In this mode, lettuce will print each scenario name that is currently
+being ran, followed by <strong>OK</strong>, <strong>FAILED</strong> or <strong>ERROR</strong> depending of the
+status of the steps within that scenario.</p>
+
+<p>For example, if you have a feature that looks like:</p>
+<div class="highlight"><pre name="the-command-line-example-8"><span class="n">Feature</span><span class="o">:</span> <span class="n">Manipulate</span> <span class="n">strings</span>
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">Uppercased</span> <span class="n">strings</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">string</span> <span class="s2">"lettuce leaves"</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">put</span> <span class="n">it</span> <span class="k">in</span> <span class="n">upper</span> <span class="k">case</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">string</span> <span class="k">is</span> <span class="s2">"LETTUCE LEAVES"</span>
+
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">basic</span> <span class="n">math</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">sum</span> <span class="mi">2</span> <span class="n">and</span> <span class="mi">5</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">result</span> <span class="k">is</span> <span class="mi">9</span>
+</pre></div>
+<p>The output will be:</p>
+<div class="highlight"><pre name="the-command-line-example-9"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">myproj</span>$ <span class="n">lettuce</span> <span class="o">-</span><span class="n">v</span> 2
+<span class="n">Uppercased</span> <span class="n">strings</span> <span class="p">...</span> <span class="n">OK</span>
+<span class="n">basic</span> <span class="n">math</span> <span class="p">...</span> <span class="n">FAILED</span>
+
+1 <span class="n">feature</span> <span class="p">(</span>1 <span class="n">passed</span><span class="p">)</span>
+2 <span class="n">scenarios</span> <span class="p">(</span>2 <span class="n">passed</span><span class="p">)</span>
+5 <span class="n">steps</span> <span class="p">(</span>4 <span class="n">passed</span><span class="p">)</span>
+</pre></div><h4 id="level-3---full-feature-print--but-colorless" name="level-3---full-feature-print--but-colorless"><a href="#level-3---full-feature-print--but-colorless">level 3 - full feature print, but colorless</a></h4><div class="highlight"><pre name="the-command-line-example-10"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">myproj</span>$ <span class="n">lettuce</span> <span class="o">--</span><span class="n">verbosity</span><span class="p">=</span>3
+</pre></div>
+<p>This mode is a lot more verbose than the later one. It prints every
+single feature, with really useful information like:</p>
+
+<ul>
+<li>  the relative path to the feature file being ran, and the current
+line in that file</li>
+<li>  the relative path to the step definition responsible for the step
+being ran, also followed by the current line</li>
+<li>  inline tracebacks when some feature fails</li>
+<li>  &ldquo;ready-to-use&rdquo; snippets for undefined steps</li>
+</ul>
+
+<p>For example, let&#39;s say you have the feature below, but only the step
+<code>Given I have the string &quot;lettuce leaves&quot;</code> is defined</p>
+<div class="highlight"><pre name="the-command-line-example-11"><span class="n">Feature</span><span class="o">:</span> <span class="n">Manipulate</span> <span class="n">strings</span>
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">Uppercased</span> <span class="n">strings</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">string</span> <span class="s2">"lettuce leaves"</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">put</span> <span class="n">it</span> <span class="k">in</span> <span class="n">upper</span> <span class="k">case</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">string</span> <span class="k">is</span> <span class="s2">"LETTUCE LEAVES"</span>
+</pre></div>
+<p>Your output will look like:</p>
+<div class="highlight"><pre name="the-command-line-example-12"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">myproj</span>$ <span class="n">lettuce</span> <span class="o">-</span><span class="n">v</span> 2
+
+<span class="n">Feature</span><span class="p">:</span> <span class="n">Manipulate</span> <span class="n">strings</span>                   # <span class="n">features</span><span class="o">/</span><span class="n">strings</span><span class="p">.</span><span class="n">feature</span><span class="p">:</span>1
+
+  <span class="n">Scenario</span><span class="p">:</span> <span class="n">Uppercased</span> <span class="n">strings</span>                # <span class="n">features</span><span class="o">/</span><span class="n">strings</span><span class="p">.</span><span class="n">feature</span><span class="p">:</span>2
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">string</span> "<span class="n">lettuce</span> <span class="n">leaves</span>"  # <span class="n">features</span><span class="o">/</span><span class="n">step_definitions</span><span class="o">/</span><span class="n">example</span><span class="o">-</span><span class="n">steps</span><span class="p">.</span><span class="n">py</span><span class="p">:</span>5
+    <span class="n">When</span> <span class="n">I</span> <span class="n">put</span> <span class="n">it</span> <span class="n">in</span> <span class="n">upper</span> <span class="k">case</span>               # <span class="n">features</span><span class="o">/</span><span class="n">strings</span><span class="p">.</span><span class="n">feature</span><span class="p">:</span>4 <span class="p">(</span><span class="n">undefined</span><span class="p">)</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">string</span> <span class="n">is</span> "<span class="n">LETTUCE</span> <span class="n">LEAVES</span>" # <span class="n">features</span><span class="o">/</span><span class="n">strings</span><span class="p">.</span><span class="n">feature</span><span class="p">:</span>5 <span class="p">(</span><span class="n">undefined</span><span class="p">)</span>
+
+1 <span class="n">feature</span> <span class="p">(</span>0 <span class="n">passed</span><span class="p">)</span>
+1 <span class="n">scenario</span> <span class="p">(</span>0 <span class="n">passed</span><span class="p">)</span>
+3 <span class="n">steps</span> <span class="p">(</span>2 <span class="n">undefined</span><span class="p">,</span> 1 <span class="n">passed</span><span class="p">)</span>
+
+<span class="n">You</span> <span class="n">can</span> <span class="n">implement</span> <span class="n">step</span> <span class="n">definitions</span> <span class="k">for</span> <span class="n">undefined</span> <span class="n">steps</span> <span class="n">with</span> <span class="n">these</span> <span class="n">snippets</span><span class="p">:</span>
+
+# <span class="o">-*-</span> <span class="n">coding</span><span class="p">:</span> <span class="n">utf</span><span class="o">-</span>8 <span class="o">-*-</span>
+<span class="n">from</span> <span class="n">lettuce</span> <span class="n">import</span> <span class="n">step</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="n">u</span><span class="o">'</span><span class="n">When</span> <span class="n">I</span> <span class="n">put</span> <span class="n">it</span> <span class="n">in</span> <span class="n">upper</span> <span class="k">case</span><span class="o">'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">when_i_put_it_in_upper_case</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">assert</span> <span class="n">False</span><span class="p">,</span> <span class="s">'This step must be implemented'</span>
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="n">u</span><span class="o">'</span><span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">the</span> <span class="n">string</span> <span class="n">is</span> "<span class="p">(</span><span class="o">.*</span><span class="p">)</span>"<span class="s">')</span>
+<span class="s">def then_i_see_the_string_is_group1(step, group1):</span>
+<span class="s">    assert False, '</span><span class="n">This</span> <span class="n">step</span> <span class="n">must</span> <span class="n">be</span> <span class="n">implemented</span><span class="o">'</span>
+</pre></div><h4 id="level-4---full-feature-print--but-colorful" name="level-4---full-feature-print--but-colorful"><a href="#level-4---full-feature-print--but-colorful">level 4 - full feature print, but colorful</a></h4>
+<p>This mode is almost <strong>exactly</strong> the same of level 3, the difference is
+that it&#39;s colorful.</p>
+
+<p><img src="../tutorial/screenshot6.png" title="None" alt="image" /></p>
+<h3 id="getting-help-from-shell" name="getting-help-from-shell"><a href="#getting-help-from-shell">getting help from shell</a></h3><div class="highlight"><pre name="the-command-line-example-13"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">projects</span><span class="o">/</span><span class="n">myproj</span>$ <span class="n">lettuce</span> <span class="o">-</span><span class="n">h</span>
+</pre></div>
+<p>Shows all the options described here.</p>
+
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="span7">
+            <h3 class="footer-title">Lettuce</h3>
+            <p>Lettuce is maintained by gabrielfalcao. <br />
+              This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+            </p>
+            <p>
+              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
+              <a class="footer-brand" href="http://designmodo.com" target="_blank">
+                <img src="../assets/images/footer/logo.png" alt="Designmodo.com">
+              </a>
+            </p>
+          </div> <!-- /span8 -->
+
+          <div class="span5">
+            <div class="footer-banner">
+              <h3 class="footer-title">Table of contents</h3>
+              <ul>
+                 
+                <li>
+                  <a href="../contents.html">
+                        contents.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/documentation.html">
+                        documentation.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install-debian-squeeze.html">
+                        install-debian-squeeze.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/testing.html">
+                        testing.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/overview.html">
+                        overview.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/wtf.html">
+                        wtf.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/django-lxml.html">
+                        django-lxml.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/nose.html">
+                        nose.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./cli.html">
+                        cli.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./features.html">
+                        features.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./languages.html">
+                        languages.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./terrain.html">
+                        terrain.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/django.html">
+                        django.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/multiline.html">
+                        multiline.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/scenario-outlines.html">
+                        scenario-outlines.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/simple.html">
+                        simple.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/steps-from-step-definitions.html">
+                        steps-from-step-definitions.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/tables.html">
+                        tables.md
+                  </a>
+                </li>
+                 
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

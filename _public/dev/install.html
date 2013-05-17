@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="../assets/css/flat-ui.css" rel="stylesheet">
+    <link href="../assets/css/github.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">Lettuce
+          <small>Behaviour Driven Development for python</small></h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div class="sidebar-nav">
+            <ul class="share mrl">
+              <div class="btn btn-primary btn-block btn-large">
+                <h3>Sections</h3>
+              </div>
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#install-a-development-environment-for-lettuce">
+         Install a development environment for lettuce
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#os-specific">
+         OS specific
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#generic-guidelines">
+         Generic guidelines
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#dependencies">
+         Dependencies
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#you-could-use-a-virtualenv">
+         you could use a virtualenv
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#or-just-install-manually">
+         or just install manually
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#or-do-it-really-from-scratch">
+         or do it really from scratch
+    </a>
+  
+    
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#installing-lettuce-itself">
+         Installing lettuce itself
+    </a>
+  
+    
+  
+    
+  
+              
+            </ul>
+          </div>
+        </div>
+        <div class="span8">
+          <h1 id="install-a-development-environment-for-lettuce" name="install-a-development-environment-for-lettuce"><a href="#install-a-development-environment-for-lettuce">Install a development environment for lettuce</a></h1>
+<p>Here are guidelines to get a development environment for lettuce.</p>
+<h2 id="os-specific" name="os-specific"><a href="#os-specific">OS specific</a></h2>
+<p>Here are repcipes for specific operating systems. They should help you
+go fast or automate lettuce installation procedure:</p>
+<h2 id="generic-guidelines" name="generic-guidelines"><a href="#generic-guidelines">Generic guidelines</a></h2><h3 id="dependencies" name="dependencies"><a href="#dependencies">Dependencies</a></h3>
+<p><strong>you will need to install these dependencies in order to</strong> <em>hack</em>
+<strong>lettuce</strong> :)</p>
+
+<p>All of them are used within lettuce tests.</p>
+<h4 id="you-could-use-a-virtualenv" name="you-could-use-a-virtualenv"><a href="#you-could-use-a-virtualenv">you could use a virtualenv</a></h4><div class="highlight"><pre name="install-a-development-environment-for-lettuce-example-1"><span class="n">mkvirtualenv</span> <span class="n">lettuce</span>
+<span class="n">workon</span> <span class="n">lettuce</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span>
+</pre></div><h4 id="or-just-install-manually" name="or-just-install-manually"><a href="#or-just-install-manually">or just install manually</a></h4><div class="highlight"><pre name="install-a-development-environment-for-lettuce-example-2"><span class="n">sudo</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span>
+</pre></div><h4 id="or-do-it-really-from-scratch" name="or-do-it-really-from-scratch"><a href="#or-do-it-really-from-scratch">or do it really from scratch</a></h4>
+<ul>
+<li><p><a href="[http://code.google.com/p/python-nose/](http://code.google.com/p/python-nose/" title="None">nose</a>)
+:   &gt; [sudo] pip install nose</p></li>
+<li><p><a href="[http://code.google.com/p/pymox/](http://code.google.com/p/pymox/" title="None">mox</a>)
+:   &gt; [sudo] pip install mox</p></li>
+<li><p><a href="[http://sphinx.pocoo.org/](http://sphinx.pocoo.org/" title="None">sphinx</a>)
+:   &gt; [sudo] pip install sphinx</p></li>
+<li><p><a href="[http://codespeak.net/lxml/](http://codespeak.net/lxml/" title="None">lxml</a>)
+:   &gt; [sudo] pip install lxml</p></li>
+<li><p><a href="[http://tornadoweb.org/](http://tornadoweb.org/" title="None">tornado</a>)
+:   &gt; [sudo] pip install tornado</p></li>
+<li><p><a href="[http://djangoproject.com/](http://djangoproject.com/" title="None">django</a>)
+:   &gt; [sudo] pip install django</p></li>
+</ul>
+<h3 id="installing-lettuce-itself" name="installing-lettuce-itself"><a href="#installing-lettuce-itself">Installing lettuce itself</a></h3><div class="highlight"><pre name="install-a-development-environment-for-lettuce-example-3"><span class="p">[</span><span class="n">sudo</span><span class="p">]</span> <span class="n">python</span> <span class="n">setup</span><span class="p">.</span><span class="n">py</span> <span class="n">develop</span>
+</pre></div>
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="span7">
+            <h3 class="footer-title">Lettuce</h3>
+            <p>Lettuce is maintained by gabrielfalcao. <br />
+              This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+            </p>
+            <p>
+              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
+              <a class="footer-brand" href="http://designmodo.com" target="_blank">
+                <img src="../assets/images/footer/logo.png" alt="Designmodo.com">
+              </a>
+            </p>
+          </div> <!-- /span8 -->
+
+          <div class="span5">
+            <div class="footer-banner">
+              <h3 class="footer-title">Table of contents</h3>
+              <ul>
+                 
+                <li>
+                  <a href="../contents.html">
+                        contents.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./documentation.html">
+                        documentation.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./install-debian-squeeze.html">
+                        install-debian-squeeze.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./testing.html">
+                        testing.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/overview.html">
+                        overview.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/wtf.html">
+                        wtf.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/django-lxml.html">
+                        django-lxml.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/nose.html">
+                        nose.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/cli.html">
+                        cli.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/features.html">
+                        features.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/languages.html">
+                        languages.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/terrain.html">
+                        terrain.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/django.html">
+                        django.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/multiline.html">
+                        multiline.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/scenario-outlines.html">
+                        scenario-outlines.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/simple.html">
+                        simple.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/steps-from-step-definitions.html">
+                        steps-from-step-definitions.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/tables.html">
+                        tables.md
+                  </a>
+                </li>
+                 
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

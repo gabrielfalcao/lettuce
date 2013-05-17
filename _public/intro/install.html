@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="../assets/css/flat-ui.css" rel="stylesheet">
+    <link href="../assets/css/github.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">Lettuce
+          <small>Behaviour Driven Development for python</small></h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div class="sidebar-nav">
+            <ul class="share mrl">
+              <div class="btn btn-primary btn-block btn-large">
+                <h3>Sections</h3>
+              </div>
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#installing-lettuce">
+         Installing Lettuce
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#stable-release">
+         Stable release
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#using-control-version--39-s-head">
+         Using control version&#39;s HEAD
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#build-and-install-the-egg-from-sources">
+         Build and install the egg from sources
+    </a>
+  
+    
+      <a class="btn btn-inverse btn-block btn-large"
+       href="#use-the-latest-code-to-contribute-with-lettuce--39-s-codebase">
+         Use the latest code to contribute with lettuce&#39;s codebase
+    </a>
+  
+    
+  
+    
+  
+              
+            </ul>
+          </div>
+        </div>
+        <div class="span8">
+          <h1 id="installing-lettuce" name="installing-lettuce"><a href="#installing-lettuce">Installing Lettuce</a></h1><h2 id="stable-release" name="stable-release"><a href="#stable-release">Stable release</a></h2>
+<p>You can install the latest stable release with pip</p>
+<div class="highlight"><pre name="installing-lettuce-example-1"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~</span>$ <span class="p">[</span><span class="n">sudo</span><span class="p">]</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">lettuce</span>
+</pre></div><h2 id="using-control-version--39-s-head" name="using-control-version--39-s-head"><a href="#using-control-version--39-s-head">Using control version&#39;s HEAD</a></h2>
+<p>Otherwise, if you&#39;re a more adventurous developer, you can use the
+bleeding edge version of Lettuce by taking the git HEAD</p>
+
+<p>If you want so, you have basically 2 options:</p>
+<h3 id="build-and-install-the-egg-from-sources" name="build-and-install-the-egg-from-sources"><a href="#build-and-install-the-egg-from-sources">Build and install the egg from sources</a></h3>
+<p>Good for those that just want to use the latest features</p>
+<div class="highlight"><pre name="installing-lettuce-example-2"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">Downloads</span>$ <span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">gabrielfalcao</span><span class="o">/</span><span class="n">lettuce</span><span class="p">.</span><span class="n">git</span>
+<span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">Downloads</span>$ <span class="n">cd</span> <span class="n">lettuce</span>
+<span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">Downloads</span><span class="o">/</span><span class="n">lettuce</span>$ <span class="n">sudo</span> <span class="n">python</span> <span class="n">setup</span><span class="p">.</span><span class="n">py</span> <span class="n">install</span>
+</pre></div><h3 id="use-the-latest-code-to-contribute-with-lettuce--39-s-codebase" name="use-the-latest-code-to-contribute-with-lettuce--39-s-codebase"><a href="#use-the-latest-code-to-contribute-with-lettuce--39-s-codebase">Use the latest code to contribute with lettuce&#39;s codebase</a></h3>
+<p>If it is your case, I strongly recommend a sandbox:</p>
+
+<p><strong>GNU/Linux:</strong></p>
+
+<ol>
+<li> Fetch the code</li>
+</ol>
+
+<!-- -->
+<div class="highlight"><pre name="installing-lettuce-example-3"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">Projects</span>$ <span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">gabrielfalcao</span><span class="o">/</span><span class="n">lettuce</span><span class="p">.</span><span class="n">git</span>
+</pre></div>
+<ol>
+<li> Add to your PYTHONPATH</li>
+</ol>
+
+<!-- -->
+<div class="highlight"><pre name="installing-lettuce-example-4"><span class="n">user</span><span class="p">@</span><span class="n">machine</span><span class="p">:</span><span class="o">~/</span><span class="n">Projects</span>$ <span class="n">echo</span> "<span class="n">export</span> <span class="n">PYTHONPATH</span><span class="p">=</span>$<span class="n">HOME</span><span class="o">/</span><span class="n">Projects</span><span class="o">/</span><span class="n">lettuce</span><span class="p">:</span>$<span class="n">PYTHONPATH</span>" <span class="o">&gt;&gt;</span> $<span class="n">HOME</span><span class="o">/</span><span class="p">.</span><span class="n">bashrc</span>
+</pre></div>
+<ol>
+<li> Open a new terminal and enjoy!</li>
+</ol>
+
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="span7">
+            <h3 class="footer-title">Lettuce</h3>
+            <p>Lettuce is maintained by gabrielfalcao. <br />
+              This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+            </p>
+            <p>
+              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
+              <a class="footer-brand" href="http://designmodo.com" target="_blank">
+                <img src="../assets/images/footer/logo.png" alt="Designmodo.com">
+              </a>
+            </p>
+          </div> <!-- /span8 -->
+
+          <div class="span5">
+            <div class="footer-banner">
+              <h3 class="footer-title">Table of contents</h3>
+              <ul>
+                 
+                <li>
+                  <a href="../contents.html">
+                        contents.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/documentation.html">
+                        documentation.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install-debian-squeeze.html">
+                        install-debian-squeeze.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/testing.html">
+                        testing.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./overview.html">
+                        overview.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./wtf.html">
+                        wtf.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/django-lxml.html">
+                        django-lxml.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/nose.html">
+                        nose.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/cli.html">
+                        cli.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/features.html">
+                        features.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/languages.html">
+                        languages.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/terrain.html">
+                        terrain.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/django.html">
+                        django.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/multiline.html">
+                        multiline.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/scenario-outlines.html">
+                        scenario-outlines.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/simple.html">
+                        simple.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/steps-from-step-definitions.html">
+                        steps-from-step-definitions.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../tutorial/tables.html">
+                        tables.md
+                  </a>
+                </li>
+                 
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>

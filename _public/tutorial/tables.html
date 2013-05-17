@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Flat UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Loading Bootstrap -->
+    <link href="../assets/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Loading Flat UI -->
+    <link href="../assets/css/flat-ui.css" rel="stylesheet">
+    <link href="../assets/css/github.css" rel="stylesheet">
+    <link rel="shortcut icon" href="../assets/images/favicon.ico">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+
+    <div class="container">
+      <div class="demo-headline">
+        <h1 class="demo-logo">Lettuce
+          <small>Behaviour Driven Development for python</small></h1>
+      </div>
+      <div class="row">
+        <div class="span4">
+          <div class="sidebar-nav">
+            <ul class="share mrl">
+              <div class="btn btn-primary btn-block btn-large">
+                <h3>Sections</h3>
+              </div>
+              
+              <a class="btn btn-inverse btn-block btn-large"
+       href="#handling-data-with-tables">
+         handling data with tables
+    </a>
+  
+              
+            </ul>
+          </div>
+        </div>
+        <div class="span8">
+          <h1 id="handling-data-with-tables" name="handling-data-with-tables"><a href="#handling-data-with-tables">handling data with tables</a></h1>
+<p>Let&#39;s imagine writing a MVC application. While writing the tests you
+will stumble in to a situation where there is a few models that must be
+added to the database, maybe you will also need to check the new state
+of those models.</p>
+
+<p>It means that as you write tests with lettuce, it can be very useful to
+handle data within steps.</p>
+
+<p>Step tables are here for you</p>
+<div class="highlight"><pre name="handling-data-with-tables-example-1"><span class="n">Feature</span><span class="o">:</span> <span class="n">bill</span> <span class="n">students</span> <span class="n">alphabetically</span>
+  <span class="n">In</span> <span class="n">order</span> <span class="n">to</span> <span class="n">bill</span> <span class="n">students</span> <span class="n">properly</span>
+  <span class="n">As</span> <span class="n">a</span> <span class="n">financial</span> <span class="n">specialist</span>
+  <span class="n">I</span> <span class="n">want</span> <span class="n">to</span> <span class="n">bill</span> <span class="n">those</span> <span class="n">which</span> <span class="n">name</span> <span class="n">starts</span> <span class="k">with</span> <span class="n">some</span> <span class="n">letter</span>
+
+  <span class="n">Scenario</span><span class="o">:</span> <span class="n">Bill</span> <span class="n">students</span> <span class="n">which</span> <span class="n">name</span> <span class="n">starts</span> <span class="k">with</span> <span class="s2">"G"</span>
+    <span class="n">Given</span> <span class="n">I</span> <span class="n">have</span> <span class="n">the</span> <span class="n">following</span> <span class="n">students</span> <span class="k">in</span> <span class="n">my</span> <span class="n">database</span><span class="o">:</span>
+      <span class="o">|</span> <span class="n">name</span>     <span class="o">|</span> <span class="n">monthly_due</span> <span class="o">|</span> <span class="n">billed</span> <span class="o">|</span>
+      <span class="o">|</span> <span class="n">Anton</span>    <span class="o">|</span> <span class="n">$</span> <span class="mi">500</span>       <span class="o">|</span> <span class="n">no</span>     <span class="o">|</span>
+      <span class="o">|</span> <span class="n">Jack</span>     <span class="o">|</span> <span class="n">$</span> <span class="mi">400</span>       <span class="o">|</span> <span class="n">no</span>     <span class="o">|</span>
+      <span class="o">|</span> <span class="n">Gabriel</span>  <span class="o">|</span> <span class="n">$</span> <span class="mi">300</span>       <span class="o">|</span> <span class="n">no</span>     <span class="o">|</span>
+      <span class="o">|</span> <span class="n">Gloria</span>   <span class="o">|</span> <span class="n">$</span> <span class="mf">442.65</span>    <span class="o">|</span> <span class="n">no</span>     <span class="o">|</span>
+      <span class="o">|</span> <span class="n">Ken</span>      <span class="o">|</span> <span class="n">$</span> <span class="mf">907.86</span>    <span class="o">|</span> <span class="n">no</span>     <span class="o">|</span>
+      <span class="o">|</span> <span class="n">Leonard</span>  <span class="o">|</span> <span class="n">$</span> <span class="mf">742.84</span>    <span class="o">|</span> <span class="n">no</span>     <span class="o">|</span>
+    <span class="n">When</span> <span class="n">I</span> <span class="n">bill</span> <span class="n">names</span> <span class="n">starting</span> <span class="k">with</span> <span class="s2">"G"</span>
+    <span class="n">Then</span> <span class="n">I</span> <span class="n">see</span> <span class="n">those</span> <span class="n">billed</span> <span class="n">students</span><span class="o">:</span>
+      <span class="o">|</span> <span class="n">Gabriel</span>  <span class="o">|</span> <span class="n">$</span> <span class="mi">300</span>       <span class="o">|</span> <span class="n">no</span>     <span class="o">|</span>
+      <span class="o">|</span> <span class="n">Gloria</span>   <span class="o">|</span> <span class="n">$</span> <span class="mf">442.65</span>    <span class="o">|</span> <span class="n">no</span>     <span class="o">|</span>
+    <span class="n">And</span> <span class="n">those</span> <span class="n">that</span> <span class="n">weren</span><span class="err">'</span><span class="n">t</span><span class="o">:</span>
+      <span class="o">|</span> <span class="n">Anton</span>    <span class="o">|</span> <span class="n">$</span> <span class="mi">500</span>       <span class="o">|</span> <span class="n">no</span>     <span class="o">|</span>
+      <span class="o">|</span> <span class="n">Jack</span>     <span class="o">|</span> <span class="n">$</span> <span class="mi">400</span>       <span class="o">|</span> <span class="n">no</span>     <span class="o">|</span>
+      <span class="o">|</span> <span class="n">Ken</span>      <span class="o">|</span> <span class="n">$</span> <span class="mf">907.86</span>    <span class="o">|</span> <span class="n">no</span>     <span class="o">|</span>
+      <span class="o">|</span> <span class="n">Leonard</span>  <span class="o">|</span> <span class="n">$</span> <span class="mf">742.84</span>    <span class="o">|</span> <span class="n">no</span>     <span class="o">|</span>
+</pre></div>
+<p>In the example above there are 4 steps, in which 3 contains tables.</p>
+
+<p>Now let us imagine that we&#39;re using <a href="http://djangoproject.com/" title="None">Django</a>
+and write a step definition that uses the table.</p>
+<div class="highlight"><pre name="handling-data-with-tables-example-2"><span class="n">from</span> <span class="n">lettuce</span> <span class="n">import</span> <span class="n">step</span>
+<span class="n">from</span> <span class="n">school</span><span class="p">.</span><span class="n">models</span> <span class="n">import</span> <span class="n">Student</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I have the following students in my database:'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">students_in_database</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">student_dict</span> <span class="n">in</span> <span class="n">step</span><span class="p">.</span><span class="n">hashes</span><span class="p">:</span>
+        <span class="n">person</span> <span class="p">=</span> <span class="n">Student</span><span class="p">(</span><span class="o">**</span><span class="n">student_dict</span><span class="p">)</span>
+        <span class="n">person</span><span class="p">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+<p>What about handy functions for getting the first or the last row of the
+tables ?!</p>
+<div class="highlight"><pre name="handling-data-with-tables-example-3"><span class="n">from</span> <span class="n">lettuce</span> <span class="n">import</span> <span class="n">step</span>
+<span class="n">from</span> <span class="n">school</span><span class="p">.</span><span class="n">models</span> <span class="n">import</span> <span class="n">Student</span>
+
+<span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I have the following students in my database:'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">students_in_database</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">person1</span> <span class="p">=</span> <span class="n">Student</span><span class="p">(</span><span class="o">**</span><span class="n">step</span><span class="p">.</span><span class="n">hashes</span><span class="p">.</span><span class="n">first</span><span class="p">)</span>
+    <span class="n">person2</span> <span class="p">=</span> <span class="n">Student</span><span class="p">(</span><span class="o">**</span><span class="n">step</span><span class="p">.</span><span class="n">hashes</span><span class="p">.</span><span class="n">last</span><span class="p">)</span>
+
+    <span class="n">person1</span><span class="p">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="n">person2</span><span class="p">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+<p>Easy, huh?!</p>
+
+<p>Every step has a attribute called hashes which is a list of dicts. Each
+dict has represents table headers as keys and each table row as value.</p>
+
+<p>In other words, lettuce will translate the table written in the first
+step as this equivalent dict</p>
+<div class="highlight"><pre name="handling-data-with-tables-example-4"><span class="p">@</span><span class="n">step</span><span class="p">(</span><span class="s">'I have the following students in my database:'</span><span class="p">)</span>
+<span class="n">def</span> <span class="n">students_in_database</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
+    <span class="n">assert</span> <span class="n">step</span><span class="p">.</span><span class="n">hashes</span> <span class="o">==</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s">'name'</span><span class="p">:</span> <span class="s">'Anton'</span><span class="p">,</span>
+            <span class="s">'monthly_due'</span><span class="p">:</span> <span class="s">'$ 500'</span><span class="p">,</span>
+            <span class="s">'billed'</span><span class="p">:</span> <span class="s">'no'</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s">'name'</span><span class="p">:</span> <span class="s">'Jack'</span><span class="p">,</span>
+            <span class="s">'monthly_due'</span><span class="p">:</span> <span class="s">'$ 400'</span><span class="p">,</span>
+            <span class="s">'billed'</span><span class="p">:</span> <span class="s">'no'</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s">'name'</span><span class="p">:</span> <span class="s">'Gabriel'</span><span class="p">,</span>
+            <span class="s">'monthly_due'</span><span class="p">:</span> <span class="s">'$ 300'</span><span class="p">,</span>
+            <span class="s">'billed'</span><span class="p">:</span> <span class="s">'no'</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s">'name'</span><span class="p">:</span> <span class="s">'Gloria'</span><span class="p">,</span>
+            <span class="s">'monthly_due'</span><span class="p">:</span> <span class="s">'$ 442.65'</span><span class="p">,</span>
+            <span class="s">'billed'</span><span class="p">:</span> <span class="s">'no'</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s">'name'</span><span class="p">:</span> <span class="s">'Ken'</span><span class="p">,</span>
+            <span class="s">'monthly_due'</span><span class="p">:</span> <span class="s">'$ 907.86'</span><span class="p">,</span>
+            <span class="s">'billed'</span><span class="p">:</span> <span class="s">'no'</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s">'name'</span><span class="p">:</span> <span class="s">'Leonard'</span><span class="p">,</span>
+            <span class="s">'monthly_due'</span><span class="p">:</span> <span class="s">'$ 742.84'</span><span class="p">,</span>
+            <span class="s">'billed'</span><span class="p">:</span> <span class="s">'no'</span>
+        <span class="p">},</span>
+    <span class="p">]</span>
+</pre></div>
+        </div>
+      </div>
+    </div> <!-- /container -->
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="span7">
+            <h3 class="footer-title">Lettuce</h3>
+            <p>Lettuce is maintained by gabrielfalcao. <br />
+              This documentation was generated automatically by <a href="http://octomarks.io/gabrielfalcao/markment">Markment</a>.
+            </p>
+            <p>
+              This theme was written by Gabriel Falcão using the <a href="http://designmodo.github.io/Flat-UI/">Flat-UI</a> library by
+              <a class="footer-brand" href="http://designmodo.com" target="_blank">
+                <img src="../assets/images/footer/logo.png" alt="Designmodo.com">
+              </a>
+            </p>
+          </div> <!-- /span8 -->
+
+          <div class="span5">
+            <div class="footer-banner">
+              <h3 class="footer-title">Table of contents</h3>
+              <ul>
+                 
+                <li>
+                  <a href="../contents.html">
+                        contents.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/documentation.html">
+                        documentation.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/index.html">
+                        index.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install-debian-squeeze.html">
+                        install-debian-squeeze.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../dev/testing.html">
+                        testing.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/install.html">
+                        install.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/overview.html">
+                        overview.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../intro/wtf.html">
+                        wtf.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/django-lxml.html">
+                        django-lxml.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../recipes/nose.html">
+                        nose.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/cli.html">
+                        cli.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/features.html">
+                        features.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/languages.html">
+                        languages.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="../reference/terrain.html">
+                        terrain.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./django.html">
+                        django.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./multiline.html">
+                        multiline.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./scenario-outlines.html">
+                        scenario-outlines.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./simple.html">
+                        simple.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./steps-from-step-definitions.html">
+                        steps-from-step-definitions.md
+                  </a>
+                </li>
+                 
+                <li>
+                  <a href="./tables.html">
+                        tables.md
+                  </a>
+                </li>
+                 
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
