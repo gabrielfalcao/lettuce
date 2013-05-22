@@ -492,8 +492,10 @@ class Step(object):
                 None,
                 invalid_first_line_error % (lines[0], 'multiline'))
 
-        # Select only lines that aren't end-to-end whitespace
-        lines = filter(lambda x: not REP.only_whitespace.match(x), lines)
+        # Select only lines that aren't end-to-end whitespace and aren't tags
+        # Tags could be inclueed as steps if the first scenario following a background is tagged
+        # This then causes the test to fail, because lettuce looks for the step's definition (which doesn't exist)
+        lines = filter(lambda x: not (REP.only_whitespace.match(x) or re.match(r'^\s*@', x)), lines)
 
         step_strings = []
         in_multiline = False

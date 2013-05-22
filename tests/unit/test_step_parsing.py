@@ -23,6 +23,15 @@ I_HAVE_TASTY_BEVERAGES = """I have the following tasty beverages in my freezer:
 """.strip()
 I_DIE_HAPPY = "I shall die with love in my heart"
 
+BACKGROUND_WITH_TAGGED_SCENARIO = '''
+    Background:
+        background line 1
+        
+    @wip
+    Scenario:
+        Scenario line 1
+'''
+
 MULTI_LINE = '''
 I have a string like so:
   """
@@ -154,6 +163,12 @@ def test_can_parse_two_ordinary_steps():
     assert isinstance(steps[1], Step)
     assert_equals(steps[0].sentence, I_DIE_HAPPY)
     assert_equals(steps[1].sentence, I_LIKE_VEGETABLES)
+
+def test_can_parse_background_and_ignore_tag():
+    "It should correctly parse and ignore tags between the background and first step."
+    steps = Step.many_from_lines(BACKGROUND_WITH_TAGGED_SCENARIO.splitlines())
+    steps_without_tags = filter(lambda x: not x.sentence == '@wip', steps)
+    assert_equals(len(steps), len(steps_without_tags))
 
 def test_cannot_start_with_multiline():
     "It should raise an error when a step starts with a multiline string"
