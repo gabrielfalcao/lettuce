@@ -334,7 +334,7 @@ def test_output_with_success_colorful_many_features():
 def test_output_when_could_not_find_features():
     "Testing the colorful output of many successful features"
 
-    path = fs.relpath(join(abspath(dirname(__file__)), 'unexistent-folder'))
+    path = fs.relpath(join(abspath(dirname(__file__)), 'no_features', 'unexistent-folder'))
     runner = Runner(path, verbosity=4)
     runner.run()
 
@@ -348,7 +348,7 @@ def test_output_when_could_not_find_features():
 def test_output_when_could_not_find_features_colorless():
     "Testing the colorful output of many successful features colorless"
 
-    path = fs.relpath(join(abspath(dirname(__file__)), 'unexistent-folder'))
+    path = fs.relpath(join(abspath(dirname(__file__)), 'no_features', 'unexistent-folder'))
     runner = Runner(path, verbosity=3)
     runner.run()
 
@@ -362,7 +362,7 @@ def test_output_when_could_not_find_features_colorless():
 def test_output_when_could_not_find_features_verbosity_level_2():
     "Testing the colorful output of many successful features colorless"
 
-    path = fs.relpath(join(abspath(dirname(__file__)), 'unexistent-folder'))
+    path = fs.relpath(join(abspath(dirname(__file__)), 'no_features', 'unexistent-folder'))
     runner = Runner(path, verbosity=2)
     runner.run()
 
@@ -1115,7 +1115,9 @@ def test_run_only_fast_tests():
 def test_run_random():
     "Randomise the feature order"
 
-    runner = Runner('some_basepath', random=True)
+    path = fs.relpath(join(abspath(dirname(__file__)), 'no_features', 'unexistent-folder'))
+
+    runner = Runner(path, random=True)
     assert_equals(True, runner.random)
     with patch.object(random, 'shuffle') as pshuffle:
         runner.run()
@@ -1235,10 +1237,10 @@ def test_output_background_with_success_colorless():
         '  I want to automate its test                 # tests/functional/bg_features/simple/simple.feature:4\n'
         '\n'
         '  Background:\n'
-        '    Given the variable "X" holds 2            # tests/functional/test_runner.py:1221\n'
+        '    Given the variable "X" holds 2            # tests/functional/test_runner.py:1223\n'
         '\n'
         '  Scenario: multiplication changing the value # tests/functional/bg_features/simple/simple.feature:9\n'
-        '    Given the variable "X" is equal to 2      # tests/functional/test_runner.py:1221\n'
+        '    Given the variable "X" is equal to 2      # tests/functional/test_runner.py:1223\n'
         '\n'
         '1 feature (1 passed)\n'
         '1 scenario (1 passed)\n'
@@ -1270,12 +1272,12 @@ def test_output_background_with_success_colorful():
         '\033[1;37m  I want to automate its test                 \033[1;30m# tests/functional/bg_features/simple/simple.feature:4\033[0m\n'
         '\n'
         '\033[1;37m  Background:\033[0m\n'
-        '\033[1;30m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1256\033[0m\n'
-        '\033[A\033[1;32m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1256\033[0m\n'
+        '\033[1;30m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1258\033[0m\n'
+        '\033[A\033[1;32m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1258\033[0m\n'
         '\n'
         '\033[1;37m  Scenario: multiplication changing the value \033[1;30m# tests/functional/bg_features/simple/simple.feature:9\033[0m\n'
-        '\033[1;30m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1256\033[0m\n'
-        '\033[A\033[1;32m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1256\033[0m\n'
+        '\033[1;30m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1258\033[0m\n'
+        '\033[A\033[1;32m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1258\033[0m\n'
         '\n'
         '\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n'
         '\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n'

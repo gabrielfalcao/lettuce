@@ -292,3 +292,20 @@ def test_running_only_specified_features():
     assert "Test the django app FOO BAR" in out
     assert "Test the django app DO NOTHING" not in out
     FileSystem.popd()
+
+
+def test_specifying_features_in_inner_directory():
+    'it can run only the specified features from a subdirectory'
+
+    FileSystem.pushd(current_directory, "django", "alfaces")
+
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest --verbosity=3 " \
+        "foobar/features/deeper/deeper/leaf.feature")
+
+    assert_equals(status, 0, out)
+
+    assert "Test the django app FOO BAR" not in out
+    assert "Test a feature in an inner directory" in out
+    assert "Test the django app DO NOTHING" not in out
+    FileSystem.popd()

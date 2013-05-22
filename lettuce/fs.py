@@ -33,7 +33,14 @@ class FeatureLoader(object):
         self.base_dir = FileSystem.abspath(base_dir)
 
     def find_and_load_step_definitions(self):
-        files = FileSystem.locate(self.base_dir, '*.py')
+        # find steps, possibly up several directories
+        base_dir = self.base_dir
+        while base_dir != '/':
+            files = FileSystem.locate(base_dir, '*.py')
+            if files:
+                break
+            base_dir = FileSystem.join(base_dir, '..')
+
         for filename in files:
             root = FileSystem.dirname(filename)
             sys.path.insert(0, root)
