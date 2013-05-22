@@ -24,7 +24,7 @@ integration: clean
 	@nosetests --stop -s --verbosity=2 tests/integration
 
 doctest: clean
-	@cd docs && make doctest
+	@find specs -name '*.md' -exec steadymark {} \;
 
 documentation:
 	@markment --theme=flat-ui -o ./_public specs
