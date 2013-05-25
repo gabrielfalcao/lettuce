@@ -142,7 +142,7 @@ class Command(BaseCommand):
             except LettuceServerException, e:
                 raise SystemExit(e)
 
-        os.environ['SERVER_NAME'] = server.address
+        os.environ['SERVER_NAME'] = str(server.address)
         os.environ['SERVER_PORT'] = str(server.port)
 
         failed = False
