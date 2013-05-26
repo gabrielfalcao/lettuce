@@ -58,3 +58,17 @@ def test_harvest_sets_environment_variabled_for_gae():
     assert_equals(status, 0, out)
 
     FileSystem.popd()
+
+
+def test_harvest_uses_test_runner():
+    'harvest uses TEST_RUNNER specified in settings'
+
+    FileSystem.pushd(current_directory, "django", "brocolis")
+
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest -T leaves/features/disabled.feature")
+
+    assert_equals(status, 0, out)
+    assert "Custom test runner enabled." in out
+
+    FileSystem.popd()
