@@ -44,3 +44,7 @@ def database_dump(step):
 @step(r'I have populated the database')
 def database_populated(step):
     pass
+
+@step(r'I count the harvesters')
+def count_harvesters(step):
+    print "Harvester count: %d" % Harvester.objects.count()

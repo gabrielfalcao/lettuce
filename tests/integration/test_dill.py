@@ -76,3 +76,18 @@ def test_model_existence_check():
     assert "Expected 2 geese, found 1" in out
 
     FileSystem.popd()
+
+def test_use_test_database_setting():
+    'Test database is recreated each time if LETTUCE_USE_TEST_DATABASE is set'
+
+    FileSystem.pushd(current_directory, "django", "dill")
+
+    for i in range(1, 2):
+        status, out = commands.getstatusoutput(
+            "python manage.py harvest --settings=testdbsettings " +
+            "leaves/features/testdb.feature")
+
+        assert_equals(status, 0, out)
+        assert "Harvester count: 1" in out, out
+
+    FileSystem.popd()

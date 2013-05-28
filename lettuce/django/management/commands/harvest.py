@@ -50,7 +50,8 @@ class Command(BaseCommand):
         make_option('-S', '--no-server', action='store_true', dest='no_server', default=False,
             help="will not run django's builtin HTTP server"),
 
-        make_option('-T', '--test-server', action='store_true', dest='test_database', default=False,
+        make_option('-T', '--test-server', action='store_true', dest='test_database',
+            default=getattr(settings, "LETTUCE_USE_TEST_DATABASE", False),
             help="will run django's builtin HTTP server using the test databases"),
 
         make_option('-P', '--port', type='int', dest='port',
