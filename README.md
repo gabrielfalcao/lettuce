@@ -21,7 +21,7 @@ Lettuce is a [BDD](http://en.wikipedia.org/wiki/Behavior_Driven_Development) too
 4. Ruby has Capistrano, Python has Fabric. Ruby has cucumber, Python has lettuce.
 5. I personally don't like mixing many languages in small projects. Keeping all in python is better.
 6. I love python, and ever did. But I also ever missed something that make writing tests easier and funnier.
-7. I like [nose](http://code.google.com/p/python-nose/), which is a unittest pythonic framework. However, as the project I work on grows, so do the tests, and it becomes harder to understand them.
+7. I like [nose](https://github.com/nose-devs/nose), which is a unittest pythonic framework. However, as the project I work on grows, so do the tests, and it becomes harder to understand them.
 
 # Dependencies
 
@@ -40,7 +40,7 @@ all them are used within lettuce tests
 
 ## or do it really from scratch:
 
-* [nose](http://code.google.com/p/python-nose/)
+* [nose](https://github.com/nose-devs/nose)
     > [sudo] pip install nose
 * [mox](http://code.google.com/p/pymox/)
     > [sudo] pip install mox
