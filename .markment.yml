@@ -1,0 +1,16 @@
+project:
+  name: "Lettuce"
+  version: 0.2.16
+  description: Behaviour Driven Development for python
+
+  github_maintainer: gabrielfalcao
+  github_maintainer_url: http://github.com/gabrielfalcao
+  github_maintainer_gravatar: https://secure.gravatar.com/avatar/3fa0df5c54f5ac0f8652d992d7d24039?s=64
+
+  github_url: http://github.com/gabrielfalcao/lettuce
+  github_fork_url: https://github.com/gabrielfalcao/lettuce/archive/master.tar.gz
+  tarball_download_url: https://github.com/gabrielfalcao/lettuce/archive/master.tar.gz
+  zipball_download_url: https://github.com/gabrielfalcao/lettuce/archive/master.zip
+
+documentation:
+  index: index.md
