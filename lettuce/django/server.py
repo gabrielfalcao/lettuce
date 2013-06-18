@@ -107,13 +107,13 @@ class ThreadedServer(multiprocessing.Process):
     """
     Runs django's builtin in background
     """
-    lock = multiprocessing.Lock()
     daemon = True
 
     def __init__(self, address, port, mail_queue, *args, **kw):
         multiprocessing.Process.__init__(self)
         self.address = address
         self.port = port
+        self.lock = multiprocessing.Lock()
         self.mail_queue = mail_queue
 
     def configure_mail_queue(self):
