@@ -41,7 +41,7 @@ setup(
     name='lettuce',
     version='0.2.17',
     description='Behaviour Driven Development for python',
-    author=u'Gabriel Falcao',
+    author='Gabriel Falcao',
     author_email='gabriel@nacaolivre.org',
     url='http://lettuce.it',
     packages=get_packages(),
