@@ -15,3 +15,5 @@ INSTALLED_APPS = (
     'lettuce.django',
     'leaves',
 )
+TEST_RUNNER = 'leaves.test_runner.TestRunner'
+SECRET_KEY = 'secret'
