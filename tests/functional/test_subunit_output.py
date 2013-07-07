@@ -27,41 +27,84 @@ from lettuce.plugins import subunit_output
 from tests.asserts import prepare_stdout
 from tests.functional.test_runner import feature_name
 
-@with_setup(prepare_stdout, registry.clear)
-def test_subunit_output():
-    """
-    Test Subunit output
-    """
+class State(object):
 
-    output = StringIO()
-    patch = (subunit_output.open_file, subunit_output.close_file)
+    expect = []
 
-    expect = [
-        {
-            'id': 'one commented scenario: Do nothing',
-            'status': 'success',
-        },
-    ]
-
-    def handle_dict(test_dict):
-        d = expect.pop(0)
+    def handle_dict(self, test_dict):
+        d = self.expect.pop(0)
         assert all((test_dict[k] == v for k, v in d.iteritems()))
 
-    def close_file(file_):
+    def close_file(self, file_):
+        """
+        Close and check the file
+        """
+
         file_.seek(0)
         case = ByteStreamToStreamResult(file_)
-        result = StreamToDict(handle_dict)
+        result = StreamToDict(self.handle_dict)
         result.startTestRun()
         case.run(result)
         result.stopTestRun()
 
         file_.close()
 
-    subunit_output.open_file = lambda f: output
-    subunit_output.close_file = close_file
+    def setup(self):
+        """
+        Set up the for the test case
+        """
+
+        prepare_stdout()
+
+        output = StringIO()
+        self.patch = (subunit_output.open_file, subunit_output.close_file)
+
+        subunit_output.open_file = lambda f: output
+        subunit_output.close_file = self.close_file
+
+    def teardown(self):
+        """
+        Tear down the test case
+        """
+
+        subunit_output.open_file, subunit_output.close_file = self.patch
+        assert len(self.expect) == 0
+
+        registry.clear()
+
+state = State()
+
+@with_setup(state.setup, state.teardown)
+def test_subunit_output_with_no_errors():
+    """
+    Test Subunit output with no errors
+    """
+
+    state.expect = [
+        {
+            'id': 'one commented scenario: Do nothing',
+            'status': 'success',
+        },
+    ]
 
     runner = Runner(feature_name('commented_feature'), enable_subunit=True)
     runner.run()
 
-    subunit_output.open_file, subunit_output.close_file = patch
-    assert len(expect) == 0
+
+@with_setup(state.setup, state.teardown)
+def test_subunit_output_with_one_error():
+    """
+    Test Subunit output with one error
+    """
+
+    state.expect = [
+        {
+            'status': 'success',
+        },
+        {
+            'status': 'fail',
+        },
+    ]
+
+    runner = Runner(feature_name('error_traceback'), enable_subunit=True)
+    runner.run()
