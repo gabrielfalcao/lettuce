@@ -15,9 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sys
 from cStringIO import StringIO
 
 from nose.tools import with_setup
+from subunit.v2 import ByteStreamToStreamResult
+from testtools import StreamToDict
 
 from lettuce import Runner, registry
 from lettuce.plugins import subunit_output
@@ -33,8 +36,25 @@ def test_subunit_output():
     output = StringIO()
     patch = (subunit_output.open_file, subunit_output.close_file)
 
+    expect = [
+        {
+            'id': 'one commented scenario: Do nothing',
+            'status': 'success',
+        },
+    ]
+
+    def handle_dict(test_dict):
+        d = expect.pop(0)
+        assert all((test_dict[k] == v for k, v in d.iteritems()))
+
     def close_file(file_):
-        print file_.getvalue()
+        file_.seek(0)
+        case = ByteStreamToStreamResult(file_)
+        result = StreamToDict(handle_dict)
+        result.startTestRun()
+        case.run(result)
+        result.stopTestRun()
+
         file_.close()
 
     subunit_output.open_file = lambda f: output
@@ -44,3 +64,4 @@ def test_subunit_output():
     runner.run()
 
     subunit_output.open_file, subunit_output.close_file = patch
+    assert len(expect) == 0

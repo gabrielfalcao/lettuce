@@ -56,4 +56,4 @@ def enable(filename=None):
 
 
 def get_test_id(scenario):
-    return '{} {}'.format(scenario.feature.name, scenario.name)
+    return '{}: {}'.format(scenario.feature.name, scenario.name)
