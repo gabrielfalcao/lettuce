@@ -33,7 +33,9 @@ class Includes(object):
         self.d = d
 
     def __eq__(self, a):
-        return all((a[k] == v for k, v in self.d.iteritems()))
+        # for k, v in self.d.iteritems():
+        #     assert_equal(v, a[k])
+        return all((v == a[k] for k, v in self.d.iteritems()))
 
     def __repr__(self):
         return '{}({})'.format(self.__class__.__name__, self.d)
@@ -48,12 +50,28 @@ class Keys(object):
         return set(a.keys()) == set(self.keys)
 
 
+class ContentContains(object):
+
+    def __init__(self, text):
+        self.text = text
+
+    def __eq__(self, a):
+        return self.text in a.as_text()
+
+    def __repr__(self):
+        return '{}({})'.format(self.__class__.__name__, self.text)
+
+
 class State(object):
 
     expect = []
 
     def handle_dict(self, test):
-        d = self.expect.pop(0)
+        try:
+            d = self.expect.pop(0)
+        except IndexError:
+            raise Exception("Unexpected {}".format(test))
+
         assert_equal(d, test)
 
     def close_file(self, file_):
@@ -152,4 +170,26 @@ def test_subunit_output_with_tags():
     ]
 
     runner = Runner(feature_name('tagged_features'), enable_subunit=True)
+    runner.run()
+
+
+@with_setup(state.setup, state.teardown)
+def test_subunit_output_unicode():
+    """
+    Test Subunit output with unicode traceback
+    """
+
+    state.expect = [
+        Includes({
+            'status': 'success',
+        }),
+        Includes({
+            'status': 'fail',
+            'details': Includes({
+                'traceback': ContentContains('given_my_daemi_that_blows_a_exception'),
+            }),
+        }),
+    ]
+
+    runner = Runner(feature_name('unicode_traceback'), enable_subunit=True)
     runner.run()
