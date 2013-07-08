@@ -68,14 +68,12 @@ def enable(filename=None):
     def after_scenario(scenario):
 
         streamresult.status(test_id=get_test_id(scenario),
-                            test_status='inprogress',
                             file_name='stdout',
                             file_bytes=sys.stdout.getvalue(),
                             mime_type='text/plain; charset=utf8',
                             eof=True)
 
         streamresult.status(test_id=get_test_id(scenario),
-                            test_status='inprogress',
                             file_name='stderr',
                             file_bytes=sys.stderr.getvalue(),
                             mime_type='text/plain; charset=utf8',
@@ -97,7 +95,6 @@ def enable(filename=None):
 
         if not step.passed:
             streamresult.status(test_id=get_test_id(step.scenario),
-                                test_status='inprogress',
                                 file_name='traceback',
                                 file_bytes=bytes(step.why.traceback),
                                 mime_type='text/plain; charset=utf8')
