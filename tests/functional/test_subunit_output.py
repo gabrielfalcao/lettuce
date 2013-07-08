@@ -18,7 +18,7 @@
 import sys
 from cStringIO import StringIO
 
-from nose.tools import with_setup
+from nose.tools import with_setup, assert_equal
 from subunit.v2 import ByteStreamToStreamResult
 from testtools import StreamToDict
 
@@ -35,6 +35,9 @@ class Includes(object):
     def __eq__(self, a):
         return all((a[k] == v for k, v in self.d.iteritems()))
 
+    def __repr__(self):
+        return '{}({})'.format(self.__class__.__name__, self.d)
+
 
 class Keys(object):
 
@@ -50,9 +53,8 @@ class State(object):
     expect = []
 
     def handle_dict(self, test):
-        # print >> sys.stderr, test
         d = self.expect.pop(0)
-        assert d == test
+        assert_equal(d, test)
 
     def close_file(self, file_):
         """
@@ -87,7 +89,7 @@ class State(object):
         """
 
         subunit_output.open_file, subunit_output.close_file = self.patch
-        assert len(self.expect) == 0
+        assert_equal(len(self.expect), 0, "Expected results left")
 
         registry.clear()
 
@@ -129,4 +131,25 @@ def test_subunit_output_with_one_error():
     ]
 
     runner = Runner(feature_name('error_traceback'), enable_subunit=True)
+    runner.run()
+
+
+@with_setup(state.setup, state.teardown)
+def test_subunit_output_with_tags():
+    """
+    Test Subunit output with tags
+    """
+
+    state.expect = [
+        Includes({
+            'status': 'success',
+            'tags': set(['slow-ish']),
+        }),
+        Includes({
+            'status': 'success',
+            'tags': set(['fast-ish']),
+        }),
+    ]
+
+    runner = Runner(feature_name('tagged_features'), enable_subunit=True)
     runner.run()

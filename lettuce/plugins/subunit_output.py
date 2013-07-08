@@ -61,7 +61,8 @@ def enable(filename=None):
         sys.stdout = StringIO()
         sys.stderr = StringIO()
         streamresult.status(test_id=get_test_id(scenario),
-                            test_status='inprogress')
+                            test_status='inprogress',
+                            test_tags=scenario.tags)
 
     @after.each_scenario
     def after_scenario(scenario):
