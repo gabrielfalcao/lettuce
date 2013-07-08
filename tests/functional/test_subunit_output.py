@@ -27,13 +27,32 @@ from lettuce.plugins import subunit_output
 from tests.asserts import prepare_stdout
 from tests.functional.test_runner import feature_name
 
+class Includes(object):
+
+    def __init__(self, d):
+        self.d = d
+
+    def __eq__(self, a):
+        return all((a[k] == v for k, v in self.d.iteritems()))
+
+
+class Keys(object):
+
+    def __init__(self, *keys):
+        self.keys = keys
+
+    def __eq__(self, a):
+        return set(a.keys()) == set(self.keys)
+
+
 class State(object):
 
     expect = []
 
-    def handle_dict(self, test_dict):
+    def handle_dict(self, test):
+        # print >> sys.stderr, test
         d = self.expect.pop(0)
-        assert all((test_dict[k] == v for k, v in d.iteritems()))
+        assert d == test
 
     def close_file(self, file_):
         """
@@ -81,10 +100,11 @@ def test_subunit_output_with_no_errors():
     """
 
     state.expect = [
-        {
+        Includes({
             'id': 'one commented scenario: Do nothing',
             'status': 'success',
-        },
+            'details': Keys('stdout', 'stderr'),
+        }),
     ]
 
     runner = Runner(feature_name('commented_feature'), enable_subunit=True)
@@ -98,12 +118,14 @@ def test_subunit_output_with_one_error():
     """
 
     state.expect = [
-        {
+        Includes({
             'status': 'success',
-        },
-        {
+            'details': Keys('stdout', 'stderr'),
+        }),
+        Includes({
             'status': 'fail',
-        },
+            'details': Keys('stdout', 'stderr', 'traceback'),
+        }),
     ]
 
     runner = Runner(feature_name('error_traceback'), enable_subunit=True)

@@ -91,8 +91,19 @@ def enable(filename=None):
             streamresult.status(test_id=get_test_id(scenario),
                                 test_status='fail')
 
+    @after.each_step
+    def after_step(step):
+
+        if not step.passed:
+            streamresult.status(test_id=get_test_id(step.scenario),
+                                test_status='inprogress',
+                                file_name='traceback',
+                                file_bytes=bytes(step.why.traceback),
+                                mime_type='text/plain; charset=utf8')
+
     @after.all
     def after_all(total):
+
         streamresult.stopTestRun()
         close_file(file_)
 
