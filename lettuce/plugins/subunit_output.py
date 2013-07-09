@@ -93,14 +93,31 @@ def enable(filename=None):
     @after.each_step
     def after_step(step):
 
-        if not step.passed:
+        if step.passed:
+            marker = u'✔'
+        elif not step.defined_at:
+            marker = u'?'
+        elif step.failed:
+            marker = u'❌'
+
             try:
                 streamresult.status(test_id=get_test_id(step.scenario),
                                     file_name='traceback',
-                                    file_bytes=bytes(step.why.traceback),
+                                    file_bytes=step.why.traceback.encode('utf-8'),
                                     mime_type='text/plain; charset=utf8')
             except AttributeError:
                 pass
+
+        elif not step.ran:
+            marker = u' '
+        else:
+            raise AssertionError("Internal error")
+
+        steps = u'{} {}\n'.format(marker, step.sentence)
+        streamresult.status(test_id=get_test_id(step.scenario),
+                        file_name='steps',
+                        file_bytes=steps.encode('utf-8'),
+                        mime_type='text/plain; charset=utf8')
 
     @after.all
     def after_all(total):

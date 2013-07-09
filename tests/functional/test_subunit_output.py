@@ -123,7 +123,7 @@ def test_subunit_output_with_no_errors():
         Includes({
             'id': 'one commented scenario: Do nothing',
             'status': 'success',
-            'details': Keys('stdout', 'stderr'),
+            'details': Keys('stdout', 'stderr', 'steps'),
         }),
     ]
 
@@ -140,11 +140,11 @@ def test_subunit_output_with_one_error():
     state.expect = [
         Includes({
             'status': 'success',
-            'details': Keys('stdout', 'stderr'),
+            'details': Keys('stdout', 'stderr', 'steps'),
         }),
         Includes({
             'status': 'fail',
-            'details': Keys('stdout', 'stderr', 'traceback'),
+            'details': Keys('stdout', 'stderr', 'traceback', 'steps'),
         }),
     ]
 
@@ -227,6 +227,7 @@ def test_subunit_output_console():
     runner = Runner(feature_name('writes_to_console'), enable_subunit=True)
     runner.run()
 
+
 @with_setup(state.setup, state.teardown)
 def test_subunit_output_undefined_steps():
     """
@@ -236,9 +237,15 @@ def test_subunit_output_undefined_steps():
     state.expect = [
         Includes({
             'status': 'fail',
+            'details': Includes({
+                'steps': ContentContains('? When this test step is undefined\n'),
+            }),
         }),
         Includes({
             'status': 'fail',
+            'details': Includes({
+                'steps': ContentContains('? When this test step is undefined\n'),
+            }),
         }),
     ]
 
