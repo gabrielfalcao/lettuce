@@ -11,7 +11,7 @@ lxml
 mock==1.0b1
 mox==0.5.3
 nose==1.1.2
-subunit==0.0.13
+python-subunit==0.0.13
 sure==1.1.7
 tornado==2.3
 tox==1.4.2
