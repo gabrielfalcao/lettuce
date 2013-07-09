@@ -226,3 +226,21 @@ def test_subunit_output_console():
 
     runner = Runner(feature_name('writes_to_console'), enable_subunit=True)
     runner.run()
+
+@with_setup(state.setup, state.teardown)
+def test_subunit_output_undefined_steps():
+    """
+    Test Subunit output with undefined steps
+    """
+
+    state.expect = [
+        Includes({
+            'status': 'fail',
+        }),
+        Includes({
+            'status': 'fail',
+        }),
+    ]
+
+    runner = Runner(feature_name('undefined_steps'), enable_subunit=True)
+    runner.run()

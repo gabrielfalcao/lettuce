@@ -94,10 +94,13 @@ def enable(filename=None):
     def after_step(step):
 
         if not step.passed:
-            streamresult.status(test_id=get_test_id(step.scenario),
-                                file_name='traceback',
-                                file_bytes=bytes(step.why.traceback),
-                                mime_type='text/plain; charset=utf8')
+            try:
+                streamresult.status(test_id=get_test_id(step.scenario),
+                                    file_name='traceback',
+                                    file_bytes=bytes(step.why.traceback),
+                                    mime_type='text/plain; charset=utf8')
+            except AttributeError:
+                pass
 
     @after.all
     def after_all(total):
