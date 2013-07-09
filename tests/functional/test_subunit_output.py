@@ -33,8 +33,6 @@ class Includes(object):
         self.d = d
 
     def __eq__(self, a):
-        # for k, v in self.d.iteritems():
-        #     assert_equal(v, a[k])
         return all((v == a[k] for k, v in self.d.iteritems()))
 
     def __repr__(self):
