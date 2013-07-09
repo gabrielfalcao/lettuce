@@ -70,7 +70,7 @@ class State(object):
         try:
             d = self.expect.pop(0)
         except IndexError:
-            raise Exception("Unexpected {}".format(test))
+            raise AssertionError("Unexpected {}".format(test))
 
         assert_equal(d, test)
 
@@ -192,4 +192,29 @@ def test_subunit_output_unicode():
     ]
 
     runner = Runner(feature_name('unicode_traceback'), enable_subunit=True)
+    runner.run()
+
+
+@with_setup(state.setup, state.teardown)
+def test_subunit_output_console():
+    """
+    Test Subunit output to console
+    """
+
+    state.expect = [
+        Includes({
+            'status': 'success',
+            'details': Includes({
+                'stdout': ContentContains('Badger'),
+            }),
+        }),
+        Includes({
+            'status': 'success',
+            'details': Includes({
+                'stderr': ContentContains('Mushroom'),
+            }),
+        }),
+    ]
+
+    runner = Runner(feature_name('writes_to_console'), enable_subunit=True)
     runner.run()
