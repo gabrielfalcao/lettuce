@@ -13,3 +13,13 @@ Feature: ignore slow steps
   Scenario: this one is fast!!
     Given I do nothing
     Then I see that the test passes
+
+  Scenario: this scenario is not tagged
+    Given I do nothing
+    Then I should not see "harvey@nom.cat"
+
+  Scenario: this scenario is also not tagged
+    Given some email addresses
+        | email          |
+        | harvey@nom.cat |
+    Then I see that the test passes

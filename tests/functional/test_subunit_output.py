@@ -167,6 +167,14 @@ def test_subunit_output_with_tags():
             'status': 'success',
             'tags': set(['fast-ish']),
         }),
+        Includes({
+            'status': 'success',
+            'tags': set(),
+        }),
+        Includes({
+            'status': 'success',
+            'tags': set(),
+        }),
     ]
 
     runner = Runner(feature_name('tagged_features'), enable_subunit=True)
