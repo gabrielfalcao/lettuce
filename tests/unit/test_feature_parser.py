@@ -418,6 +418,20 @@ Feature: My scenarios have no name
         Given this scenario raises a syntax error
 """
 
+FEATURE21 = """
+Feature: Taming the tag parser
+
+  Scenario: Next scenario should not have tags related to the emails
+    Given the email addresses:
+      | name         | email                      |
+      | Chuck Norris | roundhouse@chucknorris.com |
+    Then the next scenario has only the tags it's supposed to
+
+  Scenario: I'm isolated
+    Given I am parsed
+    Then this scenario has only one tag
+"""
+
 
 def test_feature_has_repr():
     "Feature implements __repr__ nicely"
@@ -794,3 +808,15 @@ def test_syntax_error_for_scenarios_with_no_name():
          'scenarios must have a name, make sure to declare '
          'a scenario like this: `Scenario: name of your scenario`')
     )
+
+
+def test_scenario_post_email():
+    ("Having a scenario which the body has an email address; "
+     "Then the following scenario should have no "
+     "tags related to the email")
+
+    feature = Feature.from_string(FEATURE21)
+    scenario1, scenario2 = feature.scenarios
+
+    scenario1.tags.should.be.empty
+    scenario2.tags.should.be.empty
