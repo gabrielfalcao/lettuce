@@ -9,7 +9,6 @@ from smtpd import SMTPServer
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 
 from lettuce import after, before
-from lettuce.django import mail
 
 
 def _parse_header(val):
@@ -55,6 +54,8 @@ def _convert_to_django_msg(msg):
 def enable():
 
     from django.conf import settings
+    from lettuce.django import mail
+
     smtp_queue_server = None
 
     @before.each_scenario
@@ -70,41 +71,40 @@ def enable():
         global smtp_queue_server
         smtp_queue_server.stop()
 
+    class QueueSMTPServer(SMTPServer, threading.Thread):
+        """
+        Asyncore SMTP server wrapped into a thread.
+        It pushes incoming email messages into lettuce email queue.
+        Based on DummyFTPServer from:
+        http://svn.python.org/view/python/branches/py3k/Lib/test/test_ftplib.py?revision=86061&view=markup
+        """
+        def __init__(self, *args, **kwargs):
+            threading.Thread.__init__(self)
+            SMTPServer.__init__(self, *args, **kwargs)
+            self.active_lock = threading.Lock()
+            self.active = False
+            self.daemon = True
 
-class QueueSMTPServer(SMTPServer, threading.Thread):
-    """
-    Asyncore SMTP server wrapped into a thread.
-    It pushes incoming email messages into lettuce email queue.
-    Based on DummyFTPServer from:
-    http://svn.python.org/view/python/branches/py3k/Lib/test/test_ftplib.py?revision=86061&view=markup
-    """
-    def __init__(self, *args, **kwargs):
-        threading.Thread.__init__(self)
-        SMTPServer.__init__(self, *args, **kwargs)
-        self.active_lock = threading.Lock()
-        self.active = False
-        self.daemon = True
+        def process_message(self, peer, mailfrom, rcpttos, data):
+            msg = message_from_string(data)
+            django_msg = _convert_to_django_msg(msg)
+            mail.queue.put(django_msg)
 
-    def process_message(self, peer, mailfrom, rcpttos, data):
-        msg = message_from_string(data)
-        django_msg = _convert_to_django_msg(msg)
-        mail.queue.put(django_msg)
+        def start(self):
+            assert not self.active
+            self.__flag = threading.Event()
+            threading.Thread.start(self)
 
-    def start(self):
-        assert not self.active
-        self.__flag = threading.Event()
-        threading.Thread.start(self)
+        def run(self):
+            self.active = True
+            self.__flag.set()
+            while self.active and asyncore.socket_map:
+                self.active_lock.acquire()
+                asyncore.loop(timeout=0.1, count=1)
+                self.active_lock.release()
+            asyncore.close_all()
 
-    def run(self):
-        self.active = True
-        self.__flag.set()
-        while self.active and asyncore.socket_map:
-            self.active_lock.acquire()
-            asyncore.loop(timeout=0.1, count=1)
-            self.active_lock.release()
-        asyncore.close_all()
-
-    def stop(self):
-        assert self.active
-        self.active = False
-        self.join()
+        def stop(self):
+            assert self.active
+            self.active = False
+            self.join()
