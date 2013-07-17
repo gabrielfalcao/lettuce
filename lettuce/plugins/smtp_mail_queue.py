@@ -1,10 +1,13 @@
 import asyncore
-from email.header import decode_header
 import threading
+
+from email.header import decode_header
 from email import message_from_string
+
 from smtpd import SMTPServer
+
 from django.core.mail import EmailMessage, EmailMultiAlternatives
-from django.conf import settings
+
 from lettuce import after, before
 from lettuce.django import mail
 
@@ -51,6 +54,7 @@ def _convert_to_django_msg(msg):
 
 def enable():
 
+    from django.conf import settings
     smtp_queue_server = None
 
     @before.each_scenario
