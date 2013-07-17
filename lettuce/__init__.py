@@ -43,7 +43,8 @@ from lettuce.registry import CALLBACK_REGISTRY
 from lettuce.exceptions import StepLoadingError
 from lettuce.plugins import (
     xunit_output,
-    autopdb
+    autopdb,
+    smtp_mail_queue
 )
 from lettuce import fs
 from lettuce import exceptions
@@ -87,7 +88,7 @@ class Runner(object):
     """
     def __init__(self, base_path, scenarios=None, verbosity=0, random=False,
                  enable_xunit=False, xunit_filename=None, tags=None,
-                 failfast=False, auto_pdb=False):
+                 failfast=False, auto_pdb=False, smtp_queue=None):
         """ lettuce.Runner will try to find a terrain.py file and
         import it from within `base_path`
         """
@@ -124,6 +125,8 @@ class Runner(object):
 
         if enable_xunit:
             xunit_output.enable(filename=xunit_filename)
+        if smtp_queue:
+            smtp_mail_queue.enable()
 
         reload(output)
 
