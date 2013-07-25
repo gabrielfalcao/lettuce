@@ -75,7 +75,7 @@ LANGUAGES = {
         'scenario': u'Forgatókönyv',
         'scenario_outline': u'Forgatókönyv vázlat',
         'scenario_separator': u'(Forgatókönyv|Forgatókönyv vázlat)',
-        'background': u'(?:Background)',
+        'background': u'(?:Háttér)',
     },
     'fr': {
         'examples': u'Exemples|Scénarios',
