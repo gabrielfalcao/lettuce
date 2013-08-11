@@ -454,32 +454,6 @@ def test_commented_scenarios():
     assert_equals(len(scenario.steps), 4)
 
 
-def test_scenario_has_tag():
-    ("A scenario object should be able to find at least one tag "
-     "on the first line")
-
-    scenario = Scenario.from_string(
-        SCENARIO1,
-        original_string=('@onetag\n' + SCENARIO1.strip()))
-
-    expect(scenario.tags).to.equal(['onetag'])
-
-
-def test_scenario_has_tags_singleline():
-    ("A scenario object should be able to find many tags "
-     "on the first line")
-
-    scenario = Scenario.from_string(
-        SCENARIO1,
-        original_string=(
-            '@onetag @another @$%^&even-weird_chars \n' + SCENARIO1.strip()))
-
-    expect(scenario.tags).to.equal([
-        'onetag',
-        'another',
-        '$%^&even-weird_chars',
-    ])
-
 
 def test_scenario_matches_tags():
     ("A scenario with tags should respond with True when "
@@ -487,7 +461,8 @@ def test_scenario_matches_tags():
 
     scenario = Scenario.from_string(
         SCENARIO1,
-        original_string=('@onetag\n@another-one\n' + SCENARIO1.strip()))
+        original_string=SCENARIO1.strip(),
+        tags=['onetag', 'another-one'])
 
     expect(scenario.tags).to.equal(['onetag', 'another-one'])
     assert scenario.matches_tags(['onetag'])
@@ -500,7 +475,8 @@ def test_scenario_matches_tags_fuzzywuzzy():
 
     scenario = Scenario.from_string(
         SCENARIO1,
-        original_string=('@anothertag\n@another-tag\n' + SCENARIO1.strip()))
+        original_string=SCENARIO1.strip(),
+        tags=['anothertag', 'another-tag'])
 
     assert scenario.matches_tags(['~another'])
 
@@ -511,7 +487,8 @@ def test_scenario_matches_tags_excluding():
 
     scenario = Scenario.from_string(
         SCENARIO1,
-        original_string=('@anothertag\n@another-tag\n' + SCENARIO1.strip()))
+        original_string=SCENARIO1.strip(),
+        tags=['anothertag', 'another-tag'])
 
     assert not scenario.matches_tags(['-anothertag'])
     assert scenario.matches_tags(['-foobar'])
@@ -544,7 +521,8 @@ def test_scenario_show_tags_in_its_representation():
 
     scenario = Scenario.from_string(
         SCENARIO1,
-        original_string=('@slow\n@firefox\n@chrome\n' + SCENARIO1.strip()))
+        original_string=SCENARIO1.strip(),
+        tags=['slow', 'firefox', 'chrome'])
 
     expect(scenario.represented()).to.equal(
         u'  @slow @firefox @chrome\n  '

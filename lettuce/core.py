@@ -45,7 +45,8 @@ class REP(object):
     within_double_quotes = re.compile(r'("[^"]+")')
     within_single_quotes = re.compile(r"('[^']+')")
     only_whitespace = re.compile('^\s*$')
-    tag_extraction_regex = re.compile(r'(?:(?:^|\s+)[@]([^@\s]+))')
+    last_tag_extraction_regex = re.compile(ur'(?:\s|^)[@](\S+)\s*$')
+    first_tag_extraction_regex = re.compile(ur'^\s*[@](\S+)(?:\s|$)')
     tag_strip_regex = re.compile(ur'(?:(?:^\s*|\s+)[@]\S+\s*)+$', re.DOTALL)
     comment_strip1 = re.compile(ur'(^[^\'"]*)[#]([^\'"]*)$')
     comment_strip2 = re.compile(ur'(^[^\'"]+)[#](.*)$')
@@ -542,7 +543,7 @@ class Scenario(object):
                  with_file=None,
                  original_string=None,
                  language=None,
-                 previous_scenario=None):
+                 tags=None):
 
         self.feature = None
         if not language:
@@ -550,6 +551,7 @@ class Scenario(object):
 
         self.name = name
         self.language = language
+        self.tags = tags
         self.remaining_lines = remaining_lines
         self.steps = self._parse_remaining_lines(remaining_lines,
                                                  with_file,
@@ -558,8 +560,6 @@ class Scenario(object):
         self.outlines = outlines
         self.with_file = with_file
         self.original_string = original_string
-
-        self.previous_scenario = previous_scenario
 
         if with_file and original_string:
             scenario_definition = ScenarioDescription(self, with_file,
@@ -570,11 +570,6 @@ class Scenario(object):
         self.solved_steps = list(self._resolve_steps(
             self.steps, self.outlines, with_file, original_string))
         self._add_myself_to_steps()
-
-        if original_string and '@' in self.original_string:
-            self.tags = self._find_tags_in(original_string)
-        else:
-            self.tags = []
 
     @property
     def max_length(self):
@@ -740,40 +735,6 @@ class Scenario(object):
         for step in self.solved_steps:
             step.scenario = self
 
-    def _find_tags_in(self, original_string):
-        broad_regex = re.compile(ur"([@].*)%s: (%s)" % (
-            self.language.scenario_separator,
-            re.escape(self.name)), re.DOTALL)
-
-        regexes = []
-        if not self.previous_scenario:
-            regexes.append(broad_regex)
-
-        else:
-            regexes.append(re.compile(ur"(?:%s: %s.*)([@]?.*)%s: (%s)\s*\n" % (
-                self.language.non_capturable_scenario_separator,
-                re.escape(self.previous_scenario.name),
-                self.language.scenario_separator,
-                re.escape(self.name)), re.DOTALL))
-
-        def try_finding_with(regex):
-            found = regex.search(original_string)
-
-            if found:
-                tag_lines = found.group().splitlines()
-                tags = list(chain(*map(self._extract_tag, tag_lines)))
-                return tags
-
-        for regex in regexes:
-            found = try_finding_with(regex)
-            if found:
-                return found
-
-        return []
-
-    def _extract_tag(self, item):
-        return REP.tag_extraction_regex.findall(item)
-
     def _resolve_steps(self, steps, outlines, with_file, original_string):
         for outline in outlines:
             for step in steps:
@@ -831,7 +792,7 @@ class Scenario(object):
                     with_file=None,
                     original_string=None,
                     language=None,
-                    previous_scenario=None):
+                    tags=None):
         """ Creates a new scenario from string"""
         # ignoring comments
         string = "\n".join(strings.get_stripped_lines(string, ignore_lines_starting_with='#'))
@@ -865,7 +826,7 @@ class Scenario(object):
             with_file=with_file,
             original_string=original_string,
             language=language,
-            previous_scenario=previous_scenario,
+            tags=tags,
         )
 
         return scenario
@@ -1011,7 +972,7 @@ class Feature(object):
 
             if found:
                 tag_lines = found.group().splitlines()
-                tags = set(chain(*map(self._extract_tag, tag_lines)))
+                tags = list(chain(*map(self._extract_tag, tag_lines)))
                 return tags
 
         for regex in regexes:
@@ -1094,6 +1055,15 @@ class Feature(object):
 
     def _set_definition(self, definition):
         self.described_at = definition
+    
+    def _extract_tags(self, string, extract_regex=REP.last_tag_extraction_regex):
+        tags = []
+        while True:
+            m = extract_regex.search(string)
+            if not m:
+                return tags, string
+            tags.insert(0, m.groups()[0])
+            string = extract_regex.sub('', string)
 
     def _strip_next_scenario_tags(self, string):
         stripped = REP.tag_strip_regex.sub('', string)
@@ -1143,6 +1113,7 @@ class Feature(object):
 
         description = u""
         background = None
+        tags_scenario = []
 
         if not re.search("^" + scenario_prefix, joined):
             if not parts:
@@ -1151,8 +1122,8 @@ class Feature(object):
                     (u"Features must have scenarios.\n"
                      "Please refer to the documentation available at http://lettuce.it for more information.")
                 )
-
-            description, background_lines = self._extract_desc_and_bg(parts[0])
+            tags_scenario, description_and_background = self._extract_tags(parts[0])
+            description, background_lines = self._extract_desc_and_bg(description_and_background)
 
             background = background_lines and Background.from_string(
                 background_lines,
@@ -1176,22 +1147,18 @@ class Feature(object):
 
         scenarios = []
         while upcoming_scenarios:
+            tags_next_scenario, current = self._extract_tags(upcoming_scenarios[0])
             current = self._strip_next_scenario_tags(upcoming_scenarios.pop(0))
 
-            previous_scenario = None
-            has_previous = len(scenarios) > 0
-
-            if has_previous:
-                previous_scenario = scenarios[-1]
-
             params = dict(
-                previous_scenario=previous_scenario,
+                tags=tags_scenario,
             )
 
             params.update(kw)
             current_scenario = Scenario.from_string(current, **params)
             current_scenario.background = background
             scenarios.append(current_scenario)
+            tags_scenario = tags_next_scenario
 
         return background, scenarios, description
 
