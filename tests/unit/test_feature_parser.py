@@ -421,7 +421,7 @@ Feature: My scenarios have no name
 FEATURE21 = """
 Feature: Taming the tag parser
 
-  Scenario: Next scenario should not have tags related to the emails
+  Background:
     Given the email addresses:
       | name         | email                      |
       | Chuck Norris | roundhouse@chucknorris.com |
@@ -429,7 +429,12 @@ Feature: Taming the tag parser
 
   Scenario: I'm isolated
     Given I am parsed
-    Then this scenario has only one tag
+    Then this scenario has only zero tags
+
+  @tag
+  Scenario: I'm so isolated
+    Given I am parsed
+    Then this scenario has one tag
 """
 
 
@@ -819,4 +824,4 @@ def test_scenario_post_email():
     scenario1, scenario2 = feature.scenarios
 
     scenario1.tags.should.be.empty
-    scenario2.tags.should.be.empty
+    expect(scenario2.tags).to.equal(['tag'])
