@@ -34,9 +34,11 @@ Step tables are here for you
          | Leonard  | $ 742.84    | no     |
        When I bill names starting with "G"
        Then I see those billed students:
+         | name     | monthly_due | billed |
          | Gabriel  | $ 300       | no     |
          | Gloria   | $ 442.65    | no     |
        And those that weren't:
+         | name     | monthly_due | billed |
          | Anton    | $ 500       | no     |
          | Jack     | $ 400       | no     |
          | Ken      | $ 907.86    | no     |
