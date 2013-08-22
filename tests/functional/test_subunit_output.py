@@ -36,7 +36,9 @@ class Includes(object):
         return all((v == a[k] for k, v in self.d.iteritems()))
 
     def __repr__(self):
-        return '{}({})'.format(self.__class__.__name__, self.d)
+        return '{klass}({d})'.format(
+            klass=self.__class__.__name__,
+            d=self.d)
 
 
 class Keys(object):
@@ -57,7 +59,9 @@ class ContentContains(object):
         return self.text in a.as_text()
 
     def __repr__(self):
-        return '{}({})'.format(self.__class__.__name__, self.text)
+        return '{klass}({text})'.format(
+            klass=self.__class__.__name__,
+            text=self.text)
 
 
 class State(object):
@@ -68,7 +72,7 @@ class State(object):
         try:
             d = self.expect.pop(0)
         except IndexError:
-            raise AssertionError("Unexpected {}".format(test))
+            raise AssertionError("Unexpected {test}".format(test=test))
 
         assert_equal(d, test)
 

@@ -28,7 +28,7 @@ def open_file(filename):
 
     this is not a context manager because it is used asynchronously by
     hooks
-    
+
     out of the scope of enable() because we want to patch it in our tests
     """
 
@@ -113,7 +113,9 @@ def enable(filename=None):
         else:
             raise AssertionError("Internal error")
 
-        steps = u'{} {}\n'.format(marker, step.sentence)
+        steps = u'{marker} {sentence}\n'.format(
+            marker=marker,
+            sentence=step.sentence)
         streamresult.status(test_id=get_test_id(step.scenario),
                         file_name='steps',
                         file_bytes=steps.encode('utf-8'),
@@ -127,4 +129,6 @@ def enable(filename=None):
 
 
 def get_test_id(scenario):
-    return '{}: {}'.format(scenario.feature.name, scenario.name)
+    return '{feature}: {scenario}'.format(
+        feature=scenario.feature.name,
+        scenario=scenario.name)
