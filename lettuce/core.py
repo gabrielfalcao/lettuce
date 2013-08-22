@@ -741,7 +741,7 @@ class Scenario(object):
             step.scenario = self
 
     def _find_tags_in(self, original_string):
-        broad_regex = re.compile(ur"([@].*)%s: (%s)" % (
+        broad_regex = re.compile(ur"([@][^|]*)%s: (%s)" % (
             self.language.scenario_separator,
             re.escape(self.name)), re.DOTALL)
 
@@ -750,7 +750,7 @@ class Scenario(object):
             regexes.append(broad_regex)
 
         else:
-            regexes.append(re.compile(ur"(?:%s: %s.*)([@]?.*)%s: (%s)\s*\n" % (
+            regexes.append(re.compile(ur"(?:%s: %s.*)([@]?[^|]*)%s: (%s)\s*\n" % (
                 self.language.non_capturable_scenario_separator,
                 re.escape(self.previous_scenario.name),
                 self.language.scenario_separator,
