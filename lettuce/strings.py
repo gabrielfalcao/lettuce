@@ -38,12 +38,16 @@ def escape_if_necessary(what):
 
 
 def get_stripped_lines(string, ignore_lines_starting_with=''):
+    """Split lines at newline char, then return the array of stripped lines"""
+    # used e.g. to separate out all the steps in a scenario
     string = unicode(string)
     lines = [unicode(l.strip()) for l in string.splitlines()]
     if ignore_lines_starting_with:
         filter_func = lambda x: x and not x.startswith(
             ignore_lines_starting_with)
     else:
+        # by using an "identity" filter function, blank lines
+        # will not be included in the returned list
         filter_func = lambda x: x
 
     lines = filter(filter_func, lines)
