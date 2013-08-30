@@ -174,7 +174,9 @@ class ScenarioDescription(object):
 
         for pline, part in enumerate(string.splitlines()):
             part = part.strip()
-            if re.match(u"%s:[ ]+" % language.scenario_separator + re.escape(scenario.name), part):
+            # for performance reasons, avoid using the regex on all lines:
+            # first check if the scenario name is present, and use regex to verify this is the scenario definition
+            if (scenario.name in part) and re.match(u"%s:[ ]+" % language.scenario_separator + re.escape(scenario.name), part):
                 self.line = pline + 1
                 break
 
