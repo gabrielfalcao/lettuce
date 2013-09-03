@@ -216,6 +216,7 @@ class Step(object):
     related_outline = None
     scenario = None
     background = None
+    display = True
 
     def __init__(self, sentence, remaining_lines, line=None, filename=None):
         self.sentence = sentence
@@ -255,7 +256,7 @@ class Step(object):
 
         return method_name, sentence
 
-    def solve_and_clone(self, data):
+    def solve_and_clone(self, data, display_step):
         sentence = self.sentence
         hashes = self.hashes[:]  # deep copy
         for k, v in data.items():
@@ -275,6 +276,7 @@ class Step(object):
         new = deepcopy(self)
         new.sentence = sentence
         new.hashes = hashes
+        new.display = display_step
         return new
 
     def _calc_list_length(self, lst):
@@ -393,7 +395,7 @@ class Step(object):
             for step in steps:
                 step.scenario = self.scenario
 
-        (_, _, steps_failed, steps_undefined, _) = self.run_all(steps)
+        (_, _, steps_failed, steps_undefined) = self.run_all(steps)
         if not steps_failed and not steps_undefined:
             self.passed = True
             self.failed = False
@@ -426,7 +428,7 @@ class Step(object):
         return line
 
     @staticmethod
-    def run_all(steps, outline=None, run_callbacks=False, ignore_case=True, failfast=False):
+    def run_all(steps, outline=None, run_callbacks=False, ignore_case=True, failfast=False, display_steps=True, reasons_to_fail=None):
         """Runs each step in the given list of steps.
 
         Returns a tuple of five lists:
@@ -441,11 +443,12 @@ class Step(object):
         steps_passed = []
         steps_failed = []
         steps_undefined = []
-        reasons_to_fail = []
+        if reasons_to_fail is None:
+            reasons_to_fail = []
 
         for step in steps:
             if outline:
-                step = step.solve_and_clone(outline)
+                step = step.solve_and_clone(outline, display_steps)
 
             try:
                 step.pre_run(ignore_case, with_outline=outline)
@@ -461,17 +464,17 @@ class Step(object):
                 steps_undefined.append(e.step)
 
             except Exception, e:
-                if failfast:
-                    raise
                 steps_failed.append(step)
                 reasons_to_fail.append(step.why)
+                if failfast:
+                    raise
 
             finally:
                 all_steps.append(step)
                 if run_callbacks:
                     call_hook('after_each', 'step', step)
 
-        return (all_steps, steps_passed, steps_failed, steps_undefined, reasons_to_fail)
+        return (all_steps, steps_passed, steps_failed, steps_undefined)
 
     @classmethod
     def many_from_lines(klass, lines, filename=None, original_string=None):
@@ -662,10 +665,10 @@ class Scenario(object):
 
     @property
     def evaluated(self):
-        for outline in self.outlines:
+        for outline_idx, outline in enumerate(self.outlines):
             steps = []
             for step in self.steps:
-                new_step = step.solve_and_clone(outline)
+                new_step = step.solve_and_clone(outline, display_step=(outline_idx == 0))
                 new_step.original_sentence = step.sentence
                 new_step.scenario = self
                 steps.append(new_step)
@@ -696,18 +699,18 @@ class Scenario(object):
                 if self.background:
                     self.background.run(ignore_case)
 
-                all_steps, steps_passed, steps_failed, steps_undefined, reasons_to_fail = Step.run_all(self.steps, outline, run_callbacks, ignore_case, failfast=failfast)
+                reasons_to_fail = []
+                all_steps, steps_passed, steps_failed, steps_undefined = Step.run_all(self.steps, outline, run_callbacks, ignore_case, failfast=failfast, display_steps=(order < 1), reasons_to_fail=reasons_to_fail)
             except:
-                if failfast:
-                    call_hook('after_each', 'scenario', self)
+                call_hook('after_each', 'scenario', self)
                 raise
+            finally:
+                if outline:
+                    call_hook('outline', 'scenario', self, order, outline,
+                            reasons_to_fail)
 
             skip = lambda x: x not in steps_passed and x not in steps_undefined and x not in steps_failed
-
             steps_skipped = filter(skip, all_steps)
-            if outline:
-                call_hook('outline', 'scenario', self, order, outline,
-                        reasons_to_fail)
 
             return ScenarioResult(
                 self,
@@ -718,10 +721,8 @@ class Scenario(object):
             )
 
         if self.outlines:
-            first = True
             for index, outline in enumerate(self.outlines):
-                results.append(run_scenario(self, index, outline, run_callbacks=first))
-                first = False
+                results.append(run_scenario(self, index, outline, run_callbacks=True))
         else:
             results.append(run_scenario(self, run_callbacks=True))
 
@@ -736,9 +737,9 @@ class Scenario(object):
             step.scenario = self
 
     def _resolve_steps(self, steps, outlines, with_file, original_string):
-        for outline in outlines:
+        for outline_idx, outline in enumerate(outlines):
             for step in steps:
-                yield step.solve_and_clone(outline)
+                yield step.solve_and_clone(outline, display_step=(outline_idx == 0))
 
     def _parse_remaining_lines(self, lines, with_file, original_string):
         invalid_first_line_error = '\nInvalid step on scenario "%s".\n' \
@@ -1185,9 +1186,7 @@ class Feature(object):
 
                 scenarios_ran.extend(scenario.run(ignore_case, failfast=failfast))
         except:
-            if failfast:
-                call_hook('after_each', 'feature', self)
-
+            call_hook('after_each', 'feature', self)
             raise
         else:
             call_hook('after_each', 'feature', self)

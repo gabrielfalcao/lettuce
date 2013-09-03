@@ -32,6 +32,9 @@ def wrt(what):
 
 @after.each_step
 def print_step_running(step):
+    if not step.display:
+        return
+
     wrt(step.represent_string(step.original_sentence).rstrip())
     if not step.defined_at:
         wrt(" (undefined)")

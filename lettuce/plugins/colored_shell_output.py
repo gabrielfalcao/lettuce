@@ -58,7 +58,7 @@ def write_out(what):
 
 @before.each_step
 def print_step_running(step):
-    if not step.defined_at:
+    if not step.defined_at or not step.display:
         return
 
     color = '\033[1;30m'
@@ -76,6 +76,8 @@ def print_step_running(step):
 
 @after.each_step
 def print_step_ran(step):
+    if not step.display:
+        return
     if step.scenario and step.scenario.outlines and (step.failed or step.passed or step.defined_at):
         return
 
