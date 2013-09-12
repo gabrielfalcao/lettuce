@@ -205,6 +205,16 @@ The string that represents the step
 
     step.sentence == 'Given I show lettuce running'
 
+Step.passed
+===========
+
+Boolean, true if the step ran without an error.
+
+Step.failed
+===========
+
+Boolean, true if the step ran and an error occurred during execution.
+
 .. _step-definition:
 
 step definition
