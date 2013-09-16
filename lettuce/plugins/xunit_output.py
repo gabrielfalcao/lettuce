@@ -100,7 +100,7 @@ def enable(filename=None):
         for reason_to_fail in reasons_to_fail:
             cdata = doc.createCDATASection(reason_to_fail.traceback)
             failure = doc.createElement("failure")
-            failure.setAttribute("message", reason_to_fail.cause)
+            failure.setAttribute("message", reason_to_fail.cause if hasattr(reason_to_fail,"cause") else "")
             failure.appendChild(cdata)
             tc.appendChild(failure)
 
