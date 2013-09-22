@@ -105,7 +105,7 @@ def test_StepDict_can_load_steps_from_an_object():
     assert_equal(steps[expected_sentence2], step_list.step_2)
 
 def test_StepDict_can_exclude_methods_when_load_steps():
-    u"lettuce.STEP_REGISTRY.load_steps(obj) append all obj methods to STEP_REGISTRY except ones in attr 'exclude'"
+    u"lettuce.STEP_REGISTRY.load_steps(obj) don't load exluded attr in STEP_REGISTRY"
     steps = StepDict()
     class LotsOfSteps:
         exclude = ["step_1"]
@@ -122,3 +122,16 @@ def test_StepDict_can_exclude_methods_when_load_steps():
     expected_sentence2 = "Doing something"
     assert (expected_sentence1 not in steps)
     assert (expected_sentence2 in steps)
+
+def test_StepDict_can_exclude_callable_object_when_load_steps():
+    u"lettuce.STEP_REGISTRY.load_steps(obj) don't load callable objets in STEP_REGISTRY"
+    steps = StepDict()
+    class NoStep:
+        class NotAStep(object):
+            def __call__(self):
+                pass
+
+    no_step = NoStep()
+    steps.load_steps(no_step)
+
+    assert len(steps) == 0

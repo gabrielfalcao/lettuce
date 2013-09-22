@@ -59,6 +59,7 @@ class StepDict(dict):
         return obj
 
     def _extract_sentence(self, func):
+        func = getattr(func, '__func__', func)
         sentence = getattr(func, '__doc__', None)
         if sentence is None:
             sentence = func.func_name.replace('_', ' ')
@@ -75,7 +76,11 @@ class StepDict(dict):
                                    "  error: %s" % (step, func, e))
 
     def _attr_is_step(self, attr, obj):
-        return attr[0] != '_' and callable(getattr(obj, attr))
+        return attr[0] != '_' and self._is_func_or_method(getattr(obj, attr))
+
+    def _is_func_or_method(self, func):
+        func_dir = dir(func)
+        return callable(func) and ("func_name" in func_dir or "__func__" in func_dir)
 
 
 STEP_REGISTRY = StepDict()
