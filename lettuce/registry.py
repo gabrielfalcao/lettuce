@@ -50,6 +50,14 @@ class StepDict(dict):
         regex = self._extract_sentence(func)
         return self.load(regex, func)
 
+    def load_steps(self, obj):
+        exclude = getattr(obj, "exclude", [])
+        for attr in dir(obj):
+            if self._attr_is_step(attr, obj) and attr not in exclude:
+                step_method = getattr(obj, attr)
+                self.load_func(step_method)
+        return obj
+
     def _extract_sentence(self, func):
         sentence = getattr(func, '__doc__', None)
         if sentence is None:
@@ -66,7 +74,8 @@ class StepDict(dict):
                                    "  for function: %s\n"
                                    "  error: %s" % (step, func, e))
 
-
+    def _attr_is_step(self, attr, obj):
+        return attr[0] != '_' and callable(getattr(obj, attr))
 
 
 STEP_REGISTRY = StepDict()

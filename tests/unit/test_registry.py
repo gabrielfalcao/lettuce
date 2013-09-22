@@ -17,7 +17,7 @@
 from lettuce.registry import _function_matches, StepDict
 from lettuce.exceptions import StepLoadingError
 
-from nose.tools import assert_raises, assert_in, assert_equal
+from nose.tools import assert_raises, assert_not_in, assert_in, assert_equal
 
 
 def test_function_matches_compares_with_abs_path():
@@ -73,7 +73,7 @@ def test_StepDict_can_extract_a_step_sentence_from_function_doc():
     assert_equal("A step sentence", steps._extract_sentence(a_step_func))
 
 def test_StepDict_can_load_a_step_from_a_function():
-    u"lettuce.STEP_REGISTRY.load(step, func) append item(step, func) to STEP_REGISTRY"
+    u"lettuce.STEP_REGISTRY.load_func(func) append item(step, func) to STEP_REGISTRY"
     steps = StepDict()
     def a_step_to_test():
         pass
@@ -83,3 +83,42 @@ def test_StepDict_can_load_a_step_from_a_function():
     expected_sentence = "A step to test"
     assert_in(expected_sentence, steps)
     assert_equal(steps[expected_sentence], a_step_to_test)
+
+def test_StepDict_can_load_steps_from_an_object():
+    u"lettuce.STEP_REGISTRY.load_steps(obj) append all obj methods to STEP_REGISTRY"
+    steps = StepDict()
+    class LotsOfSteps:
+        def step_1(self):
+            pass
+        def step_2(self):
+            """Doing something"""
+            pass
+
+    step_list = LotsOfSteps()
+    steps.load_steps(step_list)
+
+    expected_sentence1 = "Step 1"
+    expected_sentence2 = "Doing something"
+    assert_in(expected_sentence1, steps)
+    assert_in(expected_sentence2, steps)
+    assert_equal(steps[expected_sentence1], step_list.step_1)
+    assert_equal(steps[expected_sentence2], step_list.step_2)
+
+def test_StepDict_can_exclude_methods_when_load_steps():
+    u"lettuce.STEP_REGISTRY.load_steps(obj) append all obj methods to STEP_REGISTRY except ones in attr 'exclude'"
+    steps = StepDict()
+    class LotsOfSteps:
+        exclude = ["step_1"]
+        def step_1(self):
+            pass
+        def step_2(self):
+            """Doing something"""
+            pass
+
+    step_list = LotsOfSteps()
+    steps.load_steps(step_list)
+
+    expected_sentence1 = "Step 1"
+    expected_sentence2 = "Doing something"
+    assert_not_in(expected_sentence1, steps)
+    assert_in(expected_sentence2, steps)
