@@ -17,7 +17,7 @@
 from lettuce.registry import _function_matches, StepDict
 from lettuce.exceptions import StepLoadingError
 
-from nose.tools import assert_raises, assert_not_in, assert_in, assert_equal
+from nose.tools import assert_raises, assert_equal
 
 
 def test_function_matches_compares_with_abs_path():
@@ -39,8 +39,8 @@ def test_function_matches_compares_with_abs_path():
 def test_StepDict_raise_StepLoadingError_if_load_first_argument_is_not_a_regex():
     u"lettuce.STEP_REGISTRY.load(step, func) should raise an error if step is not a regex"
     steps = StepDict()
-    with assert_raises(StepLoadingError):
-        steps.load("an invalid regex;)", lambda: "")
+    test_load = lambda: steps.load("an invalid regex;)", lambda: "")
+    assert_raises(StepLoadingError, test_load)
 
 def test_StepDict_can_load_a_step_composed_of_a_regex_and_a_function():
     u"lettuce.STEP_REGISTRY.load(step, func) append item(step, func) to STEP_REGISTRY"
@@ -48,7 +48,7 @@ def test_StepDict_can_load_a_step_composed_of_a_regex_and_a_function():
     func = lambda: ""
     step = "a step to test"
     steps.load(step, func)
-    assert_in(step, steps)
+    assert (step in steps)
     assert_equal(steps[step], func)
 
 def test_StepDict_load_a_step_return_the_given_function():
@@ -81,7 +81,7 @@ def test_StepDict_can_load_a_step_from_a_function():
     steps.load_func(a_step_to_test)
 
     expected_sentence = "A step to test"
-    assert_in(expected_sentence, steps)
+    assert (expected_sentence in steps)
     assert_equal(steps[expected_sentence], a_step_to_test)
 
 def test_StepDict_can_load_steps_from_an_object():
@@ -99,8 +99,8 @@ def test_StepDict_can_load_steps_from_an_object():
 
     expected_sentence1 = "Step 1"
     expected_sentence2 = "Doing something"
-    assert_in(expected_sentence1, steps)
-    assert_in(expected_sentence2, steps)
+    assert (expected_sentence1 in steps)
+    assert (expected_sentence2 in steps)
     assert_equal(steps[expected_sentence1], step_list.step_1)
     assert_equal(steps[expected_sentence2], step_list.step_2)
 
@@ -120,5 +120,5 @@ def test_StepDict_can_exclude_methods_when_load_steps():
 
     expected_sentence1 = "Step 1"
     expected_sentence2 = "Doing something"
-    assert_not_in(expected_sentence1, steps)
-    assert_in(expected_sentence2, steps)
+    assert (expected_sentence1 not in steps)
+    assert (expected_sentence2 in steps)
