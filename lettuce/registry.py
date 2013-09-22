@@ -15,8 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
+import re
 import threading
 import traceback
+
+from lettuce.exceptions import StepLoadingError
 
 world = threading.local()
 world._set = False
@@ -37,8 +40,23 @@ class CallbackDict(dict):
             for callback_list in action_dict.values():
                 callback_list[:] = []
 
+class StepDict(dict):
+    def load(self, step, func):
+        self._assert_is_step(step, func)
+        self[step] = func
 
-STEP_REGISTRY = {}
+    def _assert_is_step(self, step, func):
+        try:
+            re.compile(step)
+        except re.error, e:
+            raise StepLoadingError("Error when trying to compile:\n"
+                                   "  regex: %r\n"
+                                   "  for function: %s\n"
+                                   "  error: %s" % (step, func, e))
+
+
+
+STEP_REGISTRY = StepDict()
 CALLBACK_REGISTRY = CallbackDict(
     {
         'all': {
