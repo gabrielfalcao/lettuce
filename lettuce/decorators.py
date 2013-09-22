@@ -58,3 +58,49 @@ def step(step_func_or_sentence):
         return lambda func: STEP_REGISTRY.load(step_func_or_sentence, func)
     else:
         return STEP_REGISTRY.load_func(step_func_or_sentence)
+
+def steps(steps_class):
+    """Decorates a class, and set steps definitions from methods
+    except those in the attribute "exclude" or starting by underscore.
+    Steps sentences are taken from methods names or docs if exist.
+
+    Example::
+
+        >>> from lettuce import steps
+        >>> from models import contact
+        >>>
+        >>> @steps
+        >>> class ListOfSteps(object):
+        ...      exclude = ["delete_by_name"]
+        ...
+        ...      def __init__(self, contact):
+        ...          self.contact = contact
+        ...
+        ...      def given_i_delete_a_contact_from_my_address_book(self, step, name):
+        ...          '''Given I delete the contact "(?P<name>.*)" from my address book'''
+        ...          self.delete_by_name(name)
+        ...          assert step.sentence == 'Given I delete the contact "(?P<name>.*)" from my address book'
+        ...
+        ...      def given_I_delete_the_contact_John_Doe_from_my_address_book(self, step):
+        ...          self.delete_by_name("John Doe")
+        ...          assert step.sentence == 'Given I delete the contact John Doe from my address book'
+        ...
+        ...      def delete_by_name(self, name):
+        ...          self.contact.delete_by_name(name)
+        ...
+        >>> ListOfSteps(contact)
+
+
+    Notice steps are added when an object of the class is created.
+    """
+    if hasattr(steps_class, '__init__'):
+        _init_ = getattr(steps_class, '__init__')
+        def init(self, *args, **kwargs):
+            _init_(self, *args, **kwargs)
+            STEP_REGISTRY.load_steps(self)
+    else:
+        def init(self, *args, **kwargs):
+            STEP_REGISTRY.load_steps(self)
+
+    setattr(steps_class, '__init__', init)
+    return steps_class
