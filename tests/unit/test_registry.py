@@ -14,7 +14,10 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from lettuce.registry import _function_matches
+from lettuce.registry import _function_matches, StepDict
+from lettuce.exceptions import StepLoadingError
+
+from nose.tools import assert_raises, assert_in, assert_equal
 
 
 def test_function_matches_compares_with_abs_path():
@@ -32,3 +35,24 @@ def test_function_matches_compares_with_abs_path():
 
     assert _function_matches(fakecallback1, fakecallback2), \
         'the callbacks should have matched'
+
+def test_StepDict_raise_StepLoadingError_if_load_first_argument_is_not_a_regex():
+    u"lettuce.STEP_REGISTRY.load(step, func) should raise an error if step is not a regex"
+    steps = StepDict()
+    with assert_raises(StepLoadingError):
+        steps.load("an invalid regex;)", lambda: "")
+
+def test_StepDict_can_load_a_step_composed_of_a_regex_and_a_function():
+    u"lettuce.STEP_REGISTRY.load(step, func) append item(step, func) to STEP_REGISTRY"
+    steps = StepDict()
+    func = lambda: ""
+    step = "a step to test"
+    steps.load(step, func)
+    assert_in(step, steps)
+    assert_equal(steps[step], func)
+
+def test_StepDict_load_a_step_return_the_given_function():
+    u"lettuce.STEP_REGISTRY.load(step, func) returns func"
+    steps = StepDict()
+    func = lambda: ""
+    assert_equal(steps.load("another step", func), func)
