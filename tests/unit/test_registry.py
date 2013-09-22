@@ -56,3 +56,30 @@ def test_StepDict_load_a_step_return_the_given_function():
     steps = StepDict()
     func = lambda: ""
     assert_equal(steps.load("another step", func), func)
+
+def test_StepDict_can_extract_a_step_sentence_from_function_name():
+    u"lettuce.STEP_REGISTRY._extract_sentence(func) parse func name and return a sentence"
+    steps = StepDict()
+    def a_step_sentence():
+        pass
+    assert_equal("A step sentence", steps._extract_sentence(a_step_sentence))
+
+def test_StepDict_can_extract_a_step_sentence_from_function_doc():
+    u"lettuce.STEP_REGISTRY._extract_sentence(func) parse func doc and return a sentence"
+    steps = StepDict()
+    def a_step_func():
+        """A step sentence"""
+        pass
+    assert_equal("A step sentence", steps._extract_sentence(a_step_func))
+
+def test_StepDict_can_load_a_step_from_a_function():
+    u"lettuce.STEP_REGISTRY.load(step, func) append item(step, func) to STEP_REGISTRY"
+    steps = StepDict()
+    def a_step_to_test():
+        pass
+
+    steps.load_func(a_step_to_test)
+
+    expected_sentence = "A step to test"
+    assert_in(expected_sentence, steps)
+    assert_equal(steps[expected_sentence], a_step_to_test)

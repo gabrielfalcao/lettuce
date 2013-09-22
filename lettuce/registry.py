@@ -46,6 +46,17 @@ class StepDict(dict):
         self[step] = func
         return func
 
+    def _extract_sentence(self, func):
+        sentence = getattr(func, '__doc__', None)
+        if sentence is None:
+            sentence = func.func_name.replace('_', ' ')
+            sentence = sentence[0].upper() + sentence[1:]
+        return sentence
+
+    def load_func(self, func):
+        regex = self._extract_sentence(func)
+        return self.load(regex, func)
+
     def _assert_is_step(self, step, func):
         try:
             re.compile(step)
