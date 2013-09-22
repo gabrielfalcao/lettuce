@@ -16,23 +16,45 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from lettuce.core import STEP_REGISTRY
 
+def _is_step_sentence(sentence):
+    return isinstance(sentence, str) or isinstance(sentence, basestring)
 
-def step(regex):
+def step(step_func_or_sentence):
     """Decorates a function, so that it will become a new step
     definition.
+    You give step sentence either (by priority):
+    * with step function argument (first example)
+    * with function doc (second example)
+    * with the function name exploded by underscores (third example)
 
     Example::
 
         >>> from lettuce import step
         >>> from models import contact
         >>>
+        >>> # First Example
         >>> step(r'Given I delete the contact "(?P<name>.*)" from my address book')
         ... def given_i_do_something(step, name):
         ...     contact.delete_by_name(name)
         ...     assert step.sentence == 'Given I delete the contact "John Doe" from my address book'
+        ...
+        >>> # Second Example
+        >>> @step
+        ... def given_i_delete_a_contact_from_my_address_book(step, name):
+        ...     '''Given I delete the contact "(?P<name>.*)" from my address book'''
+        ...     contact.delete_by_name(name)
+        ...     assert step.sentence == 'Given I delete the contact "(?P<name>.*)" from my address book'
+        ...
+        >>> # Third Example
+        >>> @step
+        ... def given_I_delete_the_contact_John_Doe_from_my_address_book(step):
+        ...     contact.delete_by_name("John Doe")
+        ...     assert step.sentence == 'Given I delete the contact John Doe from my address book'
 
 
     Notice that all step definitions take a step object as argument.
     """
-    return lambda func: STEP_REGISTRY.load(regex, func)
-
+    if _is_step_sentence(step_func_or_sentence):
+        return lambda func: STEP_REGISTRY.load(step_func_or_sentence, func)
+    else:
+        return STEP_REGISTRY.load_func(step_func_or_sentence)
