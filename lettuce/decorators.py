@@ -34,8 +34,5 @@ def step(regex):
 
     Notice that all step definitions take a step object as argument.
     """
-    def wrap(func):
-        STEP_REGISTRY.load(regex, func)
-        return func
+    return lambda func: STEP_REGISTRY.load(regex, func)
 
-    return wrap

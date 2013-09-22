@@ -44,6 +44,7 @@ class StepDict(dict):
     def load(self, step, func):
         self._assert_is_step(step, func)
         self[step] = func
+        return func
 
     def _assert_is_step(self, step, func):
         try:
