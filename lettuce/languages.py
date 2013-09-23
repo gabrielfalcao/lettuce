@@ -75,7 +75,7 @@ LANGUAGES = {
         'scenario': u'Forgatókönyv',
         'scenario_outline': u'Forgatókönyv vázlat',
         'scenario_separator': u'(Forgatókönyv|Forgatókönyv vázlat)',
-        'background': u'(?:Background)',
+        'background': u'(?:Háttér)',
     },
     'fr': {
         'examples': u'Exemples|Scénarios',
@@ -187,4 +187,15 @@ LANGUAGES = {
         'scenario_separator': u'(Scenarioöversikt|Scenario)',
         'background': u'(?:Context)',
     },
+    'cz': {
+        'examples': u'Příklady',
+        'feature': u'Požadavek',
+        'name': u'Czech',
+        'native': u'Čeština',
+        'scenario': u'Scénář|Požadavek',
+        'scenario_outline': u'Náčrt scénáře',
+        'scenario_separator': u'(Náčrt scénáře|Scénář)',
+        'background': u'(?:Background)',
+    },
+
 }

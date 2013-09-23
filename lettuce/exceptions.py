@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import traceback
+import sys
 from lettuce.strings import utf8_string
 
 
@@ -39,8 +40,14 @@ class ReasonToFail(object):
     def __init__(self, step, exc):
         self.step = step
         self.exception = exc
-        if isinstance(exc.message, basestring):
-            self.cause = utf8_string(exc.message)
+
+        if sys.version_info[:2] < (2, 6):
+            msg = exc.message
+        else:
+            msg = exc.args[0] if exc.args else ''
+
+        if isinstance(msg, basestring):
+            self.cause = utf8_string(msg)
         self.traceback = utf8_string(traceback.format_exc(exc))
 
 

@@ -24,10 +24,10 @@ integration: clean
 	@nosetests --stop -s --verbosity=2 tests/integration
 
 doctest: clean
-	@find specs -name '*.md' -exec steadymark {} \;
+	@cd docs && make doctest
 
 documentation:
-	@markment --theme=flat-ui -o ./_public specs
+	@cd docs && make html
 
 clean:
 	@printf "Cleaning up files that are already in .gitignore... "
@@ -41,14 +41,12 @@ withdraw-documentation:
 
 deploy-documentation:documentation withdraw-documentation
 	@printf 'Deploying documentation to http://lettuce.it ...'
-	@cd ./_public && tar -zcp *  | ssh gabrielfalcao@gabrielfalcao.com "tar zxp -C ./lettuce.it/public/"
+	@cd ./docs/_build/html && tar -zcp *  | ssh gabrielfalcao@gabrielfalcao.com "tar zxp -C ./lettuce.it/public/"
 	@echo "DONE!"
 
 deploy: deploy-documentation
 
-release:
-	@./.release
-	@make clean unit functional integration doctest deploy-documentation publish
+release: clean unit functional integration doctest deploy-documentation publish
 	@printf "Exporting to $(filename)... "
 	@tar czf $(filename) lettuce setup.py README.md COPYING
 	@echo "DONE!"

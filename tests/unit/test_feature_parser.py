@@ -418,6 +418,43 @@ Feature: My scenarios have no name
         Given this scenario raises a syntax error
 """
 
+FEATURE21 = """
+Feature: Taming the tag parser
+
+  Background:
+    Given the email addresses:
+      | name         | email                      |
+      | Chuck Norris | roundhouse@chucknorris.com |
+    Then the next scenario has only the tags it's supposed to
+
+  Scenario: I'm isolated
+    Given I am parsed
+    Then this scenario has only zero tags
+
+  @tag
+  Scenario: I'm so isolated
+    Given I am parsed
+    Then this scenario has one tag
+"""
+
+FEATURE22 = """
+Feature: one tag in the first scenario
+
+  @onetag
+  Scenario: This is the first scenario
+    Given I am parsed
+    Then this scenario has one tag
+"""
+
+FEATURE23 = """
+Feature: three tags in the first scenario
+
+  @onetag @another @$%^&even-weird_chars
+  Scenario: This is the first scenario
+    Given I am parsed
+    Then this scenario has three tags
+"""
+
 
 def test_feature_has_repr():
     "Feature implements __repr__ nicely"
@@ -604,11 +641,8 @@ def test_single_feature_single_tag():
     "All scenarios within a feature inherit the feature's tags"
     feature = Feature.from_string(FEATURE18)
 
-    # FIXME (mitgr81):  It seems worth the efficiency to not loop through the feature tags and
-    # check to see if every tag exists in the child.  The "right" fix might just be to not
-    # add the tag from the feature in the first scenario directly.
     assert that(feature.scenarios[0].tags).deep_equals([
-        'feature_runme', 'runme1', 'feature_runme'])
+        'runme1', 'feature_runme'])
 
     assert that(feature.scenarios[1].tags).deep_equals([
         'runme2', 'feature_runme'])
@@ -794,3 +828,32 @@ def test_syntax_error_for_scenarios_with_no_name():
          'scenarios must have a name, make sure to declare '
          'a scenario like this: `Scenario: name of your scenario`')
     )
+
+
+def test_scenario_post_email():
+    ("Having a scenario which the body has an email address; "
+     "Then the following scenario should have no "
+     "tags related to the email")
+
+    feature = Feature.from_string(FEATURE21)
+    scenario1, scenario2 = feature.scenarios
+
+    scenario1.tags.should.be.empty
+    scenario2.tags.should.equal(['tag'])
+
+def test_feature_first_scenario_tag_extraction():
+    ("A feature object should be able to find the single tag "
+     "belonging to the first scenario")
+    feature = Feature.from_string(FEATURE22)
+
+    assert that(feature.scenarios[0].tags).deep_equals([
+        'onetag'])
+
+
+def test_feature_first_scenario_tags_extraction():
+    ("A feature object should be able to find the tags "
+     "belonging to the first scenario")
+    feature = Feature.from_string(FEATURE23)
+
+    assert that(feature.scenarios[0].tags).deep_equals([
+        'onetag', 'another', '$%^&even-weird_chars'])
