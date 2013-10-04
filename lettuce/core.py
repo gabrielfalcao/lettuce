@@ -957,7 +957,7 @@ class Feature(object):
     def _add_myself_to_scenarios(self):
         for scenario in self.scenarios:
             scenario.feature = self
-            if scenario.tags and self.tags:
+            if scenario.tags is not None and self.tags:
                 scenario.tags.extend(self.tags)
 
     def _find_tags_in(self, original_string):
