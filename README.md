@@ -2,7 +2,7 @@
 > Version 0.2.19 - kryptonite
 
 [![Build Status](https://secure.travis-ci.org/gabrielfalcao/lettuce.png)](http://travis-ci.org/gabrielfalcao/lettuce)
-[![Instanc.es Badge](http://instanc.es/bin/gabrielfalcao/lettuce.png)](https://instanc.es "Instanc.es")
+[![Instanc.es Badge](https://instanc.es/bin/gabrielfalcao/lettuce.png)](https://instanc.es "Instanc.es")
 
 ## On release names
 
