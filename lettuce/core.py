@@ -174,7 +174,9 @@ class ScenarioDescription(object):
 
         for pline, part in enumerate(string.splitlines()):
             part = part.strip()
-            if re.match(u"%s:[ ]+" % language.scenario_separator + re.escape(scenario.name), part):
+            # for performance reasons, avoid using the regex on all lines:
+            # first check if the scenario name is present, and use regex to verify this is the scenario definition
+            if (scenario.name in part) and re.match(u"%s:[ ]+" % language.scenario_separator + re.escape(scenario.name), part):
                 self.line = pline + 1
                 break
 
@@ -497,7 +499,7 @@ class Step(object):
                 invalid_first_line_error % (lines[0], 'multiline'))
 
         # Select only lines that aren't end-to-end whitespace and aren't tags
-        # Tags could be inclueed as steps if the first scenario following a background is tagged
+        # Tags could be included as steps if the first scenario following a background is tagged
         # This then causes the test to fail, because lettuce looks for the step's definition (which doesn't exist)
         lines = filter(lambda x: not (REP.only_whitespace.match(x) or re.match(r'^\s*@', x)), lines)
 
