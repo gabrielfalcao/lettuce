@@ -1236,6 +1236,8 @@ class TotalResult(object):
         self.steps_undefined = 0
         self._proposed_definitions = []
         self.steps = 0
+        # store the scenario names that failed, with their location
+        self.failed_scenario_locations = []
         for feature_result in self.feature_results:
             for scenario_result in feature_result.scenario_results:
                 self.scenario_results.append(scenario_result)
@@ -1245,6 +1247,8 @@ class TotalResult(object):
                 self.steps_undefined += len(scenario_result.steps_undefined)
                 self.steps += scenario_result.total_steps
                 self._proposed_definitions.extend(scenario_result.steps_undefined)
+                if len(scenario_result.steps_failed) > 0:
+                    self.failed_scenario_locations.append(scenario_result.scenario.represented())
 
     def _filter_proposed_definitions(self):
         sentences = []

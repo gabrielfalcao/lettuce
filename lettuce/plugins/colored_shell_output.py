@@ -253,6 +253,17 @@ def print_end(total):
 
             wrt("\n")
 
+    if total.failed_scenario_locations:
+        # print list of failed scenarios, with their file and line number
+        wrt("\n")
+        wrt("\033[1;31m")
+        wrt("List of failed scenarios:\n")
+        wrt("\033[0;31m")
+        for scenario in total.failed_scenario_locations:
+            wrt(scenario)
+        wrt("\033[0m")
+        wrt("\n")
+
 
 def print_no_features_found(where):
     where = core.fs.relpath(where)

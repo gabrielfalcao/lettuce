@@ -146,6 +146,13 @@ def print_end(total):
             wrt("    assert False, 'This step must be implemented'\n")
 
 
+    if total.failed_scenario_locations:
+        # print list of failed scenarios, with their file and line number
+        wrt("\nList of failed scenarios:\n")
+        for scenario in total.failed_scenario_locations:
+            wrt(scenario)
+        wrt("\n")
+
 def print_no_features_found(where):
     where = core.fs.relpath(where)
     if not where.startswith(os.sep):
