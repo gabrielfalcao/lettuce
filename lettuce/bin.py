@@ -66,6 +66,12 @@ def main(args=sys.argv[1:]):
                       help='Write JUnit XML to this file. Defaults to '
                       'lettucetests.xml')
 
+    parser.add_option("--with-subunit",
+                      dest="enable_subunit",
+                      action="store_true",
+                      default=False,
+                      help='Output Subunit test results to a file')
+
     parser.add_option("--subunit-file",
                       dest="subunit_filename",
                       default=None,
