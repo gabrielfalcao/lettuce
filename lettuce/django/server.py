@@ -31,7 +31,12 @@ from django.core.servers.basehttp import WSGIServer
 from django.core.servers.basehttp import ServerHandler
 from django.core.servers.basehttp import WSGIRequestHandler
 from django.core.servers.basehttp import WSGIServerException
-from django.utils.six.moves import socketserver
+
+try:
+    from django.utils.six.moves import socketserver
+except ImportError:
+    import SocketServer as socketserver
+
 try:
     from django.core.servers.basehttp import AdminMediaHandler
 except ImportError:
