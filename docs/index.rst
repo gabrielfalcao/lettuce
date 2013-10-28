@@ -40,12 +40,13 @@ nutshell
     ... def have_the_string(step, string):
     ...     world.string = string
     ...
-    >>> @step('I put it in upper case')
-    ... def put_it_in_upper(step):
+    >>> @step
+    ... def i_put_it_in_upper_case(step):
     ...     world.string = world.string.upper()
     ...
-    >>> @step('I see the string is "(.*)"')
+    >>> @step
     ... def see_the_string_is(step, expected):
+    ...     '''I see the string is "(.*)"'''
     ...     assert world.string == expected, \
     ...         "Got %s" % world.string
 
