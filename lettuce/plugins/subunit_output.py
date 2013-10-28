@@ -58,26 +58,31 @@ def enable(filename=None):
     def before_scenario(scenario):
 
         # redirect stdout and stderr
-        sys.stdout = StringIO()
-        sys.stderr = StringIO()
+        # sys.stdout = StringIO()
+        # sys.stderr = StringIO()
+        try:
+            test_tags = scenario.tags
+        except AttributeError:
+            test_tags = ()
+
         streamresult.status(test_id=get_test_id(scenario),
                             test_status='inprogress',
-                            test_tags=scenario.tags)
+                            test_tags=test_tags)
 
     @after.each_scenario
     def after_scenario(scenario):
 
-        streamresult.status(test_id=get_test_id(scenario),
-                            file_name='stdout',
-                            file_bytes=sys.stdout.getvalue(),
-                            mime_type='text/plain; charset=utf8',
-                            eof=True)
+        # streamresult.status(test_id=get_test_id(scenario),
+        #                     file_name='stdout',
+        #                     file_bytes=sys.stdout.getvalue(),
+        #                     mime_type='text/plain; charset=utf8',
+        #                     eof=True)
 
-        streamresult.status(test_id=get_test_id(scenario),
-                            file_name='stderr',
-                            file_bytes=sys.stderr.getvalue(),
-                            mime_type='text/plain; charset=utf8',
-                            eof=True)
+        # streamresult.status(test_id=get_test_id(scenario),
+        #                     file_name='stderr',
+        #                     file_bytes=sys.stderr.getvalue(),
+        #                     mime_type='text/plain; charset=utf8',
+        #                     eof=True)
 
         # unredirect stdout and stderr
         sys.stdout = real_stdout
@@ -93,6 +98,12 @@ def enable(filename=None):
     @after.each_step
     def after_step(step):
 
+        # only consider steps for background
+        if not step.scenario:
+            return
+
+        test_id = get_test_id(step.scenario)
+
         if step.passed:
             marker = u'✔'
         elif not step.defined_at:
@@ -101,7 +112,7 @@ def enable(filename=None):
             marker = u'❌'
 
             try:
-                streamresult.status(test_id=get_test_id(step.scenario),
+                streamresult.status(test_id=test_id,
                                     file_name='traceback',
                                     file_bytes=step.why.traceback.encode('utf-8'),
                                     mime_type='text/plain; charset=utf8')
@@ -116,7 +127,7 @@ def enable(filename=None):
         steps = u'{marker} {sentence}\n'.format(
             marker=marker,
             sentence=step.sentence)
-        streamresult.status(test_id=get_test_id(step.scenario),
+        streamresult.status(test_id=test_id,
                         file_name='steps',
                         file_bytes=steps.encode('utf-8'),
                         mime_type='text/plain; charset=utf8')
@@ -129,6 +140,10 @@ def enable(filename=None):
 
 
 def get_test_id(scenario):
-    return '{feature}: {scenario}'.format(
-        feature=scenario.feature.name,
-        scenario=scenario.name)
+    try:
+        return '{feature}: {scenario}'.format(
+            feature=scenario.feature.name,
+            scenario=scenario.name)
+    except AttributeError:
+        return '{feature}: Background'.format(
+            feature=scenario.feature.name)
