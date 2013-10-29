@@ -37,7 +37,7 @@ Let's choose a problem to lettuce:
 **Given a number, what is its factorial?**
 
 .. Note::
-   
+
    The factorial of a positive integer n, denoted by n!, is the
    product of all positive integers less than or equal to n. The
    factorial of 0 is 1
@@ -96,7 +96,7 @@ Start describing the expected behaviour of factorial in ``zero.feature`` using E
 --------------------------
 
 Now let's define the steps of the scenario, so Lettuce can
-understand the behaviour description. Create the ``steps.py`` file which will contain 
+understand the behaviour description. Create the ``steps.py`` file which will contain
 python code describing the steps.
 
 Python:
@@ -414,5 +414,90 @@ forth round
 
 All steps should be repeated as long as you can keep doing them - the
 quality of your software depends on these.
+
+****************
+Syntactic sugar
+****************
+
+Available for versions > 0.2.19
+
+Steps sentence can now be given by function name or doc.
+=========================================================
+
+To take a step sentence from function name or doc,
+just decorate it with "@step" without argument.
+
+These two steps below, are identicals than the example above.
+
+.. highlight:: python
+
+::
+
+    from lettuce import *
+
+    @step
+    def have_the_number(step, number):
+        'I have the number (\d+)'
+        world.number = int(number)
+
+    @step
+    def i_compute_its_factorial(step):
+        world.number = factorial(world.number)
+
+
+
+Steps can be grouped in class decorated with "@steps"
+======================================================
+
+.. highlight:: python
+
+::
+
+    from lettuce import world, steps
+
+    @steps
+    class FactorialSteps(object):
+      """Methods in exclude or starting with _ will not be considered as step"""
+
+      exclude = ['set_number', 'get_number']
+
+      def __init__(self, environs):
+        self.environs = environs
+
+      def set_number(self, value):
+        self.environs.number = int(value)
+
+      def get_number(self):
+        return self.environs.number
+
+      def _assert_number_is(self, expected, msg="Got %d"):
+          number = self.get_number()
+          assert number == expected, msg % number
+
+      def have_the_number(self, step, number):
+        '''I have the number (\d+)'''
+          self.set_number(number)
+
+      def i_compute_its_factorial(self, step):
+          number = self.get_number()
+          self.set_number(factorial(number))
+
+      def check_number(self, step, expected):
+          '''I see the number (\d+)'''
+          self._assert_number_is(int(expected))
+
+    # Important!
+    # Steps are added only when you instanciate the "@steps" decorated class
+    # Internally decorator "@steps" build a closure with __init__
+
+    FactorialSteps(world)
+
+    def factorial(number):
+        number = int(number)
+        if (number == 0) or (number == 1):
+            return 1
+        else:
+            return number*factorial(number-1)
+
 
 Have a nice lettuce...! ;)

@@ -36,7 +36,7 @@ from lettuce.terrain import after
 from lettuce.terrain import before
 from lettuce.terrain import world
 
-from lettuce.decorators import step
+from lettuce.decorators import step, steps
 from lettuce.registry import call_hook
 from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
@@ -60,6 +60,7 @@ __all__ = [
     'after',
     'before',
     'step',
+    'steps',
     'world',
     'STEP_REGISTRY',
     'CALLBACK_REGISTRY',

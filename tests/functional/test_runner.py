@@ -475,7 +475,11 @@ def test_output_with_failed_colorless_with_table():
         "\n"
         "@step(u'And this one does not even has definition')\n"
         "def and_this_one_does_not_even_has_definition(step):\n"
-        "    assert False, 'This step must be implemented'\n") % {
+        "    assert False, 'This step must be implemented'\n"
+        "\n"
+        "List of failed scenarios:\n"
+        "  Scenario: See it fail                       # tests/functional/output_features/failed_table/failed_table.feature:2\n"
+        "\n") % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')),
             'call_line': call_line,
@@ -523,7 +527,11 @@ def test_output_with_failed_colorful_with_table():
         "@step(u'And this one does not even has definition')\n"
         "def and_this_one_does_not_even_has_definition(step):\n"
         "    assert False, 'This step must be implemented'\033[0m"
-        "\n" % {
+        "\n"
+        "\n"
+        "\033[1;31mList of failed scenarios:\n"
+        "\033[0;31m  Scenario: See it fail                       # tests/functional/output_features/failed_table/failed_table.feature:2\n"
+        "\033[0m\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')),
             'call_line': call_line,
@@ -641,7 +649,11 @@ def test_output_with_failful_outline_colorless():
         '\n'
         '1 feature (0 passed)\n'
         '3 scenarios (2 passed)\n'
-        '24 steps (1 failed, 4 skipped, 19 passed)\n' % {
+        '24 steps (1 failed, 4 skipped, 19 passed)\n'
+        '\n'
+        'List of failed scenarios:\n'
+        '  Scenario Outline: fill a web form                           # tests/functional/output_features/fail_outline/fail_outline.feature:6\n'
+        '\n' % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'fail_outline', 'fail_outline_steps.py')),
             'call_line': call_line,
@@ -687,7 +699,11 @@ def test_output_with_failful_outline_colorful():
         '\n'
         "\033[1;37m1 feature (\033[0;31m0 passed\033[1;37m)\033[0m\n"
         "\033[1;37m3 scenarios (\033[1;32m2 passed\033[1;37m)\033[0m\n"
-        "\033[1;37m24 steps (\033[0;31m1 failed\033[1;37m, \033[0;36m4 skipped\033[1;37m, \033[1;32m19 passed\033[1;37m)\033[0m\n" % {
+        "\033[1;37m24 steps (\033[0;31m1 failed\033[1;37m, \033[0;36m4 skipped\033[1;37m, \033[1;32m19 passed\033[1;37m)\033[0m\n"
+        "\n"
+        "\033[1;31mList of failed scenarios:\n"
+        "\033[0;31m  Scenario Outline: fill a web form                           # tests/functional/output_features/fail_outline/fail_outline.feature:6\n"
+        "\033[0m\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'fail_outline', 'fail_outline_steps.py')),
             'call_line': call_line,
@@ -1237,10 +1253,10 @@ def test_output_background_with_success_colorless():
         '  I want to automate its test                 # tests/functional/bg_features/simple/simple.feature:4\n'
         '\n'
         '  Background:\n'
-        '    Given the variable "X" holds 2            # tests/functional/test_runner.py:1223\n'
+        '    Given the variable "X" holds 2            # tests/functional/test_runner.py:1239\n'
         '\n'
         '  Scenario: multiplication changing the value # tests/functional/bg_features/simple/simple.feature:9\n'
-        '    Given the variable "X" is equal to 2      # tests/functional/test_runner.py:1223\n'
+        '    Given the variable "X" is equal to 2      # tests/functional/test_runner.py:1239\n'
         '\n'
         '1 feature (1 passed)\n'
         '1 scenario (1 passed)\n'
@@ -1272,12 +1288,12 @@ def test_output_background_with_success_colorful():
         '\033[1;37m  I want to automate its test                 \033[1;30m# tests/functional/bg_features/simple/simple.feature:4\033[0m\n'
         '\n'
         '\033[1;37m  Background:\033[0m\n'
-        '\033[1;30m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1258\033[0m\n'
-        '\033[A\033[1;32m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1258\033[0m\n'
+        '\033[1;30m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1274\033[0m\n'
+        '\033[A\033[1;32m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1274\033[0m\n'
         '\n'
         '\033[1;37m  Scenario: multiplication changing the value \033[1;30m# tests/functional/bg_features/simple/simple.feature:9\033[0m\n'
-        '\033[1;30m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1258\033[0m\n'
-        '\033[A\033[1;32m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1258\033[0m\n'
+        '\033[1;30m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1274\033[0m\n'
+        '\033[A\033[1;32m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1274\033[0m\n'
         '\n'
         '\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n'
         '\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n'
@@ -1407,4 +1423,4 @@ def test_output_with_undefined_steps_colorful():
         'def when_this_test_step_is_undefined(step):\n'
         "    assert False, 'This step must be implemented'\x1b[0m\n"
     )
-    
+

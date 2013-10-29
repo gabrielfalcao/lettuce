@@ -58,7 +58,7 @@ def write_out(what):
 
 @before.each_step
 def print_step_running(step):
-    if not step.defined_at:
+    if not step.defined_at or not step.display:
         return
 
     color = '\033[1;30m'
@@ -76,6 +76,8 @@ def print_step_running(step):
 
 @after.each_step
 def print_step_ran(step):
+    if not step.display:
+        return
     if step.scenario and step.scenario.outlines and (step.failed or step.passed or step.defined_at):
         return
 
@@ -250,6 +252,17 @@ def print_end(total):
                 wrt("\033[0m")
 
             wrt("\n")
+
+    if total.failed_scenario_locations:
+        # print list of failed scenarios, with their file and line number
+        wrt("\n")
+        wrt("\033[1;31m")
+        wrt("List of failed scenarios:\n")
+        wrt("\033[0;31m")
+        for scenario in total.failed_scenario_locations:
+            wrt(scenario)
+        wrt("\033[0m")
+        wrt("\n")
 
 
 def print_no_features_found(where):
