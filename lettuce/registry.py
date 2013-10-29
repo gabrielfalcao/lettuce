@@ -48,6 +48,8 @@ CALLBACK_REGISTRY = CallbackDict(
         'step': {
             'before_each': [],
             'after_each': [],
+            'before_output': [],
+            'after_output': [],
         },
         'scenario': {
             'before_each': [],

@@ -57,9 +57,9 @@ def enable(filename=None):
     @before.each_scenario
     def before_scenario(scenario):
 
-        # redirect stdout and stderr
-        # sys.stdout = StringIO()
-        # sys.stderr = StringIO()
+        # create redirects for stdout and stderr
+        scenario.stdout = StringIO()
+        scenario.stderr = StringIO()
         try:
             test_tags = scenario.tags
         except AttributeError:
@@ -69,24 +69,37 @@ def enable(filename=None):
                             test_status='inprogress',
                             test_tags=test_tags)
 
+
+    @before.step_output
+    def capture_output(step):
+
+        # only consider steps for background
+        if not step.scenario:
+            return
+
+        sys.stdout = step.scenario.stdout
+        sys.stderr = step.scenario.stderr
+
+    @after.step_output
+    def uncapture_output(step):
+
+        sys.stdout = real_stdout
+        sys.stderr = real_stderr
+
     @after.each_scenario
     def after_scenario(scenario):
 
-        # streamresult.status(test_id=get_test_id(scenario),
-        #                     file_name='stdout',
-        #                     file_bytes=sys.stdout.getvalue(),
-        #                     mime_type='text/plain; charset=utf8',
-        #                     eof=True)
+        streamresult.status(test_id=get_test_id(scenario),
+                            file_name='stdout',
+                            file_bytes=scenario.stdout.getvalue(),
+                            mime_type='text/plain; charset=utf8',
+                            eof=True)
 
-        # streamresult.status(test_id=get_test_id(scenario),
-        #                     file_name='stderr',
-        #                     file_bytes=sys.stderr.getvalue(),
-        #                     mime_type='text/plain; charset=utf8',
-        #                     eof=True)
-
-        # unredirect stdout and stderr
-        sys.stdout = real_stdout
-        sys.stderr = real_stderr
+        streamresult.status(test_id=get_test_id(scenario),
+                            file_name='stderr',
+                            file_bytes=scenario.stderr.getvalue(),
+                            mime_type='text/plain; charset=utf8',
+                            eof=True)
 
         if scenario.passed:
             streamresult.status(test_id=get_test_id(scenario),
