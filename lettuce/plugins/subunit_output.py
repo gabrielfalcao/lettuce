@@ -15,12 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import datetime
 import sys
 from cStringIO import StringIO
 
 from lettuce.terrain import before, after
 
 from subunit.v2 import StreamResultToBytes
+from subunit.iso8601 import Utc
+
 
 def open_file(filename):
     """
@@ -67,7 +70,8 @@ def enable(filename=None):
 
         streamresult.status(test_id=get_test_id(scenario),
                             test_status='inprogress',
-                            test_tags=test_tags)
+                            test_tags=test_tags,
+                            timestamp=now())
 
 
     @before.step_output
@@ -103,10 +107,12 @@ def enable(filename=None):
 
         if scenario.passed:
             streamresult.status(test_id=get_test_id(scenario),
-                                test_status='success')
+                                test_status='success',
+                                timestamp=now())
         else:
             streamresult.status(test_id=get_test_id(scenario),
-                                test_status='fail')
+                                test_status='fail',
+                                timestamp=now())
 
     @after.each_step
     def after_step(step):
@@ -160,3 +166,11 @@ def get_test_id(scenario):
     except AttributeError:
         return '{feature}: Background'.format(
             feature=scenario.feature.name)
+
+
+def now():
+    """
+    A timestamp suitable for subunit
+    """
+
+    return datetime.datetime.now(tz=Utc())
