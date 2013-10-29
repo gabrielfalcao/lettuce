@@ -95,13 +95,13 @@ def enable(filename=None):
 
         streamresult.status(test_id=get_test_id(scenario),
                             file_name='stdout',
-                            file_bytes=scenario.stdout.getvalue(),
+                            file_bytes=scenario.stdout.getvalue().encode('utf-8'),
                             mime_type='text/plain; charset=utf8',
                             eof=True)
 
         streamresult.status(test_id=get_test_id(scenario),
                             file_name='stderr',
-                            file_bytes=scenario.stderr.getvalue(),
+                            file_bytes=scenario.stderr.getvalue().encode('utf-8'),
                             mime_type='text/plain; charset=utf8',
                             eof=True)
 
