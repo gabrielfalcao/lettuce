@@ -220,8 +220,39 @@ that it's colorful.
    Continuous-Integration_ server, like Hudson_. You may choose the
    levels 1, 2 or 3, so that the output won't look messy.
 
+***************************************
+integrating with continuous integration
+***************************************
+
+Lettuce can use Subunit_ to output test results.
+Subunit is a stream format that can be multiplexed, viewed in real time or
+converted to many different formats (such as xUnit/jUnit XML format).
+
+.. highlight:: bash
+
+::
+
+    user@machine:~/projects/myproj$ lettuce --with-subunit > output.log
+    user@machine:~/projects/myproj$ subunit2junitxml < subunit.bin > lettucetests.xml
+
+The `--subunit-file` flag can be used to specify a filename other than
+`subunit.bin` this is important if you're combining test runs.
+
+including coverage
+==================
+
+You can also get test coverage information using the `coverage` package.
+
+.. highlight:: bash
+
+::
+
+    user@machine:~/projects/myproj$ coverage run lettuce --with-subunit
+    user@machine:~/projects/myproj$ coverage xml
+
+***********************
 getting help from shell
-=======================
+***********************
 
 .. highlight:: bash
 
@@ -234,3 +265,4 @@ Shows all the options described here.
 
 .. _Continuous-Integration: http://www.martinfowler.com/articles/continuousIntegration.html
 .. _Hudson: http://hudson-ci.org/
+.. _Subunit: https://launchpad.net/subunit
