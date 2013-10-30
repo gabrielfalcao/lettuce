@@ -29,7 +29,7 @@ def get_server(*args, **kwargs):
     from django.conf import settings
 
     server_name = getattr(settings, 'LETTUCE_TEST_SERVER',
-                          'lettuce.django.server.Server')
+                          'lettuce.django.server.DefaultServer')
     module, klass = server_name.rsplit('.', 1)
 
     Server = getattr(__import__(module, fromlist=[klass]), klass)
