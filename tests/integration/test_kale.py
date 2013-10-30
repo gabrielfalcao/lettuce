@@ -22,7 +22,7 @@ current_directory = FileSystem.dirname(__file__)
 
 
 def test_harvest_uses_test_runner():
-    'harvest uses TEST_RUNNER specified in settings'
+    'harvest uses LETTUCE_TEST_SERVER specified in settings'
 
     FileSystem.pushd(current_directory, "django", "kale")
 
