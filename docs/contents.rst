@@ -20,6 +20,7 @@ Lettuce documentation contents
    reference/features
    reference/terrain
    reference/languages
+   reference/django
    recipes/nose
    recipes/django-lxml
    dev/index
