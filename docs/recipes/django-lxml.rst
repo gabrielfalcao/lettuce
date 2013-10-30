@@ -343,6 +343,19 @@ For those cases lettuce provides the ``--debug-mode`` or ``-d`` option.
    python manage.py harvest --debug-mode
    python manage.py harvest -d
 
+using the test database
+=======================
+
+If you want to use a test database by default, instead of a live database,
+with your test server you can specify the ``-T`` flag or set the following
+configuration variable in ``settings.py``.
+
+.. highlight:: python
+
+::
+
+    LETTUCE_USE_TEST_DATABASE = True
+
 running only the specified scenarios
 ====================================
 
