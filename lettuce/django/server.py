@@ -317,6 +317,7 @@ try:
         A sever that uses Django's LiveServerTestCase to implement the Server class.
         """
 
+        _server = None
 
         def start(self):
             super(DjangoServer, self).start()
@@ -330,7 +331,7 @@ try:
                 address=self.address,
                 port=self.port)
 
-        def stop(self):
+        def stop(self, fail=False):
             LiveServerTestCase.tearDownClass()
 
             super(DjangoServer, self).stop()
