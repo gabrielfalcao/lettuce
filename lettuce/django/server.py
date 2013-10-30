@@ -307,3 +307,42 @@ class DefaultServer(BaseServer):
             base_url += ':%d' % self.port
 
         return urlparse.urljoin(base_url, url)
+
+
+class DjangoServer(BaseServer):
+    """
+    A sever that uses Django's LiveServerTestCase to implement the Server class.
+    """
+
+    from django.test.testcases import LiveServerTestCase
+
+    def __init__(self, *args, **kwargs):
+        super(DjangoServer, self).__init__(*args, **kwargs)
+
+        queue = create_mail_queue()
+
+    def start(self):
+        super(DjangoServer, self).start()
+
+
+        os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = \
+                '{address}:{port}'.format(address=self.address,
+                                          port=self.port)
+        self.LiveServerTestCase.setUpClass()
+
+        print "Django's builtin server is running at {address}:{port}".format(
+            address=self.address,
+            port=self.port)
+
+    def stop(self):
+        self.LiveServerTestCase.tearDownClass()
+
+        super(DjangoServer, self).stop()
+
+        return 0
+
+    def url(self, url=''):
+        return urlparse.urljoin(
+            'http://{address}:{port}/'.format(address=self.address,
+                                              port=self.port),
+            url)
