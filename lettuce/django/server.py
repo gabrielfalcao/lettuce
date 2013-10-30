@@ -278,7 +278,7 @@ class DefaultServer(BaseServer):
         self._server.start()
         self._server.wait()
 
-        addrport = self.address, self._actual_server.port
+        addrport = self.address, self._server.port
         if not self._server.is_alive():
             raise LettuceServerException(
                 'Lettuce could not run the builtin Django server at %s:%d"\n'
@@ -291,7 +291,7 @@ class DefaultServer(BaseServer):
         print "Django's builtin server is running at %s:%d" % addrport
 
     def stop(self, fail=False):
-        pid = self._actual_server.pid
+        pid = self._server.pid
         if pid:
             os.kill(pid, 9)
 
@@ -309,40 +309,39 @@ class DefaultServer(BaseServer):
         return urlparse.urljoin(base_url, url)
 
 
-class DjangoServer(BaseServer):
-    """
-    A sever that uses Django's LiveServerTestCase to implement the Server class.
-    """
-
+try:
     from django.test.testcases import LiveServerTestCase
 
-    def __init__(self, *args, **kwargs):
-        super(DjangoServer, self).__init__(*args, **kwargs)
-
-        queue = create_mail_queue()
-
-    def start(self):
-        super(DjangoServer, self).start()
+    class DjangoServer(BaseServer):
+        """
+        A sever that uses Django's LiveServerTestCase to implement the Server class.
+        """
 
 
-        os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = \
-                '{address}:{port}'.format(address=self.address,
-                                          port=self.port)
-        self.LiveServerTestCase.setUpClass()
+        def start(self):
+            super(DjangoServer, self).start()
 
-        print "Django's builtin server is running at {address}:{port}".format(
-            address=self.address,
-            port=self.port)
+            os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = \
+                    '{address}:{port}'.format(address=self.address,
+                                              port=self.port)
+            LiveServerTestCase.setUpClass()
 
-    def stop(self):
-        self.LiveServerTestCase.tearDownClass()
+            print "Django's builtin server is running at {address}:{port}".format(
+                address=self.address,
+                port=self.port)
 
-        super(DjangoServer, self).stop()
+        def stop(self):
+            LiveServerTestCase.tearDownClass()
 
-        return 0
+            super(DjangoServer, self).stop()
 
-    def url(self, url=''):
-        return urlparse.urljoin(
-            'http://{address}:{port}/'.format(address=self.address,
-                                              port=self.port),
-            url)
+            return 0
+
+        def url(self, url=''):
+            return urlparse.urljoin(
+                'http://{address}:{port}/'.format(address=self.address,
+                                                  port=self.port),
+                url)
+
+except ImportError:
+    pass
