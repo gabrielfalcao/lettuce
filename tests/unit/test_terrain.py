@@ -41,6 +41,17 @@ Feature: Before and After callbacks all along lettuce
 '''
 
 
+FEATURE3 = '''
+Feature: Before and After callbacks all along lettuce
+    @tag1
+    Scenario: Before and After scenarios
+        Given I append "during" to states
+
+    @tag2
+    Scenario: Again
+        Given I append "during" to states
+'''
+
 def test_world():
     "lettuce.terrain.world can be monkey patched at will"
 
@@ -135,6 +146,24 @@ def test_after_each_feature_is_executed_before_each_feature():
     assert_equals(
         world.feature_steps,
         ['before', 'during', 'during', 'after'],
+    )
+
+
+def test_feature_hooks_not_invoked_if_no_scenarios_run():
+    feature = Feature.from_string(FEATURE3)
+
+    world.feature_steps = []
+    feature.run(tags=['tag1'])
+    assert_equals(
+        world.feature_steps,
+        ['before', 'during', 'after']
+    )
+
+    world.feature_steps = []
+    feature.run(tags=['tag3'])
+    assert_equals(
+        world.feature_steps,
+        []
     )
 
 

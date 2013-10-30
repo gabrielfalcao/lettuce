@@ -1171,26 +1171,28 @@ class Feature(object):
         return background, scenarios, description
 
     def run(self, scenarios=None, ignore_case=True, tags=None, random=False, failfast=False):
-        call_hook('before_each', 'feature', self)
         scenarios_ran = []
 
         if random:
             shuffle(self.scenarios)
 
+        scenario_nums_to_run = None
         if isinstance(scenarios, (tuple, list)):
             if all(map(lambda x: isinstance(x, int), scenarios)):
-                scenarios_to_run = scenarios
-        else:
-            scenarios_to_run = range(1, len(self.scenarios) + 1)
+                scenario_nums_to_run = scenarios
 
+        def should_run_scenario(num, scenario):
+            return scenario.matches_tags(tags) and \
+                   (scenario_nums_to_run is None or num in scenario_nums_to_run)
+        scenarios_to_run = [scenario for num, scenario in enumerate(self.scenarios, start=1)
+                                     if should_run_scenario(num, scenario)]
+        # If no scenarios in this feature will run, don't run the feature hooks.
+        if not scenarios_to_run:
+            return FeatureResult(self)
+
+        call_hook('before_each', 'feature', self)
         try:
-            for index, scenario in enumerate(self.scenarios):
-                if scenarios_to_run and (index + 1) not in scenarios_to_run:
-                    continue
-
-                if not scenario.matches_tags(tags):
-                    continue
-
+            for scenario in scenarios_to_run:
                 scenarios_ran.extend(scenario.run(ignore_case, failfast=failfast))
         except:
             call_hook('after_each', 'feature', self)
