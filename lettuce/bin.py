@@ -66,6 +66,18 @@ def main(args=sys.argv[1:]):
                       help='Write JUnit XML to this file. Defaults to '
                       'lettucetests.xml')
 
+    parser.add_option("--with-subunit",
+                      dest="enable_subunit",
+                      action="store_true",
+                      default=False,
+                      help='Output Subunit test results to a file')
+
+    parser.add_option("--subunit-file",
+                      dest="subunit_filename",
+                      default=None,
+                      help='Write Subunit data to this file. Defaults to '
+                      'subunit.bin')
+
     parser.add_option("--failfast",
                       dest="failfast",
                       default=False,
@@ -98,6 +110,8 @@ def main(args=sys.argv[1:]):
         random=options.random,
         enable_xunit=options.enable_xunit,
         xunit_filename=options.xunit_file,
+        enable_subunit=options.enable_subunit,
+        subunit_filename=options.subunit_filename,
         failfast=options.failfast,
         auto_pdb=options.auto_pdb,
         tags=tags,

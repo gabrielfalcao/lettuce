@@ -79,6 +79,18 @@ class Command(BaseCommand):
         make_option('--xunit-file', action='store', dest='xunit_file', default=None,
             help='Write JUnit XML to this file. Defaults to lettucetests.xml'),
 
+        make_option('--with-subunit',
+                    action='store_true',
+                    dest='enable_subunit',
+                    default=False,
+                    help='Output Subunit test results to a file'),
+
+        make_option('--subunit-file',
+                    action='store',
+                    dest='subunit_file',
+                    default=None,
+                    help='Write Subunit to this file. Defaults to subunit.bin'),
+
         make_option("--failfast", dest="failfast", default=False,
                     action="store_true", help='Stop running in the first failure'),
 
@@ -161,7 +173,9 @@ class Command(BaseCommand):
 
                 runner = Runner(path, options.get('scenarios'), verbosity,
                                 enable_xunit=options.get('enable_xunit'),
+                                enable_subunit=options.get('enable_subunit'),
                                 xunit_filename=options.get('xunit_file'),
+                                subunit_filename=options.get('subunit_file'),
                                 tags=tags, failfast=failfast, auto_pdb=auto_pdb)
 
                 result = runner.run()
@@ -181,7 +195,7 @@ class Command(BaseCommand):
 
         finally:
             registry.call_hook('after', 'harvest', results)
-            
+
             if test_database:
                 self._testrunner.teardown_databases(self._old_db_config)
 
