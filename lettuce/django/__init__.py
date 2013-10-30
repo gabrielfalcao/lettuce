@@ -16,11 +16,30 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from lettuce.django.apps import harvest_lettuces
-from lettuce.django.server import Server
 
-try:
-    server = Server()
+server = None
+django_url = None
+
+
+def get_server(*args, **kwargs):
+    """
+    Look up the server we are using and set it as the global
+    """
+
+    from django.conf import settings
+
+    server_name = getattr(settings, 'LETTUCE_TEST_SERVER',
+                          'lettuce.django.server.Server')
+    module, klass = server_name.rsplit('.', 1)
+
+    Server = getattr(__import__(module, fromlist=[klass]), klass)
+
+    global server, django_url
+
+    server = Server(*args, **kwargs)
     django_url = server.url
-    __all__ = ['harvest_lettuces', 'server', 'django_url']
-except ImportError:
-    __all__ = ['harvest_lettuces']
+
+    return server
+
+
+__all__ = ['harvest_lettuces', 'server', 'django_url']
