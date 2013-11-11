@@ -26,8 +26,7 @@ from django.test.utils import teardown_test_environment
 from lettuce import Runner
 from lettuce import registry
 
-from lettuce.django.server import Server
-from lettuce.django import harvest_lettuces
+from lettuce.django import harvest_lettuces, get_server
 from lettuce.django.server import LettuceServerException
 
 
@@ -146,9 +145,9 @@ class Command(BaseCommand):
 
         settings.DEBUG = options.get('debug', False)
 
-        server = Server(port=options['port'])
-
         paths = self.get_paths(args, apps_to_run, apps_to_avoid)
+        server = get_server(port=options['port'])
+
         if run_server:
             try:
                 server.start()

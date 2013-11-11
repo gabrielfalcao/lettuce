@@ -14,32 +14,21 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import commands
+from nose.tools import assert_equals
+from lettuce.fs import FileSystem
 
-from lettuce.django.apps import harvest_lettuces
-
-server = None
-django_url = None
-
-
-def get_server(*args, **kwargs):
-    """
-    Look up the server we are using and set it as the global
-    """
-
-    from django.conf import settings
-
-    server_name = getattr(settings, 'LETTUCE_TEST_SERVER',
-                          'lettuce.django.server.DefaultServer')
-    module, klass = server_name.rsplit('.', 1)
-
-    Server = getattr(__import__(module, fromlist=[klass]), klass)
-
-    global server, django_url
-
-    server = Server(*args, **kwargs)
-    django_url = server.url
-
-    return server
+current_directory = FileSystem.dirname(__file__)
 
 
-__all__ = ['harvest_lettuces', 'server', 'django_url']
+def test_harvest_uses_test_runner():
+    'harvest uses LETTUCE_TEST_SERVER specified in settings'
+
+    FileSystem.pushd(current_directory, "django", "kale")
+
+    status, out = commands.getstatusoutput(
+        "python manage.py harvest -T leaves/features/modification.feature")
+
+    assert_equals(status, 0, out)
+
+    FileSystem.popd()

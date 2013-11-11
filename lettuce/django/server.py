@@ -223,32 +223,63 @@ class ThreadedServer(multiprocessing.Process):
                 pass
 
 
-class Server(object):
-    """A silenced, lightweight and simple django's builtin server so
-    that lettuce can be used with selenium, webdriver, windmill or any
-    browser tool"""
+class BaseServer(object):
+    """
+    Base class for Lettuce's internal server
+    """
 
     def __init__(self, address='0.0.0.0', port=None):
         self.port = int(port or getattr(settings, 'LETTUCE_SERVER_PORT', 8000))
         self.address = unicode(address)
-        queue = create_mail_queue()
-        self._actual_server = ThreadedServer(self.address, self.port, queue)
 
     def start(self):
-        """Starts the webserver thread, and waits it to be available"""
-        call_hook('before', 'runserver', self._actual_server)
-        if self._actual_server.should_serve_admin_media():
+        """
+        Starts the webserver and waits it to be available
+
+        Chain this method up before your implementation
+        """
+        call_hook('before', 'runserver', self._server)
+
+    def stop(self):
+        """
+        Stops the webserver
+
+        Chain this method up after your implementation
+        """
+
+        call_hook('after', 'runserver', self._server)
+
+    def url(self, url=''):
+        """The url to access a server on"""
+        raise NotImplemented()
+
+
+class DefaultServer(BaseServer):
+    """A silenced, lightweight and simple django's builtin server so
+    that lettuce can be used with selenium, webdriver, windmill or any
+    browser tool"""
+
+    def __init__(self, *args, **kwargs):
+        super(DefaultServer, self).__init__(*args, **kwargs)
+
+        queue = create_mail_queue()
+        self._server = ThreadedServer(self.address, self.port, queue)
+
+    def start(self):
+        super(DefaultServer, self).start()
+
+        if self._server.should_serve_admin_media():
             msg = "Preparing to serve django's admin site static files"
             if getattr(settings, 'LETTUCE_SERVE_ADMIN_MEDIA', False):
                 msg += ' (as per settings.LETTUCE_SERVE_ADMIN_MEDIA=True)'
 
             print "%s..." % msg
 
-        self._actual_server.start()
-        self._actual_server.wait()
+        self._server.start()
+        self._server.wait()
 
-        addrport = self.address, self._actual_server.port
-        if not self._actual_server.is_alive():
+        addrport = self.address, self._server.port
+        if not self._server.is_alive():
             raise LettuceServerException(
                 'Lettuce could not run the builtin Django server at %s:%d"\n'
                 'maybe you forgot a "runserver" instance running ?\n\n'
@@ -260,12 +291,13 @@ class Server(object):
         print "Django's builtin server is running at %s:%d" % addrport
 
     def stop(self, fail=False):
-        pid = self._actual_server.pid
+        pid = self._server.pid
         if pid:
             os.kill(pid, 9)
 
+        super(DefaultServer, self).stop()
+
         code = int(fail)
-        call_hook('after', 'runserver', self._actual_server)
         return sys.exit(code)
 
     def url(self, url=""):
@@ -275,3 +307,42 @@ class Server(object):
             base_url += ':%d' % self.port
 
         return urlparse.urljoin(base_url, url)
+
+
+try:
+    from django.test.testcases import LiveServerTestCase
+
+    class DjangoServer(BaseServer):
+        """
+        A sever that uses Django's LiveServerTestCase to implement the Server class.
+        """
+
+        _server = None
+
+        def start(self):
+            super(DjangoServer, self).start()
+
+            os.environ['DJANGO_LIVE_TEST_SERVER_ADDRESS'] = \
+                    '{address}:{port}'.format(address=self.address,
+                                              port=self.port)
+            LiveServerTestCase.setUpClass()
+
+            print "Django's builtin server is running at {address}:{port}".format(
+                address=self.address,
+                port=self.port)
+
+        def stop(self, fail=False):
+            LiveServerTestCase.tearDownClass()
+
+            super(DjangoServer, self).stop()
+
+            return 0
+
+        def url(self, url=''):
+            return urlparse.urljoin(
+                'http://{address}:{port}/'.format(address=self.address,
+                                                  port=self.port),
+                url)
+
+except ImportError:
+    pass
