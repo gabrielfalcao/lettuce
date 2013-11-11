@@ -39,6 +39,21 @@ foreign key *user* and field *avatar*:
             | avatar  |
             | cat.jpg |
 
+To create many-to-many relationships, assuming ``User`` has and belongs to
+many ``Group`` objects:
+
+.. highlight:: ruby
+
+::
+
+    Background:
+        Given user with username "harvey" is linked to groups in the database:
+            | name |
+            | Cats |
+
+For many-to-many relationship to be created, both models must exist prior to
+linking.
+
 Most common data can be parsed, i.e. true/false, digits, strings and dates in
 the form ``2013-10-30``.
 

@@ -239,6 +239,39 @@ def create_models_for_relation(step, rel_model_name,
     create_models_generic(step, model)
 
 
+@step(STEP_PREFIX + r'([A-Z][a-z0-9_ ]*) with ([a-z]+) "([^"]*)"' +
+      r' is linked to ([A-Z][a-z0-9_ ]*) in the database:')
+def create_m2m_links(step, rel_model_name, rel_key, rel_value, relation_name):
+    """
+    And article with name "Guidelines" is linked to tags in the database:
+    | name   |
+    | coding |
+    | style  |
+    """
+
+    lookup = {rel_key: rel_value}
+    rel_model = get_model(rel_model_name).objects.get(**lookup)
+    relation = None
+    for m2m in rel_model._meta.many_to_many:
+        if relation_name in (m2m.name, m2m.verbose_name):
+            relation = getattr(rel_model, m2m.name)
+            break
+    if not relation:
+        try:
+            relation = getattr(rel_model, relation_name)
+        except AttributeError:
+            pass
+    assert relation, \
+        "%s does not have a many-to-many relation named '%s'" % (
+            rel_model._meta.verbose_name.capitalize(),
+            relation_name,
+        )
+    m2m_model = relation.model
+
+    for hash_ in step.hashes:
+        relation.add(m2m_model.objects.get(**hash_))
+
+
 @step(STEP_PREFIX + r'(?:an? )?([A-Z][a-z0-9_ ]*) should be present ' +
       r'in the database')
 def models_exist_generic(step, model):
