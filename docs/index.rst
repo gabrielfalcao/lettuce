@@ -1,5 +1,5 @@
 .. _index:
-.. rubric:: All you need to know, from leaves to root
+.. rubric:: Lettuce is a Behavior-Driven Development tool written by Gabriel Falcão G. de Moura
 
 ########
 nutshell
@@ -133,6 +133,7 @@ furthermore
     * :ref:`features, scenarios and steps <reference-features>`, diving into lettuce's core
     * :ref:`terrain, world and hooks <reference-terrain>`, stuff about setting up a environment for lettuce
     * :ref:`language support <reference-languages>`
+    * :ref:`django steps <reference-django>`
 
 #######
 recipes

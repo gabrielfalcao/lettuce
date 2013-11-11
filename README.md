@@ -1,7 +1,8 @@
 # lettuce
-> Version 0.2.16 - kryptonite
+> Version 0.2.19 - kryptonite
 
 [![Build Status](https://secure.travis-ci.org/gabrielfalcao/lettuce.png)](http://travis-ci.org/gabrielfalcao/lettuce)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/gabrielfalcao/lettuce/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 ## On release names
 
