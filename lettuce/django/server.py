@@ -30,7 +30,6 @@ from django.core.handlers.wsgi import WSGIHandler
 from django.core.servers.basehttp import WSGIServer
 from django.core.servers.basehttp import ServerHandler
 from django.core.servers.basehttp import WSGIRequestHandler
-from django.core.servers.basehttp import WSGIServerException
 try:
     from django.core.servers.basehttp import AdminMediaHandler
 except ImportError:
@@ -55,7 +54,7 @@ def create_mail_queue():
     return mail.queue
 
 
-class LettuceServerException(WSGIServerException):
+class LettuceServerException(socket.error):
     pass
 
 keep_running = True
@@ -191,7 +190,7 @@ class ThreadedServer(multiprocessing.Process):
         try:
             server_address = (self.address, self.port)
             httpd = WSGIServer(server_address, MutedRequestHandler)
-        except WSGIServerException:
+        except socket.error:
             raise LettuceServerException(
                 "the port %d already being used, could not start " \
                 "django's builtin server on it" % self.port,
