@@ -935,7 +935,11 @@ def test_output_level_2_fail():
         "\n"
         "1 feature (0 passed)\n"
         "1 scenario (0 passed)\n"
-        "5 steps (1 failed, 2 skipped, 1 undefined, 1 passed)\n" % {
+        "5 steps (1 failed, 2 skipped, 1 undefined, 1 passed)\n"
+        "\n"
+        "List of failed scenarios:\n"
+        "  Scenario: See it fail                       # tests/functional/output_features/failed_table/failed_table.feature:2\n"
+        "\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')),
             'call_line': call_line,
@@ -965,7 +969,11 @@ def test_output_level_2_error():
         "\n"
         "1 feature (0 passed)\n"
         "2 scenarios (1 passed)\n"
-        "2 steps (1 failed, 1 passed)\n" % {
+        "2 steps (1 failed, 1 passed)\n"
+        "\n"
+        "List of failed scenarios:\n"
+        "  Scenario: It should raise an exception different of AssertionError # tests/functional/output_features/error_traceback/error_traceback.feature:5\n"
+        "\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'error_traceback', 'error_traceback_steps.py')),
             'call_line': call_line,
@@ -1009,7 +1017,11 @@ def test_output_level_1_fail():
         "\n"
         "1 feature (0 passed)\n"
         "1 scenario (0 passed)\n"
-        "5 steps (1 failed, 2 skipped, 1 undefined, 1 passed)\n" % {
+        "5 steps (1 failed, 2 skipped, 1 undefined, 1 passed)\n"
+        "\n"
+        "List of failed scenarios:\n"
+        "  Scenario: See it fail                       # tests/functional/output_features/failed_table/failed_table.feature:2\n"
+        "\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'failed_table', 'failed_table_steps.py')),
             'call_line': call_line,
@@ -1037,7 +1049,11 @@ def test_output_level_1_error():
         "\n"
         "1 feature (0 passed)\n"
         "2 scenarios (1 passed)\n"
-        "2 steps (1 failed, 1 passed)\n" % {
+        "2 steps (1 failed, 1 passed)\n"
+        "\n"
+        "List of failed scenarios:\n"
+        "  Scenario: It should raise an exception different of AssertionError # tests/functional/output_features/error_traceback/error_traceback.feature:5\n"
+        "\n" % {
             'lettuce_core_file': lettuce_path('core.py'),
             'step_file': abspath(lettuce_path('..', 'tests', 'functional', 'output_features', 'error_traceback', 'error_traceback_steps.py')),
             'call_line': call_line,
