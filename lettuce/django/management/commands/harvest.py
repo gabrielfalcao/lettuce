@@ -75,6 +75,9 @@ class Command(BaseCommand):
         make_option('--with-xunit', action='store_true', dest='enable_xunit', default=False,
             help='Output JUnit XML test results to a file'),
 
+        make_option('--smtp-queue', action='store_true', dest='smtp_queue', default=False,
+                    help='Use smtp for mail queue (usefull with --no-server option'),
+
         make_option('--xunit-file', action='store', dest='xunit_file', default=None,
             help='Write JUnit XML to this file. Defaults to lettucetests.xml'),
 
@@ -121,6 +124,7 @@ class Command(BaseCommand):
         apps_to_avoid = tuple(options.get('avoid_apps', '').split(","))
         run_server = not options.get('no_server', False)
         test_database = options.get('test_database', False)
+        smtp_queue = options.get('smtp_queue', False)
         tags = options.get('tags', None)
         failfast = options.get('failfast', False)
         auto_pdb = options.get('auto_pdb', False)
@@ -175,7 +179,8 @@ class Command(BaseCommand):
                                 enable_subunit=options.get('enable_subunit'),
                                 xunit_filename=options.get('xunit_file'),
                                 subunit_filename=options.get('subunit_file'),
-                                tags=tags, failfast=failfast, auto_pdb=auto_pdb)
+                                tags=tags, failfast=failfast, auto_pdb=auto_pdb,
+                                smtp_queue=smtp_queue)
 
                 result = runner.run()
                 if app_module is not None:
