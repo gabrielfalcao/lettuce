@@ -124,7 +124,17 @@ def create_models(model, data):
         data = hashes_data(data)
 
     for hash_ in data:
-        model.objects.create(**hash_)
+        if 'pk' in hash_:
+            model_obj, created = model.objects.get_or_create(pk=hash_['pk'])
+
+            for field, val in hash_.items():
+                setattr(model_obj, field, val)
+
+            model_obj.save()
+
+        else:
+            model.objects.create(**hash_)
+
     reset_sequence(model)
 
 
