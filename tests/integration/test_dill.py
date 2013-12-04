@@ -33,6 +33,18 @@ def test_model_creation():
     FileSystem.popd()
 
 
+def test_model_update():
+    'Models are updated through Lettuce steps'
+
+    FileSystem.pushd(current_directory, "django", "dill")
+
+    status, out = commands.getstatusoutput(
+            "python manage.py harvest -T leaves/features/update.feature")
+    assert_equals(status, 0, out)
+
+    FileSystem.popd()
+
+
 def test_model_existence_check():
     'Model existence is checked through Lettuce steps'
 
