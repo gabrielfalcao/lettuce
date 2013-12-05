@@ -20,6 +20,10 @@ from lettuce.fs import FileSystem
 
 current_directory = FileSystem.dirname(__file__)
 
+def run_scenario(feature, scenario):
+    return commands.getstatusoutput(
+        "python manage.py harvest -v 3 -T " +
+        "leaves/features/%s.feature -s %d" % (feature, scenario))
 
 def test_model_creation():
     'Models are created through Lettuce steps'
@@ -48,17 +52,12 @@ def test_model_update():
 def test_model_existence_check():
     'Model existence is checked through Lettuce steps'
 
-    def run_scenario(scenario):
-        return commands.getstatusoutput(
-            "python manage.py harvest -v 3 -T " +
-            "leaves/features/existence.feature -s %d" % scenario)
-
     FileSystem.pushd(current_directory, "django", "dill")
 
-    status, out = run_scenario(1)
+    status, out = run_scenario('existence', 1)
     assert_equals(status, 0, out)
 
-    status, out = run_scenario(2)
+    status, out = run_scenario('existence', 2)
     assert_not_equals(status, 0)
     assert "Garden does not exist: {u'name': u'Botanic Gardens'}" in out
     gardens = "\n".join([
@@ -70,7 +69,7 @@ def test_model_existence_check():
     assert gardens in out
     assert "AssertionError: 1 rows missing" in out
 
-    status, out = run_scenario(3)
+    status, out = run_scenario('existence', 3)
     assert_not_equals(status, 0)
     assert "Garden does not exist: {u'name': u'Secret Garden', " \
         "u'@howbig': u'huge'}" in out
@@ -83,7 +82,7 @@ def test_model_existence_check():
     assert gardens in out
     assert "AssertionError: 1 rows missing" in out
 
-    status, out = run_scenario(4)
+    status, out = run_scenario('existence', 4)
     assert_not_equals(status, 0)
     assert "Expected 2 geese, found 1" in out
 
