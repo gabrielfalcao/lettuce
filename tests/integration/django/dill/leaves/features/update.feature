@@ -6,7 +6,7 @@ Feature: Update models
       | 2  | Octopus's Garden | 120  | true    |
       | 3  | Covent Garden    | 200  | true    |
 
-    And I have gardens in the database:
+    And I update existing gardens in the database:
       | pk | name                   | area |
       | 2  | Nicer Octopus's Garden | 150  |
 
@@ -30,3 +30,14 @@ Feature: Update models
     "  }
     "]
     """
+
+  Scenario: Create a nice farm, then try to make the same farm
+    Given I have gardens in the database:
+      | id | name             | area | raining |
+      | 1  | Secret Garden    | 45   | false   |
+      | 2  | Octopus's Garden | 120  | true    |
+      | 3  | Covent Garden    | 200  | true    |
+
+    And I have gardens in the database:
+      | pk | name                   | area |
+      | 2  | Nicer Octopus's Garden | 150  |

@@ -42,9 +42,12 @@ def test_model_update():
 
     FileSystem.pushd(current_directory, "django", "dill")
 
-    status, out = commands.getstatusoutput(
-            "python manage.py harvest -T leaves/features/update.feature")
+    status, out = run_scenario('update', 1)
     assert_equals(status, 0, out)
+
+    status, out = run_scenario('update', 2)
+    assert_not_equals(status, 0, out)
+    assert "IntegrityError: PRIMARY KEY must be unique" in out
 
     FileSystem.popd()
 
