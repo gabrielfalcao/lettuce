@@ -29,10 +29,10 @@ def _models_generator():
 MODELS = dict(_models_generator())
 
 
-_CREATE_MODEL = {}
+_WRITE_MODEL = {}
 
 
-def creates_models(model):
+def writes_models(model):
     """
     Register a model-specific creation function.
     """
@@ -41,7 +41,7 @@ def creates_models(model):
         """
         Decorator for the creation function.
         """
-        _CREATE_MODEL[model] = func
+        _WRITE_MODEL[model] = func
         return func
 
     return decorated
@@ -116,9 +116,9 @@ def reset_sequence(model):
         connection.cursor().execute(cmd)
 
 
-def create_models(model, data, update):
+def write_models(model, data, update):
     """
-    Create models for each data hash.
+    Create or update models for each data hash.
     """
     if hasattr(data, 'hashes'):
         data = hashes_data(data)
@@ -216,7 +216,7 @@ for txt, update in (
     (r'I have(?: an?)? ([a-z][a-z0-9_ ]*) in the database:', False),
     (r'I update(?: an?)? existing ([a-z][a-z0-9_ ]*) in the database:', True),
 ):
-    def create_models_generic(step, model, update=False):
+    def write_models_generic(step, model, update=False):
         """
         And I have foos in the database:
             | name | bar  |
@@ -227,17 +227,18 @@ for txt, update in (
             | 1  | Bar  |
 
         The generic method can be overridden for a specific model by defining a
-        function create_badgers(step, update), which creates the Badger model.
+        function write_badgers(step, update), which creates and updates the
+        Badger model.
         """
 
         model = get_model(model)
 
         try:
-            func = _CREATE_MODEL[model]
+            func = _WRITE_MODEL[model]
         except KeyError:
-            func = curry(create_models, model)
+            func = curry(write_models, model)
         func(step, update)
-    step(txt)(curry(create_models_generic, update=update))
+    step(txt)(curry(write_models_generic, update=update))
 
 
 @step(STEP_PREFIX + r'([A-Z][a-z0-9_ ]*) with ([a-z]+) "([^"]*)"' +
@@ -256,7 +257,7 @@ def create_models_for_relation(step, rel_model_name,
     for hash_ in step.hashes:
         hash_['%s' % rel_model_name] = rel_model
 
-    create_models_generic(step, model)
+    write_models_generic(step, model)
 
 
 @step(STEP_PREFIX + r'([A-Z][a-z0-9_ ]*) with ([a-z]+) "([^"]*)"' +
