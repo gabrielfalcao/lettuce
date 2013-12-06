@@ -73,3 +73,14 @@ Feature: Update models
     And I have gardens in the database:
       | pk | name                   | area |
       | 2  | Nicer Octopus's Garden | 150  |
+
+  Scenario: Try to update a nice farm without knowing which nice farm
+    Given I have gardens in the database:
+      | id | name             | area | raining |
+      | 1  | Secret Garden    | 45   | false   |
+      | 2  | Octopus's Garden | 120  | true    |
+      | 3  | Covent Garden    | 200  | true    |
+
+    And I update an existing garden in the database:
+      | name             | area |
+      | Octopus's Garden | 150  |
