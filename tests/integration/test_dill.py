@@ -44,10 +44,16 @@ def test_model_update():
 
     status, out = run_scenario('update', 1)
     assert_equals(status, 0, out)
-
     status, out = run_scenario('update', 2)
+    assert_equals(status, 0, out)
+
+    status, out = run_scenario('update', 3)
     assert_not_equals(status, 0, out)
     assert "IntegrityError: PRIMARY KEY must be unique" in out
+
+    status, out = run_scenario('update', 4)
+    assert_not_equals(status, 0, out)
+    assert "The \"pk\" field is required for update operations" in out
 
     FileSystem.popd()
 
