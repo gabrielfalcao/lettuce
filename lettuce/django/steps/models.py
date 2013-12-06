@@ -116,7 +116,7 @@ def reset_sequence(model):
         connection.cursor().execute(cmd)
 
 
-def create_models(model, data):
+def create_models(model, data, update):
     """
     Create models for each data hash.
     """
@@ -124,7 +124,10 @@ def create_models(model, data):
         data = hashes_data(data)
 
     for hash_ in data:
-        if 'pk' in hash_:
+        if update and not 'pk' in hash_:
+            raise KeyError("The \"pk\" field is required for update operations")
+
+        if update:
             model_obj, created = model.objects.get_or_create(pk=hash_['pk'])
 
             for field, val in hash_.items():
@@ -209,25 +212,32 @@ def models_exist(model, data, queryset=None):
         raise AssertionError("%i rows missing" % failed)
 
 
-@step(r'I have(?: an?)? ([a-z][a-z0-9_ ]*) in the database:')
-def create_models_generic(step, model):
-    """
-    And I have foos in the database:
-        | name | bar  |
-        | Baz  | Quux |
+for txt, update in (
+    (r'I have(?: an?)? ([a-z][a-z0-9_ ]*) in the database:', False),
+    (r'I update(?: an?)? existing ([a-z][a-z0-9_ ]*) in the database:', True),
+):
+    def create_models_generic(step, model, update=False):
+        """
+        And I have foos in the database:
+            | name | bar  |
+            | Baz  | Quux |
 
-    The generic method can be overridden for a specific model by defining a
-    function create_badgers(step), which creates the Badger model.
-    """
+        And I update existing foos in the database:
+            | pk | name |
+            | 1  | Bar  |
 
-    model = get_model(model)
+        The generic method can be overridden for a specific model by defining a
+        function create_badgers(step, update), which creates the Badger model.
+        """
 
-    try:
-        func = _CREATE_MODEL[model]
-    except KeyError:
-        func = curry(create_models, model)
+        model = get_model(model)
 
-    func(step)
+        try:
+            func = _CREATE_MODEL[model]
+        except KeyError:
+            func = curry(create_models, model)
+        func(step, update)
+    step(txt)(curry(create_models_generic, update=update))
 
 
 @step(STEP_PREFIX + r'([A-Z][a-z0-9_ ]*) with ([a-z]+) "([^"]*)"' +
