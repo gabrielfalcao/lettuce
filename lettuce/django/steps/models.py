@@ -242,7 +242,8 @@ for txt, update in (
 
         The generic method can be overridden for a specific model by defining a
         function write_badgers(step, update), which creates and updates the
-        Badger model.
+        Badger model and decorating it with the writes_models(model_class)
+        decorator.
         """
 
         model = get_model(model)
