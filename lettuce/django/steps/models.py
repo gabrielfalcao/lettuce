@@ -32,9 +32,16 @@ MODELS = dict(_models_generator())
 _WRITE_MODEL = {}
 
 
-def writes_models(model):
+def creates_models(model):
     """
     Register a model-specific creation function.
+    """
+    return writes_models(model)
+
+
+def writes_models(model):
+    """
+    Register a model-specific create and update function.
     """
 
     def decorated(func):
@@ -114,6 +121,13 @@ def reset_sequence(model):
     sql = connection.ops.sequence_reset_sql(no_style(), [model])
     for cmd in sql:
         connection.cursor().execute(cmd)
+
+
+def create_models(model, data):
+    """
+    Create models for each data hash.
+    """
+    return write_models(model, data, False)
 
 
 def write_models(model, data, update):
