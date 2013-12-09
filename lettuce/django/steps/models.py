@@ -138,7 +138,7 @@ def create_models(model, data):
     return write_models(model, data, None)
 
 
-def write_models(model, data, field):
+def write_models(model, data, field=None):
     """
     Create or update models for each data hash. If field is filled, it's an
     update operation. Otherwise, it's a create operation.
