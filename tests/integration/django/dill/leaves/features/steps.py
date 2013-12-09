@@ -14,11 +14,11 @@ after.each_scenario(clean_db)
 max_rego = 0
 
 @creates_models(Harvester)
-def create_with_rego(step, update):
+def create_with_rego(step):
     data = hashes_data(step)
     for hash_ in data:
         hash_['rego'] = hash_['make'][:3].upper() + "001"
-    create_models(Harvester, data, update)
+    create_models(Harvester, data)
 
 @checks_existence(Harvester)
 def check_with_rego(step):
