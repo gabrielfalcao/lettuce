@@ -133,27 +133,30 @@ def reset_sequence(model):
 
 def create_models(model, data):
     """
-    Create models for each data hash.
+    Create models for each data hash. Wrapper around write_models.
     """
-    return write_models(model, data, False)
+    return write_models(model, data, None)
 
 
-def write_models(model, data, update):
+def write_models(model, data, field):
     """
-    Create or update models for each data hash.
+    Create or update models for each data hash. If field is filled, it's an
+    update operation. Otherwise, it's a create operation.
     """
     if hasattr(data, 'hashes'):
         data = hashes_data(data)
 
     for hash_ in data:
-        if update and not 'pk' in hash_:
-            raise KeyError("The \"pk\" field is required for update operations")
+        if field:
+            if not field in hash_:
+                raise KeyError(("The \"%s\" field is required for all update "
+                                "operations") % field)
 
-        if update:
-            model_obj, created = model.objects.get_or_create(pk=hash_['pk'])
+            model_kwargs = {field: hash_[field]}
+            model_obj, created = model.objects.get_or_create(**model_kwargs)
 
-            for field, val in hash_.items():
-                setattr(model_obj, field, val)
+            for to_set, val in hash_.items():
+                setattr(model_obj, to_set, val)
 
             model_obj.save()
 
@@ -234,11 +237,13 @@ def models_exist(model, data, queryset=None):
         raise AssertionError("%i rows missing" % failed)
 
 
-for txt, update in (
-    (r'I have(?: an?)? ([a-z][a-z0-9_ ]*) in the database:', False),
-    (r'I update(?: an?)? existing ([a-z][a-z0-9_ ]*) in the database:', True),
+for txt in (
+    (r'I have(?: an?)? ([a-z][a-z0-9_ ]*) in the database:'),
+    (r'I update(?: an?)? existing ([a-z][a-z0-9_ ]*) by ([a-z]+) in the '
+     'database:'),
 ):
-    def write_models_generic(step, model, update=False):
+    @step(txt)
+    def write_models_generic(step, model, field=None):
         """
         And I have foos in the database:
             | name | bar  |
@@ -249,7 +254,7 @@ for txt, update in (
             | 1  | Bar  |
 
         The generic method can be overridden for a specific model by defining a
-        function write_badgers(step, data, update), which creates and updates
+        function write_badgers(step, data, field), which creates and updates
         the Badger model and decorating it with the writes_models(model_class)
         decorator.
         """
@@ -260,8 +265,7 @@ for txt, update in (
             func = _WRITE_MODEL[model]
         except KeyError:
             func = curry(write_models, model)
-        func(step, update)
-    step(txt)(curry(write_models_generic, update=update))
+        func(step, field)
 
 
 @step(STEP_PREFIX + r'([A-Z][a-z0-9_ ]*) with ([a-z]+) "([^"]*)"' +
