@@ -34,9 +34,17 @@ _WRITE_MODEL = {}
 
 def creates_models(model):
     """
-    Register a model-specific creation function.
+    Register a model-specific creation function. Wrapper around writes_models
+    that removes the field parameter (always a create operation).
     """
-    return writes_models(model)
+
+    def decorated(func):
+
+        @writes_models(model)
+        def wrapped(data, field):
+            return func(data)
+
+    return decorated
 
 
 def writes_models(model):
