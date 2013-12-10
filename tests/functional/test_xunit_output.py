@@ -35,7 +35,7 @@ def assert_xsd_valid(filename, content):
     # from nose.tools import set_trace; set_trace()
 
     xmlschema = etree.XMLSchema(etree.parse(
-        open('/home/hackawaye/virtual_envs/lettuce_src/lettuce_ada/tests/functional/xunit.xsd')
+        open('tests/functional/xunit.xsd')
     ))
     xmlschema.assertValid(etree.parse(StringIO(content)))
 
