@@ -143,18 +143,18 @@ def test_step_represent_string_when_defined():
     )
 
 
-# def test_step_represent_table():
-#     "Step.represent_hashes"
-#
-#     step = core.Step.from_string(STEP_WITH_TABLE)
-#
-#     assert_equals(
-#         step.represent_hashes(),
-#         '      | name  | description                                           |\n'
-#         '      | Glass | a nice glass to drink grape juice                     |\n'
-#         '      | Pasta | a pasta to cook and eat with grape juice in the glass |\n'
-#         '      | Pasta | a pasta to cook and eat with grape juice in the glass |\n'
-#     )
+def test_step_represent_table():
+    "Step.represent_hashes"
+
+    step = core.Step.from_string(STEP_WITH_TABLE)
+
+    assert_equals(
+        step.represent_hashes(),
+        '      | name  | description                                           |\n'
+        '      | Glass | a nice glass to drink grape juice                     |\n'
+        '      | Pasta | a pasta to cook and eat with grape juice in the glass |\n'
+        '      | Pasta | a pasta to cook and eat with grape juice in the glass |\n'
+    )
 
 STEP_WITH_MATRIX = u'''
     Given i have the following matrix:
