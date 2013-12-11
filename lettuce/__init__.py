@@ -81,11 +81,6 @@ except Exception, e:
         sys.stderr.write(exceptions.traceback.format_exc(e))
         raise SystemExit(1)
 
-try:
-    PYTHON_VER = sys.version_info
-except Exception, e:
-    sys.stderr.write(exceptions.traceback.format_exc(e))
-    raise SystemExit(1) # sys.version_info does not exist
 
 class Runner(object):
     """ Main lettuce's test runner
