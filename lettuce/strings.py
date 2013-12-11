@@ -223,15 +223,6 @@ def json_to_string(json_list, order):
             names.append(enline(u" %s" % rfill(value, size)))
         table.append(u"|%s|" % "|".join(names))
 
-    # for data in json_list:
-    #     names = []
-    #     for key in order:
-    #         value = data.get(key, '')
-    #         size = keys_and_sizes[key]
-    #         names.append(enline(u" %s" % rfill(value, size)))
-    #
-    #     table.append(u"|%s|" % "|".join(names))
-
     return deline(u"\n".join(table) + u"\n")
 
 

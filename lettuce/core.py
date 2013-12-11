@@ -227,7 +227,6 @@ class Step(object):
         self.original_sentence = sentence
         self._remaining_lines = remaining_lines
         keys, hashes, self.multiline, columns, nukeys = self._parse_remaining_lines(remaining_lines)
-        # columns, matrix = self._parse_remaining_lines_boost()
         self.keys = tuple(keys)
         self.non_unique_keys = nukeys
         self.hashes = HashList(self, hashes)

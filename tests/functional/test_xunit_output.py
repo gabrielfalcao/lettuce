@@ -32,7 +32,6 @@ from tests.asserts import prepare_stdout
 
 
 def assert_xsd_valid(filename, content):
-    # from nose.tools import set_trace; set_trace()
 
     xmlschema = etree.XMLSchema(etree.parse(
         open('tests/functional/xunit.xsd')
@@ -43,7 +42,6 @@ def assert_xsd_valid(filename, content):
 @with_setup(prepare_stdout, registry.clear)
 def test_xunit_output_with_no_errors():
     'Test xunit output with no errors'
-    # import pdb; pdb.set_trace()
     called = []
 
     def assert_correct_xml(filename, content):

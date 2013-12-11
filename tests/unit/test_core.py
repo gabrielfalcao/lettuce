@@ -103,7 +103,7 @@ def test_feature_description():
 
 
 def test_step_represent_string_when_not_defined():
-    "Step.represent_string behaviour when not defined"
+    """Step.represent_string behaviour when not defined"""
 
     class FakeFeature:
         max_length = 10
@@ -143,18 +143,18 @@ def test_step_represent_string_when_defined():
     )
 
 
-# def test_step_represent_table():
-#     "Step.represent_hashes"
-#
-#     step = core.Step.from_string(STEP_WITH_TABLE)
-#
-#     assert_equals(
-#         step.represent_hashes(),
-#         '      | name  | description                                           |\n'
-#         '      | Glass | a nice glass to drink grape juice                     |\n'
-#         '      | Pasta | a pasta to cook and eat with grape juice in the glass |\n'
-#         '      | Pasta | a pasta to cook and eat with grape juice in the glass |\n'
-#     )
+def test_step_represent_table():
+    "Step.represent_hashes"
+
+    step = core.Step.from_string(STEP_WITH_TABLE)
+
+    assert_equals(
+        step.represent_hashes(),
+        '      | name  | description                                           |\n'
+        '      | Glass | a nice glass to drink grape juice                     |\n'
+        '      | Pasta | a pasta to cook and eat with grape juice in the glass |\n'
+        '      | Pasta | a pasta to cook and eat with grape juice in the glass |\n'
+    )
 
 STEP_WITH_MATRIX = u'''
     Given i have the following matrix:
@@ -173,13 +173,6 @@ def test_step_represent_matrix():
     "Step with a more suggestive representation for a matrix"
 
     step = core.Step.from_string(STEP_WITH_MATRIX2)
-    # step = core.Step.from_string(STEP_WITH_MATRIX)
-    # assert_equals(
-    #     step.represent_columns(),
-    #     '      | a | b | ab |\n'
-    #     '      | 2 | 24 | 3 |\n'
-    # )
-
     assert_equals(
         step.represent_columns(),
     '      | a | a |\n'
