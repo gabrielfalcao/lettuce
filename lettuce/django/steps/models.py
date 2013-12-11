@@ -42,6 +42,9 @@ def creates_models(model):
 
         @writes_models(model)
         def wrapped(data, field):
+            if field:
+                raise NotImplementedError(
+                    "Must use the writes_models decorator to update models")
             return func(data)
 
     return decorated
