@@ -116,3 +116,12 @@ Feature: Update models
     And I update an existing garden by pk in the database:
       | name             | area |
       | Octopus's Garden | 150  |
+
+Scenario: Try to update a panda without implementing write decorator
+    Given I have pandas in the database:
+      | name | location |
+      | Funi | China    |
+
+    And I update an existing panda by name in the database:
+      | name | location |
+      | Funi | Adelaide |

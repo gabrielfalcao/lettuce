@@ -48,3 +48,12 @@ def database_populated(step):
 @step(r'I count the harvesters')
 def count_harvesters(step):
     print "Harvester count: %d" % Harvester.objects.count()
+
+@creates_models(Panda)
+def create_pandas(step):
+    data = hashes_data(step)
+
+    if 'name' in data:
+        data['name'] += ' Panda'
+
+    return create_models(Panda, data)

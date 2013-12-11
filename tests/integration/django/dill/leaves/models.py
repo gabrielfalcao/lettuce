@@ -43,3 +43,11 @@ class Goose(models.Model):
 class Harvester(models.Model):
     make = models.CharField(max_length=100)
     rego = models.CharField(max_length=100)
+
+
+class Panda(models.Model):
+    """
+    Not part of a garden, but still an important part of any good application
+    """
+    name = models.CharField(max_length=100)
+    location = models.CharField(max_length=100)

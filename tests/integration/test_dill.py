@@ -57,6 +57,10 @@ def test_model_update():
     assert_not_equals(status, 0, out)
     assert "The \"pk\" field is required for all update operations" in out
 
+    status, out = run_scenario('update', 6)
+    assert_not_equals(status, 0, out)
+    assert "Must use the writes_models decorator to update models" in out
+
     FileSystem.popd()
 
 
