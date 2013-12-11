@@ -156,7 +156,7 @@ def write_models(model, data, field=None):
                                 "operations") % field)
 
             model_kwargs = {field: hash_[field]}
-            model_obj, created = model.objects.get_or_create(**model_kwargs)
+            model_obj, created = model.objects.get(**model_kwargs)
 
             for to_set, val in hash_.items():
                 setattr(model_obj, to_set, val)
