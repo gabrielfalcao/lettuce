@@ -46,20 +46,16 @@ def test_model_update():
 
     status, out = run_scenario('update', 1)
     assert_equals(status, 0, out)
-    status, out = run_scenario('update', 2)
-    assert_equals(status, 0, out)
-    status, out = run_scenario('update', 3)
-    assert_equals(status, 0, out)
 
-    status, out = run_scenario('update', 4)
+    status, out = run_scenario('update', 2)
     assert_not_equals(status, 0, out)
     assert "IntegrityError: PRIMARY KEY must be unique" in out
 
-    status, out = run_scenario('update', 5)
+    status, out = run_scenario('update', 3)
     assert_not_equals(status, 0, out)
     assert "The \"pk\" field is required for all update operations" in out
 
-    status, out = run_scenario('update', 6)
+    status, out = run_scenario('update', 4)
     assert_not_equals(status, 0, out)
     assert "Must use the writes_models decorator to update models" in out
 
