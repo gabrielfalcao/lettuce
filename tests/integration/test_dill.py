@@ -20,10 +20,12 @@ from lettuce.fs import FileSystem
 
 current_directory = FileSystem.dirname(__file__)
 
+
 def run_scenario(feature, scenario):
     return commands.getstatusoutput(
         "python manage.py harvest -v 3 -T " +
         "leaves/features/%s.feature -s %d" % (feature, scenario))
+
 
 def test_model_creation():
     'Models are created through Lettuce steps'
@@ -31,7 +33,7 @@ def test_model_creation():
     FileSystem.pushd(current_directory, "django", "dill")
 
     status, out = commands.getstatusoutput(
-            "python manage.py harvest -T leaves/features/create.feature")
+        "python manage.py harvest -T leaves/features/create.feature")
     assert_equals(status, 0, out)
 
     FileSystem.popd()
@@ -102,6 +104,7 @@ def test_model_existence_check():
     assert "Expected 2 geese, found 1" in out
 
     FileSystem.popd()
+
 
 def test_use_test_database_setting():
     'Test database is recreated each time if LETTUCE_USE_TEST_DATABASE is set'
