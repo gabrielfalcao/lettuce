@@ -152,7 +152,7 @@ def write_models(model, data, field=None):
 
     for hash_ in data:
         if field:
-            if not field in hash_:
+            if field not in hash_:
                 raise KeyError(("The \"%s\" field is required for all update "
                                 "operations") % field)
 
