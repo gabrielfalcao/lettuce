@@ -143,8 +143,9 @@ def create_models(model, data):
 
 def write_models(model, data, field=None):
     """
-    Create or update models for each data hash. If field is filled, it's an
-    update operation. Otherwise, it's a create operation.
+    Create or update models for each data hash. If field is present, it is the
+    field that is used to get the existing models out of the database to update
+    them; otherwise, new models are created.
     """
     if hasattr(data, 'hashes'):
         data = hashes_data(data)
@@ -219,7 +220,7 @@ def models_exist(model, data, queryset=None):
             match = False
             if filtered.exists():
                 for obj in filtered.all():
-                    if all(getattr(obj, k) == v \
+                    if all(getattr(obj, k) == v
                             for k, v in extra_attrs.iteritems()):
                         match = True
                         break
