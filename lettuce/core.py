@@ -332,8 +332,11 @@ class Step(object):
         lines = strings.dicts_to_string(self.hashes, self.keys).splitlines()
         return u"\n".join([(u" " * self.table_indentation) + line for line in lines]) + "\n"
 
-    def __repr__(self):
+    def __unicode__(self):
         return u'<Step: "%s">' % self.sentence
+
+    def __repr__(self):
+        return unicode(self).encode('utf-8')
 
     def _parse_remaining_lines(self, lines):
         multiline = strings.parse_multiline(lines)
@@ -622,8 +625,11 @@ class Scenario(object):
     def _calc_value_length(self, data):
         return self._calc_list_length(data.values())
 
-    def __repr__(self):
+    def __unicode__(self):
         return u'<Scenario: "%s">' % self.name
+
+    def __repr__(self):
+        return unicode(self).encode('utf-8')
 
     def matches_tags(self, tags):
         if tags is None:
@@ -995,8 +1001,11 @@ class Feature(object):
         found = regex.findall(item)
         return found
 
-    def __repr__(self):
+    def __unicode__(self):
         return u'<%s: "%s">' % (self.language.first_of_feature, self.name)
+
+    def __repr__(self):
+        return unicode(self).encode('utf-8')
 
     def get_head(self):
         return u"%s: %s" % (self.language.first_of_feature, self.name)
