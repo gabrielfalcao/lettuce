@@ -27,11 +27,10 @@ def mail_sent_content(step, text, part):
     """
     Then I have sent an email with "pandas" in the body
     """
-    for email in mail.outbox:
-        if text in getattr(email, part):
-            return True
-
-    assert False, "An email contained expected text in the {0}".format(part)
+    assert any(text in getattr(email, part)
+               for email
+               in mail.outbox
+               ), "An email contained expected text in the {0}".format(part)
 
 
 @step(CHECK_PREFIX + r'I have sent an email with the following in the body:')
