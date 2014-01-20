@@ -8,10 +8,11 @@ from lettuce import step
 
 
 STEP_PREFIX = r'(?:Given|And|Then|When) '
+CHECK_PREFIX = r'(?:And|Then) '
 EMAIL_PARTS = ('subject', 'body', 'from_email', 'to', 'bcc', 'cc')
 
 
-@step(r'I have sent (\d+) emails?')
+@step(CHECK_PREFIX + r'I have sent (\d+) emails?')
 def mail_sent_count(step, count):
     """
     Then I have sent 2 emails
@@ -20,9 +21,8 @@ def mail_sent_count(step, count):
     assert len(mail.outbox) == count, "Length of outbox is {0}".format(count)
 
 
-@step(r'I have sent an email with "([^"]*)" in the ({0})'.format(
-      '|'.join(EMAIL_PARTS)
-      ))
+@step(CHECK_PREFIX + (r'I have sent an email with "([^"]*)" in the ({0})'
+                      '').format('|'.join(EMAIL_PARTS)))
 def mail_sent_content(step, text, part):
     """
     Then I have sent an email with "pandas" in the body
@@ -34,7 +34,7 @@ def mail_sent_content(step, text, part):
     assert False, "An email contained expected text in the {0}".format(part)
 
 
-@step(r'I have sent an email with the following in the body:')
+@step(CHECK_PREFIX + r'I have sent an email with the following in the body:')
 def mail_sent_content_multiline(step):
     """
     I have sent an email with the following in the body:
@@ -45,7 +45,7 @@ def mail_sent_content_multiline(step):
     return mail_sent_content(step, step.multiline, 'body')
 
 
-@step(r'I clear my email outbox')
+@step(STEP_PREFIX + r'I clear my email outbox')
 def mail_clear(step):
     """
     I clear my email outbox
