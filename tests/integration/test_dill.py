@@ -17,12 +17,12 @@
 import commands
 from lettuce.fs import FileSystem
 from nose.tools import assert_equals, assert_not_equals
-from tests.util import in_directory, run_scenario
+from tests.util import run_scenario
 
 current_directory = FileSystem.dirname(__file__)
 
 
-@in_directory(current_directory, 'django', 'dill')
+@FileSystem.in_directory(current_directory, 'django', 'dill')
 def test_model_creation():
     'Models are created through Lettuce steps'
 
@@ -30,7 +30,7 @@ def test_model_creation():
     assert_equals(status, 0, out)
 
 
-@in_directory(current_directory, 'django', 'dill')
+@FileSystem.in_directory(current_directory, 'django', 'dill')
 def test_model_existence_check():
     'Model existence is checked through Lettuce steps'
 
@@ -67,7 +67,7 @@ def test_model_existence_check():
     assert "Expected 2 geese, found 1" in out
 
 
-@in_directory(current_directory, 'django', 'dill')
+@FileSystem.in_directory(current_directory, 'django', 'dill')
 def test_use_test_database_setting():
     'Test database is recreated each time if LETTUCE_USE_TEST_DATABASE is set'
 

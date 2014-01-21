@@ -2,8 +2,6 @@
 Utils for testing
 """
 import commands
-from functools import wraps
-from lettuce.fs import FileSystem
 
 
 def run_scenario(application='', feature='', scenario='', **opts):
@@ -32,22 +30,3 @@ def run_scenario(application='', feature='', scenario='', **opts):
                                                                  scenario,
                                                                  )
     return commands.getstatusoutput(cmd)
-
-
-def in_directory(*directories):
-    """
-    Decorator to set the working directory around a function
-    """
-    def decorator(func):
-        @wraps(func)
-        def inner(*args, **kwargs):
-            FileSystem.pushd(*directories)
-
-            try:
-                return func(*args, **kwargs)
-
-            finally:
-                FileSystem.popd()
-            
-        return inner
-    return decorator

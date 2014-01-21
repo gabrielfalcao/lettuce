@@ -20,7 +20,6 @@ import commands
 
 from lettuce.fs import FileSystem
 from tests.asserts import assert_not_equals
-from tests.util import in_directory
 
 current_directory = FileSystem.dirname(__file__)
 lib_directory = FileSystem.join(current_directory,  'lib')
@@ -33,7 +32,7 @@ def teardown():
     os.environ['PYTHONPATH'] = OLD_PYTHONPATH
 
 
-@in_directory(current_directory, 'django', 'chive')
+@FileSystem.in_directory(current_directory, 'django', 'chive')
 def test_django_admin_media_serving_on_django_13():
     'lettuce should serve admin static files properly on Django 1.3'
 

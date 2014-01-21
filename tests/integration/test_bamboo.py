@@ -16,12 +16,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from lettuce.fs import FileSystem
 from nose.tools import assert_equals, assert_not_equals
-from tests.util import in_directory, run_scenario
+from tests.util import run_scenario
 
 current_directory = FileSystem.dirname(__file__)
 
 
-@in_directory(current_directory, 'django', 'bamboo')
+@FileSystem.in_directory(current_directory, 'django', 'bamboo')
 def test_mail_count():
     'Mail count is checked through Lettuce steps'
 
@@ -35,7 +35,7 @@ def test_mail_count():
     assert "Length of outbox is 1" in out
 
 
-@in_directory(current_directory, 'django', 'bamboo')
+@FileSystem.in_directory(current_directory, 'django', 'bamboo')
 def test_mail_content():
     'Mail content is checked through Lettuce steps'
 

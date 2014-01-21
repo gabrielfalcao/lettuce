@@ -20,7 +20,6 @@ import commands
 
 from lettuce.fs import FileSystem
 from tests.asserts import assert_equals
-from tests.util import in_directory
 
 current_directory = FileSystem.dirname(__file__)
 lib_directory = FileSystem.join(current_directory,  'lib')
@@ -33,7 +32,7 @@ def teardown():
     os.environ['PYTHONPATH'] = OLD_PYTHONPATH
 
 
-@in_directory(current_directory, 'django', 'grocery')
+@FileSystem.in_directory(current_directory, 'django', 'grocery')
 def test_django_admin_media_serving_on_django_13():
     'lettuce should serve admin static files properly on Django 1.3'
 
@@ -58,7 +57,7 @@ def test_django_admin_media_serving_on_django_13():
     assert u"Django's builtin server is running at 0.0.0.0:7000" in lines
 
 
-@in_directory(current_directory, 'django', 'grocery')
+@FileSystem.in_directory(current_directory, 'django', 'grocery')
 def test_django_admin_media_serving_on_django_125():
     'lettuce should serve admin static files properly on Django 1.2.5'
 
@@ -86,7 +85,7 @@ def test_django_admin_media_serving_on_django_125():
     assert u'Fetching javascript files: ... OK' in lines, f
 
 
-@in_directory(current_directory, 'django', 'grocery')
+@FileSystem.in_directory(current_directory, 'django', 'grocery')
 def test_django_admin_media_serving_forced_by_setting():
     'settings.LETTUCE_SERVE_ADMIN_MEDIA forces lettuce to serve admin assets'
 

@@ -17,12 +17,12 @@
 
 import commands
 from lettuce.fs import FileSystem
-from tests.util import in_directory, run_scenario
+from tests.util import run_scenario
 
 current_directory = FileSystem.dirname(__file__)
 
 
-@in_directory(current_directory, 'django', 'cucumber')
+@FileSystem.in_directory(current_directory, 'django', 'cucumber')
 def test_django_against_cucumber_django_project():
     'testing all django hooks'
 

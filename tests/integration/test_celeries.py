@@ -17,12 +17,12 @@
 import commands
 from lettuce.fs import FileSystem
 from sure import this as the
-from tests.util import in_directory, run_scenario
+from tests.util import run_scenario
 
 current_directory = FileSystem.dirname(__file__)
 
 
-@in_directory(current_directory, 'django', 'celeries')
+@FileSystem.in_directory(current_directory, 'django', 'celeries')
 def test_failfast():
     'passing --failfast to the harvest command will cause lettuce to stop in the first failure'
 

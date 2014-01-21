@@ -17,12 +17,12 @@
 import commands
 from lettuce.fs import FileSystem
 from nose.tools import assert_equals
-from tests.util import in_directory, run_scenario
+from tests.util import run_scenario
 
 current_directory = FileSystem.dirname(__file__)
 
 
-@in_directory(current_directory, 'django', 'kale')
+@FileSystem.in_directory(current_directory, 'django', 'kale')
 def test_harvest_uses_test_runner():
     'harvest uses LETTUCE_TEST_SERVER specified in settings'
 

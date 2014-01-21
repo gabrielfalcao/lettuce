@@ -17,12 +17,12 @@
 import commands
 from lettuce.fs import FileSystem
 from sure import expect
-from tests.util import in_directory, run_scenario
+from tests.util import run_scenario
 
 current_directory = FileSystem.dirname(__file__)
 
 
-@in_directory(current_directory, 'django', 'couves')
+@FileSystem.in_directory(current_directory, 'django', 'couves')
 def test_django_agains_couves():
     'it always call @after.all hooks, even after exceptions'
 
@@ -32,7 +32,7 @@ def test_django_agains_couves():
     expect("Couves after all").to.be.within(out)
 
 
-@in_directory(current_directory, 'django', 'couves')
+@FileSystem.in_directory(current_directory, 'django', 'couves')
 def test_django_agains_couves_nohooks():
     'it only calls @before.all and @after.all hooks if there are features found'
 
