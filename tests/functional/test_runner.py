@@ -688,7 +688,7 @@ def test_output_with_failful_outline_colorful():
         '\033[1;37m  Examples:\033[0m\n'
         '\033[0;36m   \033[1;37m |\033[0;36m username\033[1;37m |\033[0;36m password\033[1;37m |\033[0;36m email         \033[1;37m |\033[0;36m message      \033[1;37m |\033[0;36m\033[0m\n'
         '\033[1;32m   \033[1;37m |\033[1;32m john    \033[1;37m |\033[1;32m doe-1234\033[1;37m |\033[1;32m john@gmail.org\033[1;37m |\033[1;32m Welcome, John\033[1;37m |\033[1;32m\033[0m\n'
-        '\033[1;32m   \033[1;37m |\033[1;32m mary    \033[1;37m |\033[1;32m wee-9876\033[1;37m |\033[1;32m mary@email.com\033[1;37m |\033[1;32m Welcome, Mary\033[1;37m |\033[1;32m\033[0m\n'
+        '\033[1;31m   \033[1;37m |\033[0;31m mary    \033[1;37m |\033[0;31m wee-9876\033[1;37m |\033[0;31m mary@email.com\033[1;37m |\033[0;31m Welcome, Mary\033[1;37m |\033[0;31m\033[0m\n'
         "\033[1;31m    Traceback (most recent call last):\n"
         '      File "%(lettuce_core_file)s", line %(call_line)d, in __call__\n'
         "        ret = self.function(self.step, *args, **kw)\n"
