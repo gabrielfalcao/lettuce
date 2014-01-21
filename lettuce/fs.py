@@ -22,6 +22,7 @@ import codecs
 import fnmatch
 import zipfile
 
+from functools import wraps
 from glob import glob
 from os.path import abspath, join, dirname, curdir, exists
 
@@ -241,3 +242,20 @@ class FileSystem(object):
             path = cls.current_dir(name)
 
         return open(path, mode)
+
+    @classmethod
+    def in_directory(cls, *directories):
+        """Decorator to set the working directory around a function"""
+        def decorator(func):
+            @wraps(func)
+            def inner(*args, **kwargs):
+                cls.pushd(*directories)
+
+                try:
+                    return func(*args, **kwargs)
+
+                finally:
+                    cls.popd()
+                
+            return inner
+        return decorator
