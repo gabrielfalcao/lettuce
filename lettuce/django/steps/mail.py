@@ -69,7 +69,7 @@ def broken_send(*args, **kwargs):
     raise SMTPException()
 
 
-@step(STEP_PREFIX + r'Sending email does not work')
+@step(STEP_PREFIX + r'sending email does not work')
 def email_broken(step):
     """
     Break email sending

@@ -114,6 +114,83 @@ registering your own model testers
 For more complex tests that have to process or parse data you can write your
 own creating steps using the ``checks_existence`` decorator.
 
+*************
+testing email
+*************
+
+There are 6 steps that allow you to do a reasonably comprehensive test of
+sending email, as long as you use Django's default ``django.core.mail``
+functionality.
+
+Check the number of emails sent:
+
+.. highlight:: ruby
+
+::
+
+    Then I have sent 1 email
+
+A more readable step also exists for checking no mail was sent:
+
+.. highlight:: ruby
+
+::
+
+    Then I have not sent any emails
+
+Check if the body of an email contains the following multiline string:
+
+.. highlight:: ruby
+
+::
+
+    Then I have sent an email with the following in the body:
+        """
+        Lettuce is a BDD tool for python, 100% inspired on cucumber.
+        """
+
+Check if part of an email (subject, body, from_email, to, bcc, cc) contains the
+given text somewhere:
+
+.. highlight:: ruby
+
+::
+
+    Then I have sent an email with "Lettuce" in the body
+
+You should always test failure cases for your features. As such, there's a step
+to make sure that sending email fails as expected. This will cause
+``SMTPException`` to always be raised:
+
+.. highlight:: ruby
+
+::
+
+    Given sending email does not work
+
+At some point in your tests, you will likely want to clear your outbox of all
+previous changes. To clear your emails, and reset any brokenness caused by a
+previous ``sending email does not work`` step, you can use:
+
+
+.. highlight:: ruby
+
+::
+
+    Given I clear my email outbox
+
+It is likely that you want this to run after every test to clean up. To do this, simply add the following to your ``terrain.py``:
+
+.. highlight:: python
+
+::
+    from lettuce import after, before
+    from lettuce.django.steps.mail import mail_clear
+
+    @before.each_background
+    def reset_email(lettuce_object):
+        mail_clear(lettuce_object)
+
 *********************
 settings.py variables
 *********************
