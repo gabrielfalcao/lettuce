@@ -42,6 +42,7 @@ def assert_xsd_valid(filename, content):
 def test_xunit_output_with_no_errors():
     'Test xunit output with no errors'
     called = []
+
     def assert_correct_xml(filename, content):
         called.append(True)
         assert_xsd_valid(filename, content)
