@@ -14,48 +14,36 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import commands
-from nose.tools import assert_equals, assert_not_equals
 from lettuce.fs import FileSystem
+from nose.tools import assert_equals, assert_not_equals
+from tests.util import in_directory, run_scenario
 
 current_directory = FileSystem.dirname(__file__)
 
 
-def run_scenario(feature, scenario):
-    return commands.getstatusoutput(
-        "python manage.py harvest -v 3 -T " +
-        "leaves/features/%s.feature -s %d" % (feature, scenario))
-
-
+@in_directory(current_directory, 'django', 'bamboo')
 def test_mail_count():
     'Mail count is checked through Lettuce steps'
 
-    FileSystem.pushd(current_directory, "django", "bamboo")
-
-    status, out = run_scenario('count', 1)
+    status, out = run_scenario('leaves', 'count', 1)
     assert_equals(status, 0, out)
-    status, out = run_scenario('count', 2)
+    status, out = run_scenario('leaves', 'count', 2)
     assert_equals(status, 0, out)
 
-    status, out = run_scenario('count', 3)
+    status, out = run_scenario('leaves', 'count', 3)
     assert_not_equals(status, 0)
     assert "Length of outbox is 1" in out
 
-    FileSystem.popd()
 
-
+@in_directory(current_directory, 'django', 'bamboo')
 def test_mail_content():
     'Mail content is checked through Lettuce steps'
 
-    FileSystem.pushd(current_directory, "django", "bamboo")
-
-    status, out = run_scenario('content', 1)
+    status, out = run_scenario('leaves', 'content', 1)
     assert_equals(status, 0, out)
-    status, out = run_scenario('content', 2)
+    status, out = run_scenario('leaves', 'content', 2)
     assert_equals(status, 0, out)
 
-    status, out = run_scenario('content', 3)
+    status, out = run_scenario('leaves', 'content', 3)
     assert_not_equals(status, 0)
     assert "An email contained expected text in the body" in out
-
-    FileSystem.popd()

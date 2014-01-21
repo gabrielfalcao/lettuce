@@ -17,16 +17,16 @@
 import commands
 from lettuce.fs import FileSystem
 from sure import this as the
+from tests.util import in_directory, run_scenario
 
 current_directory = FileSystem.dirname(__file__)
 
 
+@in_directory(current_directory, 'django', 'celeries')
 def test_failfast():
     'passing --failfast to the harvest command will cause lettuce to stop in the first failure'
 
-    FileSystem.pushd(current_directory, "django", "celeries")
-
-    status, output = commands.getstatusoutput("python manage.py harvest --verbosity=3 --failfast")
+    status, output = run_scenario(**{'--failfast': None})
 
     the(output).should.contain("This one is present")
     the(output).should.contain("Celeries before all")
@@ -45,5 +45,3 @@ def test_failfast():
     the(output).should.contain("Celeries after all")
 
     the(output).should_not.contain("This one is never called")
-
-    FileSystem.popd()

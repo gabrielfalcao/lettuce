@@ -15,20 +15,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import commands
-from nose.tools import assert_equals
 from lettuce.fs import FileSystem
+from nose.tools import assert_equals
+from tests.util import in_directory, run_scenario
 
 current_directory = FileSystem.dirname(__file__)
 
 
+@in_directory(current_directory, 'django', 'kale')
 def test_harvest_uses_test_runner():
     'harvest uses LETTUCE_TEST_SERVER specified in settings'
 
-    FileSystem.pushd(current_directory, "django", "kale")
-
-    status, out = commands.getstatusoutput(
-        "python manage.py harvest -T leaves/features/modification.feature")
+    status, out = run_scenario('leaves', 'modification')
 
     assert_equals(status, 0, out)
-
-    FileSystem.popd()

@@ -17,18 +17,16 @@
 
 import commands
 from lettuce.fs import FileSystem
+from tests.util import in_directory, run_scenario
 
 current_directory = FileSystem.dirname(__file__)
 
 
+@in_directory(current_directory, 'django', 'cucumber')
 def test_django_against_cucumber_django_project():
     'testing all django hooks'
 
-    FileSystem.pushd(current_directory, "django", "cucumber")
-
-    status, out = commands.getstatusoutput(
-        "python manage.py harvest --verbosity=1")
+    status, out = run_scenario()
 
     assert "before harvest" in out
     assert "after harvest" in out
-    FileSystem.popd()

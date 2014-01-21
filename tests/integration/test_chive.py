@@ -18,8 +18,9 @@ import os
 import sys
 import commands
 
-from tests.asserts import assert_not_equals
 from lettuce.fs import FileSystem
+from tests.asserts import assert_not_equals
+from tests.util import in_directory
 
 current_directory = FileSystem.dirname(__file__)
 lib_directory = FileSystem.join(current_directory,  'lib')
@@ -32,6 +33,7 @@ def teardown():
     os.environ['PYTHONPATH'] = OLD_PYTHONPATH
 
 
+@in_directory(current_directory, 'django', 'chive')
 def test_django_admin_media_serving_on_django_13():
     'lettuce should serve admin static files properly on Django 1.3'
 
@@ -40,13 +42,10 @@ def test_django_admin_media_serving_on_django_13():
         OLD_PYTHONPATH,
     )
 
-    FileSystem.pushd(current_directory, "django", "chive")
-
     status, out = commands.getstatusoutput(
         "python manage.py harvest --verbosity=2 ./features/")
 
     assert_not_equals(status, 0)
-    FileSystem.popd()
 
     lines = out.splitlines()
 
