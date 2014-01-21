@@ -42,8 +42,12 @@ def in_directory(*directories):
         @wraps(func)
         def inner(*args, **kwargs):
             FileSystem.pushd(*directories)
-            value = func(*args, **kwargs)
-            FileSystem.popd()
-            return value
+
+            try:
+                return func(*args, **kwargs)
+
+            finally:
+                FileSystem.popd()
+            
         return inner
     return decorator
