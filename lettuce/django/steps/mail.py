@@ -10,6 +10,7 @@ from lettuce import step
 STEP_PREFIX = r'(?:Given|And|Then|When) '
 CHECK_PREFIX = r'(?:And|Then) '
 EMAIL_PARTS = ('subject', 'body', 'from_email', 'to', 'bcc', 'cc')
+GOOD_MAIL = mail.EmailMessage.send
 
 
 @step(CHECK_PREFIX + r'I have sent (\d+) emails?')
@@ -19,6 +20,14 @@ def mail_sent_count(step, count):
     """
     count = int(count)
     assert len(mail.outbox) == count, "Length of outbox is {0}".format(count)
+
+
+@step(r'I have not sent any emails')
+def mail_not_sent(step):
+    """
+    I have not sent any emails
+    """
+    return mail_sent_count(step, 0)
 
 
 @step(CHECK_PREFIX + (r'I have sent an email with "([^"]*)" in the ({0})'
@@ -49,4 +58,20 @@ def mail_clear(step):
     """
     I clear my email outbox
     """
+    mail.EmailMessage.send = GOOD_MAIL
     mail.outbox = []
+
+
+def broken_send(*args, **kwargs):
+    """
+    Broken send function for email_broken step
+    """
+    raise SMTPException()
+
+
+@step(STEP_PREFIX + r'Sending email does not work')
+def email_broken(step):
+    """
+    Break email sending
+    """
+    mail.EmailMessage.send = broken_send
