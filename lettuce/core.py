@@ -222,15 +222,38 @@ class Step(object):
     columns = None
     matrix = None
 
+    class HashKeyWrap(object):
+        """Object wrapper for keys, hashes 
+        for old dict-style representation
+
+        """
+        
+        def __init__(self, keys=None, hashes=None):
+            self.hashes = hashes
+            self.keys = keys
+
+
+    class MatrixWrap(object):
+        """Object wrapper for non non_unique_keys,
+        columns new matrix enabled representation
+        
+        """
+
+        def __init__(self, nukeys=None, columns=None):
+            self.nukeys = nukeys
+            self.columns = columns
+
     def __init__(self, sentence, remaining_lines, line=None, filename=None):
         self.sentence = sentence
         self.original_sentence = sentence
         self._remaining_lines = remaining_lines
-        keys, hashes, self.multiline, columns, nukeys = self._parse_remaining_lines(remaining_lines)
-        self.keys = tuple(keys)
-        self.non_unique_keys = nukeys
-        self.hashes = HashList(self, hashes)
-        self.columns = columns
+        hk_wrap = self.HashKeyWrap()
+        mat_wrap = self.MatrixWrap()
+        hk_wrap, self.multiline, mat_wrap = self._parse_remaining_lines(remaining_lines)
+        self.keys = tuple(hk_wrap.keys)
+        self.non_unique_keys = mat_wrap.nukeys
+        self.hashes = HashList(self, hk_wrap.hashes)
+        self.columns = mat_wrap.columns
         self.described_at = StepDescription(line, filename)
         self.proposed_method_name, self.proposed_sentence = self.propose_definition()
 
@@ -355,7 +378,9 @@ class Step(object):
         multiline = strings.parse_multiline(lines)
         keys, hashes = strings.parse_hashes(lines)
         non_unique_keys, columns = strings.parse_as_json(lines)
-        return keys, hashes, multiline, columns, non_unique_keys
+        dict_style = self.HashKeyWrap(keys, hashes)
+        matrix_style = self.MatrixWrap(non_unique_keys, columns)
+        return dict_style, multiline, matrix_style
 
 
     def _get_match(self, ignore_case):
