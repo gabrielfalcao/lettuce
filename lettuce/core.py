@@ -247,8 +247,6 @@ class Step(object):
         self.sentence = sentence
         self.original_sentence = sentence
         self._remaining_lines = remaining_lines
-        hk_wrap = self.HashKeyWrap()
-        mat_wrap = self.MatrixWrap()
         hk_wrap, self.multiline, mat_wrap = self._parse_remaining_lines(remaining_lines)
         self.keys = tuple(hk_wrap.keys)
         self.non_unique_keys = mat_wrap.nukeys
