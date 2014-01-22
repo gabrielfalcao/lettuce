@@ -35,7 +35,11 @@ def escape_if_necessary(what):
     return what
 
 class _escapes(object):
+    """
+        This wraps the former nested functions within
+        each of the parsing/formatting functions.
 
+    """
 
     def __init__(self, escape, strip, rm_backslash_en, rm_backslash_de):
         _escapes.escape = escape
