@@ -21,6 +21,8 @@ from mock import Mock, patch
 from sure import expect
 from StringIO import StringIO
 from os.path import dirname, join, abspath
+from inspect import currentframe
+
 from nose.tools import assert_equals, with_setup, assert_raises
 from lettuce.fs import FeatureLoader
 from lettuce.core import Feature, fs, StepDefinition
@@ -1251,6 +1253,7 @@ def test_output_background_with_success_colorless():
 
     from lettuce import step
 
+    line = currentframe().f_lineno  # get line number
     @step(ur'the variable "(\w+)" holds (\d+)')
     @step(ur'the variable "(\w+)" is equal to (\d+)')
     def just_pass(step, *args):
@@ -1269,14 +1272,15 @@ def test_output_background_with_success_colorless():
         '  I want to automate its test                 # tests/functional/bg_features/simple/simple.feature:4\n'
         '\n'
         '  Background:\n'
-        '    Given the variable "X" holds 2            # tests/functional/test_runner.py:1239\n'
+        '    Given the variable "X" holds 2            # tests/functional/test_runner.py:{line}\n'
         '\n'
         '  Scenario: multiplication changing the value # tests/functional/bg_features/simple/simple.feature:9\n'
-        '    Given the variable "X" is equal to 2      # tests/functional/test_runner.py:1239\n'
+        '    Given the variable "X" is equal to 2      # tests/functional/test_runner.py:{line}\n'
         '\n'
         '1 feature (1 passed)\n'
         '1 scenario (1 passed)\n'
         '1 step (1 passed)\n'
+        .format(line=line+2)  # increment is line number of step past line
     )
 
 
@@ -1286,6 +1290,7 @@ def test_output_background_with_success_colorful():
 
     from lettuce import step
 
+    line = currentframe().f_lineno  # get line number
     @step(ur'the variable "(\w+)" holds (\d+)')
     @step(ur'the variable "(\w+)" is equal to (\d+)')
     def just_pass(step, *args):
@@ -1304,16 +1309,17 @@ def test_output_background_with_success_colorful():
         '\033[1;37m  I want to automate its test                 \033[1;30m# tests/functional/bg_features/simple/simple.feature:4\033[0m\n'
         '\n'
         '\033[1;37m  Background:\033[0m\n'
-        '\033[1;30m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1274\033[0m\n'
-        '\033[A\033[1;32m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:1274\033[0m\n'
+        '\033[1;30m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:{line}\033[0m\n'
+        '\033[A\033[1;32m    Given the variable "X" holds 2            \033[1;30m# tests/functional/test_runner.py:{line}\033[0m\n'
         '\n'
         '\033[1;37m  Scenario: multiplication changing the value \033[1;30m# tests/functional/bg_features/simple/simple.feature:9\033[0m\n'
-        '\033[1;30m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1274\033[0m\n'
-        '\033[A\033[1;32m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:1274\033[0m\n'
+        '\033[1;30m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:{line}\033[0m\n'
+        '\033[A\033[1;32m    Given the variable "X" is equal to 2      \033[1;30m# tests/functional/test_runner.py:{line}\033[0m\n'
         '\n'
         '\033[1;37m1 feature (\033[1;32m1 passed\033[1;37m)\033[0m\n'
         '\033[1;37m1 scenario (\033[1;32m1 passed\033[1;37m)\033[0m\n'
         '\033[1;37m1 step (\033[1;32m1 passed\033[1;37m)\033[0m\n'
+        .format(line=line+2)  # increment is line number of step past line
     )
 
 
