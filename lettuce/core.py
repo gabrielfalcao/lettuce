@@ -360,7 +360,7 @@ class Step(object):
         return u"\n".join([(u" " * self.table_indentation) + line for line in lines]) + "\n"
 
     def represent_columns(self):
-        lines = strings.json_to_string(self.columns, self.non_unique_keys).splitlines()
+        lines = strings.matrix_to_string(self.columns, self.non_unique_keys).splitlines()
         return u"\n".join([(u" " * self.table_indentation) + line for line in lines]) + "\n"
 
     def __unicode__(self):
@@ -375,7 +375,7 @@ class Step(object):
     def _parse_remaining_lines(self, lines):
         multiline = strings.parse_multiline(lines)
         keys, hashes = strings.parse_hashes(lines)
-        non_unique_keys, columns = strings.parse_as_json(lines)
+        non_unique_keys, columns = strings.parse_as_matrix(lines)
         dict_style = self.HashKeyWrap(keys, hashes)
         matrix_style = self.MatrixWrap(non_unique_keys, columns)
         return dict_style, multiline, matrix_style

@@ -195,7 +195,7 @@ def parse_hashes(lines, json_format=None):
 
     return keys, hashes
 
-def json_to_string(json_list, order):
+def matrix_to_string(json_list, order):
     '''
     This is for aesthetic reasons, it will get the width of the largest column and
     rfill the rest with spaces
@@ -237,7 +237,7 @@ def json_to_string(json_list, order):
     return escapes.deline(u"\n".join(table) + u"\n")
 
 
-def parse_as_json(lines):
+def parse_as_matrix(lines):
     '''
         Parse lines into json objects
     '''
