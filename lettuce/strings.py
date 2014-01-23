@@ -205,7 +205,6 @@ def matrix_to_string(json_list, order):
     escapes = _escapes(escape, strip=False,
                        rm_backslash_en=False, rm_backslash_de=False)
 
-    nu_keys_and_sizes = list([[k.keys()[0], getlen(k.keys()[0])] for k in json_list])
     maxlen = 0
     for counter, column in enumerate(json_list):
         current_size = getlen(column.keys()[0])
