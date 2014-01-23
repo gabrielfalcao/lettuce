@@ -210,11 +210,12 @@ def matrix_to_string(json_list, order):
         current_size = getlen(column.keys()[0])
         temp_list = json_list[counter].values()[0]
         maxlen = max(maxlen, len(temp_list))
-        for data in temp_list:
-            value = unicode(data)
-            size = getlen(value)
-            if size > current_size:
-                column.keys()[0] = size
+        size = max(temp_list, key=lambda s: getlen(unicode(s)))
+        # for data in temp_list:
+        #     value = unicode(data)
+        #
+        #     if size > current_size:
+        column.keys()[0] = size
     names = []
     for counter, column in enumerate(json_list):
         size = getlen(column.keys()[0])
