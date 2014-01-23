@@ -207,24 +207,20 @@ def json_to_string(json_list, order):
 
     nu_keys_and_sizes = list([[k.keys()[0], getlen(k.keys()[0])] for k in json_list])
     maxlen = 0
-    for key_list in nu_keys_and_sizes:
-        current_size = key_list[1]
-        counter = 0
+    for counter, column in enumerate(json_list):
+        from nose.tools import set_trace; set_trace()
+        current_size = getlen(column.keys()[0])
         temp_list = json_list[counter].values()[0]
-        temp_maxlen = len(temp_list)
-        if temp_maxlen > maxlen:
-            maxlen = temp_maxlen
+        maxlen = max(maxlen, len(temp_list))
         for data in temp_list:
             value = unicode(data)
             size = getlen(value)
             if size > current_size:
-                key_list[1] = size
-        counter += 1
+                column.keys()[0] = size
     names = []
-    idx = 0
-    for key in nu_keys_and_sizes:
-        size = key[1]
-        name = u" %s" % rfill(key[0], size)
+    for counter, column in enumerate(json_list):
+        size = getlen(column.keys()[0])
+        name = u" %s" % rfill(column.keys()[0], size)
         names.append(escapes.enline(name))
     table = [u"|%s|" % "|".join(names)]
 
