@@ -61,7 +61,7 @@ class _escapes(object):
 
     @classmethod
     def discard_comments(cls, lines):
-        return [line for line in lines if not line.startswith('#')]
+        return (line for line in lines if not line.startswith('#'))
 
 
 def get_stripped_lines(string, ignore_lines_starting_with=''):
@@ -253,6 +253,7 @@ def parse_as_json(lines):
 
     lines = escapes.discard_comments(lines)
     lines = map(escapes.enline, lines)
+
     non_unique_keys = []
     json_map = []
     if lines:
@@ -260,9 +261,7 @@ def parse_as_json(lines):
         non_unique_keys = split_wisely(first_line, u"|", True)
         non_unique_keys = map(escapes.deline, non_unique_keys)
         rng_idx = len(non_unique_keys)
-        json_map = list(non_unique_keys)
-        for idx in xrange(rng_idx):
-            json_map[idx] = dict([(non_unique_keys[idx], [])])
+        json_map = [dict([(key, [])]) for key in non_unique_keys]
         for line in lines:
             values = split_wisely(line, u"|", True)
             values = map(escapes.deline, values)
