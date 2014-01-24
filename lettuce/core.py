@@ -263,6 +263,7 @@ class Step(object):
 
     def solve_and_clone(self, data, display_step):
         sentence = self.sentence
+        multiline = self.multiline
         hashes = self.hashes[:]  # deep copy
         for k, v in data.items():
 
@@ -276,10 +277,12 @@ class Step(object):
                 return new_row
 
             sentence = evaluate(sentence)
+            multiline = evaluate(multiline)
             hashes = map(evaluate_hash_value, hashes)
 
         new = deepcopy(self)
         new.sentence = sentence
+        new.multiline = multiline
         new.hashes = hashes
         new.display = display_step
         return new

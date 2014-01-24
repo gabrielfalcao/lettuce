@@ -48,7 +48,9 @@ def wp(l):
         l = l.replace(" |", "\033[1;37m |\033[0;31m")
     if l.startswith("\033[1;30m"):
         l = l.replace(" |", "\033[1;37m |\033[1;30m")
-
+    if l.startswith("\033[1;31m"):
+        l = l.replace(" |", "\033[1;37m |\033[0;31m")  
+  
     return l
 
 
@@ -157,14 +159,18 @@ def print_outline(scenario, order, outline, reasons_to_fail):
 
     wline = lambda x: write_out("\033[0;36m%s%s\033[0m\n" % (" " * scenario.table_indentation, x))
     wline_success = lambda x: write_out("\033[1;32m%s%s\033[0m\n" % (" " * scenario.table_indentation, x))
-    wline_red = lambda x: wrt("%s%s" % (" " * scenario.table_indentation, x))
+    wline_red_outline = lambda x: write_out("\033[1;31m%s%s\033[0m\n" % (" " * scenario.table_indentation, x))
+    wline_red = lambda x: write_out("%s%s" % (" " * scenario.table_indentation, x))
     if order is 0:
         wrt("\n")
         wrt("\033[1;37m%s%s:\033[0m\n" % (" " * scenario.indentation, scenario.language.first_of_examples))
         wline(head)
 
     line = lines[order]
-    wline_success(line)
+    if reasons_to_fail:
+        wline_red_outline(line)
+    else:
+        wline_success(line)
     if reasons_to_fail:
         elines = reasons_to_fail[0].traceback.splitlines()
         wrt("\033[1;31m")

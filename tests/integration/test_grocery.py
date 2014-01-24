@@ -18,8 +18,8 @@ import os
 import sys
 import commands
 
-from tests.asserts import assert_equals
 from lettuce.fs import FileSystem
+from tests.asserts import assert_equals
 
 current_directory = FileSystem.dirname(__file__)
 lib_directory = FileSystem.join(current_directory,  'lib')
@@ -32,6 +32,7 @@ def teardown():
     os.environ['PYTHONPATH'] = OLD_PYTHONPATH
 
 
+@FileSystem.in_directory(current_directory, 'django', 'grocery')
 def test_django_admin_media_serving_on_django_13():
     'lettuce should serve admin static files properly on Django 1.3'
 
@@ -40,13 +41,10 @@ def test_django_admin_media_serving_on_django_13():
         OLD_PYTHONPATH,
     )
 
-    FileSystem.pushd(current_directory, "django", "grocery")
-
     status, out = commands.getstatusoutput(
         "python manage.py harvest --verbosity=2 ./features/")
 
     assert_equals(status, 0, out)
-    FileSystem.popd()
 
     lines = out.splitlines()
 
@@ -59,6 +57,7 @@ def test_django_admin_media_serving_on_django_13():
     assert u"Django's builtin server is running at 0.0.0.0:7000" in lines
 
 
+@FileSystem.in_directory(current_directory, 'django', 'grocery')
 def test_django_admin_media_serving_on_django_125():
     'lettuce should serve admin static files properly on Django 1.2.5'
 
@@ -66,13 +65,11 @@ def test_django_admin_media_serving_on_django_125():
         FileSystem.join(lib_directory, 'Django-1.2.5'),
         OLD_PYTHONPATH,
     )
-    FileSystem.pushd(current_directory, "django", "grocery")
 
     status, out = commands.getstatusoutput(
         "python manage.py harvest --verbosity=2 ./features/")
 
     assert_equals(status, 0, out)
-    FileSystem.popd()
 
     lines = out.splitlines()
     f = '\n\n'
@@ -88,6 +85,7 @@ def test_django_admin_media_serving_on_django_125():
     assert u'Fetching javascript files: ... OK' in lines, f
 
 
+@FileSystem.in_directory(current_directory, 'django', 'grocery')
 def test_django_admin_media_serving_forced_by_setting():
     'settings.LETTUCE_SERVE_ADMIN_MEDIA forces lettuce to serve admin assets'
 
@@ -96,15 +94,12 @@ def test_django_admin_media_serving_forced_by_setting():
         OLD_PYTHONPATH,
     )
 
-    FileSystem.pushd(current_directory, "django", "grocery")
-
     extra_args = " --scenarios=1,3,4,5 --settings=settings_without_admin"
 
     status, out = commands.getstatusoutput(
         "python manage.py harvest --verbosity=2 ./features/ %s" % extra_args)
 
     assert_equals(status, 0, out)
-    FileSystem.popd()
 
     lines = out.splitlines()
 
