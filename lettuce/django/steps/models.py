@@ -10,6 +10,7 @@ from django.core.management.color import no_style
 from django.db import connection
 from django.db.models.loading import get_models
 from django.utils.functional import curry
+from functools import wraps
 
 from lettuce import step
 
@@ -40,6 +41,7 @@ def creates_models(model):
 
     def decorated(func):
 
+        @wraps(func)
         @writes_models(model)
         def wrapped(data, field):
             if field:
