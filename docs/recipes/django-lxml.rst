@@ -447,6 +447,23 @@ You can also specify it at ``settings.py`` so that you won't need to type the sa
        'lettuce.django',
    )
 
+printing summary for all apps execution
+-------------------------------------------
+
+You can print the summary for the test execution for all the apps at the end
+by using --harvest-summary
+
+.. highlight:: bash
+
+::
+
+   python manage.py harvest --harvest-summary
+
+
+.. highlight:: python
+
+::
+
 .. _alfaces: http://github.com/gabrielfalcao/lettuce/tree/master/tests/integration/django/alfaces/
 .. _Django: http://djangoproject.com
 .. _twill: http://twill.idyll.org/python-api.html
