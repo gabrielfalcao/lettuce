@@ -344,7 +344,7 @@ class Step(object):
 
     def __unicode__(self):
         return u'<Step: "%s">' % self.sentence
-    
+
     def __repr__(self):
         return u'<Step: "%s">' % self.sentence
 
@@ -1258,7 +1258,11 @@ class ScenarioResult(object):
 
 
 class TotalResult(object):
+<<<<<<< HEAD
     def __init__(self, feature_results):
+=======
+    def __init__(self, feature_results=None):
+>>>>>>> c33abde... Merge remote-tracking branch 'upstream/master'
         self.feature_results = feature_results
         self.scenario_results = []
         self.steps_passed = 0
@@ -1269,6 +1273,8 @@ class TotalResult(object):
         self.steps = 0
         # store the scenario names that failed, with their location
         self.failed_scenario_locations = []
+
+    def output_format(self):
         for feature_result in self.feature_results:
             for scenario_result in feature_result.scenario_results:
                 self.scenario_results.append(scenario_result)
@@ -1307,3 +1313,35 @@ class TotalResult(object):
     @property
     def scenarios_passed(self):
         return len([result for result in self.scenario_results if result.passed])
+
+
+
+class SummaryTotalResults(TotalResult):
+
+    def __init__(self, total_results):
+        """Aggregates results per total results into a summary
+        @params: list of total result objects
+
+        """
+        super(SummaryTotalResults, self).__init__()
+        self.total_results = total_results
+
+
+    def summarize_all(self):
+        """Outputs the aggregated results for the TotalResult list
+
+        """
+        for partial_result in self.total_results:
+            self.feature_results = partial_result.feature_results
+            for feature_result in self.feature_results:
+                for scenario_result in feature_result.scenario_results:
+                    self.scenario_results.append(scenario_result)
+                    self.steps_passed += len(scenario_result.steps_passed)
+                    self.steps_failed += len(scenario_result.steps_failed)
+                    self.steps_skipped += len(scenario_result.steps_skipped)
+                    self.steps_undefined += len(scenario_result.steps_undefined)
+                    self.steps += scenario_result.total_steps
+                    self._proposed_definitions.extend(scenario_result.steps_undefined)
+                    if len(scenario_result.steps_failed) > 0:
+                        self.failed_scenario_locations.append(scenario_result.scenario.represented())
+

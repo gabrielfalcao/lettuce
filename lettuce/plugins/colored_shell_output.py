@@ -192,9 +192,11 @@ def print_feature_running(feature):
         line = wrap_file_and_line(line, '\033[1;30m', '\033[0m')
         write_out("\033[1;37m%s\n" % line)
 
-
+@after.harvest
 @after.all
-def print_end(total):
+def print_end(total=None):
+    if total is None:
+        return
     write_out("\n")
 
     word = total.features_ran > 1 and "features" or "feature"
