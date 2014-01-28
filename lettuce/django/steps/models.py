@@ -152,6 +152,8 @@ def write_models(model, data, field=None):
     if hasattr(data, 'hashes'):
         data = hashes_data(data)
 
+    written = []
+
     for hash_ in data:
         if field:
             if field not in hash_:
@@ -167,9 +169,12 @@ def write_models(model, data, field=None):
             model_obj.save()
 
         else:
-            model.objects.create(**hash_)
+            model_obj = model.objects.create(**hash_)
+
+        written.append(model_obj)
 
     reset_sequence(model)
+    return written
 
 
 def _dump_model(model, attrs=None):
