@@ -10,6 +10,7 @@ from django.core.management.color import no_style
 from django.db import connection
 from django.db.models.loading import get_models
 from django.utils.functional import curry
+from functools import wraps
 
 from lettuce import step
 
@@ -29,19 +30,38 @@ def _models_generator():
 MODELS = dict(_models_generator())
 
 
-_CREATE_MODEL = {}
+_WRITE_MODEL = {}
 
 
 def creates_models(model):
     """
-    Register a model-specific creation function.
+    Register a model-specific creation function. Wrapper around writes_models
+    that removes the field parameter (always a create operation).
+    """
+
+    def decorated(func):
+
+        @wraps(func)
+        @writes_models(model)
+        def wrapped(data, field):
+            if field:
+                raise NotImplementedError(
+                    "Must use the writes_models decorator to update models")
+            return func(data)
+
+    return decorated
+
+
+def writes_models(model):
+    """
+    Register a model-specific create and update function.
     """
 
     def decorated(func):
         """
         Decorator for the creation function.
         """
-        _CREATE_MODEL[model] = func
+        _WRITE_MODEL[model] = func
         return func
 
     return decorated
@@ -118,14 +138,43 @@ def reset_sequence(model):
 
 def create_models(model, data):
     """
-    Create models for each data hash.
+    Create models for each data hash. Wrapper around write_models.
+    """
+    return write_models(model, data, None)
+
+
+def write_models(model, data, field=None):
+    """
+    Create or update models for each data hash. If field is present, it is the
+    field that is used to get the existing models out of the database to update
+    them; otherwise, new models are created.
     """
     if hasattr(data, 'hashes'):
         data = hashes_data(data)
 
+    written = []
+
     for hash_ in data:
-        model.objects.create(**hash_)
+        if field:
+            if field not in hash_:
+                raise KeyError(("The \"%s\" field is required for all update "
+                                "operations") % field)
+
+            model_kwargs = {field: hash_[field]}
+            model_obj = model.objects.get(**model_kwargs)
+
+            for to_set, val in hash_.items():
+                setattr(model_obj, to_set, val)
+
+            model_obj.save()
+
+        else:
+            model_obj = model.objects.create(**hash_)
+
+        written.append(model_obj)
+
     reset_sequence(model)
+    return written
 
 
 def _dump_model(model, attrs=None):
@@ -178,7 +227,7 @@ def models_exist(model, data, queryset=None):
             match = False
             if filtered.exists():
                 for obj in filtered.all():
-                    if all(getattr(obj, k) == v \
+                    if all(getattr(obj, k) == v
                             for k, v in extra_attrs.iteritems()):
                         match = True
                         break
@@ -199,25 +248,35 @@ def models_exist(model, data, queryset=None):
         raise AssertionError("%i rows missing" % failed)
 
 
-@step(r'I have(?: an?)? ([a-z][a-z0-9_ ]*) in the database:')
-def create_models_generic(step, model):
-    """
-    And I have foos in the database:
-        | name | bar  |
-        | Baz  | Quux |
+for txt in (
+    (r'I have(?: an?)? ([a-z][a-z0-9_ ]*) in the database:'),
+    (r'I update(?: an?)? existing ([a-z][a-z0-9_ ]*) by ([a-z]+) in the '
+     'database:'),
+):
+    @step(txt)
+    def write_models_generic(step, model, field=None):
+        """
+        And I have foos in the database:
+            | name | bar  |
+            | Baz  | Quux |
 
-    The generic method can be overridden for a specific model by defining a
-    function create_badgers(step), which creates the Badger model.
-    """
+        And I update existing foos in the database:
+            | pk | name |
+            | 1  | Bar  |
 
-    model = get_model(model)
+        The generic method can be overridden for a specific model by defining a
+        function write_badgers(step, data, field), which creates and updates
+        the Badger model and decorating it with the writes_models(model_class)
+        decorator.
+        """
 
-    try:
-        func = _CREATE_MODEL[model]
-    except KeyError:
-        func = curry(create_models, model)
+        model = get_model(model)
 
-    func(step)
+        try:
+            func = _WRITE_MODEL[model]
+        except KeyError:
+            func = curry(write_models, model)
+        func(step, field)
 
 
 @step(STEP_PREFIX + r'([A-Z][a-z0-9_ ]*) with ([a-z]+) "([^"]*)"' +
@@ -236,7 +295,7 @@ def create_models_for_relation(step, rel_model_name,
     for hash_ in step.hashes:
         hash_['%s' % rel_model_name] = rel_model
 
-    create_models_generic(step, model)
+    write_models_generic(step, model)
 
 
 @step(STEP_PREFIX + r'([A-Z][a-z0-9_ ]*) with ([a-z]+) "([^"]*)"' +
