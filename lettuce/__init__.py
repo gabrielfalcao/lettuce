@@ -144,12 +144,6 @@ class Runner(object):
         """ Find and load step definitions, and them find and load
         features under `base_path` specified on constructor
         """
-        try:
-            self.loader.find_and_load_step_definitions()
-        except StepLoadingError, e:
-            print "Error loading step definitions:\n", e
-            return
-
         results = []
         if self.single_feature:
             features_files = [self.single_feature]
@@ -160,6 +154,15 @@ class Runner(object):
 
         if not features_files:
             self.output.print_no_features_found(self.loader.base_dir)
+            return
+
+        # only load steps if we've located some features.
+        # this prevents stupid bugs when loading django modules
+        # that we don't even want to test.
+        try:
+            self.loader.find_and_load_step_definitions()
+        except StepLoadingError, e:
+            print "Error loading step definitions:\n", e
             return
 
         call_hook('before', 'all')

@@ -6,7 +6,6 @@ from email import message_from_string
 
 from smtpd import SMTPServer
 
-from django.core.mail import EmailMessage, EmailMultiAlternatives
 
 from lettuce import after, before
 
@@ -37,6 +36,9 @@ def _get_content(msg):
 
 
 def _convert_to_django_msg(msg):
+
+    from django.core.mail import EmailMessage, EmailMultiAlternatives
+
     body, alternatives = _get_content(msg)
     if alternatives:
         email = EmailMultiAlternatives(body=body,

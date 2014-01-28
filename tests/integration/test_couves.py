@@ -17,29 +17,26 @@
 import commands
 from lettuce.fs import FileSystem
 from sure import expect
+from tests.util import run_scenario
 
 current_directory = FileSystem.dirname(__file__)
 
 
+@FileSystem.in_directory(current_directory, 'django', 'couves')
 def test_django_agains_couves():
     'it always call @after.all hooks, even after exceptions'
 
-    FileSystem.pushd(current_directory, "django", "couves")
-
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3")
+    status, out = run_scenario()
 
     expect("Couves before all").to.be.within(out)
     expect("Couves after all").to.be.within(out)
-    FileSystem.popd()
 
 
+@FileSystem.in_directory(current_directory, 'django', 'couves')
 def test_django_agains_couves_nohooks():
     'it only calls @before.all and @after.all hooks if there are features found'
 
-    FileSystem.pushd(current_directory, "django", "couves")
-
-    status, out = commands.getstatusoutput("python manage.py harvest --verbosity=3 --tags=nothingwillbefound")
+    status, out = run_scenario(**{'--tags': 'nothingwillbefound'})
 
     expect("Couves before all").to.not_be.within(out)
     expect("Couves after all").to.not_be.within(out)
-    FileSystem.popd()
