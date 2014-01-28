@@ -31,6 +31,26 @@ def test_model_creation():
 
 
 @FileSystem.in_directory(current_directory, 'django', 'dill')
+def test_model_update():
+    'Models are updated through Lettuce steps'
+
+    status, out = run_scenario('leaves', 'update', 1)
+    assert_equals(status, 0, out)
+
+    status, out = run_scenario('leaves', 'update', 2)
+    assert_not_equals(status, 0, out)
+    assert "IntegrityError: PRIMARY KEY must be unique" in out
+
+    status, out = run_scenario('leaves', 'update', 3)
+    assert_not_equals(status, 0, out)
+    assert "The \"pk\" field is required for all update operations" in out
+
+    status, out = run_scenario('leaves', 'update', 4)
+    assert_not_equals(status, 0, out)
+    assert "Must use the writes_models decorator to update models" in out
+
+
+@FileSystem.in_directory(current_directory, 'django', 'dill')
 def test_model_existence_check():
     'Model existence is checked through Lettuce steps'
 
