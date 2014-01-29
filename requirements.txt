@@ -16,3 +16,4 @@ tornado==2.3
 tox==1.4.2
 markment==0.1.6
 steadymark==0.4.5
+testtools==0.9.34
