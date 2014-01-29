@@ -1258,11 +1258,8 @@ class ScenarioResult(object):
 
 
 class TotalResult(object):
-<<<<<<< HEAD
-    def __init__(self, feature_results):
-=======
+
     def __init__(self, feature_results=None):
->>>>>>> c33abde... Merge remote-tracking branch 'upstream/master'
         self.feature_results = feature_results
         self.scenario_results = []
         self.steps_passed = 0
