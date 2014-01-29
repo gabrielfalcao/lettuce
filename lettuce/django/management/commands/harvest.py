@@ -100,9 +100,6 @@ class Command(BaseCommand):
         make_option("--pdb", dest="auto_pdb", default=False,
                     action="store_true", help='Launches an interactive debugger upon error'),
 
-        make_option("--harvest-summary", dest="summary_display", default=False,
-                    action="store_true", help='Displays the summary after executing a batch of '
-                                              'django apps')
     )
 
     def stopserver(self, failed=False):
@@ -204,12 +201,9 @@ class Command(BaseCommand):
             traceback.print_exc(e)
 
         finally:
-            if with_summary:
-                summary = SummaryTotalResults(results)
-                summary.summarize_all()
-                registry.call_hook('after', 'harvest', summary)
-            else:
-                registry.call_hook('after', 'harvest')
+            summary = SummaryTotalResults(results)
+            summary.summarize_all()
+            registry.call_hook('after', 'harvest', summary)
 
             if test_database:
                 self._testrunner.teardown_databases(self._old_db_config)

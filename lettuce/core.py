@@ -1322,13 +1322,29 @@ class SummaryTotalResults(TotalResult):
         """
         super(SummaryTotalResults, self).__init__()
         self.total_results = total_results
+        self.features_ran_overall = 0
+        self.features_passed_overall = 0
 
+
+    def __len__(self):
+        """ Overloaded len() to be able to use with tests
+
+        """
+        return len(self.total_results)
+
+    def __getitem__(self, item):
+        """ Needed for tests.
+
+        """
+        return self.total_results[item]
 
     def summarize_all(self):
         """Outputs the aggregated results for the TotalResult list
 
         """
         for partial_result in self.total_results:
+            self.features_ran_overall += len(partial_result.feature_results)
+            self.features_passed_overall += len([feat for feat in partial_result.feature_results if feat.passed])
             self.feature_results = partial_result.feature_results
             for feature_result in self.feature_results:
                 for scenario_result in feature_result.scenario_results:
