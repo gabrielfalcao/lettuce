@@ -194,6 +194,7 @@ class Runner(object):
 
         finally:
             total = TotalResult(results)
+            total.output_format()
             call_hook('after', 'all', total)
 
             if failed:

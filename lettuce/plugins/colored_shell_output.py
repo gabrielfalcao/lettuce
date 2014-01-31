@@ -192,22 +192,38 @@ def print_feature_running(feature):
         line = wrap_file_and_line(line, '\033[1;30m', '\033[0m')
         write_out("\033[1;37m%s\n" % line)
 
-
+@after.harvest
 @after.all
-def print_end(total):
+def print_end(total=None):
+    if total is None:
+        return
     write_out("\n")
+    if isinstance(total, core.SummaryTotalResults):
+        word = total.features_ran_overall > 1 and "features" or "feature"
 
-    word = total.features_ran > 1 and "features" or "feature"
+        color = "\033[1;32m"
+        if total.features_passed_overall is 0:
+            color = "\033[0;31m"
 
-    color = "\033[1;32m"
-    if total.features_passed is 0:
-        color = "\033[0;31m"
+        write_out("\033[1;37mTest Suite Summary:\n")
+        write_out("\033[1;37m%d %s (%s%d passed\033[1;37m)\033[0m\n" % (
+            total.features_ran_overall,
+            word,
+            color,
+            total.features_passed_overall))
 
-    write_out("\033[1;37m%d %s (%s%d passed\033[1;37m)\033[0m\n" % (
-        total.features_ran,
-        word,
-        color,
-        total.features_passed))
+    else:
+        word = total.features_ran > 1 and "features" or "feature"
+
+        color = "\033[1;32m"
+        if total.features_passed is 0:
+            color = "\033[0;31m"
+
+        write_out("\033[1;37m%d %s (%s%d passed\033[1;37m)\033[0m\n" % (
+            total.features_ran,
+            word,
+            color,
+            total.features_passed))
 
     color = "\033[1;32m"
     if total.scenarios_passed is 0:

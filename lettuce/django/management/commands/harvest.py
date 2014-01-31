@@ -25,6 +25,7 @@ from django.test.utils import teardown_test_environment
 
 from lettuce import Runner
 from lettuce import registry
+from lettuce.core import SummaryTotalResults
 
 from lettuce.django import harvest_lettuces, get_server
 from lettuce.django.server import LettuceServerException
@@ -98,6 +99,7 @@ class Command(BaseCommand):
 
         make_option("--pdb", dest="auto_pdb", default=False,
                     action="store_true", help='Launches an interactive debugger upon error'),
+
     )
 
     def stopserver(self, failed=False):
@@ -128,6 +130,7 @@ class Command(BaseCommand):
         tags = options.get('tags', None)
         failfast = options.get('failfast', False)
         auto_pdb = options.get('auto_pdb', False)
+        with_summary = options.get('summary_display', False)
 
         if test_database:
             migrate_south = getattr(settings, "SOUTH_TESTS_MIGRATE", True)
@@ -198,7 +201,9 @@ class Command(BaseCommand):
             traceback.print_exc(e)
 
         finally:
-            registry.call_hook('after', 'harvest', results)
+            summary = SummaryTotalResults(results)
+            summary.summarize_all()
+            registry.call_hook('after', 'harvest', summary)
 
             if test_database:
                 self._testrunner.teardown_databases(self._old_db_config)
