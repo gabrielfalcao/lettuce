@@ -346,9 +346,6 @@ class Step(object):
         return u'<Step: "%s">' % self.sentence
 
     def __repr__(self):
-        return u'<Step: "%s">' % self.sentence
-
-    def __repr__(self):
         return unicode(self).encode('utf-8')
 
     def _parse_remaining_lines(self, lines):
