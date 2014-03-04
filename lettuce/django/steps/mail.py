@@ -1,6 +1,7 @@
 """
 Step definitions for working with Django email.
 """
+from smtplib import SMTPException
 
 from django.core import mail
 
