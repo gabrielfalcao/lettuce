@@ -1,6 +1,7 @@
 """
 Step definitions for working with Django email.
 """
+from smtplib import SMTPException
 
 from django.core import mail
 
@@ -66,7 +67,7 @@ def broken_send(*args, **kwargs):
     """
     Broken send function for email_broken step
     """
-    raise SMTPException()
+    raise SMTPException("Failure mocked by lettuce")
 
 
 @step(STEP_PREFIX + r'sending email does not work')
