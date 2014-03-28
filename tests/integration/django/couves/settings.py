@@ -15,3 +15,4 @@ INSTALLED_APPS = (
     'lettuce.django',
     'leaves',
 )
+SECRET_KEY = 'secret'

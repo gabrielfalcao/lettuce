@@ -41,6 +41,17 @@ Feature: Before and After callbacks all along lettuce
 '''
 
 
+FEATURE3 = '''
+Feature: Before and After callbacks all along lettuce
+    @tag1
+    Scenario: Before and After scenarios
+        Given I append "during" to states
+
+    @tag2
+    Scenario: Again
+        Given I append "during" to states
+'''
+
 def test_world():
     "lettuce.terrain.world can be monkey patched at will"
 
@@ -138,6 +149,24 @@ def test_after_each_feature_is_executed_before_each_feature():
     )
 
 
+def test_feature_hooks_not_invoked_if_no_scenarios_run():
+    feature = Feature.from_string(FEATURE3)
+
+    world.feature_steps = []
+    feature.run(tags=['tag1'])
+    assert_equals(
+        world.feature_steps,
+        ['before', 'during', 'after']
+    )
+
+    world.feature_steps = []
+    feature.run(tags=['tag3'])
+    assert_equals(
+        world.feature_steps,
+        []
+    )
+
+
 def test_after_each_all_is_executed_before_each_all():
     "terrain.before.each_all and terrain.after.each_all decorators"
     import lettuce
@@ -157,8 +186,8 @@ def test_after_each_all_is_executed_before_each_all():
     lettuce.sys.path.insert(0, 'some_basepath')
     lettuce.sys.path.remove('some_basepath')
 
-    loader_mock.find_and_load_step_definitions()
     loader_mock.find_feature_files().AndReturn(['some_basepath/foo.feature'])
+    loader_mock.find_and_load_step_definitions()
     lettuce.Feature.from_file('some_basepath/foo.feature'). \
         AndReturn(Feature.from_string(FEATURE2))
 

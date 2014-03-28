@@ -48,7 +48,9 @@ def wp(l):
         l = l.replace(" |", "\033[1;37m |\033[0;31m")
     if l.startswith("\033[1;30m"):
         l = l.replace(" |", "\033[1;37m |\033[1;30m")
-
+    if l.startswith("\033[1;31m"):
+        l = l.replace(" |", "\033[1;37m |\033[0;31m")  
+  
     return l
 
 
@@ -58,7 +60,7 @@ def write_out(what):
 
 @before.each_step
 def print_step_running(step):
-    if not step.defined_at:
+    if not step.defined_at or not step.display:
         return
 
     color = '\033[1;30m'
@@ -76,6 +78,8 @@ def print_step_running(step):
 
 @after.each_step
 def print_step_ran(step):
+    if not step.display:
+        return
     if step.scenario and step.scenario.outlines and (step.failed or step.passed or step.defined_at):
         return
 
@@ -155,14 +159,18 @@ def print_outline(scenario, order, outline, reasons_to_fail):
 
     wline = lambda x: write_out("\033[0;36m%s%s\033[0m\n" % (" " * scenario.table_indentation, x))
     wline_success = lambda x: write_out("\033[1;32m%s%s\033[0m\n" % (" " * scenario.table_indentation, x))
-    wline_red = lambda x: wrt("%s%s" % (" " * scenario.table_indentation, x))
+    wline_red_outline = lambda x: write_out("\033[1;31m%s%s\033[0m\n" % (" " * scenario.table_indentation, x))
+    wline_red = lambda x: write_out("%s%s" % (" " * scenario.table_indentation, x))
     if order is 0:
         wrt("\n")
         wrt("\033[1;37m%s%s:\033[0m\n" % (" " * scenario.indentation, scenario.language.first_of_examples))
         wline(head)
 
     line = lines[order]
-    wline_success(line)
+    if reasons_to_fail:
+        wline_red_outline(line)
+    else:
+        wline_success(line)
     if reasons_to_fail:
         elines = reasons_to_fail[0].traceback.splitlines()
         wrt("\033[1;31m")
@@ -184,22 +192,38 @@ def print_feature_running(feature):
         line = wrap_file_and_line(line, '\033[1;30m', '\033[0m')
         write_out("\033[1;37m%s\n" % line)
 
-
+@after.harvest
 @after.all
-def print_end(total):
+def print_end(total=None):
+    if total is None:
+        return
     write_out("\n")
+    if isinstance(total, core.SummaryTotalResults):
+        word = total.features_ran_overall > 1 and "features" or "feature"
 
-    word = total.features_ran > 1 and "features" or "feature"
+        color = "\033[1;32m"
+        if total.features_passed_overall is 0:
+            color = "\033[0;31m"
 
-    color = "\033[1;32m"
-    if total.features_passed is 0:
-        color = "\033[0;31m"
+        write_out("\033[1;37mTest Suite Summary:\n")
+        write_out("\033[1;37m%d %s (%s%d passed\033[1;37m)\033[0m\n" % (
+            total.features_ran_overall,
+            word,
+            color,
+            total.features_passed_overall))
 
-    write_out("\033[1;37m%d %s (%s%d passed\033[1;37m)\033[0m\n" % (
-        total.features_ran,
-        word,
-        color,
-        total.features_passed))
+    else:
+        word = total.features_ran > 1 and "features" or "feature"
+
+        color = "\033[1;32m"
+        if total.features_passed is 0:
+            color = "\033[0;31m"
+
+        write_out("\033[1;37m%d %s (%s%d passed\033[1;37m)\033[0m\n" % (
+            total.features_ran,
+            word,
+            color,
+            total.features_passed))
 
     color = "\033[1;32m"
     if total.scenarios_passed is 0:
@@ -250,6 +274,17 @@ def print_end(total):
                 wrt("\033[0m")
 
             wrt("\n")
+
+    if total.failed_scenario_locations:
+        # print list of failed scenarios, with their file and line number
+        wrt("\n")
+        wrt("\033[1;31m")
+        wrt("List of failed scenarios:\n")
+        wrt("\033[0;31m")
+        for scenario in total.failed_scenario_locations:
+            wrt(scenario)
+        wrt("\033[0m")
+        wrt("\n")
 
 
 def print_no_features_found(where):

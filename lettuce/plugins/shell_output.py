@@ -32,6 +32,9 @@ def wrt(what):
 
 @after.each_step
 def print_step_running(step):
+    if not step.display:
+        return
+
     wrt(step.represent_string(step.original_sentence).rstrip())
     if not step.defined_at:
         wrt(" (undefined)")
@@ -102,15 +105,23 @@ def print_feature_running(feature):
     wrt("\n")
     wrt(feature.represented())
 
-
+@after.harvest
 @after.all
-def print_end(total):
+def print_end(total=None):
     wrt("\n")
-    word = total.features_ran > 1 and "features" or "feature"
-    wrt("%d %s (%d passed)\n" % (
-        total.features_ran,
-        word,
-        total.features_passed))
+    if isinstance(total, core.SummaryTotalResults):
+        wrt("Test Suite Summary:\n")
+        word = total.features_ran_overall > 1 and "features" or "feature"
+        wrt("%d %s (%d passed)\n" % (
+            total.features_ran_overall,
+            word,
+            total.features_passed_overall))
+    else:
+        word = total.features_ran > 1 and "features" or "feature"
+        wrt("%d %s (%d passed)\n" % (
+            total.features_ran,
+            word,
+            total.features_passed))
 
     word = total.scenarios_ran > 1 and "scenarios" or "scenario"
     wrt("%d %s (%d passed)\n" % (
@@ -142,6 +153,13 @@ def print_end(total):
             wrt("def %s:\n" % method_name)
             wrt("    assert False, 'This step must be implemented'\n")
 
+
+    if total.failed_scenario_locations:
+        # print list of failed scenarios, with their file and line number
+        wrt("\nList of failed scenarios:\n")
+        for scenario in total.failed_scenario_locations:
+            wrt(scenario)
+        wrt("\n")
 
 def print_no_features_found(where):
     where = core.fs.relpath(where)

@@ -64,6 +64,19 @@ Examples:
     | 2 | 4 |
 """
 
+OUTLINED_SCENARIO_WITH_SUBSTITUTIONS_IN_MULTILINE = '''
+Scenario Outline: Parsing HTML
+    When I parse the HTML:
+        """
+        <div><v></div>
+        """
+    I should see "outline value"
+
+Examples:
+    | v             |
+    | outline value |
+'''
+
 OUTLINED_FEATURE = """
     Feature: Do many things at once
         In order to automate tests
@@ -325,6 +338,16 @@ def test_scenario_tables_are_solved_against_outlines():
     for step, expected_hashes in zip(scenario.solved_steps, expected_hashes_per_step):
         assert_equals(type(step), Step)
         assert_equals(step.hashes, expected_hashes)
+
+def test_scenario_tables_are_solved_against_outlines():
+    "Outline substitution should apply to multiline strings within a scenario"
+    expected_multiline = '<div>outline value</div>'
+
+    scenario = Scenario.from_string(OUTLINED_SCENARIO_WITH_SUBSTITUTIONS_IN_MULTILINE)
+    step = scenario.solved_steps[0]
+    
+    assert_equals(type(step), Step)
+    assert_equals(step.multiline, expected_multiline)
 
 def test_solved_steps_also_have_scenario_as_attribute():
     "Steps solved in scenario outlines also have scenario as attribute"

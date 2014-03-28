@@ -24,8 +24,6 @@ def utf8_string(s):
     if isinstance(s, str):
         s = s.decode("utf-8")
 
-    elif isinstance(s, unicode):
-        s = s.encode("utf-8")
     return s
 
 
@@ -38,12 +36,16 @@ def escape_if_necessary(what):
 
 
 def get_stripped_lines(string, ignore_lines_starting_with=''):
+    """Split lines at newline char, then return the array of stripped lines"""
+    # used e.g. to separate out all the steps in a scenario
     string = unicode(string)
     lines = [unicode(l.strip()) for l in string.splitlines()]
     if ignore_lines_starting_with:
         filter_func = lambda x: x and not x.startswith(
             ignore_lines_starting_with)
     else:
+        # by using an "identity" filter function, blank lines
+        # will not be included in the returned list
         filter_func = lambda x: x
 
     lines = filter(filter_func, lines)
@@ -105,6 +107,9 @@ def getlen(string):
 
 
 def dicts_to_string(dicts, order):
+    '''
+    Makes dictionary ready for comparison to strings
+    '''
     escape = "#{%s}" % unicode(time.time())
 
     def enline(line):
@@ -141,7 +146,7 @@ def dicts_to_string(dicts, order):
     return deline(u"\n".join(table) + u"\n")
 
 
-def parse_hashes(lines):
+def parse_hashes(lines, json_format=None):
     escape = "#{%s}" % unicode(time.time())
 
     def enline(line):
@@ -169,6 +174,90 @@ def parse_hashes(lines):
             hashes.append(dict(zip(keys, values)))
 
     return keys, hashes
+
+def json_to_string(json_list, order):
+    '''
+    This is for aesthetic reasons, it will get the width of the largest column and
+    rfill the rest with spaces
+    '''
+    escape = "#{%s}" % unicode(time.time())
+
+    def enline(line):
+        return unicode(line).replace("|", escape)
+
+    def deline(line):
+        return line.replace(escape, '\\|')
+
+    nu_keys_and_sizes = list([[k.keys()[0], getlen(k.keys()[0])] for k in json_list])
+    maxlen = 0
+    for key_list in nu_keys_and_sizes:
+        current_size = key_list[1]
+        counter = 0
+        temp_list = json_list[counter].values()[0]
+        temp_maxlen = len(temp_list)
+        if temp_maxlen > maxlen:
+            maxlen = temp_maxlen
+        for data in temp_list:
+            value = unicode(data)
+            size = getlen(value)
+            if size > current_size:
+                key_list[1] = size
+        counter += 1
+    names = []
+    idx = 0
+    for key in nu_keys_and_sizes:
+        size = key[1]
+        name = u" %s" % rfill(key[0], size)
+        names.append(enline(name))
+
+    table = [u"|%s|" % "|".join(names)]
+
+    for idx in xrange(maxlen):
+        names = []
+        for data, key in zip(json_list, nu_keys_and_sizes):
+            try:
+                value = data.values()[0][idx]
+            except IndexError:
+                value = ''
+            size = key[1]
+            names.append(enline(u" %s" % rfill(value, size)))
+        table.append(u"|%s|" % "|".join(names))
+
+    return deline(u"\n".join(table) + u"\n")
+
+
+def parse_as_json(lines):
+    '''
+        Parse lines into json objects
+    '''
+    escape = "#{%s}" % unicode(time.time())
+    def enline(line):
+        return unicode(line.replace("\\|", escape)).strip()
+
+    def deline(line):
+        return line.replace(escape, '|')
+
+    def discard_comments(lines):
+        return [line for line in lines if not line.startswith('#')]
+    lines = discard_comments(lines)
+    lines = map(enline, lines)
+    non_unique_keys = []
+    json_map = []
+    if lines:
+        first_line = lines.pop(0)
+        non_unique_keys = split_wisely(first_line, u"|", True)
+        non_unique_keys = map(deline, non_unique_keys)
+        rng_idx = len(non_unique_keys)
+        json_map = list(non_unique_keys)
+        for idx in xrange(rng_idx):
+            json_map[idx] = dict([(non_unique_keys[idx], [])])
+        for line in lines:
+            values = split_wisely(line, u"|", True)
+            values = map(deline, values)
+
+            for idx in xrange(rng_idx):
+                json_map[idx].values()[0].append(values[idx])
+    return non_unique_keys, json_map
 
 
 def parse_multiline(lines):

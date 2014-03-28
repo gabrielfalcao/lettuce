@@ -29,7 +29,7 @@ def get_packages():
 
     return packages
 
-required_modules = ['sure', 'fuzzywuzzy']
+required_modules = ['sure', 'fuzzywuzzy', 'python-subunit']
 
 if sys.version_info[:2] < (2, 6):
     required_modules.append('multiprocessing')

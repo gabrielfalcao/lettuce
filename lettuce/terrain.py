@@ -53,6 +53,7 @@ class Main(object):
 for name, where, when in (
         ('all', 'all', '%(0)s'),
         ('each_step', 'step', '%(0)s_each'),
+        ('step_output', 'step',  '%(0)s_output'),
         ('each_scenario', 'scenario', '%(0)s_each'),
         ('each_background', 'background', '%(0)s_each'),
         ('each_feature', 'feature', '%(0)s_each'),

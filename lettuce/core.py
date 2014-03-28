@@ -174,7 +174,9 @@ class ScenarioDescription(object):
 
         for pline, part in enumerate(string.splitlines()):
             part = part.strip()
-            if re.match(u"%s:[ ]+" % language.scenario_separator + re.escape(scenario.name), part):
+            # for performance reasons, avoid using the regex on all lines:
+            # first check if the scenario name is present, and use regex to verify this is the scenario definition
+            if (scenario.name in part) and re.match(u"%s:[ ]+" % language.scenario_separator + re.escape(scenario.name), part):
                 self.line = pline + 1
                 break
 
@@ -216,15 +218,19 @@ class Step(object):
     related_outline = None
     scenario = None
     background = None
+    display = True
+    columns = None
+    matrix = None
 
     def __init__(self, sentence, remaining_lines, line=None, filename=None):
         self.sentence = sentence
         self.original_sentence = sentence
         self._remaining_lines = remaining_lines
-        keys, hashes, self.multiline = self._parse_remaining_lines(remaining_lines)
-
+        keys, hashes, self.multiline, columns, nukeys = self._parse_remaining_lines(remaining_lines)
         self.keys = tuple(keys)
+        self.non_unique_keys = nukeys
         self.hashes = HashList(self, hashes)
+        self.columns = columns
         self.described_at = StepDescription(line, filename)
         self.proposed_method_name, self.proposed_sentence = self.propose_definition()
 
@@ -255,8 +261,9 @@ class Step(object):
 
         return method_name, sentence
 
-    def solve_and_clone(self, data):
+    def solve_and_clone(self, data, display_step):
         sentence = self.sentence
+        multiline = self.multiline
         hashes = self.hashes[:]  # deep copy
         for k, v in data.items():
 
@@ -270,11 +277,14 @@ class Step(object):
                 return new_row
 
             sentence = evaluate(sentence)
+            multiline = evaluate(multiline)
             hashes = map(evaluate_hash_value, hashes)
 
         new = deepcopy(self)
         new.sentence = sentence
+        new.multiline = multiline
         new.hashes = hashes
+        new.display = display_step
         return new
 
     def _calc_list_length(self, lst):
@@ -328,13 +338,22 @@ class Step(object):
         lines = strings.dicts_to_string(self.hashes, self.keys).splitlines()
         return u"\n".join([(u" " * self.table_indentation) + line for line in lines]) + "\n"
 
-    def __repr__(self):
+    def represent_columns(self):
+        lines = strings.json_to_string(self.columns, self.non_unique_keys).splitlines()
+        return u"\n".join([(u" " * self.table_indentation) + line for line in lines]) + "\n"
+
+    def __unicode__(self):
         return u'<Step: "%s">' % self.sentence
+
+    def __repr__(self):
+        return unicode(self).encode('utf-8')
 
     def _parse_remaining_lines(self, lines):
         multiline = strings.parse_multiline(lines)
         keys, hashes = strings.parse_hashes(lines)
-        return keys, hashes, multiline
+        non_unique_keys, columns = strings.parse_as_json(lines)
+        return keys, hashes, multiline, columns, non_unique_keys
+
 
     def _get_match(self, ignore_case):
         matched, func = None, lambda: None
@@ -393,7 +412,7 @@ class Step(object):
             for step in steps:
                 step.scenario = self.scenario
 
-        (_, _, steps_failed, steps_undefined, _) = self.run_all(steps)
+        (_, _, steps_failed, steps_undefined) = self.run_all(steps)
         if not steps_failed and not steps_undefined:
             self.passed = True
             self.failed = False
@@ -426,7 +445,7 @@ class Step(object):
         return line
 
     @staticmethod
-    def run_all(steps, outline=None, run_callbacks=False, ignore_case=True, failfast=False):
+    def run_all(steps, outline=None, run_callbacks=False, ignore_case=True, failfast=False, display_steps=True, reasons_to_fail=None):
         """Runs each step in the given list of steps.
 
         Returns a tuple of five lists:
@@ -441,17 +460,20 @@ class Step(object):
         steps_passed = []
         steps_failed = []
         steps_undefined = []
-        reasons_to_fail = []
+        if reasons_to_fail is None:
+            reasons_to_fail = []
 
         for step in steps:
             if outline:
-                step = step.solve_and_clone(outline)
+                step = step.solve_and_clone(outline, display_steps)
 
             try:
                 step.pre_run(ignore_case, with_outline=outline)
 
                 if run_callbacks:
                     call_hook('before_each', 'step', step)
+
+                call_hook('before_output', 'step', step)
 
                 if not steps_failed and not steps_undefined:
                     step.run(ignore_case)
@@ -461,17 +483,20 @@ class Step(object):
                 steps_undefined.append(e.step)
 
             except Exception, e:
-                if failfast:
-                    raise
                 steps_failed.append(step)
                 reasons_to_fail.append(step.why)
+                if failfast:
+                    raise
 
             finally:
                 all_steps.append(step)
+
+                call_hook('after_output', 'step', step)
+
                 if run_callbacks:
                     call_hook('after_each', 'step', step)
 
-        return (all_steps, steps_passed, steps_failed, steps_undefined, reasons_to_fail)
+        return (all_steps, steps_passed, steps_failed, steps_undefined)
 
     @classmethod
     def many_from_lines(klass, lines, filename=None, original_string=None):
@@ -494,7 +519,7 @@ class Step(object):
                 invalid_first_line_error % (lines[0], 'multiline'))
 
         # Select only lines that aren't end-to-end whitespace and aren't tags
-        # Tags could be inclueed as steps if the first scenario following a background is tagged
+        # Tags could be included as steps if the first scenario following a background is tagged
         # This then causes the test to fail, because lettuce looks for the step's definition (which doesn't exist)
         lines = filter(lambda x: not (REP.only_whitespace.match(x) or re.match(r'^\s*@', x)), lines)
 
@@ -612,8 +637,11 @@ class Scenario(object):
     def _calc_value_length(self, data):
         return self._calc_list_length(data.values())
 
-    def __repr__(self):
+    def __unicode__(self):
         return u'<Scenario: "%s">' % self.name
+
+    def __repr__(self):
+        return unicode(self).encode('utf-8')
 
     def matches_tags(self, tags):
         if tags is None:
@@ -662,10 +690,10 @@ class Scenario(object):
 
     @property
     def evaluated(self):
-        for outline in self.outlines:
+        for outline_idx, outline in enumerate(self.outlines):
             steps = []
             for step in self.steps:
-                new_step = step.solve_and_clone(outline)
+                new_step = step.solve_and_clone(outline, display_step=(outline_idx == 0))
                 new_step.original_sentence = step.sentence
                 new_step.scenario = self
                 steps.append(new_step)
@@ -696,18 +724,18 @@ class Scenario(object):
                 if self.background:
                     self.background.run(ignore_case)
 
-                all_steps, steps_passed, steps_failed, steps_undefined, reasons_to_fail = Step.run_all(self.steps, outline, run_callbacks, ignore_case, failfast=failfast)
+                reasons_to_fail = []
+                all_steps, steps_passed, steps_failed, steps_undefined = Step.run_all(self.steps, outline, run_callbacks, ignore_case, failfast=failfast, display_steps=(order < 1), reasons_to_fail=reasons_to_fail)
             except:
-                if failfast:
-                    call_hook('after_each', 'scenario', self)
+                call_hook('after_each', 'scenario', self)
                 raise
+            finally:
+                if outline:
+                    call_hook('outline', 'scenario', self, order, outline,
+                            reasons_to_fail)
 
             skip = lambda x: x not in steps_passed and x not in steps_undefined and x not in steps_failed
-
             steps_skipped = filter(skip, all_steps)
-            if outline:
-                call_hook('outline', 'scenario', self, order, outline,
-                        reasons_to_fail)
 
             return ScenarioResult(
                 self,
@@ -718,10 +746,8 @@ class Scenario(object):
             )
 
         if self.outlines:
-            first = True
             for index, outline in enumerate(self.outlines):
-                results.append(run_scenario(self, index, outline, run_callbacks=first))
-                first = False
+                results.append(run_scenario(self, index, outline, run_callbacks=True))
         else:
             results.append(run_scenario(self, run_callbacks=True))
 
@@ -736,9 +762,9 @@ class Scenario(object):
             step.scenario = self
 
     def _resolve_steps(self, steps, outlines, with_file, original_string):
-        for outline in outlines:
+        for outline_idx, outline in enumerate(outlines):
             for step in steps:
-                yield step.solve_and_clone(outline)
+                yield step.solve_and_clone(outline, display_step=(outline_idx == 0))
 
     def _parse_remaining_lines(self, lines, with_file, original_string):
         invalid_first_line_error = '\nInvalid step on scenario "%s".\n' \
@@ -987,8 +1013,11 @@ class Feature(object):
         found = regex.findall(item)
         return found
 
-    def __repr__(self):
+    def __unicode__(self):
         return u'<%s: "%s">' % (self.language.first_of_feature, self.name)
+
+    def __repr__(self):
+        return unicode(self).encode('utf-8')
 
     def get_head(self):
         return u"%s: %s" % (self.language.first_of_feature, self.name)
@@ -1163,31 +1192,31 @@ class Feature(object):
         return background, scenarios, description
 
     def run(self, scenarios=None, ignore_case=True, tags=None, random=False, failfast=False):
-        call_hook('before_each', 'feature', self)
         scenarios_ran = []
 
         if random:
             shuffle(self.scenarios)
 
+        scenario_nums_to_run = None
         if isinstance(scenarios, (tuple, list)):
             if all(map(lambda x: isinstance(x, int), scenarios)):
-                scenarios_to_run = scenarios
-        else:
-            scenarios_to_run = range(1, len(self.scenarios) + 1)
+                scenario_nums_to_run = scenarios
 
+        def should_run_scenario(num, scenario):
+            return scenario.matches_tags(tags) and \
+                   (scenario_nums_to_run is None or num in scenario_nums_to_run)
+        scenarios_to_run = [scenario for num, scenario in enumerate(self.scenarios, start=1)
+                                     if should_run_scenario(num, scenario)]
+        # If no scenarios in this feature will run, don't run the feature hooks.
+        if not scenarios_to_run:
+            return FeatureResult(self)
+
+        call_hook('before_each', 'feature', self)
         try:
-            for index, scenario in enumerate(self.scenarios):
-                if scenarios_to_run and (index + 1) not in scenarios_to_run:
-                    continue
-
-                if not scenario.matches_tags(tags):
-                    continue
-
+            for scenario in scenarios_to_run:
                 scenarios_ran.extend(scenario.run(ignore_case, failfast=failfast))
         except:
-            if failfast:
-                call_hook('after_each', 'feature', self)
-
+            call_hook('after_each', 'feature', self)
             raise
         else:
             call_hook('after_each', 'feature', self)
@@ -1226,7 +1255,8 @@ class ScenarioResult(object):
 
 
 class TotalResult(object):
-    def __init__(self, feature_results):
+
+    def __init__(self, feature_results=None):
         self.feature_results = feature_results
         self.scenario_results = []
         self.steps_passed = 0
@@ -1235,6 +1265,10 @@ class TotalResult(object):
         self.steps_undefined = 0
         self._proposed_definitions = []
         self.steps = 0
+        # store the scenario names that failed, with their location
+        self.failed_scenario_locations = []
+
+    def output_format(self):
         for feature_result in self.feature_results:
             for scenario_result in feature_result.scenario_results:
                 self.scenario_results.append(scenario_result)
@@ -1244,6 +1278,8 @@ class TotalResult(object):
                 self.steps_undefined += len(scenario_result.steps_undefined)
                 self.steps += scenario_result.total_steps
                 self._proposed_definitions.extend(scenario_result.steps_undefined)
+                if len(scenario_result.steps_failed) > 0:
+                    self.failed_scenario_locations.append(scenario_result.scenario.represented())
 
     def _filter_proposed_definitions(self):
         sentences = []
@@ -1271,3 +1307,51 @@ class TotalResult(object):
     @property
     def scenarios_passed(self):
         return len([result for result in self.scenario_results if result.passed])
+
+
+
+class SummaryTotalResults(TotalResult):
+
+    def __init__(self, total_results):
+        """Aggregates results per total results into a summary
+        @params: list of total result objects
+
+        """
+        super(SummaryTotalResults, self).__init__()
+        self.total_results = total_results
+        self.features_ran_overall = 0
+        self.features_passed_overall = 0
+
+
+    def __len__(self):
+        """ Overloaded len() to be able to use with tests
+
+        """
+        return len(self.total_results)
+
+    def __getitem__(self, item):
+        """ Needed for tests.
+
+        """
+        return self.total_results[item]
+
+    def summarize_all(self):
+        """Outputs the aggregated results for the TotalResult list
+
+        """
+        for partial_result in self.total_results:
+            self.features_ran_overall += len(partial_result.feature_results)
+            self.features_passed_overall += len([feat for feat in partial_result.feature_results if feat.passed])
+            self.feature_results = partial_result.feature_results
+            for feature_result in self.feature_results:
+                for scenario_result in feature_result.scenario_results:
+                    self.scenario_results.append(scenario_result)
+                    self.steps_passed += len(scenario_result.steps_passed)
+                    self.steps_failed += len(scenario_result.steps_failed)
+                    self.steps_skipped += len(scenario_result.steps_skipped)
+                    self.steps_undefined += len(scenario_result.steps_undefined)
+                    self.steps += scenario_result.total_steps
+                    self._proposed_definitions.extend(scenario_result.steps_undefined)
+                    if len(scenario_result.steps_failed) > 0:
+                        self.failed_scenario_locations.append(scenario_result.scenario.represented())
+

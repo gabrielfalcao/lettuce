@@ -215,6 +215,40 @@ Example:
     python manage.py harvest --no-server
     python manage.py harvest -S
 
+Notice that if you have tests with some email checks they wont pass because
+email queue should be in the same process with django server. To bypass this
+limitation you can use --smtp-queue option.
+
+Example:
+
+Define lettuce smtp server host & port in `settings.py` :
+
+    LETTUCE_SMTP_QUEUE_HOST
+    LETTUCE_SMTP_QUEUE_PORT
+
+This is where lettuce smtp server will be listen to for incoming email messages.
+
+Configure django application smtp settings accordingly for sending emails
+to lettuce smtp server:
+
+    EMAIL_HOST  # = LETTUCE_SMTP_QUEUE_HOST
+    EMAIL_PORT  # = LETTUCE_SMTP_QUEUE_PORT
+    EMAIL_HOST_USER = None
+    EMAIL_HOST_PASSWORD = None
+
+Configured this way django application will send email messages to lettuce email queue.
+
+Run django application
+
+Run lettuce
+
+    ./manage.py harvest --no-server --smtp-queue
+
+Notice that this plugin use `lettuce.django.email.queue` , but as it parse incoming
+smtp emails to django `EmailMessage`, there can be some differences
+in emails (emails usually won't be fully equal in all headers, attachments, etc,
+but it works ok for simple cases like checking body and common headers).
+
 ### running the HTTP server in other port than 8000
 
 If you face the problem of having lettuce running on port 8000, you can

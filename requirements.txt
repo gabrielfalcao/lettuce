@@ -1,4 +1,4 @@
-Django==1.4.1
+Django==1.5.5
 Jinja2==2.6
 Pygments==1.5
 Sphinx==1.1.3
@@ -10,8 +10,10 @@ lxml
 mock==1.0b1
 mox==0.5.3
 nose==1.1.2
+python-subunit==0.0.13
 sure==1.1.7
 tornado==2.3
 tox==1.4.2
 markment==0.1.6
 steadymark==0.4.5
+testtools==0.9.34

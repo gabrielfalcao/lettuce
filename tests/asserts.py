@@ -21,6 +21,8 @@ from nose.tools import assert_equals, assert_not_equals
 from lettuce import registry
 from difflib import Differ
 
+
+
 def prepare_stdout():
     registry.clear()
     if isinstance(sys.stdout, StringIO):
@@ -90,7 +92,7 @@ def assert_lines_with_traceback(one, other):
 def assert_unicode_equals(original, expected):
     if isinstance(original, basestring):
         original = original.decode('utf-8')
-
+    assert_equals.im_class.maxDiff = None
     assert_equals(original, expected)
 
 def assert_stderr(expected):

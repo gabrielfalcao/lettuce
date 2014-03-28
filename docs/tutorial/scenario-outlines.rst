@@ -44,4 +44,11 @@ reducing "copy & paste" work and making your tests more clear.
    step [e], you'll see your description expanding to the five
    previous scenarios:
 
+.. Note::
+
+   When using XML, your tags may have the same name as an outline substitution.
+   If you need to call an outline substitution variable a similar name (eg
+   ```<head>```), maybe think about calling it something like ```<_head>```
+   instead.
+
 .. image:: ./screenshot7.png
