@@ -49,6 +49,9 @@ class Command(BaseCommand):
 
         make_option('-S', '--no-server', action='store_true', dest='no_server', default=False,
             help="will not run django's builtin HTTP server"),
+            
+        make_option('--nothreading', action='store_false', dest='use_threading', default=True,
+            help='Tells Django to NOT use threading.'),
 
         make_option('-T', '--test-server', action='store_true', dest='test_database',
             default=getattr(settings, "LETTUCE_USE_TEST_DATABASE", False),
@@ -130,6 +133,7 @@ class Command(BaseCommand):
         tags = options.get('tags', None)
         failfast = options.get('failfast', False)
         auto_pdb = options.get('auto_pdb', False)
+        threading = options.get('use_threading', True)
         with_summary = options.get('summary_display', False)
 
         if test_database:
@@ -153,7 +157,7 @@ class Command(BaseCommand):
         settings.DEBUG = options.get('debug', False)
 
         paths = self.get_paths(args, apps_to_run, apps_to_avoid)
-        server = get_server(port=options['port'])
+        server = get_server(port=options['port'], threading=threading)
 
         if run_server:
             try:

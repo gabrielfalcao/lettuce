@@ -30,6 +30,7 @@ from django.core.handlers.wsgi import WSGIHandler
 from django.core.servers.basehttp import WSGIServer
 from django.core.servers.basehttp import ServerHandler
 from django.core.servers.basehttp import WSGIRequestHandler
+
 try:
     from django.core.servers.basehttp import AdminMediaHandler
 except ImportError:
@@ -38,6 +39,11 @@ try:
     from django.contrib.staticfiles.handlers import StaticFilesHandler
 except ImportError:
     StaticFilesHandler = None
+
+try:
+    from django.utils.six.moves import socketserver
+except ImportError:
+    import SocketServer as socketserver
 
 try:
     import SocketServer
@@ -108,13 +114,14 @@ class ThreadedServer(multiprocessing.Process):
     """
     daemon = True
 
-    def __init__(self, address, port, mail_queue, *args, **kw):
+    def __init__(self, address, port, mail_queue, threading=True, *args, **kw):
         multiprocessing.Process.__init__(self)
         self.address = address
         self.port = port
         self.lock = multiprocessing.Lock()
         self.mail_queue = mail_queue
-
+        self.threading = threading
+        
     def configure_mail_queue(self):
         mail.queue = self.mail_queue
         settings.EMAIL_BACKEND = \
@@ -177,6 +184,11 @@ class ThreadedServer(multiprocessing.Process):
 
         connector = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+        if self.threading:
+            httpd_cls = type(str('WSGIServer'), (socketserver.ThreadingMixIn, WSGIServer), {})
+        else:
+            httpd_cls = WSGIServer
+
         try:
             s = connector.connect((self.address, self.port))
             self.lock.release()
@@ -189,7 +201,8 @@ class ThreadedServer(multiprocessing.Process):
 
         try:
             server_address = (self.address, self.port)
-            httpd = WSGIServer(server_address, MutedRequestHandler)
+            httpd = httpd_cls(server_address, MutedRequestHandler)
+
         except socket.error:
             raise LettuceServerException(
                 "the port %d already being used, could not start " \
@@ -227,9 +240,10 @@ class BaseServer(object):
     Base class for Lettuce's internal server
     """
 
-    def __init__(self, address='0.0.0.0', port=None):
+    def __init__(self, address='0.0.0.0', port=None, threading=True):
         self.port = int(port or getattr(settings, 'LETTUCE_SERVER_PORT', 8000))
         self.address = unicode(address)
+        self.threading = threading
 
     def start(self):
         """
@@ -262,7 +276,8 @@ class DefaultServer(BaseServer):
         super(DefaultServer, self).__init__(*args, **kwargs)
 
         queue = create_mail_queue()
-        self._server = ThreadedServer(self.address, self.port, queue)
+        self._server = ThreadedServer(self.address, self.port, queue, threading=self.threading)
+
 
     def start(self):
         super(DefaultServer, self).start()
