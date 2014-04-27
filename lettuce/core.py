@@ -1339,7 +1339,7 @@ class SummaryTotalResults(TotalResult):
         """Outputs the aggregated results for the TotalResult list
 
         """
-        for partial_result in self.total_results:
+        for partial_result in filter(None, self.total_results):
             self.features_ran_overall += len(partial_result.feature_results)
             self.features_passed_overall += len([feat for feat in partial_result.feature_results if feat.passed])
             self.feature_results = partial_result.feature_results
