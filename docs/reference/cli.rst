@@ -45,9 +45,9 @@ running only some scenarios of a specific feature file
 
 This will run the scenarios 3, 5 and 9 from file ``path/to/some/file.feature``
 
-*********************************************
-running only some scenarios all feature files
-*********************************************
+************************************************
+running only some scenarios of all feature files
+************************************************
 
 Maybe you can find it senseless, but it works like that, and does not hurt so far :)
 
