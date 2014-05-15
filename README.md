@@ -3,7 +3,6 @@
 
 [![Build Status](https://secure.travis-ci.org/gabrielfalcao/lettuce.png)](http://travis-ci.org/gabrielfalcao/lettuce)
 [![tip for next commit](http://tip4commit.com/projects/132.svg)](http://tip4commit.com/projects/132)
-[![Instanc.es Badge](https://instanc.es/bin/gabrielfalcao/lettuce.png)](https://instanc.es "Instanc.es")
 
 ## On release names
 
