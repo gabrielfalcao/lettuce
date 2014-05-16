@@ -145,8 +145,7 @@ LANGUAGES = {
         'scenario': u'Сценарий',
         'scenario_outline': u'Структура сценария',
         'scenario_separator': u'(Структура сценария|Сценарий)',
-        'background': u'(?:Background)',
-    },
+        'background': u'("Предыстория|Контекст")'
     'uk': {
         'examples': u'Приклади|Сценарії',
         'feature': u'Функціонал',
