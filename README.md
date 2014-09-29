@@ -24,6 +24,10 @@ Lettuce is a [BDD](http://en.wikipedia.org/wiki/Behavior_Driven_Development) too
 6. I love python, and ever did. But I also ever missed something that make writing tests easier and funnier.
 7. I like [nose](https://github.com/nose-devs/nose), which is a unittest pythonic framework. However, as the project I work on grows, so do the tests, and it becomes harder to understand them.
 
+# Documentation
+
+See full documentation on [http://lettuce.it/](http://lettuce.it/)
+
 # Dependencies
 
 **you will need to install these dependencies in order to** *hack* **lettuce** :)
