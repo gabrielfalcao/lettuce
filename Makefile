@@ -1,4 +1,4 @@
-all: check_dependencies unit functional integration doctest
+all: check_dependencies unit functional doctest
 
 filename=lettuce-`python -c 'import lettuce;print lettuce.version'`.tar.gz
 
