@@ -237,13 +237,13 @@ def print_end(total=None):
         total.scenarios_passed))
 
     steps_details = []
-    kinds_and_colors = {
-        'failed': '\033[0;31m',
-        'skipped': '\033[0;36m',
-        'undefined': '\033[0;33m'
-    }
+    kinds_and_colors = (
+        ('failed', '\033[0;31m'),
+        ('skipped', '\033[0;36m'),
+        ('undefined', '\033[0;33m'),
+    )
 
-    for kind, color in kinds_and_colors.items():
+    for kind, color in kinds_and_colors:
         attr = 'steps_%s' % kind
         stotal = getattr(total, attr)
         if stotal:
