@@ -92,7 +92,7 @@ class Runner(object):
                  enable_xunit=False, xunit_filename=None,
                  enable_subunit=False, subunit_filename=None,
                  tags=None, failfast=False, auto_pdb=False,
-                 smtp_queue=None):
+                 smtp_queue=None, root_dir=None):
 
         """ lettuce.Runner will try to find a terrain.py file and
         import it from within `base_path`
@@ -106,7 +106,7 @@ class Runner(object):
             base_path = os.path.dirname(base_path)
 
         sys.path.insert(0, base_path)
-        self.loader = fs.FeatureLoader(base_path)
+        self.loader = fs.FeatureLoader(base_path, root_dir)
         self.verbosity = verbosity
         self.scenarios = scenarios and map(int, scenarios.split(",")) or None
         self.failfast = failfast
