@@ -181,7 +181,7 @@ def test_after_each_all_is_executed_before_each_all():
     mox.StubOutWithMock(lettuce.fs, 'FileSystem')
     mox.StubOutWithMock(lettuce, 'Feature')
 
-    lettuce.fs.FeatureLoader('some_basepath').AndReturn(loader_mock)
+    lettuce.fs.FeatureLoader('some_basepath', None).AndReturn(loader_mock)
 
     lettuce.sys.path.insert(0, 'some_basepath')
     lettuce.sys.path.remove('some_basepath')
