@@ -41,7 +41,7 @@ class REP(object):
     "RegEx Pattern"
     first_of = re.compile(ur'^first_of_')
     last_of = re.compile(ur'^last_of_')
-    language = re.compile(u"language:[ ]*([^\s]+)")
+    language = re.compile(u"\s*#\s*language:[ ]*([^\s]+)")
     within_double_quotes = re.compile(r'("[^"]+")')
     within_single_quotes = re.compile(r"('[^']+')")
     only_whitespace = re.compile('^\s*$')

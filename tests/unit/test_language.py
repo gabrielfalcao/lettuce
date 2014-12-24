@@ -35,3 +35,13 @@ def test_language_has_first_of():
 
     assert_equals(lang.first_of_examples, 'Examples')
 
+def test_search_language_only_in_comments():
+    assert_equals(Language.guess_from_string('#  language: fr').code, 'fr') 
+    assert_equals(Language.guess_from_string('#language: fr  ').code, 'fr') 
+    assert_equals(Language.guess_from_string('  #language:   fr').code, 'fr') 
+    assert_equals(Language.guess_from_string(' #   language: fr').code, 'fr') 
+    assert_equals(Language.guess_from_string('\t#   language: fr').code, 'fr') 
+    assert_equals(Language.guess_from_string('# language: fr foo').code, 'fr') 
+    
+    assert_equals(Language.guess_from_string('language: fr').code, 'en') 
+    assert_equals(Language.guess_from_string('#And my current language: fr').code, 'en') 
