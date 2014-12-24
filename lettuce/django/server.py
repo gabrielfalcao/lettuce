@@ -332,7 +332,7 @@ try:
 
     class DjangoServer(BaseServer):
         """
-        A sever that uses Django's LiveServerTestCase to implement the Server class.
+        A server that uses Django's LiveServerTestCase to implement the Server class.
         """
 
         _server = None
