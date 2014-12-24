@@ -324,7 +324,11 @@ class DefaultServer(BaseServer):
 
 
 try:
-    from django.test.testcases import LiveServerTestCase
+    try:
+        from django.contrib.staticfiles.testing import \
+            StaticLiveServerTestCase as LiveServerTestCase
+    except ImportError:
+        from django.test.testcases import LiveServerTestCase
 
     class DjangoServer(BaseServer):
         """
