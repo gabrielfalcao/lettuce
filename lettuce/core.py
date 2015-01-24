@@ -1047,7 +1047,7 @@ class Feature(object):
         if not language:
             language = Language()
 
-        found = len(re.findall(r'^[ \t]*(?:%s):[ ]*\w+' % language.feature, "\n".join(lines), re.U))
+        found = len(re.findall(r'^[ \t]*(?:%s):[ ]*\w+' % language.feature, "\n".join(lines), re.U + re.M))
 
         if found > 1:
             raise LettuceSyntaxError(with_file,
