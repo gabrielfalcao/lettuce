@@ -28,8 +28,11 @@ class NoDefinitionFound(Exception):
     """
     def __init__(self, step):
         self.step = step
-        super(NoDefinitionFound, self).__init__(
-            'The step r"%s" is not defined' % self.step.sentence)
+
+        error = filter(lambda x : 0 <= ord(x) <= 127,
+                       'The step r"%s" is not defined' % self.step.sentence)
+        super(NoDefinitionFound, self).__init__(error)
+
 
 
 class ReasonToFail(object):
