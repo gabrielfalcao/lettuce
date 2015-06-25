@@ -22,6 +22,7 @@ release = 'kryptonite'
 import os
 import sys
 import traceback
+import warnings
 try:
     from imp import reload
 except ImportError:
@@ -122,9 +123,10 @@ class Runner(object):
         elif verbosity is 2:
             from lettuce.plugins import scenario_names as output
         elif verbosity is 3:
-            from lettuce.plugins import shell_output as output
-        else:
             from lettuce.plugins import colored_shell_output as output
+        else:
+            from lettuce.plugins import shell_output as output
+            warnings.warn('Deprecated in django 1.7 user -v 3 --no-color instead of the -v 4', DeprecationWarning)
 
         self.random = random
 

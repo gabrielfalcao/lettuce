@@ -36,11 +36,7 @@ class Command(BaseCommand):
     args = '[PATH to feature file or folder]'
     requires_model_validation = False
 
-    option_list = BaseCommand.option_list[1:] + (
-        make_option('-v', '--verbosity', action='store', dest='verbosity', default='4',
-            type='choice', choices=map(str, range(5)),
-            help='Verbosity level; 0=no output, 1=only dots, 2=only scenario names, 3=colorless output, 4=normal output (colorful)'),
-
+    option_list = BaseCommand.option_list + (
         make_option('-a', '--apps', action='store', dest='apps', default='',
             help='Run ONLY the django apps that are listed here. Comma separated'),
 
@@ -49,7 +45,7 @@ class Command(BaseCommand):
 
         make_option('-S', '--no-server', action='store_true', dest='no_server', default=False,
             help="will not run django's builtin HTTP server"),
-            
+
         make_option('--nothreading', action='store_false', dest='use_threading', default=True,
             help='Tells Django to NOT use threading.'),
 
@@ -105,6 +101,16 @@ class Command(BaseCommand):
 
     )
 
+    def create_parser(self, prog_name, subcommand):
+        parser = super(Command, self).create_parser(prog_name, subcommand)
+        parser.remove_option('-v')
+        parser.add_option(
+            '-v', '--verbosity', action='store', dest='verbosity', default='3',
+            type='choice', choices=map(str, range(5)),
+            help='Verbosity level; 0=no output, 1=only dots, 2=only scenario names, 3=normal output (colorful), 4=colorless output (Deprecated)'
+        )
+        return parser
+
     def stopserver(self, failed=False):
         raise SystemExit(int(failed))
 
@@ -124,7 +130,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         setup_test_environment()
 
-        verbosity = int(options.get('verbosity', 4))
+        verbosity = int(options.get('verbosity', 3))
         apps_to_run = tuple(options.get('apps', '').split(","))
         apps_to_avoid = tuple(options.get('avoid_apps', '').split(","))
         run_server = not options.get('no_server', False)
