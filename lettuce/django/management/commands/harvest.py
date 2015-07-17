@@ -120,10 +120,10 @@ class Command(BaseCommand):
             # Django 1.7 introduces the --no-color flag. We must add the flag
             # to be compatible with older django versions
             parser.add_option('--no-color',
-                              action='store_false',
-                              dest='use_color',
-                              default=True,
-                              help='Prevent the output to be colored.')
+                              action='store_true',
+                              dest='no_color',
+                              default=False,
+                              help="Don't colorize the command output.")
         return parser
 
     def stopserver(self, failed=False):
@@ -146,7 +146,7 @@ class Command(BaseCommand):
         setup_test_environment()
 
         verbosity = int(options.get('verbosity', 3))
-        use_color = int(options.get('use_color', True))
+        no_color = int(options.get('no_color', False))
         apps_to_run = tuple(options.get('apps', '').split(","))
         apps_to_avoid = tuple(options.get('avoid_apps', '').split(","))
         run_server = not options.get('no_server', False)
@@ -204,7 +204,7 @@ class Command(BaseCommand):
                     registry.call_hook('before_each', 'app', app_module)
 
                 runner = Runner(path, options.get('scenarios'),
-                                verbosity, use_color,
+                                verbosity, no_color,
                                 enable_xunit=options.get('enable_xunit'),
                                 enable_subunit=options.get('enable_subunit'),
                                 xunit_filename=options.get('xunit_file'),

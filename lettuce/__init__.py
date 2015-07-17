@@ -90,7 +90,7 @@ class Runner(object):
     features and step definitions on there.
     """
     def __init__(self, base_path, scenarios=None,
-                 verbosity=0, use_color=True, random=False,
+                 verbosity=0, no_color=False, random=False,
                  enable_xunit=False, xunit_filename=None,
                  enable_subunit=False, subunit_filename=None,
                  tags=None, failfast=False, auto_pdb=False,
@@ -130,10 +130,10 @@ class Runner(object):
                        ' with --no-color flag instead of verbosity 4')
                 warnings.warn(msg, DeprecationWarning)
             elif verbosity is 3:
-                if use_color:
-                    from lettuce.plugins import colored_shell_output as output
-                else:
+                if no_color:
                     from lettuce.plugins import shell_output as output
+                else:
+                    from lettuce.plugins import colored_shell_output as output
 
         self.random = random
 

@@ -34,10 +34,10 @@ def main(args=sys.argv[1:]):
                       help='The verbosity level')
 
     parser.add_option("--no-color",
-                      action="store_false",
-                      dest="use_color",
-                      default=True,
-                      help='Prevent the output to be colored.')
+                      action="store_true",
+                      dest="no_color",
+                      default=False,
+                      help="Don't colorize the command output.")
 
     parser.add_option("-s", "--scenarios",
                       dest="scenarios",
