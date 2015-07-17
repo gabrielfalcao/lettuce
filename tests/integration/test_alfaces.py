@@ -29,7 +29,7 @@ def test_django_agains_alfaces():
     'running the "harvest" django command with verbosity 3'
 
     status, out = commands.getstatusoutput(
-        "python manage.py harvest --verbosity=3")
+        "python manage.py harvest --verbosity=3 --no-color")
     assert_equals(status, 0, out)
 
     assert "Test the django app DO NOTHING" in out
@@ -67,7 +67,7 @@ def test_django_background_server_running_in_background():
 
     try:
         status, out = commands.getstatusoutput(
-            "python manage.py harvest --verbosity=3")
+            "python manage.py harvest --verbosity=3 --no-color")
         assert_equals(out, e)
         assert_not_equals(status, 0)
 
@@ -106,7 +106,7 @@ def test_django_background_server_running_in_background_with_custom_port():
 
     try:
         status, out = commands.getstatusoutput(
-            "python manage.py harvest --verbosity=3 --port=9889")
+            "python manage.py harvest --verbosity=3 --no-color --port=9889")
         assert_equals(out, e)
         assert_not_equals(status, 0)
 
@@ -119,7 +119,7 @@ def test_limit_by_app_getting_all_apps_by_comma():
     'running "harvest" with --apps=multiple,apps,separated,by,comma'
 
     status, out = commands.getstatusoutput(
-        "python manage.py harvest --verbosity=3 --apps=foobar,donothing")
+        "python manage.py harvest --verbosity=3 --no-color --apps=foobar,donothing")
     assert_equals(status, 0, out)
 
     assert "Test the django app DO NOTHING" in out
@@ -131,7 +131,7 @@ def test_limit_by_app_getting_one_app():
     'running "harvest" with --apps=one_app'
 
     status, out = commands.getstatusoutput(
-        "python manage.py harvest --verbosity=3 --apps=foobar")
+        "python manage.py harvest --verbosity=3 --no-color --apps=foobar")
     assert_equals(status, 0, out)
 
     assert "Test the django app DO NOTHING" not in out
@@ -143,7 +143,7 @@ def test_excluding_apps_separated_by_comma():
     'running "harvest" with --avoid-apps=multiple,apps'
 
     status, out = commands.getstatusoutput(
-        "python manage.py harvest --verbosity=3 --avoid-apps=donothing,foobar")
+        "python manage.py harvest --verbosity=3 --no-color --avoid-apps=donothing,foobar")
     assert_equals(status, 0, out)
 
     assert "Test the django app DO NOTHING" not in out
@@ -155,7 +155,7 @@ def test_excluding_app():
     'running "harvest" with --avoid-apps=one_app'
 
     status, out = commands.getstatusoutput(
-        "python manage.py harvest --verbosity=3 --avoid-apps=donothing")
+        "python manage.py harvest --verbosity=3 --no-color --avoid-apps=donothing")
     assert_equals(status, 0, out)
 
     assert "Test the django app DO NOTHING" not in out
@@ -168,7 +168,7 @@ def test_running_only_apps_within_lettuce_apps_setting():
              'setting LETTUCE_APPS is set'
 
     status, out = commands.getstatusoutput(
-        "python manage.py harvest --settings=onlyfoobarsettings --verbosity=3")
+        "python manage.py harvest --settings=onlyfoobarsettings --verbosity=3 --no-color")
     assert_equals(status, 0, out)
 
     assert "Test the django app FOO BAR" in out
@@ -182,7 +182,7 @@ def test_running_all_apps_but_lettuce_avoid_apps():
 
     status, out = commands.getstatusoutput(
         "python manage.py harvest --settings=allbutfoobarsettings " \
-        "--verbosity=3")
+        "--verbosity=3 --no-color")
 
     assert_equals(status, 0, out)
 
@@ -197,7 +197,7 @@ def test_ignores_settings_avoid_apps_if_apps_argument_is_passed():
 
     status, out = commands.getstatusoutput(
         "python manage.py harvest --settings=avoidallappssettings "
-        "--verbosity=3 --apps=foobar,donothing")
+        "--verbosity=3 --no-color --apps=foobar,donothing")
     assert_equals(status, 0, out)
 
     assert "Test the django app FOO BAR" in out
@@ -209,7 +209,7 @@ def test_no_server():
     '"harvest" --no-server does not start the server'
 
     status, out = commands.getstatusoutput(
-        "python manage.py harvest --verbosity=3 --apps=foobar --no-server")
+        "python manage.py harvest --verbosity=3 --no-color --apps=foobar --no-server")
 
     assert_equals(status, 0, out)
     assert "Django's builtin server is running at" not in out
@@ -221,7 +221,7 @@ def test_django_specifying_scenarios_to_run():
             '--scenarios or -s options'
 
     status, out = commands.getstatusoutput(
-        "python manage.py harvest --verbosity=3 --scenarios=2,5 -a foobar")
+        "python manage.py harvest --verbosity=3 --no-color --scenarios=2,5 -a foobar")
     assert_equals(status, 0, out)
 
     assert "2nd scenario" in out
@@ -239,7 +239,7 @@ def test_django_specifying_scenarios_to_run_by_tag():
             '--tags or -t options'
 
     status, out = commands.getstatusoutput(
-        "python manage.py harvest --verbosity=3 --tag=fast -a foobar")
+        "python manage.py harvest --verbosity=3 --no-color --tag=fast -a foobar")
     assert_equals(status, 0, out)
 
     assert "3rd scenario" in out
@@ -256,7 +256,7 @@ def test_running_only_specified_features():
     'it can run only the specified features, passing the file path'
 
     status, out = commands.getstatusoutput(
-        "python manage.py harvest --verbosity=3 " \
+        "python manage.py harvest --verbosity=3 --no-color " \
         "foobar/features/foobar.feature")
 
     assert_equals(status, 0, out)
@@ -270,7 +270,7 @@ def test_specifying_features_in_inner_directory():
     'it can run only the specified features from a subdirectory'
 
     status, out = commands.getstatusoutput(
-        "python manage.py harvest --verbosity=3 " \
+        "python manage.py harvest --verbosity=3 --no-color " \
         "foobar/features/deeper/deeper/leaf.feature")
 
     assert_equals(status, 0, out)
