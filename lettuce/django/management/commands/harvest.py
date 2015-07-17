@@ -16,6 +16,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
 import sys
+import django
+from distutils.version import StrictVersion
 from optparse import make_option
 from django.conf import settings
 from django.core.management import call_command
@@ -104,11 +106,24 @@ class Command(BaseCommand):
     def create_parser(self, prog_name, subcommand):
         parser = super(Command, self).create_parser(prog_name, subcommand)
         parser.remove_option('-v')
-        parser.add_option(
-            '-v', '--verbosity', action='store', dest='verbosity', default='3',
-            type='choice', choices=map(str, range(5)),
-            help='Verbosity level; 0=no output, 1=only dots, 2=only scenario names, 3=normal output (colorful), 4=colorless output (Deprecated)'
-        )
+        help_text = ('Verbosity level; 0=no output, 1=only dots, 2=only '
+                     'scenario names, 3=normal output, 4=normal output '
+                     '(colorful, deprecated)')
+        parser.add_option('-v', '--verbosity',
+                          action='store',
+                          dest='verbosity',
+                          default='3',
+                          type='choice',
+                          choices=map(str, range(5)),
+                          help=help_text)
+        if StrictVersion(django.get_version()) < StrictVersion('1.7'):
+            # Django 1.7 introduces the --no-color flag. We must add the flag
+            # to be compatible with older django versions
+            parser.add_option('--no-color',
+                              action='store_false',
+                              dest='use_color',
+                              default=True,
+                              help='Prevent the output to be colored.')
         return parser
 
     def stopserver(self, failed=False):
@@ -131,6 +146,7 @@ class Command(BaseCommand):
         setup_test_environment()
 
         verbosity = int(options.get('verbosity', 3))
+        use_color = int(options.get('use_color', True))
         apps_to_run = tuple(options.get('apps', '').split(","))
         apps_to_avoid = tuple(options.get('avoid_apps', '').split(","))
         run_server = not options.get('no_server', False)
@@ -187,7 +203,8 @@ class Command(BaseCommand):
                 if app_module is not None:
                     registry.call_hook('before_each', 'app', app_module)
 
-                runner = Runner(path, options.get('scenarios'), verbosity,
+                runner = Runner(path, options.get('scenarios'),
+                                verbosity, use_color,
                                 enable_xunit=options.get('enable_xunit'),
                                 enable_subunit=options.get('enable_subunit'),
                                 xunit_filename=options.get('xunit_file'),

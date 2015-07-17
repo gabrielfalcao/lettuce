@@ -30,8 +30,14 @@ def main(args=sys.argv[1:]):
 
     parser.add_option("-v", "--verbosity",
                       dest="verbosity",
-                      default=4,
+                      default=3,
                       help='The verbosity level')
+
+    parser.add_option("--no-color",
+                      action="store_false",
+                      dest="use_color",
+                      default=True,
+                      help='Prevent the output to be colored.')
 
     parser.add_option("-s", "--scenarios",
                       dest="scenarios",
