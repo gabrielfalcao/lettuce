@@ -126,8 +126,8 @@ class Runner(object):
         else:
             if verbosity is 4:
                 from lettuce.plugins import colored_shell_output as output
-                msg = ('Deprecated in lettuce 2.2.21. Use verbosity 3 combined'
-                       ' with --no-color flag instead of verbosity 4')
+                msg = ('Deprecated in lettuce 2.2.21. Use verbosity 3 without '
+                       '--no-color flag instead of verbosity 4')
                 warnings.warn(msg, DeprecationWarning)
             elif verbosity is 3:
                 if no_color:
