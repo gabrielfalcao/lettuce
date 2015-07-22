@@ -143,7 +143,7 @@ class StepDefinition(object):
         try:
             ret = self.function(self.step, *args, **kw)
             self.step.passed = True
-        except Exception, e:
+        except Exception as e:
             self.step.failed = True
             self.step.why = ReasonToFail(self.step, e)
             raise
@@ -479,10 +479,10 @@ class Step(object):
                     step.run(ignore_case)
                     steps_passed.append(step)
 
-            except NoDefinitionFound, e:
+            except NoDefinitionFound as e:
                 steps_undefined.append(e.step)
 
-            except Exception, e:
+            except Exception as e:
                 steps_failed.append(step)
                 reasons_to_fail.append(step.why)
                 if failfast:
@@ -885,7 +885,7 @@ class Background(object):
             call_hook('before_each', 'step', step)
             try:
                 results.append(step.run(ignore_case))
-            except Exception, e:
+            except Exception as e:
                 print e
                 pass
 

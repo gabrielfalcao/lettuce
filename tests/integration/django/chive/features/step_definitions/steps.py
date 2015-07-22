@@ -12,7 +12,7 @@ def get_url(url):
 
     try:
         world.last_response = urllib2.urlopen(url)
-    except Exception, e:
+    except Exception as e:
         world.last_response = e
 
     return world.last_response

@@ -226,7 +226,7 @@ def test_hashes__first_attr_raises_assertion_error_if_empty():
     try:
         step.hashes.first
         failed = False
-    except AssertionError, e:
+    except AssertionError as e:
         failed = True
         assert_equals(
             unicode(e),
@@ -253,7 +253,7 @@ def test_hashes__last_attr_raises_assertion_error_if_empty():
     try:
         step.hashes.last
         failed = False
-    except AssertionError, e:
+    except AssertionError as e:
         failed = True
         assert_equals(
             unicode(e),
@@ -276,7 +276,7 @@ def test_handy_function_for_table_members_fail_giving_assertionerror():
     try:
         step.hashes.values_under('Foobar')
         failed = False
-    except AssertionError, e:
+    except AssertionError as e:
         failed = True
         assert_equals(
             unicode(e),
