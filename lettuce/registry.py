@@ -69,7 +69,7 @@ class StepDict(dict):
     def _assert_is_step(self, step, func):
         try:
             re.compile(step)
-        except re.error, e:
+        except re.error as e:
             raise StepLoadingError("Error when trying to compile:\n"
                                    "  regex: %r\n"
                                    "  for function: %s\n"

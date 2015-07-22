@@ -177,7 +177,7 @@ class Runner(object):
                                 random=self.random,
                                 failfast=self.failfast))
 
-        except exceptions.LettuceSyntaxError, e:
+        except exceptions.LettuceSyntaxError as e:
             sys.stderr.write(e.msg)
             failed = True
         except:
