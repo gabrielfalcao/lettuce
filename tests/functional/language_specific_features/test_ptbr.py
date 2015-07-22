@@ -28,7 +28,7 @@ join_path = lambda *x: join(current_dir, *x)
 def test_output_with_success_colorless():
     "Language: pt-br -> sucess colorless"
 
-    runner = Runner(join_path('pt-br', 'success', 'dumb.feature'), verbosity=3)
+    runner = Runner(join_path('pt-br', 'success', 'dumb.feature'), verbosity=3, no_color=True)
     runner.run()
 
     assert_stdout_lines(
@@ -50,7 +50,7 @@ def test_output_with_success_colorless():
 def test_output_of_table_with_success_colorless():
     "Language: pt-br -> sucess table colorless"
 
-    runner = Runner(join_path('pt-br', 'success', 'table.feature'), verbosity=3)
+    runner = Runner(join_path('pt-br', 'success', 'table.feature'), verbosity=3, no_color=True)
     runner.run()
 
     assert_stdout_lines(
@@ -75,7 +75,7 @@ def test_output_of_table_with_success_colorless():
 def test_output_outlines_success_colorless():
     "Language: pt-br -> sucess outlines colorless"
 
-    runner = Runner(join_path('pt-br', 'success', 'outlines.feature'), verbosity=3)
+    runner = Runner(join_path('pt-br', 'success', 'outlines.feature'), verbosity=3, no_color=True)
     runner.run()
 
     assert_stdout_lines(
@@ -105,7 +105,7 @@ def test_output_outlines_success_colorless():
 def test_output_outlines_success_colorful():
     "Language: pt-br -> sucess outlines colorful"
 
-    runner = Runner(join_path('pt-br', 'success', 'outlines.feature'), verbosity=4)
+    runner = Runner(join_path('pt-br', 'success', 'outlines.feature'), verbosity=3, no_color=False)
     runner.run()
 
     assert_stdout_lines(

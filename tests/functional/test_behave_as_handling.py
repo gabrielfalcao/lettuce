@@ -37,7 +37,7 @@ def path_to_feature(name):
 @with_setup(prepare_stdout)
 def test_simple_behave_as_feature():
     "Basic step.behave_as behaviour is working"
-    Runner(path_to_feature('1st_normal_steps'), verbosity=3).run()
+    Runner(path_to_feature('1st_normal_steps'), verbosity=3, no_color=True).run()
     assert_stdout_lines(
         "\n"
         "Feature: Multiplication                            # tests/functional/behave_as_features/1st_normal_steps/1st_normal_steps.feature:2\n"
@@ -62,7 +62,7 @@ def test_simple_behave_as_feature():
 @with_setup(prepare_stdout)
 def test_simple_tables_behave_as_feature():
     "Basic step.behave_as behaviour is working"
-    Runner(path_to_feature('2nd_table_steps'), verbosity=3).run()
+    Runner(path_to_feature('2nd_table_steps'), verbosity=3, no_color=True).run()
     assert_stdout_lines(
         "\n"
         "Feature: Multiplication                            # tests/functional/behave_as_features/2nd_table_steps/2nd_table_steps.feature:2\n"
@@ -88,7 +88,7 @@ def test_simple_tables_behave_as_feature():
 @with_setup(prepare_stdout)
 def test_failing_tables_behave_as_feature():
     "Basic step.behave_as behaviour is working"
-    Runner(path_to_feature('3rd_failing_steps'), verbosity=3).run()
+    Runner(path_to_feature('3rd_failing_steps'), verbosity=3, no_color=True).run()
     assert_stdout_lines_with_traceback(
     '\n'
     'Feature: Multiplication                            # tests/functional/behave_as_features/3rd_failing_steps/3rd_failing_steps.feature:2\n'

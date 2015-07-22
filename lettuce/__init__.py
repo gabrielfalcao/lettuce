@@ -22,6 +22,7 @@ release = 'kryptonite'
 import os
 import sys
 import traceback
+import warnings
 try:
     from imp import reload
 except ImportError:
@@ -88,7 +89,8 @@ class Runner(object):
     Takes a base path as parameter (string), so that it can look for
     features and step definitions on there.
     """
-    def __init__(self, base_path, scenarios=None, verbosity=0, random=False,
+    def __init__(self, base_path, scenarios=None,
+                 verbosity=0, no_color=False, random=False,
                  enable_xunit=False, xunit_filename=None,
                  enable_subunit=False, subunit_filename=None,
                  tags=None, failfast=False, auto_pdb=False,
@@ -121,10 +123,17 @@ class Runner(object):
             from lettuce.plugins import dots as output
         elif verbosity is 2:
             from lettuce.plugins import scenario_names as output
-        elif verbosity is 3:
-            from lettuce.plugins import shell_output as output
         else:
-            from lettuce.plugins import colored_shell_output as output
+            if verbosity is 4:
+                from lettuce.plugins import colored_shell_output as output
+                msg = ('Deprecated in lettuce 2.2.21. Use verbosity 3 without '
+                       '--no-color flag instead of verbosity 4')
+                warnings.warn(msg, DeprecationWarning)
+            elif verbosity is 3:
+                if no_color:
+                    from lettuce.plugins import shell_output as output
+                else:
+                    from lettuce.plugins import colored_shell_output as output
 
         self.random = random
 
