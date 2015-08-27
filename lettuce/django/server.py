@@ -35,11 +35,15 @@ try:
     from django.core.servers.basehttp import AdminMediaHandler
 except ImportError:
     AdminMediaHandler = None
-try:
-    from django.contrib.staticfiles.handlers import StaticFilesHandler
-except ImportError:
+    
+if 'django.contrib.staticfiles' in settings.INSTALLED_APPS:
+    try:
+        from django.contrib.staticfiles.handlers import StaticFilesHandler
+    except ImportError:
+        StaticFilesHandler = None
+else:
     StaticFilesHandler = None
-
+    
 try:
     from django.utils.six.moves import socketserver
 except ImportError:
