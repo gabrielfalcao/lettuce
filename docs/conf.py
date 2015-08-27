@@ -15,6 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
+import sys
+
+here = os.path.dirname(__file__)
+parent = os.path.dirname(here)
+
+sys.path.append(parent)
+sys.path.append(os.path.join(here, '_ext'))
+
 from lettuce import version, release
 
 copyright = u'Gabriel Falcão <gabriel@nacaolivre.org>'
