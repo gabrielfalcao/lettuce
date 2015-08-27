@@ -41,6 +41,24 @@ class CallbackDict(dict):
                 callback_list[:] = []
 
 class StepDict(dict):
+    def __init__(self, *args, **kwargs):
+        super(StepDict, self).__init__(*args, **kwargs)
+        self._compiled = {}
+        self._compiled_ignore_case = {}
+
+    def get_regex(self, step, ignore_case=False):
+        if ignore_case:
+            regex = self._compiled_ignore_case.get(step, None)
+            if not regex:
+                regex = re.compile(step, re.I)
+                self._compiled_ignore_case[step] = regex
+        else:
+            regex = self._compiled.get(step, None)
+            if not regex:
+                regex = re.compile(step)
+                self._compiled[step] = regex
+        return regex
+
     def load(self, step, func):
         self._assert_is_step(step, func)
         self[step] = func

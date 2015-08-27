@@ -357,9 +357,9 @@ class Step(object):
 
     def _get_match(self, ignore_case):
         matched, func = None, lambda: None
-
-        for regex, func in STEP_REGISTRY.items():
-            matched = re.search(regex, self.sentence, ignore_case and re.I or 0)
+        for step, func in STEP_REGISTRY.items():
+            regex = STEP_REGISTRY.get_regex(step, ignore_case)
+            matched = regex.search(self.sentence)
             if matched:
                 break
 
@@ -1354,4 +1354,3 @@ class SummaryTotalResults(TotalResult):
                     self._proposed_definitions.extend(scenario_result.steps_undefined)
                     if len(scenario_result.steps_failed) > 0:
                         self.failed_scenario_locations.append(scenario_result.scenario.represented())
-
