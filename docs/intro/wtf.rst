@@ -20,10 +20,10 @@ up in to features of the system.
 After enumerating features, you need to create scenarios which will
 describe those feature. Thus, scenarios are components of a feature.
 
-Let's learn by example: suppose we want to create a system to manage a
+Let's learn by example: suppose we want to create a system to manage an
 address book.
 
-OK, one of the very basic features of a address book is adding contacts, which will
+OK, one of the very basic features of an address book is adding contacts, which will
 include their name and phone numbers.
 
 This is how Lettuce allows you to describe such feature:
