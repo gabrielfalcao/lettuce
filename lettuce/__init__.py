@@ -189,6 +189,9 @@ class Runner(object):
         except exceptions.LettuceSyntaxError, e:
             sys.stderr.write(e.msg)
             failed = True
+        except exceptions.NoDefinitionFound, e:
+            sys.stderr.write(e.msg)
+            failed = True
         except:
             if not self.failfast:
                 e = sys.exc_info()[1]
