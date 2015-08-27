@@ -1047,7 +1047,7 @@ class Feature(object):
         if not language:
             language = Language()
 
-        found = len(re.findall(r'(?:%s):[ ]*\w+' % language.feature, "\n".join(lines), re.U))
+        found = len(re.findall(r'^[ \t]*(?:%s):[ ]*\w+' % language.feature, "\n".join(lines), re.U + re.M))
 
         if found > 1:
             raise LettuceSyntaxError(with_file,
@@ -1058,7 +1058,7 @@ class Feature(object):
                 'Features must have a name. e.g: "Feature: This is my name"')
 
         while lines:
-            matched = re.search(r'(?:%s):(.*)' % language.feature, lines[0], re.I)
+            matched = re.search(r'^[ \t]*(?:%s):(.*)' % language.feature, lines[0], re.I)
             if matched:
                 name = matched.groups()[0].strip()
                 break
