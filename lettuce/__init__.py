@@ -72,7 +72,7 @@ __all__ = [
 try:
     terrain = fs.FileSystem._import("terrain")
     reload(terrain)
-except Exception, e:
+except Exception as e:
     if not "No module named terrain" in str(e):
         string = 'Lettuce has tried to load the conventional environment ' \
             'module "terrain"\nbut it has errors, check its contents and ' \
@@ -170,7 +170,7 @@ class Runner(object):
         # that we don't even want to test.
         try:
             self.loader.find_and_load_step_definitions()
-        except StepLoadingError, e:
+        except StepLoadingError as e:
             print "Error loading step definitions:\n", e
             return
 
@@ -186,7 +186,7 @@ class Runner(object):
                                 random=self.random,
                                 failfast=self.failfast))
 
-        except exceptions.LettuceSyntaxError, e:
+        except exceptions.LettuceSyntaxError as e:
             sys.stderr.write(e.msg)
             failed = True
         except exceptions.NoDefinitionFound, e:
