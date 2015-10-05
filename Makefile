@@ -46,7 +46,7 @@ deploy-documentation:documentation withdraw-documentation
 
 deploy: deploy-documentation
 
-release: clean unit functional doctest deploy-documentation publish
+release: clean doctest deploy-documentation publish
 	@printf "Exporting to $(filename)... "
 	@tar czf $(filename) lettuce setup.py README.md COPYING
 	@echo "DONE!"
