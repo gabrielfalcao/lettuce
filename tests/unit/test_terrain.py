@@ -25,6 +25,18 @@ from lettuce.terrain import world
 from lettuce.core import Feature, TotalResult
 from lettuce.registry import CALLBACK_REGISTRY
 
+OUTLINE_FEATURE = '''
+Feature: Outline hooks
+
+  Scenario Outline: Outlines
+    Given step1 of <outline>
+    And step2 of <outline>
+    Examples:
+      | outline        |
+      | first_outline  |
+      | second_outline |
+'''
+
 FEATURE1 = '''
 Feature: Before and After callbacks all along lettuce
     Scenario: Before and After steps
@@ -69,6 +81,81 @@ def test_world():
     test_does_not_have()
     set_world()
     test_does_have()
+
+
+def test_outline_hooks_if_test_failed():
+    "before.each_outline and after.each_outline decorators works in correct order even if test fails in fastfail"
+    @step("step1 of first_outline")
+    def step_def(step):
+        raise Exception("Failed")
+
+    world.scenario_names = set()
+    world.hooks_for_failing_test = []
+
+    @before.each_scenario
+    def before_scenario(scenario):
+        world.hooks_for_failing_test.append("before scenario {0}".format(scenario.name))
+
+    @after.each_scenario
+    def after_scenario(scenario):
+        world.hooks_for_failing_test.append("after scenario {0}".format(scenario.name))
+
+    @before.each_outline
+    def before_outline(scenario, outline):
+        world.scenario_names.add(scenario.name)
+        world.hooks_for_failing_test.append("before {0}".format(outline["outline"]))
+
+    @after.each_outline
+    def after_outline(scenario, outline):
+        world.scenario_names.add(scenario.name)
+        world.hooks_for_failing_test.append("after {0}".format(outline["outline"]))
+
+    feature = Feature.from_string(OUTLINE_FEATURE)
+    try:
+        feature.run(failfast=True)
+    except Exception:
+        pass
+
+    assert_equals(world.hooks_for_failing_test,
+                  ['before scenario Outlines',
+                   'before first_outline',
+                   'after first_outline',
+                   'after scenario Outlines'])
+
+
+def test_outline_hooks():
+    "terrain.before.each_outline and terrain.after.each_outline decorators"
+    world.scenario_names = set()
+    world.hooks = []
+
+    @before.each_scenario
+    def before_scenario(scenario):
+        world.hooks.append("before scenario {0}".format(scenario.name))
+
+    @after.each_scenario
+    def after_scenario(scenario):
+        world.hooks.append("after scenario {0}".format(scenario.name))
+
+    @before.each_outline
+    def before_outline(scenario, outline):
+        world.scenario_names.add(scenario.name)
+        world.hooks.append("before {0}".format(outline["outline"]))
+
+    @after.each_outline
+    def after_outline(scenario, outline):
+        world.scenario_names.add(scenario.name)
+        world.hooks.append("after {0}".format(outline["outline"]))
+
+    feature = Feature.from_string(OUTLINE_FEATURE)
+    feature.run()
+
+    assert_equals(world.hooks,
+                  ['before scenario Outlines',
+                   'before first_outline',
+                   'after first_outline',
+                   'before second_outline',
+                   'after second_outline',
+                   'after scenario Outlines'])
 
 
 def test_after_each_step_is_executed_before_each_step():
@@ -256,25 +343,25 @@ def test_world_should_be_able_to_absorb_lambdas():
 
 
 def test_world_should_be_able_to_absorb_classs():
-   u"world should be able to absorb class"
-   assert not hasattr(world, 'MyClass')
+    u"world should be able to absorb class"
+    assert not hasattr(world, 'MyClass')
 
-   if sys.version_info < (2, 6):
-       return
+    if sys.version_info < (2, 6):
+        return
 
-   class MyClass:
-       pass
+    class MyClass:
+        pass
 
-   world.absorb(MyClass)
+    world.absorb(MyClass)
 
-   assert hasattr(world, 'MyClass')
-   assert_equals(world.MyClass, MyClass)
+    assert hasattr(world, 'MyClass')
+    assert_equals(world.MyClass, MyClass)
 
-   assert isinstance(world.MyClass(), MyClass)
+    assert isinstance(world.MyClass(), MyClass)
 
-   world.spew('MyClass')
+    world.spew('MyClass')
 
-   assert not hasattr(world, 'MyClass')
+    assert not hasattr(world, 'MyClass')
 
 
 def test_hooks_should_be_still_manually_callable():

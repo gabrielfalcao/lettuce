@@ -320,6 +320,44 @@ by the fact that its ran *after* lettuce run the scenario.
    def teardown_some_scenario(scenario):
        models.reset_all_data()
 
+@before.each_outline
+====================
+
+This hook is ran before lettuce run each scenario outline iteration
+
+The decorated function takes a :ref:`scenario-class` as parameter and
+outline dict where each column name is key
+
+
+.. highlight:: python
+
+.. doctest::
+
+   from lettuce import *
+
+   @before.each_outline
+   def setup_some_scenario(scenario, outline):
+       print "We are now going to run scenario {0} with size={1}".format(scenario.name, outline["size"])
+
+
+@after.each_outline
+===================
+
+This hooks behaves in the same way @before.each_outline does, except
+by the fact that its ran *after* lettuce run the scenario outline iteration.
+
+
+.. highlight:: python
+
+.. doctest::
+
+   from lettuce import *
+
+   @after.each_outline
+   def complete_some_scenario(scenario, outline):
+       print "We are now finished scenario {0} with size={1}".format(scenario.name, outline["size"])
+
+
 @before.each_step
 =================
 

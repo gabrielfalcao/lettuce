@@ -721,18 +721,25 @@ class Scenario(object):
 
         def run_scenario(almost_self, order=-1, outline=None, run_callbacks=False):
             try:
+                if outline:
+                    self._report_outline_hook(outline, True)
                 if self.background:
                     self.background.run(ignore_case)
 
                 reasons_to_fail = []
                 all_steps, steps_passed, steps_failed, steps_undefined = Step.run_all(self.steps, outline, run_callbacks, ignore_case, failfast=failfast, display_steps=(order < 1), reasons_to_fail=reasons_to_fail)
             except:
+                if outline:
+                    # Can't use "finally" here since we need to call it before after_each_scenario
+                    self._report_outline_hook(outline, False)
                 call_hook('after_each', 'scenario', self)
                 raise
             finally:
                 if outline:
                     call_hook('outline', 'scenario', self, order, outline,
                             reasons_to_fail)
+            if outline:
+                self._report_outline_hook(outline, False)
 
             skip = lambda x: x not in steps_passed and x not in steps_undefined and x not in steps_failed
             steps_skipped = filter(skip, all_steps)
@@ -760,6 +767,17 @@ class Scenario(object):
 
         for step in self.solved_steps:
             step.scenario = self
+
+    def _report_outline_hook(self, outline, started):
+        """
+        Function called before each outline and after each outline to provide hooks
+        :param outline: dict with examples row
+        :type outline dict
+        :param started: is outline started or finished
+        :type started bool
+        """
+        call_hook('before_each' if started else 'after_each', 'outline', self, outline)
+
 
     def _resolve_steps(self, steps, outlines, with_file, original_string):
         for outline_idx, outline in enumerate(outlines):
