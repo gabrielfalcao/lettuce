@@ -53,7 +53,17 @@ def _filter_configured_avoids(module):
 
 
 def get_apps():
-    return map(import_module, settings.INSTALLED_APPS)
+    """
+    Import Django apps. It ignores ImportErrors.
+    (Django will take care of it)
+    """
+    apps = []
+    for app in settings.INSTALLED_APPS:
+        try:
+            apps.append(import_module(app))
+        except ImportError:
+            pass
+    return apps
 
 
 def harvest_lettuces(only_the_apps=None, avoid_apps=None, path="features"):
