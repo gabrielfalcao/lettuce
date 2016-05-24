@@ -172,9 +172,12 @@ class Command(BaseCommand):
             self._testrunner.setup_test_environment()
             self._old_db_config = self._testrunner.setup_databases()
 
-            call_command('syncdb', verbosity=0, interactive=False,)
-            if migrate_south:
-               call_command('migrate', verbosity=0, interactive=False,)
+            if StrictVersion(django.get_version()) < StrictVersion('1.7'):
+                call_command('syncdb', verbosity=0, interactive=False,)
+                if migrate_south:
+                   call_command('migrate', verbosity=0, interactive=False,)
+            else:
+                call_command('migrate', verbosity=0, interactive=False,)
 
         settings.DEBUG = options.get('debug', False)
 
