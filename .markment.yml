@@ -1,6 +1,6 @@
 project:
   name: "Lettuce"
-  version: 0.2.17
+  version: 0.2.21
   description: Behaviour Driven Development for python
 
   github_maintainer: gabrielfalcao
