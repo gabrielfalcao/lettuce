@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-__version__ = version = '0.2.22'
+__version__ = version = '0.2.23'
 
 release = 'kryptonite'
 
