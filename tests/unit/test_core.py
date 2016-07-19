@@ -14,6 +14,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import unittest
+
 from lettuce import core
 from sure import expect
 from nose.tools import assert_equals
@@ -39,7 +41,7 @@ def test_step_definition():
     definition = core.StepDefinition("FOO BAR", dumb)
     assert_equals(definition.function, dumb)
     assert_equals(definition.file, core.fs.relpath(__file__).rstrip("c"))
-    assert_equals(definition.line, 37)
+    assert_equals(definition.line, 39)
 
 
 def test_step_description():
@@ -202,3 +204,15 @@ def test_scenario_outline_represent_examples():
         '    | first     | primeiro  |\n'
         '    | second    | segundo   |\n'
     )
+
+
+class TotalResultTestCase(unittest.TestCase):
+
+    def test_is_success_yes(self):
+        total = core.TotalResult()
+        self.assertTrue(total.is_success)
+
+    def test_is_success_no(self):
+        total = core.TotalResult()
+        total.failed_scenario_locations.append('<scenario location>')
+        self.assertFalse(total.is_success)

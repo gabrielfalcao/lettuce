@@ -47,6 +47,7 @@ from lettuce.plugins import (
     subunit_output,
     autopdb,
     smtp_mail_queue,
+    jsonreport_output,
 )
 from lettuce import fs
 from lettuce import exceptions
@@ -93,6 +94,7 @@ class Runner(object):
                  verbosity=0, no_color=False, random=False,
                  enable_xunit=False, xunit_filename=None,
                  enable_subunit=False, subunit_filename=None,
+                 enable_jsonreport=False, jsonreport_filename=None,
                  tags=None, failfast=False, auto_pdb=False,
                  smtp_queue=None, root_dir=None):
 
@@ -144,6 +146,9 @@ class Runner(object):
 
         if enable_subunit:
             subunit_output.enable(filename=subunit_filename)
+
+        if enable_jsonreport:
+            jsonreport_output.enable(filename=jsonreport_filename)
 
         reload(output)
 

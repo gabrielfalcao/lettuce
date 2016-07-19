@@ -95,6 +95,18 @@ class Command(BaseCommand):
                     default=None,
                     help='Write Subunit to this file. Defaults to subunit.bin'),
 
+        make_option('--with-jsonreport',
+                    action='store_true',
+                    dest='enable_jsonreport',
+                    default=False,
+                    help='Output JSON test results to a file'),
+
+        make_option('--jsonreport-file',
+                    action='store',
+                    dest='jsonreport_file',
+                    default=None,
+                    help='Write JSON report to this file. Defaults to lettucetests.json'),
+
         make_option("--failfast", dest="failfast", default=False,
                     action="store_true", help='Stop running in the first failure'),
 
@@ -210,8 +222,10 @@ class Command(BaseCommand):
                                 verbosity, no_color,
                                 enable_xunit=options.get('enable_xunit'),
                                 enable_subunit=options.get('enable_subunit'),
+                                enable_jsonreport=options.get('enable_jsonreport'),
                                 xunit_filename=options.get('xunit_file'),
                                 subunit_filename=options.get('subunit_file'),
+                                jsonreport_filename=options.get('jsonreport_file'),
                                 tags=tags, failfast=failfast, auto_pdb=auto_pdb,
                                 smtp_queue=smtp_queue)
 
