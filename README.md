@@ -37,7 +37,7 @@ all them are used within lettuce tests
     > mkvirtualenv lettuce
     > workon lettuce
     > pip install -r requirements.txt
-note this uses [virtualenvwrapper](http://virtualenvwrapper.readthedocs.org/en/latest/) to save some virtualenv handling hassle. you can also use virtualenv the regular way.
+note this uses [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/) to save some virtualenv handling hassle. you can also use virtualenv the regular way.
 ## or just install manually:
 
     > sudo pip install -r requirements.txt
