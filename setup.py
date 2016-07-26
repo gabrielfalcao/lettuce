@@ -31,9 +31,6 @@ def get_packages():
 
 required_modules = ['sure', 'fuzzywuzzy', 'python-subunit']
 
-if sys.version_info[:2] < (2, 6):
-    required_modules.append('multiprocessing')
-
 if os.name.lower() == 'nt':
     required_modules.append('colorama')
 
