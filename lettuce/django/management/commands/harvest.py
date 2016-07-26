@@ -38,7 +38,7 @@ from lettuce.django.server import LettuceServerException
 class Command(BaseCommand):
     help = u'Run lettuce tests all along installed apps'
     args = '[PATH to feature file or folder]'
-    requires_model_validation = False
+    requires_model_validation = requires_system_checks = False
 
     option_list = BaseCommand.option_list + (
         make_option('-a', '--apps', action='store', dest='apps', default='',

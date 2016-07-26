@@ -32,7 +32,7 @@ def _filter_bultins(module):
 def _filter_configured_apps(module):
     "returns only those apps that are in django.conf.settings.LETTUCE_APPS"
     app_found = True
-    if hasattr(settings, 'LETTUCE_APPS') and isinstance(settings.LETTUCE_APPS, tuple):
+    if hasattr(settings, 'LETTUCE_APPS') and isinstance(settings.LETTUCE_APPS, (list, tuple)):
         app_found = False
         for appname in settings.LETTUCE_APPS:
             if module.__name__.startswith(appname):
@@ -44,7 +44,7 @@ def _filter_configured_apps(module):
 def _filter_configured_avoids(module):
     "returns apps that are not within django.conf.settings.LETTUCE_AVOID_APPS"
     run_app = False
-    if hasattr(settings, 'LETTUCE_AVOID_APPS') and isinstance(settings.LETTUCE_AVOID_APPS, tuple):
+    if hasattr(settings, 'LETTUCE_AVOID_APPS') and isinstance(settings.LETTUCE_AVOID_APPS, (list, tuple)):
         for appname in settings.LETTUCE_AVOID_APPS:
             if module.__name__.startswith(appname):
                 run_app = True
@@ -73,7 +73,7 @@ def harvest_lettuces(only_the_apps=None, avoid_apps=None, path="features"):
 
     apps = get_apps()
 
-    if isinstance(only_the_apps, tuple) and any(only_the_apps):
+    if isinstance(only_the_apps, (list, tuple)) and any(only_the_apps):
 
         def _filter_only_specified(module):
             return module.__name__ in only_the_apps
@@ -83,7 +83,7 @@ def harvest_lettuces(only_the_apps=None, avoid_apps=None, path="features"):
         apps = filter(_filter_configured_apps, apps)
         apps = filter(_filter_configured_avoids, apps)
 
-    if isinstance(avoid_apps, tuple) and any(avoid_apps):
+    if isinstance(avoid_apps, (list, tuple)) and any(avoid_apps):
 
         def _filter_avoid(module):
             return module.__name__ not in avoid_apps
