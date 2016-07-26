@@ -26,6 +26,7 @@ from inspect import currentframe
 from nose.tools import assert_equals, with_setup, assert_raises
 from lettuce.fs import FeatureLoader
 from lettuce.core import Feature, fs, StepDefinition
+from lettuce.exceptions import LettuceRunnerError
 from lettuce.terrain import world
 from lettuce import Runner
 
@@ -70,7 +71,7 @@ def test_try_to_import_terrain():
         import lettuce
         reload(lettuce)
         raise AssertionError('The runner should raise ImportError !')
-    except SystemExit:
+    except LettuceRunnerError:
         assert_stderr_lines_with_traceback(
             'Lettuce has tried to load the conventional environment module '
             '"terrain"\nbut it has errors, check its contents and '
@@ -1367,7 +1368,7 @@ def test_many_features_a_file():
 
     filename = syntax_feature_name('many_features_a_file')
     runner = Runner(filename)
-    assert_raises(SystemExit, runner.run)
+    assert_raises(LettuceRunnerError, runner.run)
 
     assert_stderr_lines(
         'Syntax error at: %s\n'
@@ -1382,7 +1383,7 @@ def test_feature_without_name():
     filename = syntax_feature_name('feature_without_name')
     runner = Runner(filename)
 
-    assert_raises(SystemExit, runner.run)
+    assert_raises(LettuceRunnerError, runner.run)
 
     assert_stderr_lines(
         'Syntax error at: %s\n'
@@ -1398,7 +1399,7 @@ def test_feature_missing_scenarios():
     filename = syntax_feature_name("feature_missing_scenarios")
     runner = Runner(filename)
 
-    assert_raises(SystemExit, runner.run)
+    assert_raises(LettuceRunnerError, runner.run)
 
     assert_stderr_lines(
         u"Syntax error at: %s\n"

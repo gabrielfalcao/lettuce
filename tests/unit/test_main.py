@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import lettuce
 import lettuce.fs
+from lettuce.exceptions import LettuceRunnerError
 from nose.tools import assert_equals
 from mox import Mox
 
@@ -62,7 +63,7 @@ def test_terrain_import_exception():
 
     try:
         reload(lettuce)
-    except SystemExit:
+    except LettuceRunnerError:
         mox.VerifyAll()
 
     finally:

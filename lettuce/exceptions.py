@@ -63,3 +63,7 @@ class LettuceSyntaxError(SyntaxError):
 class StepLoadingError(Exception):
     """Raised when a step cannot be loaded."""
     pass
+
+
+class LettuceRunnerError(Exception):
+    """Raised when the Lettuce runner experiences failures/errors."""

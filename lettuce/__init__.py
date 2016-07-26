@@ -41,7 +41,7 @@ from lettuce.decorators import step, steps
 from lettuce.registry import call_hook
 from lettuce.registry import STEP_REGISTRY
 from lettuce.registry import CALLBACK_REGISTRY
-from lettuce.exceptions import StepLoadingError
+from lettuce.exceptions import StepLoadingError, LettuceRunnerError
 from lettuce.plugins import (
     xunit_output,
     subunit_output,
@@ -81,7 +81,7 @@ except Exception as e:
 
         sys.stderr.write(string)
         sys.stderr.write(exceptions.traceback.format_exc(e))
-        raise SystemExit(1)
+        raise LettuceRunnerError(string)
 
 
 class Runner(object):
@@ -215,6 +215,6 @@ class Runner(object):
             call_hook('after', 'all', total)
 
             if failed:
-                raise SystemExit(2)
+                raise LettuceRunnerError("Test failed.")
 
             return total
