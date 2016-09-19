@@ -17,14 +17,13 @@
 import os
 import sys
 import traceback
-import django
 from distutils.version import StrictVersion
-from optparse import make_option
+
+import django
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand, CommandError
-from django.test.utils import setup_test_environment
-from django.test.utils import teardown_test_environment
+from django.test.utils import setup_test_environment, teardown_test_environment
 
 from lettuce import Runner
 from lettuce import registry
@@ -35,110 +34,103 @@ from lettuce.django import harvest_lettuces, get_server
 from lettuce.django.server import LettuceServerException
 
 
+DJANGO_VERSION = StrictVersion(django.get_version())
+
+
 class Command(BaseCommand):
     help = u'Run lettuce tests all along installed apps'
     args = '[PATH to feature file or folder]'
-    requires_model_validation = requires_system_checks = False
 
-    option_list = BaseCommand.option_list + (
-        make_option('-a', '--apps', action='store', dest='apps', default='',
-            help='Run ONLY the django apps that are listed here. Comma separated'),
+    if DJANGO_VERSION < StrictVersion('1.7'):
+        requires_model_validation = False
+    else:
+        requires_system_checks = False
 
-        make_option('-A', '--avoid-apps', action='store', dest='avoid_apps', default='',
-            help='AVOID running the django apps that are listed here. Comma separated'),
-
-        make_option('-S', '--no-server', action='store_true', dest='no_server', default=False,
-            help="will not run django's builtin HTTP server"),
-
-        make_option('--nothreading', action='store_false', dest='use_threading', default=True,
-            help='Tells Django to NOT use threading.'),
-
-        make_option('-T', '--test-server', action='store_true', dest='test_database',
+    def add_arguments(self, parser):
+        parser.set_defaults(verbosity=3)  # default verbosity is 3
+        parser.add_argument(
+            '-a', '--apps', action='store', dest='apps', default='',
+            help='Run ONLY the django apps that are listed here. Comma separated'
+        )
+        parser.add_argument(
+            '-A', '--avoid-apps', action='store', dest='avoid_apps', default='',
+            help='AVOID running the django apps that are listed here. Comma separated'
+        )
+        parser.add_argument(
+            '-S', '--no-server', action='store_true', dest='no_server', default=False,
+            help="will not run django's builtin HTTP server"
+        )
+        parser.add_argument(
+            '--nothreading', action='store_false', dest='use_threading', default=True,
+            help='Tells Django to NOT use threading.'
+        )
+        parser.add_argument(
+            '-T', '--test-server', action='store_true', dest='test_database',
             default=getattr(settings, "LETTUCE_USE_TEST_DATABASE", False),
-            help="will run django's builtin HTTP server using the test databases"),
-
-        make_option('-P', '--port', type='int', dest='port',
-            help="the port in which the HTTP server will run at"),
-
-        make_option('-d', '--debug-mode', action='store_true', dest='debug', default=False,
-            help="when put together with builtin HTTP server, forces django to run with settings.DEBUG=True"),
-
-        make_option('-s', '--scenarios', action='store', dest='scenarios', default=None,
-            help='Comma separated list of scenarios to run'),
-
-        make_option("-t", "--tag",
-                    dest="tags",
-                    type="str",
-                    action='append',
-                    default=None,
-                    help='Tells lettuce to run the specified tags only; '
-                    'can be used multiple times to define more tags'
-                    '(prefixing tags with "-" will exclude them and '
-                    'prefixing with "~" will match approximate words)'),
-
-        make_option('--with-xunit', action='store_true', dest='enable_xunit', default=False,
-            help='Output JUnit XML test results to a file'),
-
-        make_option('--smtp-queue', action='store_true', dest='smtp_queue', default=False,
-                    help='Use smtp for mail queue (usefull with --no-server option'),
-
-        make_option('--xunit-file', action='store', dest='xunit_file', default=None,
-            help='Write JUnit XML to this file. Defaults to lettucetests.xml'),
-
-        make_option('--with-subunit',
-                    action='store_true',
-                    dest='enable_subunit',
-                    default=False,
-                    help='Output Subunit test results to a file'),
-
-        make_option('--subunit-file',
-                    action='store',
-                    dest='subunit_file',
-                    default=None,
-                    help='Write Subunit to this file. Defaults to subunit.bin'),
-
-        make_option('--with-jsonreport',
-                    action='store_true',
-                    dest='enable_jsonreport',
-                    default=False,
-                    help='Output JSON test results to a file'),
-
-        make_option('--jsonreport-file',
-                    action='store',
-                    dest='jsonreport_file',
-                    default=None,
-                    help='Write JSON report to this file. Defaults to lettucetests.json'),
-
-        make_option("--failfast", dest="failfast", default=False,
-                    action="store_true", help='Stop running in the first failure'),
-
-        make_option("--pdb", dest="auto_pdb", default=False,
-                    action="store_true", help='Launches an interactive debugger upon error'),
-
-    )
-
-    def create_parser(self, prog_name, subcommand):
-        parser = super(Command, self).create_parser(prog_name, subcommand)
-        parser.remove_option('-v')
-        help_text = ('Verbosity level; 0=no output, 1=only dots, 2=only '
-                     'scenario names, 3=normal output, 4=normal output '
-                     '(colorful, deprecated)')
-        parser.add_option('-v', '--verbosity',
-                          action='store',
-                          dest='verbosity',
-                          default='3',
-                          type='choice',
-                          choices=map(str, range(5)),
-                          help=help_text)
-        if StrictVersion(django.get_version()) < StrictVersion('1.7'):
+            help="will run django's builtin HTTP server using the test databases"
+        )
+        parser.add_argument(
+            '-P', '--port', type=int, dest='port',
+            help="the port in which the HTTP server will run at"
+        )
+        parser.add_argument(
+            '-d', '--debug-mode', action='store_true', dest='debug', default=False,
+            help="when put together with builtin HTTP server, forces django to run with settings.DEBUG=True"
+        )
+        parser.add_argument(
+            '-s', '--scenarios', action='store', dest='scenarios', default=None,
+            help='Comma separated list of scenarios to run'
+        )
+        parser.add_argument(
+            "-t", "--tag", dest="tags", type=str, action='append', default=None,
+            help='Tells lettuce to run the specified tags only; '
+                 'can be used multiple times to define more tags'
+                 '(prefixing tags with "-" will exclude them and '
+                 'prefixing with "~" will match approximate words)'
+        )
+        parser.add_argument(
+            '--with-xunit', action='store_true', dest='enable_xunit', default=False,
+            help='Output JUnit XML test results to a file'
+        )
+        parser.add_argument(
+            '--smtp-queue', action='store_true', dest='smtp_queue', default=False,
+            help='Use smtp for mail queue (usefull with --no-server option'
+        )
+        parser.add_argument(
+            '--xunit-file', action='store', dest='xunit_file', default=None,
+            help='Write JUnit XML to this file. Defaults to lettucetests.xml'
+        )
+        parser.add_argument(
+            '--with-subunit', action='store_true', dest='enable_subunit',
+            default=False, help='Output Subunit test results to a file'
+        )
+        parser.add_argument(
+            '--subunit-file', action='store', dest='subunit_file', default=None,
+            help='Write Subunit to this file. Defaults to subunit.bin'
+        )
+        parser.add_argument(
+            '--with-jsonreport', action='store_true', dest='enable_jsonreport',
+            default=False, help='Output JSON test results to a file'
+        )
+        parser.add_argument(
+            '--jsonreport-file', action='store', dest='jsonreport_file',
+            default=None, help='Write JSON report to this file. Defaults to lettucetests.json'
+        )
+        parser.add_argument(
+            "--failfast", dest="failfast", default=False,
+            action="store_true", help='Stop running in the first failure'
+        )
+        parser.add_argument(
+            "--pdb", dest="auto_pdb", default=False, action="store_true",
+            help='Launches an interactive debugger upon error'
+        )
+        if DJANGO_VERSION < StrictVersion('1.7'):
             # Django 1.7 introduces the --no-color flag. We must add the flag
             # to be compatible with older django versions
-            parser.add_option('--no-color',
-                              action='store_true',
-                              dest='no_color',
-                              default=False,
-                              help="Don't colorize the command output.")
-        return parser
+            parser.add_argument(
+                '--no-color', action='store_true', dest='no_color',
+                default=False, help="Don't colorize the command output."
+            )
 
     def get_paths(self, args, apps_to_run, apps_to_avoid):
         if args:
@@ -156,18 +148,17 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         setup_test_environment()
 
-        verbosity = int(options.get('verbosity', 3))
-        no_color = int(options.get('no_color', False))
-        apps_to_run = tuple(options.get('apps', '').split(","))
-        apps_to_avoid = tuple(options.get('avoid_apps', '').split(","))
-        run_server = not options.get('no_server', False)
-        test_database = options.get('test_database', False)
-        smtp_queue = options.get('smtp_queue', False)
-        tags = options.get('tags', None)
-        failfast = options.get('failfast', False)
-        auto_pdb = options.get('auto_pdb', False)
-        threading = options.get('use_threading', True)
-        with_summary = options.get('summary_display', False)
+        verbosity = options['verbosity']
+        no_color = options.get('no_color', False)
+        apps_to_run = tuple(options['apps'].split(","))
+        apps_to_avoid = tuple(options['avoid_apps'].split(","))
+        run_server = not options['no_server']
+        test_database = options['test_database']
+        smtp_queue = options['smtp_queue']
+        tags = options['tags']
+        failfast = options['failfast']
+        auto_pdb = options['auto_pdb']
+        threading = options['use_threading']
 
         if test_database:
             migrate_south = getattr(settings, "SOUTH_TESTS_MIGRATE", True)
@@ -183,7 +174,7 @@ class Command(BaseCommand):
             self._testrunner.setup_test_environment()
             self._old_db_config = self._testrunner.setup_databases()
 
-            if StrictVersion(django.get_version()) < StrictVersion('1.7'):
+            if DJANGO_VERSION < StrictVersion('1.7'):
                 call_command('syncdb', verbosity=0, interactive=False,)
                 if migrate_south:
                    call_command('migrate', verbosity=0, interactive=False,)
