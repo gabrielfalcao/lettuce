@@ -475,7 +475,7 @@ Steps can be grouped in class decorated with "@steps"
           assert number == expected, msg % number
 
       def have_the_number(self, step, number):
-        '''I have the number (\d+)'''
+          '''I have the number (\d+)'''
           self.set_number(number)
 
       def i_compute_its_factorial(self, step):
