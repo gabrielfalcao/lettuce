@@ -120,6 +120,7 @@ def main(args=sys.argv[1:]):
         base_path,
         scenarios=options.scenarios,
         verbosity=options.verbosity,
+        no_color=options.no_color,
         random=options.random,
         enable_xunit=options.enable_xunit,
         xunit_filename=options.xunit_file,
