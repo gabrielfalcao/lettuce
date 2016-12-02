@@ -39,7 +39,6 @@ DJANGO_VERSION = StrictVersion(django.get_version())
 
 class Command(BaseCommand):
     help = u'Run lettuce tests all along installed apps'
-    args = '[PATH to feature file or folder]'
 
     if DJANGO_VERSION < StrictVersion('1.7'):
         requires_model_validation = False
@@ -48,7 +47,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.set_defaults(verbosity=3)  # default verbosity is 3
-        parser.add_argument('features', nargs='*', help='A list of features to run.')
+        parser.add_argument('features', nargs='*', help='A list of features to run (files or folders)')
         parser.add_argument(
             '-a', '--apps', action='store', dest='apps', default='',
             help='Run ONLY the django apps that are listed here. Comma separated'
@@ -133,14 +132,14 @@ class Command(BaseCommand):
                 default=False, help="Don't colorize the command output."
             )
 
-    def get_paths(self, args, apps_to_run, apps_to_avoid):
-        if args:
-            for path, exists in zip(args, map(os.path.exists, args)):
+    def get_paths(self, feature_paths, apps_to_run, apps_to_avoid):
+        if feature_paths:
+            for path, exists in zip(feature_paths, map(os.path.exists, feature_paths)):
                 if not exists:
                     sys.stderr.write("You passed the path '%s', but it does not exist.\n" % path)
                     sys.exit(1)
             else:
-                paths = args
+                paths = feature_paths
         else:
             paths = harvest_lettuces(apps_to_run, apps_to_avoid)  # list of tuples with (path, app_module)
 
@@ -184,7 +183,7 @@ class Command(BaseCommand):
 
         settings.DEBUG = options.get('debug', False)
 
-        paths = self.get_paths(args, apps_to_run, apps_to_avoid)
+        paths = self.get_paths(options['features'], apps_to_run, apps_to_avoid)
         server = get_server(port=options['port'], threading=threading)
 
         if run_server:
