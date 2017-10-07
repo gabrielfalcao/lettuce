@@ -133,7 +133,7 @@ class Runner(object):
         self.random = random
 
         if enable_xunit:
-            xunit_output.enable(filename=xunit_filename)
+            xunit_output.enable(filename=xunit_filename, tags=tags)
         if smtp_queue:
             smtp_mail_queue.enable()
 

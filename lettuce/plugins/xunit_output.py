@@ -39,11 +39,14 @@ def total_seconds(td):
     return (td.microseconds + (td.seconds + td.days * 24 * 3600) * 1e6) / 1e6
 
 
-def enable(filename=None):
+def enable(filename=None, tags=None):
 
     doc = minidom.Document()
     root = doc.createElement("testsuite")
-    root.setAttribute("name", "lettuce")
+    if tags:
+        root.setAttribute("name", "_".join(tags))
+    else:    
+        root.setAttribute("name", "lettuce")
     root.setAttribute("hostname", "localhost")
     root.setAttribute("timestamp", datetime.now().strftime("%Y-%m-%dT%H:%M:%S"))
     output_filename = filename or "lettucetests.xml"
