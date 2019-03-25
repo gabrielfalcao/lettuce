@@ -143,8 +143,10 @@ class StepDefinition(object):
         try:
             ret = self.function(self.step, *args, **kw)
             self.step.passed = True
+            self.step.failed = False
         except Exception as e:
             self.step.failed = True
+            self.step.passed = False
             self.step.why = ReasonToFail(self.step, e)
             raise
 
